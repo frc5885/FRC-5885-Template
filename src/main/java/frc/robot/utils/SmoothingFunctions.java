@@ -1,4 +1,4 @@
-package frc.utils;
+package frc.robot.utils;
 
 // Smoothing functions for normilized values (0 -> 1)
 // All of these functions are expected to be used with additional code such as the value mapper.

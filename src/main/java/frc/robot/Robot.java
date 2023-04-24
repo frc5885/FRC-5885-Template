@@ -7,8 +7,6 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.utils.ValueMapper;
-import frc.utils.ValueMapper.SMOOTHING_METHOD;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -97,14 +95,7 @@ public class Robot extends TimedRobot {
 
   /** This function is called once when the robot is first started up. */
   @Override
-  public void simulationInit() {
-    ValueMapper cs_map = new ValueMapper(SMOOTHING_METHOD.EASE_EXPO);
-    cs_map.put(0f, 5f);
-    cs_map.put(5f, 15f);
-    cs_map.put(10f, -2f);
-
-    for (float i = -3.0f; i < 12.0f; i += 0.1f) System.out.printf("%f, %f\n", i, cs_map.get(i));
-  }
+  public void simulationInit() {}
 
   /** This function is called periodically whilst in simulation. */
   @Override
