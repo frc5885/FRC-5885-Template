@@ -44,7 +44,8 @@ public final class Constants {
     // Physical contraints
     public static final double kTrackWidthMeters = 0.7874;
     public static final double kWheelRadiusMeters = 0.1524; // 6" -> 0.1524m
-    public static final double kGearboxRatio = 12.75; // Toughbox mini
+    public static final double kEncoderGearboxRatio =
+        1; // Toughbox mini has a 1:1 output for encoders
     public static final DifferentialDriveKinematics kDriveKinematics =
         new DifferentialDriveKinematics(kTrackWidthMeters);
     public static final double kEncoderDistancePerPulse =

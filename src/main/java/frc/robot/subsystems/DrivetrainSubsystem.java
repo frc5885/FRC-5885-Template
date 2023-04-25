@@ -13,20 +13,28 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class DrivetrainSubsystem extends SubsystemBase {
 
-  WPI_TalonFX m_LeftFrontMotor = new WPI_TalonFX(Constants.DrivetrainConstants.kLeftFrontMotorPort);
-  WPI_TalonFX m_LeftRearMotor = new WPI_TalonFX(Constants.DrivetrainConstants.kLeftRearMotorPort);
+  // spotless:off
+  WPI_TalonFX m_LeftFrontMotor =
+      new WPI_TalonFX(Constants.DrivetrainConstants.kLeftFrontMotorPort);
+  WPI_TalonFX m_LeftRearMotor = 
+      new WPI_TalonFX(Constants.DrivetrainConstants.kLeftRearMotorPort);
   WPI_TalonFX m_RightFrontMotor =
       new WPI_TalonFX(Constants.DrivetrainConstants.kRightFrontMotorPort);
-  WPI_TalonFX m_RightRearMotor = new WPI_TalonFX(Constants.DrivetrainConstants.kRightRearMotorPort);
+  WPI_TalonFX m_RightRearMotor =
+      new WPI_TalonFX(Constants.DrivetrainConstants.kRightRearMotorPort);
 
-  MotorControllerGroup m_LeftMotors = new MotorControllerGroup(m_LeftFrontMotor, m_LeftRearMotor);
+  MotorControllerGroup m_LeftMotors =
+      new MotorControllerGroup(m_LeftFrontMotor, m_LeftRearMotor);
   MotorControllerGroup m_RightMotors =
       new MotorControllerGroup(m_RightFrontMotor, m_RightRearMotor);
+
+  // spotless:on
 
   AHRS m_gyro = new AHRS(SPI.Port.kMXP);
 
@@ -62,6 +70,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Yaw", m_gyro.getYaw());
+    SmartDashboard.putNumber("Pitch", m_gyro.getPitch());
+    SmartDashboard.putNumber("Roll", m_gyro.getRoll());
+    SmartDashboard.putBoolean("Calibrated", m_gyro.isCalibrating());
+
     m_odometry.update(
         m_gyro.getRotation2d(), m_LeftEncoder.getDistance(), m_RightEncoder.getDistance());
   }

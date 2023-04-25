@@ -3,14 +3,19 @@ package frc.robot.utils;
 import edu.wpi.first.wpilibj.XboxController;
 import java.util.function.Function;
 
+/*
+ * Improved xbox controller class which includes individual mapping functions, deadzone control, and "automatic" calibration (soon)
+ */
 public class ImprovedXboxController extends XboxController {
 
-  Function<Double, Double> m_left_trig_map_func = SmoothingFunctions::norm_linear;
-  Function<Double, Double> m_right_trig_map_func = SmoothingFunctions::norm_linear;
-  Function<Double, Double> m_left_map_func = SmoothingFunctions::norm_linear;
-  Function<Double, Double> m_right_map_func = SmoothingFunctions::norm_linear;
+  // By default, set the default mapping functions to be just linear
+  private Function<Double, Double> m_left_trig_map_func = SmoothingFunctions::norm_linear;
+  private Function<Double, Double> m_right_trig_map_func = SmoothingFunctions::norm_linear;
+  private Function<Double, Double> m_left_map_func = SmoothingFunctions::norm_linear;
+  private Function<Double, Double> m_right_map_func = SmoothingFunctions::norm_linear;
 
-  double m_deadzone = 0.005;
+  // By defaut, disable the deadzone
+  private double m_deadzone = 0.0;
 
   public ImprovedXboxController(int port) {
     super(port);
