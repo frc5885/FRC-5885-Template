@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems.tank;
+package frc.robot.subsystems.TankDriveSubsystem;
 
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
@@ -14,10 +14,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.TankConstants;
 import org.littletonrobotics.junction.Logger;
 
-public class Tank extends SubsystemBase {
+public class TankDrive extends SubsystemBase {
 
-  private final TankIO m_io;
-  private final TankIOInputsAutoLogged m_inputs = new TankIOInputsAutoLogged();
+  private final TankDriveIO m_io;
+  private final TankDriveIOInputsAutoLogged m_inputs = new TankDriveIOInputsAutoLogged();
   private final DifferentialDrivePoseEstimator m_odometry =
       new DifferentialDrivePoseEstimator(
           TankConstants.Auto.kDriveKinematics,
@@ -30,7 +30,7 @@ public class Tank extends SubsystemBase {
   private double m_relativeDistanceMeters;
 
   /** Creates a new Tank. */
-  public Tank(TankIO io) {
+  public TankDrive(TankDriveIO io) {
     m_io = io;
   }
 
@@ -38,7 +38,6 @@ public class Tank extends SubsystemBase {
   public void periodic() {
     m_io.updateInputs(m_inputs);
     Logger.getInstance().processInputs("Tank", m_inputs);
-    Logger.getInstance().recordOutput("Tank", m_relativeDistanceMeters);
 
     // Update odometry and log the new pose
     m_odometry.update(

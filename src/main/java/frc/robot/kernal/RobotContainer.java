@@ -2,24 +2,27 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot;
+package frc.robot.kernal;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Constants;
 import frc.robot.commands.DriveDistance;
 import frc.robot.commands.PerformSPath;
 import frc.robot.commands.TurnToAngle;
-import frc.robot.subsystems.tank.Tank;
-import frc.robot.subsystems.tank.TankIO;
-import frc.robot.subsystems.tank.TankSim;
-import frc.robot.subsystems.tank.TankTalonSRX;
+import frc.robot.subsystems.TankDriveSubsystem.TankDrive;
+import frc.robot.subsystems.TankDriveSubsystem.TankDriveIO;
+import frc.robot.subsystems.TankDriveSubsystem.TankDriveSim;
+import frc.robot.subsystems.TankDriveSubsystem.TankDriveTalonSRX;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class RobotContainer {
 
-  private final Tank m_tank;
+  private final TankDrive m_tank;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -29,18 +32,24 @@ public class RobotContainer {
 
   public RobotContainer() {
 
+    // Setup controllers depending on the current mode
     switch (Constants.currentMode) {
       case REAL:
-        m_tank = new Tank(new TankTalonSRX());
+        if (!RobotBase.isReal())
+          DriverStation.reportError("Attempted to run REAL on SIMULATED robot!", false);
+        m_tank = new TankDrive(new TankDriveTalonSRX());
         break;
 
-      case SIM:
-        m_tank = new Tank(new TankSim());
+      case SIMULATOR:
+        if (RobotBase.isReal())
+          DriverStation.reportError("Attempted to run SIMULATED on REAL robot!", false);
+
+        m_tank = new TankDrive(new TankDriveSim());
         // throw new NoSuchMethodError("Not Implemented");
         break;
 
       default:
-        m_tank = new Tank(new TankIO() {});
+        m_tank = new TankDrive(new TankDriveIO() {});
         break;
     }
 

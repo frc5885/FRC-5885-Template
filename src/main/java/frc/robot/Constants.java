@@ -5,11 +5,11 @@ import edu.wpi.first.math.util.Units;
 
 public final class Constants {
 
-  public static final Mode currentMode = Mode.SIM;
+  public static final Mode currentMode = Mode.SIMULATOR;
 
   public static enum Mode {
     REAL,
-    SIM,
+    SIMULATOR,
     REPLAY
   }
 

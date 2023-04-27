@@ -2,14 +2,14 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems.tank;
+package frc.robot.subsystems.TankDriveSubsystem;
 
 import org.littletonrobotics.junction.AutoLog;
 
-public interface TankIO {
+public interface TankDriveIO {
 
   @AutoLog
-  public static class TankIOInputs {
+  public static class TankDriveIOInputs {
     public double leftPositionMeters = 0.0;
     public double leftVelocityMetersPerSec = 0.0;
     public double rightPositionMeters = 0.0;
@@ -17,7 +17,7 @@ public interface TankIO {
     public double gyroYawRad = 0.0;
   }
 
-  public default void updateInputs(TankIOInputs inputs) {}
+  public default void updateInputs(TankDriveIOInputs inputs) {}
 
   public default void setVoltage(double leftVolts, double rightVolts) {}
 

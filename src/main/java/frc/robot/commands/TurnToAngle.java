@@ -7,11 +7,11 @@ package frc.robot.commands;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc.robot.Constants.TankConstants;
-import frc.robot.subsystems.tank.Tank;
+import frc.robot.subsystems.TankDriveSubsystem.TankDrive;
 
 public class TurnToAngle extends PIDCommand {
   /** Creates a new TurnToAngle. */
-  public TurnToAngle(double angle, Tank tank) {
+  public TurnToAngle(double angle, TankDrive tank) {
     super(
         // The controller that the command will use
         new PIDController(

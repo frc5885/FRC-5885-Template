@@ -170,6 +170,10 @@ out/
 
 # Simulation GUI and other tools window save file
 *-window.json
+simgui*.json
 
 # AdvantageKit Logs
 Log_*.wpilog
+
+# Auto generated build constants
+# src/main/java/frc/robot/BuildConstants.java

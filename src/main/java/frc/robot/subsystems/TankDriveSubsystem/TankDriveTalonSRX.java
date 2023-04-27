@@ -1,4 +1,4 @@
-package frc.robot.subsystems.tank;
+package frc.robot.subsystems.TankDriveSubsystem;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import frc.robot.Constants.TankConstants;
 
-public class TankTalonSRX implements TankIO {
+public class TankDriveTalonSRX implements TankDriveIO {
 
   private final WPI_TalonSRX m_leftFrontMotor;
   private final WPI_TalonSRX m_leftRearMotor;
@@ -23,7 +23,7 @@ public class TankTalonSRX implements TankIO {
 
   private final AHRS m_gyro;
 
-  public TankTalonSRX() {
+  public TankDriveTalonSRX() {
     m_leftFrontMotor = new WPI_TalonSRX(TankConstants.kLeftFrontMotorID);
     m_leftRearMotor = new WPI_TalonSRX(TankConstants.kLeftRearMotorID);
     m_rightFrontMotor = new WPI_TalonSRX(TankConstants.kRightFrontMotorID);
@@ -53,7 +53,7 @@ public class TankTalonSRX implements TankIO {
   }
 
   @Override
-  public void updateInputs(TankIOInputs inputs) {
+  public void updateInputs(TankDriveIOInputs inputs) {
     inputs.leftPositionMeters = m_leftEncoder.getDistance();
     inputs.leftVelocityMetersPerSec = m_leftEncoder.getRate();
     inputs.rightPositionMeters = m_rightEncoder.getDistance();

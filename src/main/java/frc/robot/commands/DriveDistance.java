@@ -8,16 +8,16 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import frc.robot.Constants.TankConstants;
-import frc.robot.subsystems.tank.Tank;
+import frc.robot.subsystems.TankDriveSubsystem.TankDrive;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class DriveDistance extends ProfiledPIDCommand {
-  Tank m_tank;
+  TankDrive m_tank;
 
   /** Creates a new DriveDistance. */
-  public DriveDistance(double distanceMeters, Tank tank) {
+  public DriveDistance(double distanceMeters, TankDrive tank) {
 
     super(
         // The ProfiledPIDController used by the command
