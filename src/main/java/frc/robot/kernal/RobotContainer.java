@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 import frc.robot.commands.DriveDistance;
 import frc.robot.commands.PerformSPath;
-import frc.robot.commands.TurnToAngle;
+import frc.robot.subsystems.PoseEstimatorSubsystem.TankDrivePoseEstimator;
 import frc.robot.subsystems.TankDriveSubsystem.TankDrive;
 import frc.robot.subsystems.TankDriveSubsystem.TankDriveIO;
 import frc.robot.subsystems.TankDriveSubsystem.TankDriveSim;
@@ -23,6 +23,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
 
   private final TankDrive m_tank;
+  private final TankDrivePoseEstimator m_tankDrivePoseEstimator;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -53,10 +54,14 @@ public class RobotContainer {
         break;
     }
 
+    m_tankDrivePoseEstimator =
+        new TankDrivePoseEstimator(
+            m_tank::getRotation, m_tank::getLeftPositionMeters, m_tank::getRightPositionMeters);
+
     autoChooser.addDefaultOption("Do Nothing", new InstantCommand());
-    autoChooser.addOption("Perform path", new PerformSPath(m_tank));
+    autoChooser.addOption("Perform path", new PerformSPath(m_tank, m_tankDrivePoseEstimator));
     autoChooser.addOption("Drive 10m", new DriveDistance(10.0, m_tank));
-    autoChooser.addOption("Turn 90 Degrees", new TurnToAngle(90.0, m_tank));
+    // autoChooser.addOption("Turn 90 Degrees", new TurnToAngle(90.0, m_tank));
 
     configureBindings();
   }

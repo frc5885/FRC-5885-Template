@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.TankConstants;
+import frc.robot.subsystems.PoseEstimatorSubsystem.TankDrivePoseEstimator;
 import frc.robot.subsystems.TankDriveSubsystem.TankDrive;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -26,13 +27,15 @@ import frc.robot.subsystems.TankDriveSubsystem.TankDrive;
 public class PerformSPath extends SequentialCommandGroup {
   TankDrive m_tank;
   DifferentialDriveVoltageConstraint autoVoltageConstraint;
+  TankDrivePoseEstimator m_tankDrivePoseEstimator;
   TrajectoryConfig config;
   Trajectory exampleTrajectory;
 
   /** Creates a new PerformSPath. */
-  public PerformSPath(TankDrive tank) {
+  public PerformSPath(TankDrive tank, TankDrivePoseEstimator tankDrivePoseEstimator) {
 
     m_tank = tank;
+    m_tankDrivePoseEstimator = tankDrivePoseEstimator;
     // autoVoltageConstraint =
     //     new DifferentialDriveVoltageConstraint(
     //         new SimpleMotorFeedforward(
@@ -72,12 +75,12 @@ public class PerformSPath extends SequentialCommandGroup {
             () -> {
               // Reset odometry for the first path you run during auto
               if (isFirstPath) {
-                m_tank.resetOdometry(traj.getInitialPose());
+                m_tankDrivePoseEstimator.setPos(traj.getInitialPose());
               }
             }),
         new PPRamseteCommand(
             traj,
-            m_tank::getPose, // Pose supplier
+            m_tankDrivePoseEstimator::getPose, // Pose supplier
             new RamseteController(),
             new SimpleMotorFeedforward(
                 TankConstants.Auto.ksVolts,

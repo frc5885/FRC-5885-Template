@@ -4,29 +4,15 @@
 
 package frc.robot.subsystems.TankDriveSubsystem;
 
-import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.TankConstants;
 import org.littletonrobotics.junction.Logger;
 
 public class TankDrive extends SubsystemBase {
 
   private final TankDriveIO m_io;
   private final TankDriveIOInputsAutoLogged m_inputs = new TankDriveIOInputsAutoLogged();
-  private final DifferentialDrivePoseEstimator m_odometry =
-      new DifferentialDrivePoseEstimator(
-          TankConstants.Auto.kDriveKinematics,
-          new Rotation2d(0),
-          0,
-          0,
-          new Pose2d(),
-          VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)),
-          VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30)));
   private double m_relativeDistanceMeters;
 
   /** Creates a new Tank. */
@@ -37,23 +23,7 @@ public class TankDrive extends SubsystemBase {
   @Override
   public void periodic() {
     m_io.updateInputs(m_inputs);
-    Logger.getInstance().processInputs("Tank", m_inputs);
-
-    // Update odometry and log the new pose
-    m_odometry.update(
-        new Rotation2d(m_inputs.gyroYawRad),
-        m_inputs.leftPositionMeters,
-        m_inputs.rightPositionMeters);
-    Logger.getInstance().recordOutput("Odometry", m_odometry.getEstimatedPosition());
-  }
-
-  public void resetOdometry(Pose2d pose) {
-    resetEncoders();
-    m_odometry.resetPosition(
-        new Rotation2d(m_inputs.gyroYawRad),
-        m_inputs.leftPositionMeters,
-        m_inputs.rightPositionMeters,
-        pose);
+    Logger.getInstance().processInputs("Tank Drive", m_inputs);
   }
 
   public void driveTankVolts(double leftSpeed, double rightSpeed) {
@@ -93,16 +63,12 @@ public class TankDrive extends SubsystemBase {
     m_io.setVoltage(0, 0);
   }
 
-  public double getHeadingDegrees() {
-    return Units.radiansToDegrees(m_inputs.gyroYawRad);
+  public Rotation2d getRotation() {
+    return m_inputs.gyroRotation;
   }
 
   public void resetEncoders() {
     m_io.resetEncoders();
-  }
-
-  public Pose2d getPose() {
-    return m_odometry.getEstimatedPosition();
   }
 
   public double getAveragePositionMeters() {

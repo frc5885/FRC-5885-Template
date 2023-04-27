@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems.TankDriveSubsystem;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import org.littletonrobotics.junction.AutoLog;
 
 public interface TankDriveIO {
@@ -14,7 +15,7 @@ public interface TankDriveIO {
     public double leftVelocityMetersPerSec = 0.0;
     public double rightPositionMeters = 0.0;
     public double rightVelocityMetersPerSec = 0.0;
-    public double gyroYawRad = 0.0;
+    public Rotation2d gyroRotation = new Rotation2d();
   }
 
   public default void updateInputs(TankDriveIOInputs inputs) {}

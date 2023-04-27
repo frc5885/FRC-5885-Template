@@ -1,6 +1,9 @@
 package frc.robot;
 
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.math.numbers.*;
 import edu.wpi.first.math.util.Units;
 
 public final class Constants {
@@ -73,6 +76,15 @@ public final class Constants {
 
       public static final DifferentialDriveKinematics kDriveKinematics =
           new DifferentialDriveKinematics(kTrackwidthMeters);
+
+      // Kalman filter
+      // Higher numbers means less trust
+
+      // X, Y, Heading
+      public static final Matrix<N3, N1> stateStdDevs = VecBuilder.fill(0.1, 0.1, 0.1);
+
+      // X, Y, Heading
+      public static final Matrix<N3, N1> visionMeasurementStdDevs = VecBuilder.fill(0.1, 0.1, 0.1);
     }
   }
 }

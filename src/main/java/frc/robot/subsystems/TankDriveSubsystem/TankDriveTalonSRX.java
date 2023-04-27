@@ -2,7 +2,6 @@ package frc.robot.subsystems.TankDriveSubsystem;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
@@ -58,7 +57,7 @@ public class TankDriveTalonSRX implements TankDriveIO {
     inputs.leftVelocityMetersPerSec = m_leftEncoder.getRate();
     inputs.rightPositionMeters = m_rightEncoder.getDistance();
     inputs.rightVelocityMetersPerSec = m_rightEncoder.getRate();
-    inputs.gyroYawRad = -Units.degreesToRadians(m_gyro.getYaw());
+    inputs.gyroRotation = m_gyro.getRotation2d();
   }
 
   @Override

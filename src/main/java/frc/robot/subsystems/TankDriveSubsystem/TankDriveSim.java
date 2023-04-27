@@ -21,7 +21,7 @@ public class TankDriveSim implements TankDriveIO {
     inputs.leftVelocityMetersPerSec = sim.getLeftVelocityMetersPerSecond();
     inputs.rightPositionMeters = sim.getRightPositionMeters();
     inputs.rightVelocityMetersPerSec = sim.getRightVelocityMetersPerSecond();
-    inputs.gyroYawRad = sim.getHeading().getRadians();
+    inputs.gyroRotation = sim.getHeading();
   }
 
   @Override

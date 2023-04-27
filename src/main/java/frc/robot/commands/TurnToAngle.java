@@ -17,7 +17,7 @@ public class TurnToAngle extends PIDCommand {
         new PIDController(
             TankConstants.Auto.kTurnP, TankConstants.Auto.kTurnI, TankConstants.Auto.kTurnD),
         // This should return the measurement
-        tank::getHeadingDegrees,
+        null,
         // This should return the setpoint (can also be a constant)
         angle,
         // This uses the output
