@@ -6,8 +6,11 @@ package frc.robot.subsystems.SwerveDriveSubsystem;
 
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.SwerveConstants;
 
 public class SwerveDrive extends SubsystemBase {
 
@@ -69,6 +72,18 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   public void stopModules() {
-    // m_moduleTopLeft.stop();
+    m_moduleTopLeft.stop();
+    m_moduleTopRight.stop();
+    m_moduleBottomLeft.stop();
+    m_moduleBottomRight.stop();
+  }
+
+  public void setModuleStates(SwerveModuleState[] states) {
+    SwerveDriveKinematics.desaturateWheelSpeeds(
+        states, SwerveConstants.Module.kPhysicalMaxSpeedMetersPerSecond);
+    m_moduleTopLeft.setDesiredState(states[0]);
+    m_moduleTopRight.setDesiredState(states[1]);
+    m_moduleBottomLeft.setDesiredState(states[2]);
+    m_moduleBottomRight.setDesiredState(states[3]);
   }
 }

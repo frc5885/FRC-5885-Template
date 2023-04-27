@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems.SwerveDriveSubsystem;
 
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import org.littletonrobotics.junction.AutoLog;
 
 public interface SwerveModuleIO {
@@ -29,8 +30,11 @@ public interface SwerveModuleIO {
 
   public default void setTurnVoltage(double volts) {}
 
-  // public default double getDrivePosition() {
-  // }
+  public default void stop() {}
+
+  public default void setState(SwerveModuleState state) {}
+
+  public default void setDesiredState(SwerveModuleState state) {}
 
   // public default double getTurningPosition() {
   // }

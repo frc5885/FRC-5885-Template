@@ -2,7 +2,9 @@ package frc.robot;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.*;
 import edu.wpi.first.math.util.Units;
 
@@ -91,6 +93,22 @@ public final class Constants {
   // Swerve drive constants
   // Tank drive constants
   public static final class SwerveConstants {
+
+    public static final double kDeadband = 0.075;
+    public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 0.5;
+    public static final double kTeleDriveMaxSpeedMetersPerSecond = 3;
+    public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = 0.5;
+
+    public static final double kTrackWidth = Units.inchesToMeters(21);
+    public static final double kWheelBase = Units.inchesToMeters(25.5);
+
+    public static final SwerveDriveKinematics kDriveKinematics =
+        new SwerveDriveKinematics(
+            new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
+            new Translation2d(kWheelBase / 2, kTrackWidth / 2),
+            new Translation2d(-kWheelBase / 2, -kTrackWidth / 2),
+            new Translation2d(-kWheelBase / 2, kTrackWidth / 2));
+
     public static final class Module {
       public static final double kWheelDiameterMeters = Units.inchesToMeters(4);
       public static final double kDriveMotorGearRatio = 1 / 6.75;

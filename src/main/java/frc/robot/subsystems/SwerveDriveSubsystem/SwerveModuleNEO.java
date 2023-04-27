@@ -130,6 +130,7 @@ public class SwerveModuleNEO implements SwerveModuleIO {
         m_turningPIDController.calculate(getTurningPosition(), state.angle.getRadians()));
   }
 
+  @Override
   public void stop() {
     m_driveMotor.set(0);
     m_turnMotor.set(0);
