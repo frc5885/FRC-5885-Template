@@ -50,7 +50,7 @@ public final class Constants {
 
       // Drive distance
       public static final double kDriveMaxVelocity = 1.75;
-      public static final double kDriveMaxAcceleration = 6;
+      public static final double kDriveMaxAcceleration = 2;
 
       // Auto turn
       public static final double kTurnP = 1;
@@ -66,8 +66,8 @@ public final class Constants {
 
       public static final double kPDriveVel = 3.2178;
 
-      public static final double kMaxSpeedMetersPerSecond = 1.5;
-      public static final double kMaxAccelerationMetersPerSecondSquared = 0.5;
+      public static final double kMaxSpeedMetersPerSecond = 2;
+      public static final double kMaxAccelerationMetersPerSecondSquared = 1;
 
       public static final double kRamseteB = 2;
       public static final double kRamseteZeta = 0.7;
@@ -85,6 +85,25 @@ public final class Constants {
 
       // X, Y, Heading
       public static final Matrix<N3, N1> visionMeasurementStdDevs = VecBuilder.fill(0.1, 0.1, 0.1);
+    }
+  }
+
+  // Swerve drive constants
+  // Tank drive constants
+  public static final class SwerveConstants {
+    public static final class Module {
+      public static final double kWheelDiameterMeters = Units.inchesToMeters(4);
+      public static final double kDriveMotorGearRatio = 1 / 6.75;
+      public static final double kTurningMotorGearRatio = 1 / (150.0 / 7.0);
+
+      public static final double kDriveEncoderRot2Meter =
+          kDriveMotorGearRatio * Math.PI * kWheelDiameterMeters;
+      public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter / 60;
+      public static final double kTurningEncoderRot2Rad = kTurningMotorGearRatio * 2 * Math.PI;
+      public static final double kTurningEncoderRPM2RadPerSec = kTurningEncoderRot2Rad / 60;
+
+      public static final double kPTurning = 0.5;
+      public static double kPhysicalMaxSpeedMetersPerSecond = Units.feetToMeters(14.5);
     }
   }
 }

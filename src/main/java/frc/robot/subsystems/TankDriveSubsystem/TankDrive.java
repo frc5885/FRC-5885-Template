@@ -64,7 +64,7 @@ public class TankDrive extends SubsystemBase {
   }
 
   public Rotation2d getRotation() {
-    return m_inputs.gyroRotation;
+    return new Rotation2d(m_inputs.gyroHeadingRad);
   }
 
   public void resetEncoders() {
