@@ -11,6 +11,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.SwerveConstants;
+import org.littletonrobotics.junction.Logger;
 
 public class SwerveDrive extends SubsystemBase {
 
@@ -57,6 +58,10 @@ public class SwerveDrive extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    Logger.getInstance().processInputs("SWERVE_DRIVE_0", m_inputsTopLeft);
+    Logger.getInstance().processInputs("SWERVE_DRIVE_1", m_inputsTopRight);
+    Logger.getInstance().processInputs("SWERVE_DRIVE_2", m_inputsTopRight);
+    Logger.getInstance().processInputs("SWERVE_DRIVE_3", m_inputsTopRight);
   }
 
   public void zeroHeading() {

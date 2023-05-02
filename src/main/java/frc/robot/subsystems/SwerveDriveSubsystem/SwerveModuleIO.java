@@ -32,8 +32,6 @@ public interface SwerveModuleIO {
 
   public default void stop() {}
 
-  public default void setState(SwerveModuleState state) {}
-
   public default void setDesiredState(SwerveModuleState state) {}
 
   // public default double getTurningPosition() {
