@@ -22,10 +22,10 @@ public final class Constants {
   public static final class TankConstants {
 
     // Motors
-    public static final int kLeftFrontMotorID = 1;
-    public static final int kLeftRearMotorID = 2;
-    public static final int kRightFrontMotorID = 3;
-    public static final int kRightRearMotorID = 4;
+    public static final int kLeftFrontMotorID = 3;
+    public static final int kLeftRearMotorID = 4;
+    public static final int kRightFrontMotorID = 1;
+    public static final int kRightRearMotorID = 2;
 
     public static final Boolean kLeftMotorsInverted = false;
     public static final Boolean kRightMotorsInverted = false;
@@ -42,7 +42,7 @@ public final class Constants {
     public static final int kRightEncoderBPort = 7;
 
     public static final Boolean kLeftEncoderInverted = false;
-    public static final Boolean kRightEncoderInverted = false;
+    public static final Boolean kRightEncoderInverted = true;
 
     public static final int kEncoderCPM = 400;
     public static final double kEncoderGearRatio = 1.0;

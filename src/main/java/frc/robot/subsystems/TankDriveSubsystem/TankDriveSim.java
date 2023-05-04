@@ -1,6 +1,7 @@
 package frc.robot.subsystems.TankDriveSubsystem;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotGearing;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotMotor;
@@ -10,7 +11,11 @@ public class TankDriveSim implements TankDriveIO {
 
   private DifferentialDrivetrainSim sim =
       DifferentialDrivetrainSim.createKitbotSim(
-          KitbotMotor.kDualCIMPerSide, KitbotGearing.k10p71, KitbotWheelSize.kSixInch, null);
+          KitbotMotor.kDualCIMPerSide,
+          KitbotGearing.k10p71,
+          KitbotWheelSize.kSixInch,
+          VecBuilder.fill(0, 0, 0.0001, 0.05, 0.05, 0.005, 0.005));
+  ;
 
   public TankDriveSim() {}
 
