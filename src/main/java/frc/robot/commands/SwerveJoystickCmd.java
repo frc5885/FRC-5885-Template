@@ -68,9 +68,10 @@ public class SwerveJoystickCmd extends CommandBase {
     } else {
       chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turningSpeed);
     }
-    
-    SwerveModuleState[] moduleStates = SwerveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
-  
+
+    SwerveModuleState[] moduleStates =
+        SwerveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
+
     m_swerveSubsystem.setModuleStates(moduleStates);
   }
   // Called once the command ends or is interrupted.

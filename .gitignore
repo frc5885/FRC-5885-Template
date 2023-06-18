@@ -177,3 +177,4 @@ Log_*.wpilog
 
 # Auto generated build constants
 # src/main/java/frc/robot/BuildConstants.java
+src/main/java/frc/robot/kernal/BuildConstants.java
