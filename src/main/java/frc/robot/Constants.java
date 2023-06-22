@@ -95,9 +95,6 @@ public final class Constants {
   public static final class SwerveConstants {
 
     public static final double kDeadband = 0.075;
-    public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 0.5;
-    public static final double kTeleDriveMaxSpeedMetersPerSecond = 3;
-    public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = 0.5;
 
     public static final double kTrackWidth = Units.inchesToMeters(21);
     public static final double kWheelBase = Units.inchesToMeters(25.5);
@@ -116,12 +113,11 @@ public final class Constants {
 
       public static final double kDriveEncoderRot2Meter =
           kDriveMotorGearRatio * Math.PI * kWheelDiameterMeters;
-      public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter / 60;
       public static final double kTurningEncoderRot2Rad = kTurningMotorGearRatio * 2 * Math.PI;
+      public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter / 60;
       public static final double kTurningEncoderRPM2RadPerSec = kTurningEncoderRot2Rad / 60;
 
       public static final double kPTurning = 0.5;
-      public static double kPhysicalMaxSpeedMetersPerSecond = Units.feetToMeters(14.5);
     }
   }
 }

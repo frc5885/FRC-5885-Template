@@ -15,28 +15,24 @@ import java.util.function.Supplier;
 public class SwerveJoystickCmd extends CommandBase {
 
   private final SwerveDrive m_swerveSubsystem;
-  private final Supplier<Double> m_xSpdFunction, m_ySpdFunction, m_turningSpdFunction;
-  private final Supplier<Boolean> m_fieldOrientedFunctions;
-  private final SlewRateLimiter m_xLimiter, m_yLimiter, m_turningLimiter;
+  private final Supplier<Double> xSpdFunction, ySpdFunction, turningSpdFunction;
+  private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
 
   /** Creates a new SwerveJoystickCmd. */
   public SwerveJoystickCmd(
-      SwerveDrive swerveSubsystem,
-      Supplier<Double> xSpdFunction,
-      Supplier<Double> ySpdFunction,
-      Supplier<Double> turningSpdFunction,
-      Supplier<Boolean> fieldOrientedFunction) {
-    m_swerveSubsystem = swerveSubsystem;
-    m_xSpdFunction = xSpdFunction;
-    m_ySpdFunction = ySpdFunction;
-    m_turningSpdFunction = turningSpdFunction;
-    m_fieldOrientedFunctions = fieldOrientedFunction;
-
-    m_xLimiter = new SlewRateLimiter(SwerveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
-    m_yLimiter = new SlewRateLimiter(SwerveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
-    m_turningLimiter = new SlewRateLimiter(SwerveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
-
-    addRequirements(swerveSubsystem);
+      SwerveDrive swerveDrive,
+      Supplier<Double> xSpdFnc,
+      Supplier<Double> ySpdFnc,
+      Supplier<Double> turningSpd) {
+    m_swerveSubsystem = swerveDrive;
+    xSpdFunction = xSpdFnc;
+    ySpdFunction = ySpdFnc;
+    turningSpdFunction = turningSpd;
+    xLimiter = new SlewRateLimiter(3);
+    yLimiter = new SlewRateLimiter(3);
+    turningLimiter = new SlewRateLimiter(3);
+    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(m_swerveSubsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -46,39 +42,35 @@ public class SwerveJoystickCmd extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double xSpeed = m_xSpdFunction.get();
-    double ySpeed = m_ySpdFunction.get();
-    double turningSpeed = m_turningSpdFunction.get();
+    double xSpd = xSpdFunction.get();
+    double ySpd = ySpdFunction.get();
+    double turnSpd = turningSpdFunction.get();
 
-    xSpeed = Math.abs(xSpeed) > SwerveConstants.kDeadband ? xSpeed : 0.0;
-    ySpeed = Math.abs(ySpeed) > SwerveConstants.kDeadband ? ySpeed : 0.0;
-    turningSpeed = Math.abs(turningSpeed) > SwerveConstants.kDeadband ? turningSpeed : 0.0;
+    xSpd = Math.abs(xSpd) > 0.05 ? xSpd : 0;
+    ySpd = Math.abs(ySpd) > 0.05 ? ySpd : 0;
+    turnSpd = Math.abs(turnSpd) > 0.05 ? turnSpd : 0;
 
-    xSpeed = m_xLimiter.calculate(xSpeed) * SwerveConstants.kTeleDriveMaxSpeedMetersPerSecond;
-    ySpeed = m_yLimiter.calculate(xSpeed) * SwerveConstants.kTeleDriveMaxSpeedMetersPerSecond;
-    turningSpeed =
-        m_turningLimiter.calculate(turningSpeed)
-            * SwerveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
+    xSpd = xLimiter.calculate(xSpd);
+    ySpd = yLimiter.calculate(ySpd);
+    turnSpd = turningLimiter.calculate(turnSpd);
 
-    ChassisSpeeds chassisSpeeds;
-    if (m_fieldOrientedFunctions.get()) {
-      chassisSpeeds =
-          ChassisSpeeds.fromFieldRelativeSpeeds(
-              xSpeed, ySpeed, turningSpeed, m_swerveSubsystem.getRotation2d());
-    } else {
-      chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turningSpeed);
-    }
+    ChassisSpeeds chassisSpeeds =
+        ChassisSpeeds.fromFieldRelativeSpeeds(
+            xSpd * 4.2 / 2,
+            ySpd * 4.2 / 2,
+            turnSpd * 9.83236752175 / 2,
+            m_swerveSubsystem.getRotation2d());
 
     SwerveModuleState[] moduleStates =
         SwerveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
 
+    // Logger.getInstance().recordOutput("chassisSpeeds", chassisSpeeds);
     m_swerveSubsystem.setModuleStates(moduleStates);
   }
+
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    m_swerveSubsystem.stopModules();
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override

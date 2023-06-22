@@ -4,86 +4,93 @@
 
 package frc.robot.subsystems.SwerveDriveSubsystem;
 
-import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.SwerveConstants;
+import org.littletonrobotics.junction.Logger;
 
 public class SwerveDrive extends SubsystemBase {
 
-  private final SwerveModuleIO m_moduleTopLeft;
-  private final SwerveModuleIOInputsAutoLogged m_inputsTopLeft =
-      new SwerveModuleIOInputsAutoLogged();
+  SwerveModuleSim m_frontLeft = new SwerveModuleSim(false);
+  SwerveModuleSim m_frontRight = new SwerveModuleSim(false);
+  SwerveModuleSim m_backLeft = new SwerveModuleSim(false);
+  SwerveModuleSim m_backRight = new SwerveModuleSim(false);
 
-  private final SwerveModuleIO m_moduleTopRight;
-  private final SwerveModuleIOInputsAutoLogged m_inputsTopRight =
-      new SwerveModuleIOInputsAutoLogged();
+  private final SwerveDrivePoseEstimator odometer;
 
-  private final SwerveModuleIO m_moduleBottomLeft;
-  private final SwerveModuleIOInputsAutoLogged m_inputsBottomLeft =
-      new SwerveModuleIOInputsAutoLogged();
-
-  private final SwerveModuleIO m_moduleBottomRight;
-  private final SwerveModuleIOInputsAutoLogged m_inputsBottomRight =
-      new SwerveModuleIOInputsAutoLogged();
-
-  private final AHRS m_gyro;
+  private double m_rotation = 0;
 
   /** Creates a new SwerveDrive. */
-  public SwerveDrive(
-      SwerveModuleIO moduleTopLeft,
-      SwerveModuleIO moduleTopRight,
-      SwerveModuleIO moduleBottomLeft,
-      SwerveModuleIO moduleBottomRight) {
-    m_moduleTopLeft = moduleTopLeft;
-    m_moduleTopRight = moduleTopRight;
-    m_moduleBottomLeft = moduleBottomLeft;
-    m_moduleBottomRight = moduleBottomRight;
-
-    m_gyro = new AHRS(SPI.Port.kMXP);
-
-    // Wait until we are done calibrating, then zero the heading
-    new Thread(
-            () -> {
-              while (m_gyro.isCalibrating()) {}
-              zeroHeading();
-            })
-        .start();
+  public SwerveDrive() {
+    odometer =
+        new SwerveDrivePoseEstimator(
+            SwerveConstants.kDriveKinematics,
+            new Rotation2d(0),
+            getModulePositions(),
+            new Pose2d(0, 0, Rotation2d.fromDegrees(0)));
   }
 
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-  }
-
-  public void zeroHeading() {
-    m_gyro.reset();
+  public SwerveModulePosition[] getModulePositions() {
+    return new SwerveModulePosition[] {
+      m_frontLeft.getPosition(),
+      m_frontRight.getPosition(),
+      m_backLeft.getPosition(),
+      m_backRight.getPosition()
+    };
   }
 
   public double getHeading() {
-    return Math.IEEEremainder(m_gyro.getAngle(), 360);
+    return Math.IEEEremainder(m_rotation, 360);
   }
 
   public Rotation2d getRotation2d() {
     return Rotation2d.fromDegrees(getHeading());
   }
 
-  public void stopModules() {
-    m_moduleTopLeft.stop();
-    m_moduleTopRight.stop();
-    m_moduleBottomLeft.stop();
-    m_moduleBottomRight.stop();
+  public SwerveModuleState[] getModuleStates() {
+    return new SwerveModuleState[] {
+      m_frontLeft.getState(), m_frontRight.getState(), m_backLeft.getState(), m_backRight.getState()
+    };
   }
 
-  public void setModuleStates(SwerveModuleState[] states) {
-    SwerveDriveKinematics.desaturateWheelSpeeds(
-        states, SwerveConstants.Module.kPhysicalMaxSpeedMetersPerSecond);
-    m_moduleTopLeft.setDesiredState(states[0]);
-    m_moduleTopRight.setDesiredState(states[1]);
-    m_moduleBottomLeft.setDesiredState(states[2]);
-    m_moduleBottomRight.setDesiredState(states[3]);
+  @Override
+  public void periodic() {
+    // System.out.println(m_frontLeft.getDriveVelocity());
+    m_frontLeft.updateInputs();
+    m_frontRight.updateInputs();
+    m_backLeft.updateInputs();
+    m_backRight.updateInputs();
+
+    var chassisSpeeds = SwerveConstants.kDriveKinematics.toChassisSpeeds(getModuleStates());
+    double chassisRotationSpeed = chassisSpeeds.omegaRadiansPerSecond;
+
+    m_rotation += Units.radiansToDegrees(chassisRotationSpeed * 0.02);
+
+    odometer.update(getRotation2d(), getModulePositions());
+
+    Logger.getInstance().recordOutput("moduleStates", getModuleStates());
+    Logger.getInstance().recordOutput("m_rotation_rad", Units.degreesToRadians(m_rotation));
+    Logger.getInstance().recordOutput("pos2d", odometer.getEstimatedPosition());
+  }
+
+  public void stopModules() {
+    m_frontLeft.stop();
+    m_frontRight.stop();
+    m_backLeft.stop();
+    m_backRight.stop();
+  }
+
+  public void setModuleStates(SwerveModuleState[] desiredStates) {
+    SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, 4.125);
+    m_frontLeft.setDesiredState(desiredStates[0]);
+    m_frontRight.setDesiredState(desiredStates[1]);
+    m_backLeft.setDesiredState(desiredStates[2]);
+    m_backRight.setDesiredState(desiredStates[3]);
   }
 }
