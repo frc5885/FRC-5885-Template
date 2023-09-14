@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -30,7 +31,7 @@ public class SwerveJoystickCmd extends CommandBase {
     turningSpdFunction = turningSpd;
     xLimiter = new SlewRateLimiter(3);
     yLimiter = new SlewRateLimiter(3);
-    turningLimiter = new SlewRateLimiter(3);
+    turningLimiter = new SlewRateLimiter(6);
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(m_swerveSubsystem);
   }
@@ -54,15 +55,25 @@ public class SwerveJoystickCmd extends CommandBase {
     ySpd = yLimiter.calculate(ySpd);
     turnSpd = turningLimiter.calculate(turnSpd);
 
+    Translation2d vel = m_swerveSubsystem.getFieldVelocity().getTranslation();
+    Translation2d heading = new Translation2d(xSpd, ySpd);
+
+    Translation2d err = vel.div(vel.getNorm()).minus(heading.div(heading.getNorm()));
+
+    xSpd += -(!Double.isNaN(err.getX()) ? err.getX() : 0) * 0.95;
+    ySpd += -(!Double.isNaN(err.getY()) ? err.getY() : 0) * 0.95;
+
     ChassisSpeeds chassisSpeeds =
         ChassisSpeeds.fromFieldRelativeSpeeds(
-            xSpd * 4.2 / 2,
-            ySpd * 4.2 / 2,
+            xSpd * 4.2 / 1,
+            ySpd * 4.2 / 1,
             turnSpd * 9.83236752175 / 2,
             m_swerveSubsystem.getRotation2d());
 
     SwerveModuleState[] moduleStates =
         SwerveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
+
+    // ChassisSpeeds updated = new ChassisSpeeds(robot_one_step.getX() );
 
     // Logger.getInstance().recordOutput("chassisSpeeds", chassisSpeeds);
     m_swerveSubsystem.setModuleStates(moduleStates);

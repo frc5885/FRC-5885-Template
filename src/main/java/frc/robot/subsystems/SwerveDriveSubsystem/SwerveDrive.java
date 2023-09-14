@@ -23,6 +23,9 @@ public class SwerveDrive extends SubsystemBase {
   SwerveModuleSim m_backRight = new SwerveModuleSim(false);
 
   private final SwerveDrivePoseEstimator odometer;
+  private Pose2d lastPos = new Pose2d();
+  private double fieldXVel = 0;
+  private double fieldYVel = 0;
 
   private double m_rotation = 0;
 
@@ -34,6 +37,10 @@ public class SwerveDrive extends SubsystemBase {
             new Rotation2d(0),
             getModulePositions(),
             new Pose2d(0, 0, Rotation2d.fromDegrees(0)));
+  }
+
+  public Pose2d getFieldVelocity() {
+    return new Pose2d(fieldXVel, fieldYVel, getRotation2d());
   }
 
   public SwerveModulePosition[] getModulePositions() {
@@ -61,7 +68,6 @@ public class SwerveDrive extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // System.out.println(m_frontLeft.getDriveVelocity());
     m_frontLeft.updateInputs();
     m_frontRight.updateInputs();
     m_backLeft.updateInputs();
@@ -75,8 +81,12 @@ public class SwerveDrive extends SubsystemBase {
     odometer.update(getRotation2d(), getModulePositions());
 
     Logger.getInstance().recordOutput("moduleStates", getModuleStates());
-    Logger.getInstance().recordOutput("m_rotation_rad", Units.degreesToRadians(m_rotation));
     Logger.getInstance().recordOutput("pos2d", odometer.getEstimatedPosition());
+
+    // fieldXVel = (odometer.getEstimatedPosition().getX() - lastPos.getX()) / 0.02;
+    // fieldYVel = (odometer.getEstimatedPosition().getY() - lastPos.getY()) / 0.02;
+
+    lastPos = odometer.getEstimatedPosition();
   }
 
   public void stopModules() {
