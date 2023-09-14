@@ -5,12 +5,10 @@
 package frc.robot.subsystems.SwerveDriveSubsystem;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.SwerveModulePosition;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
+import frc.robot.utils.MathTools;
 
 /** Add your docs here. */
 public class SwerveModuleSim implements SwerveModuleIO {
@@ -21,9 +19,11 @@ public class SwerveModuleSim implements SwerveModuleIO {
 
   private double m_driveVelocity; // m/s
   private double m_driveDistance; // m
+  private double m_driveVoltage;
 
   private double m_turnAngleVelocity; // rad/s
   private double m_turnAngle; // rad
+  private double m_turnVoltage;
 
   private final PIDController m_turningPidController;
 
@@ -39,16 +39,18 @@ public class SwerveModuleSim implements SwerveModuleIO {
     m_turnAngle = 0.0;
     m_turnAngleVelocity = 0.0;
 
+    m_driveVoltage = 0.0;
+    m_turnVoltage = 0.0;
+
     m_turningPidController = new PIDController(0.5 * 12, 0, 0);
     m_turningPidController.enableContinuousInput(-Math.PI, Math.PI);
 
     m_turnAbsoluteOffset = Math.PI * 2 * Math.random();
 
     m_absoluteEncoderReversed = isReversed;
-    resetEncoders();
   }
 
-  public void updateInputs() {
+  public void updateInputs(SwerveModuleIOInputs inputs) {
     m_driveMotor.update(0.02);
     m_turnMotor.update(0.02);
 
@@ -57,64 +59,33 @@ public class SwerveModuleSim implements SwerveModuleIO {
 
     m_turnAngleVelocity = m_turnMotor.getAngularVelocityRadPerSec();
     m_turnAngle += m_turnAngleVelocity * 0.02;
-  }
 
-  public double getDrivePosition() {
-    return m_driveDistance;
-  }
+    inputs.drivePositionMeters = m_driveDistance;
+    inputs.driveVelocityMetersPerSec = m_driveVelocity;
+    inputs.driveTemperature = 0.0;
+    inputs.driveCurrent = m_driveMotor.getCurrentDrawAmps();
+    inputs.driveVoltage = m_driveVoltage;
 
-  public double getTurnAngle() {
-    return m_turnAngle;
-  }
-
-  public double getDriveVelocity() {
-    return m_driveVelocity;
-  }
-
-  public double getTurnVelcoity() {
-    return m_turnAngleVelocity;
-  }
-
-  public double getAbsoluteEncoderRad() {
-    double ang = ((getTurnAngle() % Math.PI) + Math.PI - m_turnAbsoluteOffset);
-    return ang * (m_absoluteEncoderReversed ? -1.0 : 1.0);
+    inputs.turnPositionRad = m_turnAngle;
+    inputs.turnVelocityRadPerSec = m_turnAngleVelocity;
+    inputs.turnTemperature = 0.0;
+    inputs.turnCurrent = m_turnMotor.getCurrentDrawAmps();
+    inputs.turnVoltage = m_turnVoltage;
   }
 
   public void setDriveVoltage(double voltage) {
-    m_driveMotor.setInputVoltage(voltage);
+    m_driveVoltage = MathTools.clamp(voltage, -12, 12);
+    m_driveMotor.setInputVoltage(m_driveVoltage);
   }
 
   public void setTurnVoltage(double voltage) {
-    m_turnMotor.setInputVoltage(voltage);
+    m_turnVoltage = MathTools.clamp(voltage, -12, 12);
+    m_turnMotor.setInputVoltage(m_turnVoltage);
   }
 
-  public void resetEncoders() {
-    m_driveDistance = 0;
-    m_turnAngle = getAbsoluteEncoderRad();
-  }
+  // Breakmode on simulator is always set to break by by default
 
-  public SwerveModuleState getState() {
-    return new SwerveModuleState(getDriveVelocity(), new Rotation2d(getTurnAngle()));
-  }
+  public void setDriveBrakeMode(boolean enabled) {}
 
-  public SwerveModulePosition getPosition() {
-    return new SwerveModulePosition(getDrivePosition(), new Rotation2d(getTurnAngle()));
-  }
-
-  public void setDesiredState(SwerveModuleState state) {
-    if (Math.abs(state.speedMetersPerSecond) < 0.001) {
-      stop();
-      return;
-    }
-
-    state = SwerveModuleState.optimize(state, getState().angle);
-
-    setDriveVoltage((state.speedMetersPerSecond / 4.125) * 12);
-    setTurnVoltage(m_turningPidController.calculate(getTurnAngle(), state.angle.getRadians()));
-  }
-
-  public void stop() {
-    m_driveMotor.setInputVoltage(0);
-    m_turnMotor.setInputVoltage(0);
-  }
+  public void setTurnBrakeMode(boolean enabled) {}
 }

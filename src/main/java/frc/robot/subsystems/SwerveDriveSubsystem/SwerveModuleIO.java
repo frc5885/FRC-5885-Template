@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems.SwerveDriveSubsystem;
 
-import edu.wpi.first.math.kinematics.SwerveModuleState;
 import org.littletonrobotics.junction.AutoLog;
 
 public interface SwerveModuleIO {
@@ -15,13 +14,13 @@ public interface SwerveModuleIO {
     public double driveVelocityMetersPerSec = 0.0;
     public double driveTemperature = 0.0;
     public double driveCurrent = 0.0;
-    public double driveBusVoltage = 0.0;
+    public double driveVoltage = 0.0;
 
     public double turnPositionRad = 0.0;
     public double turnVelocityRadPerSec = 0.0;
     public double turnTemperature = 0.0;
     public double turnCurrent = 0.0;
-    public double turnBusVoltage = 0.0;
+    public double turnVoltage = 0.0;
   }
 
   public default void updateInputs(SwerveModuleIOInputs inputs) {}
@@ -30,9 +29,7 @@ public interface SwerveModuleIO {
 
   public default void setTurnVoltage(double volts) {}
 
-  public default void stop() {}
+  public default void setDriveBrakeMode(boolean state) {}
 
-  public default void setState(SwerveModuleState state) {}
-
-  public default void setDesiredState(SwerveModuleState state) {}
+  public default void setTurnBrakeMode(boolean enabled) {}
 }

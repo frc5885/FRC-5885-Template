@@ -31,7 +31,7 @@ public final class Constants {
     public static final Boolean kRightMotorsInverted = false;
 
     // Wheel & frame
-    public static final double kWheelDiameterMeters = Units.inchesToMeters(6.0);
+    public static final double kWheelDiameterMeters = Units.inchesToMeters(3.626);
     public static final double kWheelCircumferenceMeters = kWheelDiameterMeters * Math.PI;
     public static final double kTrackWidthMeters = Units.inchesToMeters(31.0);
 

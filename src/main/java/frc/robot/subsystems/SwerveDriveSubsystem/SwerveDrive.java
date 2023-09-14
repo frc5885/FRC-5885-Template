@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems.SwerveDriveSubsystem;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -17,10 +18,17 @@ import org.littletonrobotics.junction.Logger;
 
 public class SwerveDrive extends SubsystemBase {
 
-  SwerveModuleSim m_frontLeft = new SwerveModuleSim(false);
-  SwerveModuleSim m_frontRight = new SwerveModuleSim(false);
-  SwerveModuleSim m_backLeft = new SwerveModuleSim(false);
-  SwerveModuleSim m_backRight = new SwerveModuleSim(false);
+  SwerveModuleIO m_frontLeft = new SwerveModuleSim(false);
+  SwerveModuleIO m_frontRight = new SwerveModuleSim(false);
+  SwerveModuleIO m_backLeft = new SwerveModuleSim(false);
+  SwerveModuleIO m_backRight = new SwerveModuleSim(false);
+
+  SwerveModuleIOInputsAutoLogged m_frontLeftInputs = new SwerveModuleIOInputsAutoLogged();
+  SwerveModuleIOInputsAutoLogged m_frontRightInputs = new SwerveModuleIOInputsAutoLogged();
+  SwerveModuleIOInputsAutoLogged m_backLeftInputs = new SwerveModuleIOInputsAutoLogged();
+  SwerveModuleIOInputsAutoLogged m_backRightInputs = new SwerveModuleIOInputsAutoLogged();
+
+  private final PIDController[] m_turnController = new PIDController[4];
 
   private final SwerveDrivePoseEstimator odometer;
   private Pose2d lastPos = new Pose2d();
@@ -37,41 +45,19 @@ public class SwerveDrive extends SubsystemBase {
             new Rotation2d(0),
             getModulePositions(),
             new Pose2d(0, 0, Rotation2d.fromDegrees(0)));
-  }
 
-  public Pose2d getFieldVelocity() {
-    return new Pose2d(fieldXVel, fieldYVel, getRotation2d());
-  }
-
-  public SwerveModulePosition[] getModulePositions() {
-    return new SwerveModulePosition[] {
-      m_frontLeft.getPosition(),
-      m_frontRight.getPosition(),
-      m_backLeft.getPosition(),
-      m_backRight.getPosition()
-    };
-  }
-
-  public double getHeading() {
-    return Math.IEEEremainder(m_rotation, 360);
-  }
-
-  public Rotation2d getRotation2d() {
-    return Rotation2d.fromDegrees(getHeading());
-  }
-
-  public SwerveModuleState[] getModuleStates() {
-    return new SwerveModuleState[] {
-      m_frontLeft.getState(), m_frontRight.getState(), m_backLeft.getState(), m_backRight.getState()
-    };
+    for (int i = 0; i != 4; i++) {
+      m_turnController[i] = new PIDController(0.5 * 12, 0, 0);
+      m_turnController[i].enableContinuousInput(-Math.PI, Math.PI);
+    }
   }
 
   @Override
   public void periodic() {
-    m_frontLeft.updateInputs();
-    m_frontRight.updateInputs();
-    m_backLeft.updateInputs();
-    m_backRight.updateInputs();
+    m_frontLeft.updateInputs(m_frontLeftInputs);
+    m_frontRight.updateInputs(m_frontRightInputs);
+    m_backLeft.updateInputs(m_backLeftInputs);
+    m_backRight.updateInputs(m_backRightInputs);
 
     var chassisSpeeds = SwerveConstants.kDriveKinematics.toChassisSpeeds(getModuleStates());
     double chassisRotationSpeed = chassisSpeeds.omegaRadiansPerSecond;
@@ -89,18 +75,82 @@ public class SwerveDrive extends SubsystemBase {
     lastPos = odometer.getEstimatedPosition();
   }
 
-  public void stopModules() {
-    m_frontLeft.stop();
-    m_frontRight.stop();
-    m_backLeft.stop();
-    m_backRight.stop();
+  public Pose2d getFieldVelocity() {
+    return new Pose2d(fieldXVel, fieldYVel, getRotation2d());
+  }
+
+  public SwerveModulePosition[] getModulePositions() {
+    return new SwerveModulePosition[] {
+      new SwerveModulePosition(
+          m_frontLeftInputs.drivePositionMeters, new Rotation2d(m_frontLeftInputs.turnPositionRad)),
+      new SwerveModulePosition(
+          m_frontRightInputs.drivePositionMeters,
+          new Rotation2d(m_frontRightInputs.turnPositionRad)),
+      new SwerveModulePosition(
+          m_backLeftInputs.drivePositionMeters, new Rotation2d(m_backLeftInputs.turnPositionRad)),
+      new SwerveModulePosition(
+          m_backRightInputs.drivePositionMeters, new Rotation2d(m_backRightInputs.turnPositionRad)),
+    };
+  }
+
+  public double getHeading() {
+    return Math.IEEEremainder(m_rotation, 360);
+  }
+
+  public Rotation2d getRotation2d() {
+    return Rotation2d.fromDegrees(getHeading());
+  }
+
+  public SwerveModuleState[] getModuleStates() {
+    return new SwerveModuleState[] {
+      new SwerveModuleState(
+          m_frontLeftInputs.driveVelocityMetersPerSec,
+          new Rotation2d(m_frontLeftInputs.turnPositionRad)),
+      new SwerveModuleState(
+          m_frontRightInputs.driveVelocityMetersPerSec,
+          new Rotation2d(m_frontRightInputs.turnPositionRad)),
+      new SwerveModuleState(
+          m_backLeftInputs.driveVelocityMetersPerSec,
+          new Rotation2d(m_backLeftInputs.turnPositionRad)),
+      new SwerveModuleState(
+          m_backRightInputs.driveVelocityMetersPerSec,
+          new Rotation2d(m_backRightInputs.turnPositionRad)),
+    };
   }
 
   public void setModuleStates(SwerveModuleState[] desiredStates) {
     SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, 4.125);
-    m_frontLeft.setDesiredState(desiredStates[0]);
-    m_frontRight.setDesiredState(desiredStates[1]);
-    m_backLeft.setDesiredState(desiredStates[2]);
-    m_backRight.setDesiredState(desiredStates[3]);
+
+    desiredStates[0] =
+        SwerveModuleState.optimize(
+            desiredStates[0], new Rotation2d(m_frontLeftInputs.turnPositionRad));
+    m_frontLeft.setDriveVoltage((desiredStates[0].speedMetersPerSecond / 4.125) * 12);
+    m_frontLeft.setTurnVoltage(
+        m_turnController[0].calculate(
+            m_frontLeftInputs.turnPositionRad, desiredStates[0].angle.getRadians()));
+
+    desiredStates[1] =
+        SwerveModuleState.optimize(
+            desiredStates[1], new Rotation2d(m_frontRightInputs.turnPositionRad));
+    m_frontRight.setDriveVoltage((desiredStates[1].speedMetersPerSecond / 4.125) * 12);
+    m_frontRight.setTurnVoltage(
+        m_turnController[1].calculate(
+            m_frontRightInputs.turnPositionRad, desiredStates[1].angle.getRadians()));
+
+    desiredStates[2] =
+        SwerveModuleState.optimize(
+            desiredStates[2], new Rotation2d(m_backLeftInputs.turnPositionRad));
+    m_backLeft.setDriveVoltage((desiredStates[2].speedMetersPerSecond / 4.125) * 12);
+    m_backLeft.setTurnVoltage(
+        m_turnController[2].calculate(
+            m_backLeftInputs.turnPositionRad, desiredStates[2].angle.getRadians()));
+
+    desiredStates[3] =
+        SwerveModuleState.optimize(
+            desiredStates[3], new Rotation2d(m_backRightInputs.turnPositionRad));
+    m_backRight.setDriveVoltage((desiredStates[3].speedMetersPerSecond / 4.125) * 12);
+    m_backRight.setTurnVoltage(
+        m_turnController[3].calculate(
+            m_backRightInputs.turnPositionRad, desiredStates[3].angle.getRadians()));
   }
 }
