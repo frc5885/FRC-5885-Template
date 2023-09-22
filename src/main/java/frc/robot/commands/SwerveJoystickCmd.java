@@ -63,12 +63,10 @@ public class SwerveJoystickCmd extends CommandBase {
     xSpd += -(!Double.isNaN(err.getX()) ? err.getX() : 0) * 0.95;
     ySpd += -(!Double.isNaN(err.getY()) ? err.getY() : 0) * 0.95;
 
+    // ChassisSpeeds chassisSpeeds = new ChassisSpeeds(xSpd, ySpd, turnSpd * 3);
+
     ChassisSpeeds chassisSpeeds =
-        ChassisSpeeds.fromFieldRelativeSpeeds(
-            xSpd * 4.2 / 1,
-            ySpd * 4.2 / 1,
-            turnSpd * 9.83236752175 / 2,
-            m_swerveSubsystem.getRotation2d());
+        new ChassisSpeeds(xSpd * 4.2 / 1, ySpd * 4.2 / 1, turnSpd * 9.83236752175 / 2);
 
     SwerveModuleState[] moduleStates =
         SwerveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);

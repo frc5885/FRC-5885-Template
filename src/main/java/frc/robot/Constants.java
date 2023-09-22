@@ -10,7 +10,7 @@ import edu.wpi.first.math.util.Units;
 
 public final class Constants {
 
-  public static final Mode currentMode = Mode.SIMULATOR;
+  public static final Mode currentMode = Mode.REAL;
 
   public static enum Mode {
     REAL,

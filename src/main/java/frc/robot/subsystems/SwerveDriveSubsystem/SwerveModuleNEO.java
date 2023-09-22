@@ -25,12 +25,16 @@ public class SwerveModuleNEO implements SwerveModuleIO {
   private final RelativeEncoder driveDefaultEncoder;
   private final RelativeEncoder turnRelativeEncoder;
 
+  private final boolean rotateReversed;
+  private final boolean driveReversed;
+
   public SwerveModuleNEO(
       int driveMotorId,
       int turnMotorId,
       int turnAbsoluteEncoderId,
       Rotation2d turnAbsoluteEncoderOffset,
-      boolean isReversed) {
+      boolean rotateR,
+      boolean driveR) {
     m_driveMotor = new CANSparkMax(driveMotorId, MotorType.kBrushless);
     m_turnMotor = new CANSparkMax(turnMotorId, MotorType.kBrushless);
     m_turnAbsoluteEncoder = new AnalogInput(turnAbsoluteEncoderId);
@@ -38,6 +42,12 @@ public class SwerveModuleNEO implements SwerveModuleIO {
 
     driveDefaultEncoder = m_driveMotor.getEncoder();
     turnRelativeEncoder = m_turnMotor.getEncoder();
+
+    m_driveMotor.setInverted(driveR);
+    m_turnMotor.setInverted(rotateR);
+
+    rotateReversed = rotateR;
+    driveReversed = driveR;
   }
 
   public void updateInputs(SwerveModuleIOInputs inputs) {

@@ -54,9 +54,9 @@ public class RobotContainer {
     swDrive.setDefaultCommand(
         new SwerveJoystickCmd(
             swDrive,
-            () -> (-controller.getLeftY()*0.5),
-            () -> (-controller.getLeftX()*0.5),
-            () -> (-controller.getRightX())*0.75));
+            () -> (-controller.getLeftY() * 0.5),
+            () -> (-controller.getLeftX() * 0.5),
+            () -> (-controller.getRightX()) * 0.75));
   }
 
   public Command getAutonomousCommand() {
