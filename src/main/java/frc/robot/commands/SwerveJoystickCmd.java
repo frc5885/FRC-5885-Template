@@ -5,13 +5,13 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.subsystems.SwerveDriveSubsystem.SwerveDrive;
 import java.util.function.Supplier;
+import org.littletonrobotics.junction.Logger;
 
 public class SwerveJoystickCmd extends CommandBase {
 
@@ -31,7 +31,7 @@ public class SwerveJoystickCmd extends CommandBase {
     turningSpdFunction = turningSpd;
     xLimiter = new SlewRateLimiter(3);
     yLimiter = new SlewRateLimiter(3);
-    turningLimiter = new SlewRateLimiter(6);
+    turningLimiter = new SlewRateLimiter(3);
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(m_swerveSubsystem);
   }
@@ -47,33 +47,37 @@ public class SwerveJoystickCmd extends CommandBase {
     double ySpd = ySpdFunction.get();
     double turnSpd = turningSpdFunction.get();
 
-    xSpd = Math.abs(xSpd) > 0.05 ? xSpd : 0;
-    ySpd = Math.abs(ySpd) > 0.05 ? ySpd : 0;
-    turnSpd = Math.abs(turnSpd) > 0.05 ? turnSpd : 0;
+    xSpd = Math.abs(xSpd) > 0.05 ? xSpd : 0.0;
+    ySpd = Math.abs(ySpd) > 0.05 ? ySpd : 0.0;
+    turnSpd = Math.abs(turnSpd) > 0.05 ? turnSpd : 0.0;
 
-    xSpd = xLimiter.calculate(xSpd);
-    ySpd = yLimiter.calculate(ySpd);
-    turnSpd = turningLimiter.calculate(turnSpd);
+    // x * y --> y === speed constant, m/s
+    xSpd = xLimiter.calculate(xSpd) * 1.25;
+    ySpd = yLimiter.calculate(ySpd) * 1.25;
+    turnSpd = turningLimiter.calculate(turnSpd) * 3.14159;
 
-    Translation2d vel = m_swerveSubsystem.getFieldVelocity().getTranslation();
-    Translation2d heading = new Translation2d(xSpd, ySpd);
+    // TODO: Check 3rd order problem solution involving the tracking of the twist over time
 
-    Translation2d err = vel.div(vel.getNorm()).minus(heading.div(heading.getNorm()));
+    // xSpd = 0;
+    // ySpd = 0;
+    // turnSpd = 0;
 
-    xSpd += -(!Double.isNaN(err.getX()) ? err.getX() : 0) * 0.95;
-    ySpd += -(!Double.isNaN(err.getY()) ? err.getY() : 0) * 0.95;
-
-    // ChassisSpeeds chassisSpeeds = new ChassisSpeeds(xSpd, ySpd, turnSpd * 3);
-
-    ChassisSpeeds chassisSpeeds =
-        new ChassisSpeeds(xSpd * 4.2 / 1, ySpd * 4.2 / 1, turnSpd * 9.83236752175 / 2);
+    ChassisSpeeds chassisSpeeds;
+    // Use field oriented drive
+    if (false) {
+      chassisSpeeds =
+          ChassisSpeeds.fromFieldRelativeSpeeds(
+              xSpd, ySpd, turnSpd, m_swerveSubsystem.getRotation2d());
+    } else {
+      chassisSpeeds = new ChassisSpeeds(xSpd, ySpd, turnSpd);
+    }
 
     SwerveModuleState[] moduleStates =
         SwerveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
 
     // ChassisSpeeds updated = new ChassisSpeeds(robot_one_step.getX() );
 
-    // Logger.getInstance().recordOutput("chassisSpeeds", chassisSpeeds);
+    Logger.getInstance().recordOutput("chassisSpeedsvy", moduleStates);
     m_swerveSubsystem.setModuleStates(moduleStates);
   }
 

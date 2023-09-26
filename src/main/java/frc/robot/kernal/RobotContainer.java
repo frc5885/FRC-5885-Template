@@ -44,7 +44,12 @@ public class RobotContainer {
         break;
     }
 
-    swDrive = new SwerveDrive();
+    swDrive =
+        new SwerveDrive(
+            new SwerveModuleSim(false),
+            new SwerveModuleSim(false),
+            new SwerveModuleSim(false),
+            new SwerveModuleSim(false));
 
     configureBindings();
   }

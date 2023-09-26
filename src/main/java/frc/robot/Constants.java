@@ -10,7 +10,7 @@ import edu.wpi.first.math.util.Units;
 
 public final class Constants {
 
-  public static final Mode currentMode = Mode.REAL;
+  public static final Mode currentMode = Mode.SIMULATOR;
 
   public static enum Mode {
     REAL,
@@ -96,15 +96,15 @@ public final class Constants {
 
     public static final double kDeadband = 0.075;
 
-    public static final double kTrackWidth = Units.inchesToMeters(21);
+    public static final double kTrackWidth = Units.inchesToMeters(25.5);
     public static final double kWheelBase = Units.inchesToMeters(25.5);
 
     public static final SwerveDriveKinematics kDriveKinematics =
         new SwerveDriveKinematics(
-            new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
             new Translation2d(kWheelBase / 2, kTrackWidth / 2),
-            new Translation2d(-kWheelBase / 2, -kTrackWidth / 2),
-            new Translation2d(-kWheelBase / 2, kTrackWidth / 2));
+            new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
+            new Translation2d(-kWheelBase / 2, kTrackWidth / 2),
+            new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
 
     public static final class Module {
       public static final double kWheelDiameterMeters = Units.inchesToMeters(4);
