@@ -99,6 +99,8 @@ public final class Constants {
     public static final double kTrackWidth = Units.inchesToMeters(25.5);
     public static final double kWheelBase = Units.inchesToMeters(25.5);
 
+    public static final double kAttainableMaxSpeedMetersPerSecond = Units.feetToMeters(14.5);
+
     public static final SwerveDriveKinematics kDriveKinematics =
         new SwerveDriveKinematics(
             new Translation2d(kWheelBase / 2, kTrackWidth / 2),
@@ -107,6 +109,10 @@ public final class Constants {
             new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
 
     public static final class Module {
+      public static final double kDriveEncoderCPR = 42.0;
+      public static final double kTurningEncoderCPR = 42.0;
+      public static final double kRelativeEncoderCPR = 4096.0;
+
       public static final double kWheelDiameterMeters = Units.inchesToMeters(4);
       public static final double kDriveMotorGearRatio = 1 / 6.75;
       public static final double kTurningMotorGearRatio = 1 / (150.0 / 7.0);
@@ -114,6 +120,7 @@ public final class Constants {
       public static final double kDriveEncoderRot2Meter =
           kDriveMotorGearRatio * Math.PI * kWheelDiameterMeters;
       public static final double kTurningEncoderRot2Rad = kTurningMotorGearRatio * 2 * Math.PI;
+
       public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter / 60;
       public static final double kTurningEncoderRPM2RadPerSec = kTurningEncoderRot2Rad / 60;
 

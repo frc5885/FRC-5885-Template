@@ -12,6 +12,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.RobotController;
+import frc.robot.Constants.SwerveConstants;
 
 /** Add your docs here. */
 public class SwerveModuleNEO implements SwerveModuleIO {
@@ -25,16 +26,13 @@ public class SwerveModuleNEO implements SwerveModuleIO {
   private final RelativeEncoder driveDefaultEncoder;
   private final RelativeEncoder turnRelativeEncoder;
 
-  private final boolean rotateReversed;
-  private final boolean driveReversed;
-
   public SwerveModuleNEO(
       int driveMotorId,
       int turnMotorId,
       int turnAbsoluteEncoderId,
       Rotation2d turnAbsoluteEncoderOffset,
-      boolean rotateR,
-      boolean driveR) {
+      boolean turnMotorReversed,
+      boolean driveMotorReversed) {
     m_driveMotor = new CANSparkMax(driveMotorId, MotorType.kBrushless);
     m_turnMotor = new CANSparkMax(turnMotorId, MotorType.kBrushless);
     m_turnAbsoluteEncoder = new AnalogInput(turnAbsoluteEncoderId);
@@ -43,19 +41,28 @@ public class SwerveModuleNEO implements SwerveModuleIO {
     driveDefaultEncoder = m_driveMotor.getEncoder();
     turnRelativeEncoder = m_turnMotor.getEncoder();
 
-    m_driveMotor.setInverted(driveR);
-    m_turnMotor.setInverted(rotateR);
+    m_driveMotor.setInverted(driveMotorReversed);
+    m_turnMotor.setInverted(turnMotorReversed);
 
-    rotateReversed = rotateR;
-    driveReversed = driveR;
+    // This sets the conversion factor in the spark max, apparently
+    // this can cause some issues. Needs investigating.
+    driveDefaultEncoder.setPositionConversionFactor(
+        SwerveConstants.Module.kDriveEncoderRot2Meter / SwerveConstants.Module.kDriveEncoderCPR);
+    driveDefaultEncoder.setVelocityConversionFactor(
+        SwerveConstants.Module.kDriveEncoderRPM2MeterPerSec
+            / SwerveConstants.Module.kDriveEncoderCPR);
+
+    turnRelativeEncoder.setPositionConversionFactor(
+        SwerveConstants.Module.kTurningEncoderRot2Rad / SwerveConstants.Module.kTurningEncoderCPR);
+    turnRelativeEncoder.setVelocityConversionFactor(
+        SwerveConstants.Module.kTurningEncoderRPM2RadPerSec
+            / SwerveConstants.Module.kTurningEncoderCPR);
   }
 
   public void updateInputs(SwerveModuleIOInputs inputs) {
 
     inputs.drivePositionMeters = driveDefaultEncoder.getPosition();
-    inputs.driveVelocityMetersPerSec =
-        Units.rotationsPerMinuteToRadiansPerSecond(driveDefaultEncoder.getVelocity())
-            / ((50.0 / 14.0) * (17.0 / 27.0) * (45.0 / 15.0));
+    inputs.driveVelocityMetersPerSec = driveDefaultEncoder.getVelocity();
     ;
     inputs.driveTemperature = m_driveMotor.getMotorTemperature();
     inputs.driveCurrent = m_driveMotor.getOutputCurrent();
