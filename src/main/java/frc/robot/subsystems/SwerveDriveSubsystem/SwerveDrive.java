@@ -12,6 +12,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.SwerveConstants;
@@ -89,18 +90,18 @@ public class SwerveDrive extends SubsystemBase {
       m_modules[i].updateInputs(m_modulesInput[i]);
     }
 
-    // var chassisSpeeds =
-    // SwerveConstants.kDriveKinematics.toChassisSpeeds(getModuleStates());
-    // double chassisRotationSpeed = chassisSpeeds.omegaRadiansPerSecond;
+    var chassisSpeeds = SwerveConstants.kDriveKinematics.toChassisSpeeds(getModuleStates());
+    double chassisRotationSpeed = chassisSpeeds.omegaRadiansPerSecond;
 
-    m_rotation = m_gyro.getAngle();
-    // m_rotation += chassisRotationSpeed * 0.02;
+    // m_rotation = m_gyro.getAngle();
+    m_rotation += Units.radiansToDegrees(chassisRotationSpeed * 0.02);
 
     odometer.update(getRotation2d(), getModulePositions());
 
     Logger.getInstance().recordOutput("moduleStates", getModuleStates());
     Logger.getInstance().recordOutput("pos2d", odometer.getEstimatedPosition());
-    Logger.getInstance().recordOutput("m_rotation", m_rotation);
+    Logger.getInstance().recordOutput("m_rotation", Units.degreesToRadians(m_rotation));
+    Logger.getInstance().recordOutput("m_rotation_deg", m_rotation);
   }
 
   public Pose2d getFieldVelocity() {
