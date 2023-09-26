@@ -5,6 +5,8 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -72,6 +74,14 @@ public class SwerveJoystickCmd extends CommandBase {
       chassisSpeeds = new ChassisSpeeds(xSpd, ySpd, turnSpd);
     }
 
+    // Comment below out if problem occures
+    chassisSpeeds =
+        discretize(
+            chassisSpeeds.vxMetersPerSecond,
+            chassisSpeeds.vyMetersPerSecond,
+            chassisSpeeds.omegaRadiansPerSecond,
+            0.02);
+
     SwerveModuleState[] moduleStates =
         SwerveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
 
@@ -79,6 +89,24 @@ public class SwerveJoystickCmd extends CommandBase {
 
     Logger.getInstance().recordOutput("chassisSpeedsvy", moduleStates);
     m_swerveSubsystem.setModuleStates(moduleStates);
+  }
+
+  // 2024
+  // https://github.wpilib.org/allwpilib/docs/development/java/edu/wpi/first/math/kinematics/ChassisSpeeds.html#discretize(edu.wpi.first.math.kinematics.ChassisSpeeds,double)
+  // Right now
+  // https://github.com/cachemoney8096/2023-charged-up/blob/main/src/main/java/frc/robot/subsystems/drive/DriveSubsystem.java#L174
+  public static ChassisSpeeds discretize(
+      double vxMetersPerSecond,
+      double vyMetersPerSecond,
+      double omegaRadiansPerSecond,
+      double dtSeconds) {
+    var desiredDeltaPose =
+        new Pose2d(
+            vxMetersPerSecond * dtSeconds,
+            vyMetersPerSecond * dtSeconds,
+            new Rotation2d(omegaRadiansPerSecond * dtSeconds));
+    var twist = new Pose2d().log(desiredDeltaPose);
+    return new ChassisSpeeds(twist.dx / dtSeconds, twist.dy / dtSeconds, twist.dtheta / dtSeconds);
   }
 
   // Called once the command ends or is interrupted.

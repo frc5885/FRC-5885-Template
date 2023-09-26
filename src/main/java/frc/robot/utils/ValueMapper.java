@@ -3,6 +3,17 @@ package frc.robot.utils;
 import java.util.Map;
 import java.util.TreeMap;
 
+/**
+ * A utility class for mapping values using various smoothing methods. The class uses a TreeMap to
+ * store the mapped values and provides methods to add new values to the map and retrieve the mapped
+ * value for a given input using the set smoothing method. The smoothing method can be set using the
+ * SMOOTHING_METHOD enum, which includes various easing functions. The class also includes methods
+ * to set the smoothing method and construct a new ValueMapper object with a specified smoothing
+ * method.
+ *
+ * @see <a href="https://easings.net/">Easing Functions</a>
+ * @see <a href="https://www.desmos.com/calculator/retkcgaqas">Easing Functions Graph</a>
+ */
 public class ValueMapper {
 
   // Sets the easing function to be used when mapping the values. Higher the power the "stepper" the
@@ -27,38 +38,55 @@ public class ValueMapper {
   private SMOOTHING_METHOD m_smoothing_method = SMOOTHING_METHOD.LINEAR;
 
   /**
-   * Define a new ValueMapper, typically used for mapping system estimates to physical values (eg.
-   * distance -> motor power).
+   * This class provides methods for mapping input values to output values using different smoothing
+   * methods. The default smoothing method is linear.
+   *
+   * @constructor Initializes the smoothing method to linear.
    */
   public ValueMapper() {
     m_smoothing_method = SMOOTHING_METHOD.LINEAR;
   }
 
   /**
-   * Define a new ValueMapper, typically used for mapping system estimates to physical values (eg.
-   * distance -> motor power).
+   * Constructs a ValueMapper object with the specified smoothing method.
    *
-   * @param smoothing_method Smoothing method to be used.
+   * @param smoothing_method the smoothing method to be used by the ValueMapper object
    */
   public ValueMapper(SMOOTHING_METHOD smoothing_method) {
     m_smoothing_method = smoothing_method;
   }
 
   /**
-   * Add new value to the map
+   * Inserts a key-value pair into the ValueMapper.
    *
-   * @param x X value to map to Y
-   * @param y Y value to map
+   * @param x the key to be inserted
+   * @param y the value to be inserted
    */
   public void put(double x, double y) {
     m_map.put(x, y);
   }
 
   /**
-   * Get the mapped value from a given input
+   * Maps the given x and y arrays to a HashMap.
    *
-   * @param x Input value
-   * @return Mapped value with set smoothing method
+   * @param x the array of x values
+   * @param y the array of y values
+   * @throws IllegalArgumentException if the length of x and y arrays are not equal
+   */
+  public void put(double[] x, double[] y) {
+    if (x.length != y.length) throw new IllegalArgumentException("Arrays must be the same length");
+
+    for (int i = 0; i < x.length; i++) {
+      m_map.put(x[i], y[i]);
+    }
+  }
+
+  /**
+   * Maps a value to a corresponding output value using a set of input-output pairs and a smoothing
+   * function.
+   *
+   * @param x the input value to be mapped
+   * @return the output value corresponding to the input value
    */
   public double get(double x) {
     Map.Entry<Double, Double> lower_entry = m_map.floorEntry(x);
@@ -113,6 +141,11 @@ public class ValueMapper {
     return 0;
   }
 
+  /**
+   * Sets the smoothing method to be used by the ValueMapper.
+   *
+   * @param smoothing_method the smoothing method to be used
+   */
   public void setSmoothingMethod(SMOOTHING_METHOD smoothing_method) {
     m_smoothing_method = smoothing_method;
   }
