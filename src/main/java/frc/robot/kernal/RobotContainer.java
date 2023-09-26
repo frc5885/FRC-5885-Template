@@ -4,7 +4,6 @@
 
 package frc.robot.kernal;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -13,7 +12,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 import frc.robot.commands.SwerveJoystickCmd;
 import frc.robot.subsystems.SwerveDriveSubsystem.SwerveDrive;
-import frc.robot.subsystems.SwerveDriveSubsystem.SwerveModuleNEO;
 import frc.robot.subsystems.SwerveDriveSubsystem.SwerveModuleSim;
 
 public class RobotContainer {
@@ -46,11 +44,12 @@ public class RobotContainer {
         break;
     }
 
-    swDrive = new SwerveDrive(
-    new SwerveModuleSim(false),
-    new SwerveModuleSim(false),
-    new SwerveModuleSim(false),
-    new SwerveModuleSim(false));
+    swDrive =
+        new SwerveDrive(
+            new SwerveModuleSim(false),
+            new SwerveModuleSim(false),
+            new SwerveModuleSim(false),
+            new SwerveModuleSim(false));
 
     // swDrive =
     //     new SwerveDrive(

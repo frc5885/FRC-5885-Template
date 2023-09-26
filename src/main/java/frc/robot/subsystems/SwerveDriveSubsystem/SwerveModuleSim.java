@@ -6,7 +6,6 @@ package frc.robot.subsystems.SwerveDriveSubsystem;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.utils.MathTools;
@@ -55,7 +54,8 @@ public class SwerveModuleSim implements SwerveModuleIO {
     m_driveMotor.update(0.02);
     m_turnMotor.update(0.02);
 
-    m_driveVelocity = m_driveMotor.getAngularVelocityRadPerSec() * SwerveConstants.Module.kWheelDiameterMeters;
+    m_driveVelocity =
+        m_driveMotor.getAngularVelocityRadPerSec() * SwerveConstants.Module.kWheelDiameterMeters;
     m_driveDistance += m_driveVelocity * 0.02;
 
     m_turnAngleVelocity = m_turnMotor.getAngularVelocityRadPerSec();

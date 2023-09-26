@@ -1,11 +1,7 @@
 package frc.robot;
 
-import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.numbers.*;
 import edu.wpi.first.math.util.Units;
 
 public final class Constants {
@@ -17,7 +13,7 @@ public final class Constants {
     SIMULATOR,
     REPLAY
   }
-  
+
   // Swerve drive constants
   // Tank drive constants
   public static final class SwerveConstants {
