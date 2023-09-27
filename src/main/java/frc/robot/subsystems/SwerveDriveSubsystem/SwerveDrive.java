@@ -79,7 +79,7 @@ public class SwerveDrive extends SubsystemBase {
     m_modules[3] = backRight;
 
     for (int i = 0; i != 4; i++) {
-      m_turnController[i] = new PIDController(0.5, 0, 0);
+      m_turnController[i] = new PIDController(-0.5, 0, 0);
       m_turnController[i].enableContinuousInput(-Math.PI, Math.PI);
     }
   }
@@ -93,8 +93,8 @@ public class SwerveDrive extends SubsystemBase {
     var chassisSpeeds = SwerveConstants.kDriveKinematics.toChassisSpeeds(getModuleStates());
     double chassisRotationSpeed = chassisSpeeds.omegaRadiansPerSecond;
 
-    // m_rotation = m_gyro.getAngle();
-    m_rotation += Units.radiansToDegrees(chassisRotationSpeed * 0.02);
+    m_rotation = -m_gyro.getAngle();
+    // m_rotation += Units.radiansToDegrees(chassisRotationSpeed * 0.02);
 
     odometer.update(getRotation2d(), getModulePositions());
 
@@ -153,6 +153,8 @@ public class SwerveDrive extends SubsystemBase {
 
     for (int i = 0; i != 4; i++) {
       if (Math.abs(desiredStates[i].speedMetersPerSecond) < 0.001) {
+        m_modules[i].setDriveVoltage(0);
+        m_modules[i].setTurnVoltage(0);
         continue;
       }
 
@@ -164,10 +166,13 @@ public class SwerveDrive extends SubsystemBase {
           (desiredStates[i].speedMetersPerSecond
                   / SwerveConstants.kAttainableMaxSpeedMetersPerSecond)
               * 12);
-      m_modules[i].setTurnVoltage(
+
+      double d_vol =
           (m_turnController[i].calculate(
                   m_modulesInput[i].turnPositionRad, desiredStates[i].angle.getRadians()))
-              * 12);
+              * 12;
+      m_modules[i].setTurnVoltage(d_vol);
+      Logger.getInstance().recordOutput("DRIVE_VOLTAGE", d_vol);
     }
   }
 }

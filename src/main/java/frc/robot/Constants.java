@@ -7,7 +7,7 @@ import edu.wpi.first.math.util.Units;
 
 public final class Constants {
 
-  public static final Mode currentMode = Mode.SIMULATOR;
+  public static final Mode currentMode = Mode.REAL;
 
   public static enum Mode {
     REAL,
@@ -34,8 +34,8 @@ public final class Constants {
     public static final int kLeftRearTurnMotorID = 21;
     public static final int kRightRearTurnMotorID = 20;
 
-    public static final boolean kLeftFrontTurnMotorInverted = false;
-    public static final boolean kRightFrontTurnMotorInverted = false;
+    public static final boolean kLeftFrontTurnMotorInverted = true;
+    public static final boolean kRightFrontTurnMotorInverted = true;
     public static final boolean kLeftRearTurnMotorInverted = false;
     public static final boolean kRightRearTurnMotorInverted = false;
 

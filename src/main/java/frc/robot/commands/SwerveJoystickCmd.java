@@ -51,24 +51,24 @@ public class SwerveJoystickCmd extends CommandBase {
     double ySpd = ySpdFunction.get();
     double turnSpd = turningSpdFunction.get();
 
-    xSpd = Math.abs(xSpd) > 0.05 ? xSpd : 0.0;
-    ySpd = Math.abs(ySpd) > 0.05 ? ySpd : 0.0;
-    turnSpd = Math.abs(turnSpd) > 0.05 ? turnSpd : 0.0;
+    xSpd = Math.abs(xSpd) > 0.09 ? xSpd : 0.0;
+    ySpd = Math.abs(ySpd) > 0.09 ? ySpd : 0.0;
+    turnSpd = Math.abs(turnSpd) > 0.09 ? turnSpd : 0.0;
 
     // x * y --> y === speed constant, m/s
-    xSpd = xLimiter.calculate(xSpd) * 1.25;
-    ySpd = yLimiter.calculate(ySpd) * 1.25;
-    turnSpd = turningLimiter.calculate(turnSpd) * 3.14159;
+    xSpd = xLimiter.calculate(xSpd) * 1;
+    ySpd = yLimiter.calculate(ySpd) * 1;
+    turnSpd = turningLimiter.calculate(turnSpd) * 2.75;
 
     // TODO: Check 3rd order problem solution involving the tracking of the twist over time
 
-    // xSpd = 0;
+    // xSpd = 1.5;
     // ySpd = 0;
     // turnSpd = 0;
 
     ChassisSpeeds chassisSpeeds;
     // Use field oriented drive
-    if (false) {
+    if (true) {
       chassisSpeeds =
           ChassisSpeeds.fromFieldRelativeSpeeds(
               xSpd, ySpd, turnSpd, m_swerveSubsystem.getRotation2d());
@@ -77,17 +77,23 @@ public class SwerveJoystickCmd extends CommandBase {
     }
 
     // Comment below out if problem occures
-    // chassisSpeeds =
-    //     discretize(
-    //         chassisSpeeds.vxMetersPerSecond,
-    //         chassisSpeeds.vyMetersPerSecond,
-    //         chassisSpeeds.omegaRadiansPerSecond,
-    //         0.02);
+    chassisSpeeds =
+        discretize(
+            chassisSpeeds.vxMetersPerSecond,
+            chassisSpeeds.vyMetersPerSecond,
+            chassisSpeeds.omegaRadiansPerSecond,
+            0.02);
 
     SwerveModuleState[] moduleStates =
         SwerveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
 
     // ChassisSpeeds updated = new ChassisSpeeds(robot_one_step.getX() );
+
+    Logger.getInstance().recordOutput("AAA", m_swerveSubsystem.getRotation2d().getDegrees());
+
+    Logger.getInstance().recordOutput("xSpd", xSpd);
+    Logger.getInstance().recordOutput("ySpd", ySpd);
+    Logger.getInstance().recordOutput("turnSpd", turnSpd);
 
     Logger.getInstance().recordOutput("chassisSpeedsvy", moduleStates);
     Logger.getInstance().recordOutput("frontleft_rotate", moduleStates[0].angle.getDegrees());
@@ -116,7 +122,7 @@ public class SwerveJoystickCmd extends CommandBase {
             vxMetersPerSecond * dtSeconds,
             vyMetersPerSecond * dtSeconds,
             new Rotation2d(omegaRadiansPerSecond * dtSeconds));
-    var twist = new Pose2d().log(desiredDeltaPose);
+    var twist = log(desiredDeltaPose);
     return new ChassisSpeeds(twist.dx / dtSeconds, twist.dy / dtSeconds, twist.dtheta / dtSeconds);
   }
 
