@@ -12,7 +12,7 @@ public interface SwerveModuleIO {
   public static class SwerveModuleIOInputs {
     public double drivePositionMeters = 0.0;
     public double driveVelocityMetersPerSec = 0.0;
-    public double driveTemperature = 0.0;
+    public double driveTemperatureCelsius = 0.0;
     public double driveCurrent = 0.0;
     public double driveVoltage = 0.0;
 

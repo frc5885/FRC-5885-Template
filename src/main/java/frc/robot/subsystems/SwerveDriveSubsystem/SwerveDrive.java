@@ -20,24 +20,6 @@ import org.littletonrobotics.junction.Logger;
 
 public class SwerveDrive extends SubsystemBase {
 
-  // SwerveModuleIO m_frontLeft = new SwerveModuleNEO(13, 23, 3, new
-  // Rotation2d(2.50), false, false);
-  // SwerveModuleIO m_frontRight = new SwerveModuleNEO(12, 22, 2, new
-  // Rotation2d(-0.265), false, true);
-  // SwerveModuleIO m_backLeft = new SwerveModuleNEO(10, 20, 0, new
-  // Rotation2d(-2.4675), false, false);
-  // SwerveModuleIO m_backRight = new SwerveModuleNEO(11, 21, 1, new
-  // Rotation2d(-1.225), false, true);
-
-  // SwerveModuleIOInputsAutoLogged m_frontLeftInputs = new
-  // SwerveModuleIOInputsAutoLogged();
-  // SwerveModuleIOInputsAutoLogged m_frontRightInputs = new
-  // SwerveModuleIOInputsAutoLogged();
-  // SwerveModuleIOInputsAutoLogged m_backLeftInputs = new
-  // SwerveModuleIOInputsAutoLogged();
-  // SwerveModuleIOInputsAutoLogged m_backRightInputs = new
-  // SwerveModuleIOInputsAutoLogged();
-
   private final SwerveModuleIO[] m_modules = new SwerveModuleIO[4];
   private final AHRS m_gyro;
   // IO Modules can't be defined in constructor, so they are defined here
@@ -61,8 +43,8 @@ public class SwerveDrive extends SubsystemBase {
   public SwerveDrive(
       SwerveModuleIO frontLeft,
       SwerveModuleIO frontRight,
-      SwerveModuleIO backLeft,
-      SwerveModuleIO backRight) {
+      SwerveModuleIO backRight,
+      SwerveModuleIO backLeft) {
 
     odometer =
         new SwerveDrivePoseEstimator(
@@ -75,8 +57,8 @@ public class SwerveDrive extends SubsystemBase {
 
     m_modules[0] = frontLeft;
     m_modules[1] = frontRight;
-    m_modules[2] = backLeft;
-    m_modules[3] = backRight;
+    m_modules[2] = backRight;
+    m_modules[3] = backLeft;
 
     for (int i = 0; i != 4; i++) {
       m_turnController[i] = new PIDController(-0.5, 0, 0);
@@ -162,17 +144,17 @@ public class SwerveDrive extends SubsystemBase {
           SwerveModuleState.optimize(
               desiredStates[i], new Rotation2d(m_modulesInput[i].turnPositionRad));
 
+      desiredStates[i].speedMetersPerSecond *= Math.cos(m_turnController[i].getPositionError());
+
       m_modules[i].setDriveVoltage(
           (desiredStates[i].speedMetersPerSecond
                   / SwerveConstants.kAttainableMaxSpeedMetersPerSecond)
               * 12);
 
-      double d_vol =
+      m_modules[i].setTurnVoltage(
           (m_turnController[i].calculate(
                   m_modulesInput[i].turnPositionRad, desiredStates[i].angle.getRadians()))
-              * 12;
-      m_modules[i].setTurnVoltage(d_vol);
-      Logger.getInstance().recordOutput("DRIVE_VOLTAGE", d_vol);
+              * 12);
     }
   }
 }

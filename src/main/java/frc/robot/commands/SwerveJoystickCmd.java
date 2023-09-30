@@ -33,9 +33,9 @@ public class SwerveJoystickCmd extends CommandBase {
     xSpdFunction = xSpdFnc;
     ySpdFunction = ySpdFnc;
     turningSpdFunction = turningSpd;
-    xLimiter = new SlewRateLimiter(3);
-    yLimiter = new SlewRateLimiter(3);
-    turningLimiter = new SlewRateLimiter(3);
+    xLimiter = new SlewRateLimiter(6);
+    yLimiter = new SlewRateLimiter(6);
+    turningLimiter = new SlewRateLimiter(6);
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(m_swerveSubsystem);
   }
@@ -51,24 +51,14 @@ public class SwerveJoystickCmd extends CommandBase {
     double ySpd = ySpdFunction.get();
     double turnSpd = turningSpdFunction.get();
 
-    xSpd = Math.abs(xSpd) > 0.09 ? xSpd : 0.0;
-    ySpd = Math.abs(ySpd) > 0.09 ? ySpd : 0.0;
-    turnSpd = Math.abs(turnSpd) > 0.09 ? turnSpd : 0.0;
-
     // x * y --> y === speed constant, m/s
     xSpd = xLimiter.calculate(xSpd) * 1;
     ySpd = yLimiter.calculate(ySpd) * 1;
     turnSpd = turningLimiter.calculate(turnSpd) * 2.75;
 
-    // TODO: Check 3rd order problem solution involving the tracking of the twist over time
-
-    // xSpd = 1.5;
-    // ySpd = 0;
-    // turnSpd = 0;
-
     ChassisSpeeds chassisSpeeds;
     // Use field oriented drive
-    if (true) {
+    if (false) {
       chassisSpeeds =
           ChassisSpeeds.fromFieldRelativeSpeeds(
               xSpd, ySpd, turnSpd, m_swerveSubsystem.getRotation2d());
@@ -77,34 +67,18 @@ public class SwerveJoystickCmd extends CommandBase {
     }
 
     // Comment below out if problem occures
-    chassisSpeeds =
-        discretize(
-            chassisSpeeds.vxMetersPerSecond,
-            chassisSpeeds.vyMetersPerSecond,
-            chassisSpeeds.omegaRadiansPerSecond,
-            0.02);
+    // chassisSpeeds =
+    //     discretize(
+    //         chassisSpeeds.vxMetersPerSecond,
+    //         chassisSpeeds.vyMetersPerSecond,
+    //         chassisSpeeds.omegaRadiansPerSecond,
+    //         0.02);
 
     SwerveModuleState[] moduleStates =
         SwerveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
 
-    // ChassisSpeeds updated = new ChassisSpeeds(robot_one_step.getX() );
+    Logger.getInstance().recordOutput("Expected Chassis Speeds", moduleStates);
 
-    Logger.getInstance().recordOutput("AAA", m_swerveSubsystem.getRotation2d().getDegrees());
-
-    Logger.getInstance().recordOutput("xSpd", xSpd);
-    Logger.getInstance().recordOutput("ySpd", ySpd);
-    Logger.getInstance().recordOutput("turnSpd", turnSpd);
-
-    Logger.getInstance().recordOutput("chassisSpeedsvy", moduleStates);
-    Logger.getInstance().recordOutput("frontleft_rotate", moduleStates[0].angle.getDegrees());
-    Logger.getInstance().recordOutput("frontright_rotate", moduleStates[1].angle.getDegrees());
-    Logger.getInstance().recordOutput("backleft_rotate", moduleStates[2].angle.getDegrees());
-    Logger.getInstance().recordOutput("backright_rotate", moduleStates[3].angle.getDegrees());
-
-    Logger.getInstance().recordOutput("frontleft_speed", moduleStates[0].speedMetersPerSecond);
-    Logger.getInstance().recordOutput("frontright_speed", moduleStates[1].speedMetersPerSecond);
-    Logger.getInstance().recordOutput("backleft_speed", moduleStates[2].speedMetersPerSecond);
-    Logger.getInstance().recordOutput("backright_speed", moduleStates[3].speedMetersPerSecond);
     m_swerveSubsystem.setModuleStates(moduleStates);
   }
 

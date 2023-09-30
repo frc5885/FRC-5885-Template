@@ -7,7 +7,7 @@ import edu.wpi.first.math.util.Units;
 
 public final class Constants {
 
-  public static final Mode currentMode = Mode.REAL;
+  public static final Mode currentMode = Mode.SIMULATOR;
 
   public static enum Mode {
     REAL,
@@ -26,34 +26,34 @@ public final class Constants {
 
     public static final boolean kLeftFrontDriveMotorInverted = false;
     public static final boolean kRightFrontDriveMotorInverted = true;
-    public static final boolean kLeftRearDriveMotorInverted = false;
-    public static final boolean kRightRearDriveMotorInverted = true;
+    public static final boolean kLeftRearDriveMotorInverted = true;
+    public static final boolean kRightRearDriveMotorInverted = false;
 
     public static final int kLeftFrontTurnMotorID = 23;
     public static final int kRightFrontTurnMotorID = 22;
     public static final int kLeftRearTurnMotorID = 21;
     public static final int kRightRearTurnMotorID = 20;
 
-    public static final boolean kLeftFrontTurnMotorInverted = true;
-    public static final boolean kRightFrontTurnMotorInverted = true;
+    public static final boolean kLeftFrontTurnMotorInverted = false;
+    public static final boolean kRightFrontTurnMotorInverted = false;
     public static final boolean kLeftRearTurnMotorInverted = false;
     public static final boolean kRightRearTurnMotorInverted = false;
 
     // Module offsets
     public static final Rotation2d kLeftFrontModuleOffset = new Rotation2d(2.50);
     public static final Rotation2d kRightFrontModuleOffset = new Rotation2d(-0.265);
-    public static final Rotation2d kLeftRearModuleOffset = new Rotation2d(-2.4675);
-    public static final Rotation2d kRightRearModuleOffset = new Rotation2d(-1.225);
+    public static final Rotation2d kLeftRearModuleOffset = new Rotation2d(-1.225);
+    public static final Rotation2d kRightRearModuleOffset = new Rotation2d(-2.4675);
 
     // Analog encoders
     public static final int kLeftFrontAnalogEncoderPort = 3;
     public static final int kRightFrontAnalogEncoderPort = 2;
-    public static final int kLeftRearAnalogEncoderPort = 0;
-    public static final int kRightRearAnalogEncoderPort = 1;
+    public static final int kLeftRearAnalogEncoderPort = 1;
+    public static final int kRightRearAnalogEncoderPort = 0;
 
     // Controller
 
-    public static final double kDeadband = 0.075;
+    public static final double kDeadband = 0.08;
 
     //
 

@@ -21,7 +21,7 @@ public class SwerveModuleNEO implements SwerveModuleIO {
   private CANSparkMax m_turnMotor;
 
   private AnalogInput m_turnAbsoluteEncoder;
-  private Rotation2d m_turnAbsoluteEncoderOffset;
+  private Rotation2d m_turnAbsoluteEncoderOffsetRad;
 
   private final RelativeEncoder driveDefaultEncoder;
   private final RelativeEncoder turnRelativeEncoder;
@@ -36,7 +36,7 @@ public class SwerveModuleNEO implements SwerveModuleIO {
     m_driveMotor = new CANSparkMax(driveMotorId, MotorType.kBrushless);
     m_turnMotor = new CANSparkMax(turnMotorId, MotorType.kBrushless);
     m_turnAbsoluteEncoder = new AnalogInput(turnAbsoluteEncoderId);
-    m_turnAbsoluteEncoderOffset = turnAbsoluteEncoderOffset;
+    m_turnAbsoluteEncoderOffsetRad = turnAbsoluteEncoderOffset;
 
     driveDefaultEncoder = m_driveMotor.getEncoder();
     turnRelativeEncoder = m_turnMotor.getEncoder();
@@ -64,7 +64,7 @@ public class SwerveModuleNEO implements SwerveModuleIO {
     inputs.drivePositionMeters = driveDefaultEncoder.getPosition();
     inputs.driveVelocityMetersPerSec = driveDefaultEncoder.getVelocity();
     ;
-    inputs.driveTemperature = m_driveMotor.getMotorTemperature();
+    inputs.driveTemperatureCelsius = m_driveMotor.getMotorTemperature();
     inputs.driveCurrent = m_driveMotor.getOutputCurrent();
     inputs.driveVoltage = m_driveMotor.getAppliedOutput() * RobotController.getBatteryVoltage();
 
@@ -72,7 +72,7 @@ public class SwerveModuleNEO implements SwerveModuleIO {
         (m_turnAbsoluteEncoder.getVoltage() / RobotController.getVoltage5V());
     inputs.turnPositionRad =
         new Rotation2d(absolutePositionPercent * 2.0 * Math.PI)
-            .minus(m_turnAbsoluteEncoderOffset)
+            .minus(m_turnAbsoluteEncoderOffsetRad)
             .getRadians();
     inputs.turnVelocityRadPerSec =
         Units.rotationsPerMinuteToRadiansPerSecond(turnRelativeEncoder.getVelocity())
