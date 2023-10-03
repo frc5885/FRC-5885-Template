@@ -76,7 +76,7 @@ public class SwerveModuleNEO implements SwerveModuleIO {
             .getRadians();
     inputs.turnVelocityRadPerSec =
         Units.rotationsPerMinuteToRadiansPerSecond(turnRelativeEncoder.getVelocity())
-            / (150.0 / 7.0);
+            / SwerveConstants.Module.kTurningMotorGearRatio;
     ;
     inputs.turnTemperature = m_turnMotor.getMotorTemperature();
     inputs.turnCurrent = m_turnMotor.getOutputCurrent();

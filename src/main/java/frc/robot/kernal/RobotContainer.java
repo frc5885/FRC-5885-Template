@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.commands.SwerveJoystickCmd;
+import frc.robot.subsystems.PoseEstimatorSubsystem.SwervePoseEstimator;
 import frc.robot.subsystems.SwerveDriveSubsystem.SwerveDrive;
 import frc.robot.subsystems.SwerveDriveSubsystem.SwerveModuleNEO;
 import frc.robot.subsystems.SwerveDriveSubsystem.SwerveModuleSim;
@@ -25,6 +26,7 @@ public class RobotContainer {
   private final CommandXboxController controller = new CommandXboxController(0);
 
   private final SwerveDrive swDrive;
+  private final SwervePoseEstimator swPoseEst;
 
   public RobotContainer() {
 
@@ -88,6 +90,8 @@ public class RobotContainer {
         throw new NoSuchMethodError("Not Implemented");
     }
 
+    swPoseEst = new SwervePoseEstimator(swDrive);
+
     configureBindings();
   }
 
@@ -99,6 +103,8 @@ public class RobotContainer {
             () -> (-MathUtil.applyDeadband(controller.getLeftY(), SwerveConstants.kDeadband)),
             () -> (-MathUtil.applyDeadband(controller.getLeftX(), SwerveConstants.kDeadband)),
             () -> (-MathUtil.applyDeadband(controller.getRightX(), SwerveConstants.kDeadband))));
+
+    // swDrive.setDefaultCommand(new SwerveSolveFeedForward(swDrive));
   }
 
   public Command getAutonomousCommand() {

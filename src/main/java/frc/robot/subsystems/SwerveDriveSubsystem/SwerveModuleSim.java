@@ -12,16 +12,18 @@ import frc.robot.Constants.SwerveConstants;
 /** Add your docs here. */
 public class SwerveModuleSim implements SwerveModuleIO {
 
-  private FlywheelSim m_driveMotor = new FlywheelSim(DCMotor.getNEO(1), 6.75, 0.025);
+  private FlywheelSim m_driveMotor =
+      new FlywheelSim(DCMotor.getNEO(1), SwerveConstants.Module.kDriveMotorGearRatio, 0.025);
+  private FlywheelSim m_turnMotor =
+      new FlywheelSim(
+          DCMotor.getNEO(1), SwerveConstants.Module.kTurningMotorGearRatio, 0.004096955);
 
-  private FlywheelSim m_turnMotor = new FlywheelSim(DCMotor.getNEO(1), 150.0 / 7.0, 0.004096955);
-
-  private double m_driveVelocityMetersPerSecond; // m/s
-  private double m_driveDistanceMeters; // m
+  private double m_driveVelocityMetersPerSecond;
+  private double m_driveDistanceMeters;
   private double m_driveVoltage;
 
-  private double m_turnAngleVelocityRadsPerSec; // rad/s
-  private double m_turnAngleRad; // rad
+  private double m_turnAngleVelocityRadsPerSec;
+  private double m_turnAngleRad;
   private double m_turnVoltage;
 
   public SwerveModuleSim(boolean isReversed) {
@@ -67,7 +69,7 @@ public class SwerveModuleSim implements SwerveModuleIO {
 
   public void setTurnVoltage(double voltage) {
     m_turnVoltage = MathUtil.clamp(voltage, -12, 12);
-    m_turnMotor.setInputVoltage(-m_turnVoltage);
+    m_turnMotor.setInputVoltage(m_turnVoltage);
   }
 
   // Breakmode on simulator is always set to break by by default
