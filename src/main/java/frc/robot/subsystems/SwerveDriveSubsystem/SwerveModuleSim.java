@@ -63,8 +63,10 @@ public class SwerveModuleSim implements SwerveModuleIO {
   }
 
   public void setDriveVoltage(double voltage) {
+    // Simulate static voltage
+    if (Math.abs(voltage) < 0.15) voltage = 0.0;
     m_driveVoltage = MathUtil.clamp(voltage, -12, 12);
-    m_driveMotor.setInputVoltage(m_driveVoltage);
+    m_driveMotor.setInputVoltage(m_driveVoltage - Math.signum(voltage) * 0.15);
   }
 
   public void setTurnVoltage(double voltage) {

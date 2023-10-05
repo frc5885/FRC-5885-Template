@@ -63,7 +63,7 @@ public class SwerveDrive extends SubsystemBase {
     for (int i = 0; i != 4; i++) {
       m_turnController[i] = new PIDController(0.5, 0, 0);
       m_turnController[i].enableContinuousInput(-Math.PI, Math.PI);
-      m_motorFeedForward[i] = new SimpleMotorFeedforward(0, 1.31829);
+      m_motorFeedForward[i] = new SimpleMotorFeedforward(0.150531, 1.31831);
     }
   }
 

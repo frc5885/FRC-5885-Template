@@ -31,9 +31,9 @@ public class SwerveJoystickCmd extends CommandBase {
     xSpdFunction = xSpdFnc;
     ySpdFunction = ySpdFnc;
     turningSpdFunction = turningSpd;
-    xLimiter = new SlewRateLimiter(6);
-    yLimiter = new SlewRateLimiter(6);
-    turningLimiter = new SlewRateLimiter(6);
+    xLimiter = new SlewRateLimiter(12);
+    yLimiter = new SlewRateLimiter(12);
+    turningLimiter = new SlewRateLimiter(8);
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(m_swerveSubsystem);
   }
@@ -50,9 +50,9 @@ public class SwerveJoystickCmd extends CommandBase {
     double turnSpd = turningSpdFunction.get();
 
     // x * y --> y === speed constant, m/s
-    xSpd = xLimiter.calculate(xSpd) * 4.5;
-    ySpd = yLimiter.calculate(ySpd) * 4.5;
-    turnSpd = turningLimiter.calculate(turnSpd) * 3.14159 *3;
+    xSpd = xLimiter.calculate(xSpd) * 1.5;
+    ySpd = yLimiter.calculate(ySpd) * 1.5;
+    turnSpd = turningLimiter.calculate(turnSpd) * 3.14159 * 2;
 
     ChassisSpeeds chassisSpeeds;
     // Use field oriented drive

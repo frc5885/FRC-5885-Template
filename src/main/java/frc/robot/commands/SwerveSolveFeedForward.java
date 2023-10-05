@@ -57,7 +57,7 @@ public class SwerveSolveFeedForward extends CommandBase {
       if ((currentVelocityMetersPerSecond - m_previousVelocityMetersPerSecond) / 0.02 <= 0.005
           && (m_timer.get() - m_lastSetTime) >= m_minimumWaitTime) {
         m_xVelocityMetersPerSecond.add(currentVelocityMetersPerSecond);
-        m_yVoltage.add(m_swerveSubsystem.getAverageMotorVoltage());
+        m_yVoltage.add(m_currentVoltage); // m_swerveSubsystem.getAverageMotorVoltage());
         m_lastSetTime = m_timer.get();
 
         m_currentVoltage += m_rampRate;
