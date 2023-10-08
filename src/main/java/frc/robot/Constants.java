@@ -7,7 +7,7 @@ import edu.wpi.first.math.util.Units;
 
 public final class Constants {
 
-  public static final Mode currentMode = Mode.REAL;
+  public static final Mode currentMode = Mode.SIMULATOR;
 
   public static enum Mode {
     REAL,
@@ -18,11 +18,22 @@ public final class Constants {
   // Swerve drive constants
   public static final class SwerveConstants {
 
+    // Speed
+    public static final double kMaxSpeedXMetersPerSecond = 1.5;
+    public static final double kMaxSpeedYMetersPerSecond = 1.5;
+    public static final double kMaxSpeedAngularRadiansPerSecond = Math.PI * 1;
+
+    public static final double kMaxAccelerationXMetersPerSecondSquared = 6.0;
+    public static final double kMaxAccelerationYMetersPerSecondSquared = 6.0;
+    public static final double kMaxAccelerationAngularRadiansPerSecondSquared = Math.PI * 2;
+
+    public static final double kAttainableMaxSpeedMetersPerSecond = Units.feetToMeters(14.5);
+
     // Motors
     public static final int kLeftFrontDriveMotorID = 13;
     public static final int kRightFrontDriveMotorID = 12;
-    public static final int kLeftRearDriveMotorID = 11;
-    public static final int kRightRearDriveMotorID = 10;
+    public static final int kLeftRearDriveMotorID = 10;
+    public static final int kRightRearDriveMotorID = 11;
 
     public static final boolean kLeftFrontDriveMotorInverted = false;
     public static final boolean kRightFrontDriveMotorInverted = true;
@@ -31,11 +42,11 @@ public final class Constants {
 
     public static final int kLeftFrontTurnMotorID = 23;
     public static final int kRightFrontTurnMotorID = 22;
-    public static final int kLeftRearTurnMotorID = 21;
-    public static final int kRightRearTurnMotorID = 20;
+    public static final int kLeftRearTurnMotorID = 20;
+    public static final int kRightRearTurnMotorID = 21;
 
-    public static final boolean kLeftFrontTurnMotorInverted = true;
-    public static final boolean kRightFrontTurnMotorInverted = true;
+    public static final boolean kLeftFrontTurnMotorInverted = false;
+    public static final boolean kRightFrontTurnMotorInverted = false;
     public static final boolean kLeftRearTurnMotorInverted = false;
     public static final boolean kRightRearTurnMotorInverted = false;
 
@@ -55,12 +66,10 @@ public final class Constants {
 
     public static final double kDeadband = 0.075;
 
-    //
+    // Phsycial structure
 
     public static final double kTrackWidth = Units.inchesToMeters(25.5);
     public static final double kWheelBase = Units.inchesToMeters(25.5);
-
-    public static final double kAttainableMaxSpeedMetersPerSecond = Units.feetToMeters(14.5);
 
     public static final SwerveDriveKinematics kDriveKinematics =
         new SwerveDriveKinematics(

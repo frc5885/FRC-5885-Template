@@ -4,11 +4,11 @@
 
 package frc.robot.subsystems.SwerveDriveSubsystem;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import frc.robot.Constants.SwerveConstants;
-import frc.robot.utils.MathTools;
 
 /** Add your docs here. */
 public class SwerveModuleSim implements SwerveModuleIO {
@@ -59,11 +59,11 @@ public class SwerveModuleSim implements SwerveModuleIO {
     m_driveDistance += m_driveVelocity * 0.02;
 
     m_turnAngleVelocity = m_turnMotor.getAngularVelocityRadPerSec();
-    m_turnAngle += m_turnAngleVelocity * 0.02;
+    m_turnAngle += m_turnAngleVelocity * 0.02 * (m_absoluteEncoderReversed ? -1.0 : 1.0);
 
     inputs.drivePositionMeters = m_driveDistance;
     inputs.driveVelocityMetersPerSec = m_driveVelocity;
-    inputs.driveTemperature = 0.0;
+    inputs.driveTemperatureCelsius = 0.0;
     inputs.driveCurrent = m_driveMotor.getCurrentDrawAmps();
     inputs.driveVoltage = m_driveVoltage;
 
@@ -75,12 +75,12 @@ public class SwerveModuleSim implements SwerveModuleIO {
   }
 
   public void setDriveVoltage(double voltage) {
-    m_driveVoltage = MathTools.clamp(voltage, -12, 12);
+    m_driveVoltage = MathUtil.clamp(voltage, -12, 12);
     m_driveMotor.setInputVoltage(m_driveVoltage);
   }
 
   public void setTurnVoltage(double voltage) {
-    m_turnVoltage = MathTools.clamp(voltage, -12, 12);
+    m_turnVoltage = MathUtil.clamp(voltage, -12, 12);
     m_turnMotor.setInputVoltage(m_turnVoltage);
   }
 

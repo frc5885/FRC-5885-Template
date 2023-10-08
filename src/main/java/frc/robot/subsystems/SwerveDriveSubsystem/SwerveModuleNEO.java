@@ -46,17 +46,13 @@ public class SwerveModuleNEO implements SwerveModuleIO {
 
     // This sets the conversion factor in the spark max, apparently
     // this can cause some issues. Needs investigating.
-    driveDefaultEncoder.setPositionConversionFactor(
-        SwerveConstants.Module.kDriveEncoderRot2Meter / SwerveConstants.Module.kDriveEncoderCPR);
+    driveDefaultEncoder.setPositionConversionFactor(SwerveConstants.Module.kDriveEncoderRot2Meter);
     driveDefaultEncoder.setVelocityConversionFactor(
-        SwerveConstants.Module.kDriveEncoderRPM2MeterPerSec
-            / SwerveConstants.Module.kDriveEncoderCPR);
+        SwerveConstants.Module.kDriveEncoderRPM2MeterPerSec);
 
-    turnRelativeEncoder.setPositionConversionFactor(
-        SwerveConstants.Module.kTurningEncoderRot2Rad / SwerveConstants.Module.kTurningEncoderCPR);
+    turnRelativeEncoder.setPositionConversionFactor(SwerveConstants.Module.kTurningEncoderRot2Rad);
     turnRelativeEncoder.setVelocityConversionFactor(
-        SwerveConstants.Module.kTurningEncoderRPM2RadPerSec
-            / SwerveConstants.Module.kTurningEncoderCPR);
+        SwerveConstants.Module.kTurningEncoderRPM2RadPerSec);
   }
 
   public void updateInputs(SwerveModuleIOInputs inputs) {
@@ -64,7 +60,7 @@ public class SwerveModuleNEO implements SwerveModuleIO {
     inputs.drivePositionMeters = driveDefaultEncoder.getPosition();
     inputs.driveVelocityMetersPerSec = driveDefaultEncoder.getVelocity();
     ;
-    inputs.driveTemperature = m_driveMotor.getMotorTemperature();
+    inputs.driveTemperatureCelsius = m_driveMotor.getMotorTemperature();
     inputs.driveCurrent = m_driveMotor.getOutputCurrent();
     inputs.driveVoltage = m_driveMotor.getAppliedOutput() * RobotController.getBatteryVoltage();
 

@@ -12,31 +12,14 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import frc.robot.Constants.Mode;
 import frc.robot.Constants.SwerveConstants;
 import org.littletonrobotics.junction.Logger;
 
 public class SwerveDrive extends SubsystemBase {
-
-  // SwerveModuleIO m_frontLeft = new SwerveModuleNEO(13, 23, 3, new
-  // Rotation2d(2.50), false, false);
-  // SwerveModuleIO m_frontRight = new SwerveModuleNEO(12, 22, 2, new
-  // Rotation2d(-0.265), false, true);
-  // SwerveModuleIO m_backLeft = new SwerveModuleNEO(10, 20, 0, new
-  // Rotation2d(-2.4675), false, false);
-  // SwerveModuleIO m_backRight = new SwerveModuleNEO(11, 21, 1, new
-  // Rotation2d(-1.225), false, true);
-
-  // SwerveModuleIOInputsAutoLogged m_frontLeftInputs = new
-  // SwerveModuleIOInputsAutoLogged();
-  // SwerveModuleIOInputsAutoLogged m_frontRightInputs = new
-  // SwerveModuleIOInputsAutoLogged();
-  // SwerveModuleIOInputsAutoLogged m_backLeftInputs = new
-  // SwerveModuleIOInputsAutoLogged();
-  // SwerveModuleIOInputsAutoLogged m_backRightInputs = new
-  // SwerveModuleIOInputsAutoLogged();
 
   private final SwerveModuleIO[] m_modules = new SwerveModuleIO[4];
   private final AHRS m_gyro;
@@ -55,7 +38,7 @@ public class SwerveDrive extends SubsystemBase {
   private double fieldXVel = 0;
   private double fieldYVel = 0;
 
-  private double m_rotation = 0;
+  private Rotation2d m_heading = new Rotation2d(0);
 
   /** Creates a new SwerveDrive. */
   public SwerveDrive(
@@ -93,15 +76,18 @@ public class SwerveDrive extends SubsystemBase {
     var chassisSpeeds = SwerveConstants.kDriveKinematics.toChassisSpeeds(getModuleStates());
     double chassisRotationSpeed = chassisSpeeds.omegaRadiansPerSecond;
 
-    m_rotation = -m_gyro.getAngle();
-    // m_rotation += Units.radiansToDegrees(chassisRotationSpeed * 0.02);
+    if (Constants.currentMode == Mode.REAL) {
+      m_heading = Rotation2d.fromDegrees(-m_gyro.getAngle());
+    } else {
+      m_heading = m_heading.plus(Rotation2d.fromRadians(chassisRotationSpeed * 0.02));
+    }
 
     odometer.update(getRotation2d(), getModulePositions());
 
     Logger.getInstance().recordOutput("moduleStates", getModuleStates());
     Logger.getInstance().recordOutput("pos2d", odometer.getEstimatedPosition());
-    Logger.getInstance().recordOutput("m_rotation", Units.degreesToRadians(m_rotation));
-    Logger.getInstance().recordOutput("m_rotation_deg", m_rotation);
+    Logger.getInstance().recordOutput("m_heading degrees", m_heading.getDegrees());
+    Logger.getInstance().recordOutput("m_heading radians", m_heading.getRadians());
   }
 
   public Pose2d getFieldVelocity() {
@@ -123,7 +109,7 @@ public class SwerveDrive extends SubsystemBase {
 
   public double getHeading() {
     // return m_rotation;
-    return Math.IEEEremainder(m_rotation, 360);
+    return Math.IEEEremainder(m_heading.getDegrees(), 360);
   }
 
   public Rotation2d getRotation2d() {
@@ -162,17 +148,17 @@ public class SwerveDrive extends SubsystemBase {
           SwerveModuleState.optimize(
               desiredStates[i], new Rotation2d(m_modulesInput[i].turnPositionRad));
 
+      desiredStates[i].speedMetersPerSecond *= Math.cos(m_turnController[i].getPositionError());
+
       m_modules[i].setDriveVoltage(
           (desiredStates[i].speedMetersPerSecond
                   / SwerveConstants.kAttainableMaxSpeedMetersPerSecond)
               * 12);
 
-      double d_vol =
+      m_modules[i].setTurnVoltage(
           (m_turnController[i].calculate(
                   m_modulesInput[i].turnPositionRad, desiredStates[i].angle.getRadians()))
-              * 12;
-      m_modules[i].setTurnVoltage(d_vol);
-      Logger.getInstance().recordOutput("DRIVE_VOLTAGE", d_vol);
+              * 12);
     }
   }
 }
