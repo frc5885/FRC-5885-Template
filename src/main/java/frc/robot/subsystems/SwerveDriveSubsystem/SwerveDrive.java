@@ -118,7 +118,7 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   public Rotation2d getRotation2d() {
-    return Rotation2d.fromDegrees(getHeading());
+    return m_heading;
   }
 
   public SwerveModuleState[] getModuleStates() {
@@ -163,6 +163,11 @@ public class SwerveDrive extends SubsystemBase {
                   m_modulesInput[i].turnPositionRad, desiredStates[i].angle.getRadians()))
               * 12);
     }
+  }
+
+  public void resetGyro() {
+    m_gyro.reset();
+    m_heading = Rotation2d.fromDegrees(-m_gyro.getAngle());
   }
 
   public void setModulesAngle(double angle) {

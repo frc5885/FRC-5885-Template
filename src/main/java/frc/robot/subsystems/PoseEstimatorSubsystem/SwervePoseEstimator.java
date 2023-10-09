@@ -21,11 +21,13 @@ public class SwervePoseEstimator extends SubsystemBase {
 
   private final SwerveDrivePoseEstimator m_poseEstimator;
 
+  private final SwerveDrive m_sw;
+
   /** Creates a new TankDrivePoseEstimator. */
   public SwervePoseEstimator(SwerveDrive swerveDrive) {
 
-    m_rotationSupplier = () -> (swerveDrive.getRotation2d());
-    m_swerveModulePositionSupplier = () -> (swerveDrive.getModulePositions());
+    m_rotationSupplier = swerveDrive::getRotation2d;
+    m_swerveModulePositionSupplier = swerveDrive::getModulePositions;
 
     m_poseEstimator =
         new SwerveDrivePoseEstimator(
@@ -35,6 +37,8 @@ public class SwervePoseEstimator extends SubsystemBase {
             new Pose2d(),
             SwerveConstants.kStateStdDevs,
             SwerveConstants.kVisionMeasurementStdDevs);
+
+    m_sw = swerveDrive;
   }
 
   @Override
@@ -49,6 +53,7 @@ public class SwervePoseEstimator extends SubsystemBase {
   }
 
   public void reset(Pose2d newPos) {
+    m_sw.resetGyro();
     m_poseEstimator.resetPosition(
         m_rotationSupplier.get(), m_swerveModulePositionSupplier.get(), newPos);
   }

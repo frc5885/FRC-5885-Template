@@ -105,8 +105,8 @@ public class RobotContainer {
             () -> (-MathUtil.applyDeadband(controller.getRightX(), SwerveConstants.kDeadband)),
             () -> (true)));
 
-    new JoystickButton(controller.getHID(), Button.kX.value)
-        .onTrue(new SwerveFollowSquare(swDrive, swPoseEstimator));
+    // new JoystickButton(controller.getHID(), Button.kX.value)
+    //     .onTrue(new SwerveFollowSquare(swDrive, swPoseEstimator));
 
     // swDrive.setDefaultCommand(
     //   new SwerveSolveFeedForward(swDrive));
