@@ -1,8 +1,12 @@
 package frc.robot;
 
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 
 public final class Constants {
@@ -25,9 +29,7 @@ public final class Constants {
 
     public static final double kMaxAccelerationXMetersPerSecondSquared = 6.0;
     public static final double kMaxAccelerationYMetersPerSecondSquared = 6.0;
-    public static final double kMaxAccelerationAngularRadiansPerSecondSquared = Math.PI * 2;
-
-    public static final double kAttainableMaxSpeedMetersPerSecond = Units.feetToMeters(14.5);
+    public static final double kMaxAccelerationAngularRadiansPerSecondSquared = Math.PI * 2.0;
 
     // Motors
     public static final int kLeftFrontDriveMotorID = 13;
@@ -66,17 +68,34 @@ public final class Constants {
 
     public static final double kDeadband = 0.075;
 
-    // Phsycial structure
+    // Physical constants
 
-    public static final double kTrackWidth = Units.inchesToMeters(25.5);
-    public static final double kWheelBase = Units.inchesToMeters(25.5);
+    public static final double kAttainableMaxSpeedMetersPerSecond = Units.feetToMeters(14.5);
+
+    public static final double kTrackWidthMeters = Units.inchesToMeters(25.5);
+    public static final double kWheelBaseMeters = Units.inchesToMeters(25.5);
 
     public static final SwerveDriveKinematics kDriveKinematics =
         new SwerveDriveKinematics(
-            new Translation2d(kWheelBase / 2, kTrackWidth / 2),
-            new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
-            new Translation2d(-kWheelBase / 2, kTrackWidth / 2),
-            new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
+            new Translation2d(kWheelBaseMeters / 2.0, kTrackWidthMeters / 2.0),
+            new Translation2d(kWheelBaseMeters / 2.0, -kTrackWidthMeters / 2.0),
+            new Translation2d(-kWheelBaseMeters / 2.0, kTrackWidthMeters / 2.0),
+            new Translation2d(-kWheelBaseMeters / 2.0, -kTrackWidthMeters / 2.0));
+    
+            public static final double kFeedForwardKs = 1.0;
+      public static final double kFeedForwardKv = 0.0;
+      public static final double kFeedForwardKa = 0.0;
+
+    // Automous constants
+
+    // Kalman filter constants
+    // Higher number means less trust in the model
+    // Order is {x, y, theta}
+    public static final Matrix<N3, N1> kStateStdDevs = VecBuilder.fill(0.1, 0.1, 0.1);
+    public static final Matrix<N3, N1> kVisionMeasurementStdDevs = VecBuilder.fill(0.9, 0.9, 0.9);
+
+
+    // Module constants
 
     public static final class Module {
       public static final double kDriveEncoderCPR = 42.0;
@@ -84,17 +103,23 @@ public final class Constants {
       public static final double kRelativeEncoderCPR = 4096.0;
 
       public static final double kWheelDiameterMeters = Units.inchesToMeters(4);
-      public static final double kDriveMotorGearRatio = 1 / 6.75;
-      public static final double kTurningMotorGearRatio = 1 / (150.0 / 7.0);
+      public static final double kDriveMotorGearRatio = 1.0 / 6.75;
+      public static final double kTurningMotorGearRatio = 1.0 / (150.0 / 7.0);
 
       public static final double kDriveEncoderRot2Meter =
           kDriveMotorGearRatio * Math.PI * kWheelDiameterMeters;
       public static final double kTurningEncoderRot2Rad = kTurningMotorGearRatio * 2 * Math.PI;
 
-      public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter / 60;
-      public static final double kTurningEncoderRPM2RadPerSec = kTurningEncoderRot2Rad / 60;
+      public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter / 60.0;
+      public static final double kTurningEncoderRPM2RadPerSec = kTurningEncoderRot2Rad / 60.0;
 
       public static final double kPTurning = 0.5;
+    }
+
+    public static final class Simulation {
+      public static final double kFeedForwardKs = 0.150551;
+      public static final double kFeedForwardKv = 1.30222;
+      public static final double kFeedForwardKa = 0.0;
     }
   }
 }

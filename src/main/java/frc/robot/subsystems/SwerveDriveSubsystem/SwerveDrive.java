@@ -6,9 +6,11 @@ package frc.robot.subsystems.SwerveDriveSubsystem;
 
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -32,8 +34,8 @@ public class SwerveDrive extends SubsystemBase {
   };
 
   private final PIDController[] m_turnController = new PIDController[4];
+  private final SimpleMotorFeedforward[] m_driveFeedforward = new SimpleMotorFeedforward[4];
 
-  private final SwerveDrivePoseEstimator odometer;
   // private Pose2d lastPos = new Pose2d();
   private double fieldXVel = 0;
   private double fieldYVel = 0;
@@ -47,13 +49,6 @@ public class SwerveDrive extends SubsystemBase {
       SwerveModuleIO backLeft,
       SwerveModuleIO backRight) {
 
-    odometer =
-        new SwerveDrivePoseEstimator(
-            SwerveConstants.kDriveKinematics,
-            new Rotation2d(0),
-            getModulePositions(),
-            new Pose2d(0, 0, Rotation2d.fromDegrees(0)));
-
     m_gyro = new AHRS(SPI.Port.kMXP);
 
     m_modules[0] = frontLeft;
@@ -64,6 +59,12 @@ public class SwerveDrive extends SubsystemBase {
     for (int i = 0; i != 4; i++) {
       m_turnController[i] = new PIDController(-0.5, 0, 0);
       m_turnController[i].enableContinuousInput(-Math.PI, Math.PI);
+
+      if (Constants.currentMode == Mode.REAL) {
+        m_driveFeedforward[i] = new SimpleMotorFeedforward(SwerveConstants.kFeedForwardKs, SwerveConstants.kFeedForwardKv, SwerveConstants.kFeedForwardKa);
+      } else {
+        m_driveFeedforward[i] = new SimpleMotorFeedforward(SwerveConstants.Simulation.kFeedForwardKs, SwerveConstants.Simulation.kFeedForwardKv, SwerveConstants.Simulation.kFeedForwardKa);
+      }
     }
   }
 
@@ -82,10 +83,7 @@ public class SwerveDrive extends SubsystemBase {
       m_heading = m_heading.plus(Rotation2d.fromRadians(chassisRotationSpeed * 0.02));
     }
 
-    odometer.update(getRotation2d(), getModulePositions());
-
-    Logger.getInstance().recordOutput("moduleStates", getModuleStates());
-    Logger.getInstance().recordOutput("pos2d", odometer.getEstimatedPosition());
+    Logger.getInstance().recordOutput("current module states", getModuleStates());
     Logger.getInstance().recordOutput("m_heading degrees", m_heading.getDegrees());
     Logger.getInstance().recordOutput("m_heading radians", m_heading.getRadians());
   }
@@ -151,14 +149,45 @@ public class SwerveDrive extends SubsystemBase {
       desiredStates[i].speedMetersPerSecond *= Math.cos(m_turnController[i].getPositionError());
 
       m_modules[i].setDriveVoltage(
-          (desiredStates[i].speedMetersPerSecond
-                  / SwerveConstants.kAttainableMaxSpeedMetersPerSecond)
-              * 12);
+          m_driveFeedforward[i].calculate(desiredStates[i].speedMetersPerSecond));
 
       m_modules[i].setTurnVoltage(
           (m_turnController[i].calculate(
                   m_modulesInput[i].turnPositionRad, desiredStates[i].angle.getRadians()))
               * 12);
+    }
+  }
+
+  public void setModulesAngle(double angle) {
+
+    for (int i = 0; i != 4; i++) {
+      m_modules[i].setTurnVoltage(
+          (m_turnController[i].calculate(m_modulesInput[i].turnPositionRad, angle)) * 12);
+    }
+  }
+
+  public void setVoltage(double voltage) {
+    for (int i = 0; i != 4; i++) {
+      m_modules[i].setDriveVoltage(voltage);
+    }
+  }
+
+  public ChassisSpeeds getChassisSpeeds() {
+    return SwerveConstants.kDriveKinematics.toChassisSpeeds(getModuleStates());
+  }
+
+  public double getAverageMotorVoltage() {
+    return (m_modulesInput[0].driveVoltage
+            + m_modulesInput[1].driveVoltage
+            + m_modulesInput[2].driveVoltage
+            + m_modulesInput[3].driveVoltage)
+        / 4;
+  }
+
+  public void stop() {
+    for (int i = 0; i != 4; i++) {
+      m_modules[i].setDriveVoltage(0);
+      m_modules[i].setTurnVoltage(0);
     }
   }
 }

@@ -23,8 +23,8 @@ public class SwerveModuleNEO implements SwerveModuleIO {
   private AnalogInput m_turnAbsoluteEncoder;
   private Rotation2d m_turnAbsoluteEncoderOffset;
 
-  private final RelativeEncoder driveDefaultEncoder;
-  private final RelativeEncoder turnRelativeEncoder;
+  private final RelativeEncoder m_driveDefaultEncoder;
+  private final RelativeEncoder m_turnRelativeEncoder;
 
   public SwerveModuleNEO(
       int driveMotorId,
@@ -38,28 +38,30 @@ public class SwerveModuleNEO implements SwerveModuleIO {
     m_turnAbsoluteEncoder = new AnalogInput(turnAbsoluteEncoderId);
     m_turnAbsoluteEncoderOffset = turnAbsoluteEncoderOffset;
 
-    driveDefaultEncoder = m_driveMotor.getEncoder();
-    turnRelativeEncoder = m_turnMotor.getEncoder();
+    m_driveDefaultEncoder = m_driveMotor.getEncoder();
+    m_turnRelativeEncoder = m_turnMotor.getEncoder();
 
     m_driveMotor.setInverted(driveMotorReversed);
     m_turnMotor.setInverted(turnMotorReversed);
 
     // This sets the conversion factor in the spark max, apparently
     // this can cause some issues. Needs investigating.
-    driveDefaultEncoder.setPositionConversionFactor(SwerveConstants.Module.kDriveEncoderRot2Meter);
-    driveDefaultEncoder.setVelocityConversionFactor(
+    m_driveDefaultEncoder.setPositionConversionFactor(
+        SwerveConstants.Module.kDriveEncoderRot2Meter);
+    m_driveDefaultEncoder.setVelocityConversionFactor(
         SwerveConstants.Module.kDriveEncoderRPM2MeterPerSec);
 
-    turnRelativeEncoder.setPositionConversionFactor(SwerveConstants.Module.kTurningEncoderRot2Rad);
-    turnRelativeEncoder.setVelocityConversionFactor(
+    m_turnRelativeEncoder.setPositionConversionFactor(
+        SwerveConstants.Module.kTurningEncoderRot2Rad);
+    m_turnRelativeEncoder.setVelocityConversionFactor(
         SwerveConstants.Module.kTurningEncoderRPM2RadPerSec);
   }
 
   public void updateInputs(SwerveModuleIOInputs inputs) {
 
-    inputs.drivePositionMeters = driveDefaultEncoder.getPosition();
-    inputs.driveVelocityMetersPerSec = driveDefaultEncoder.getVelocity();
-    ;
+    inputs.drivePositionMeters = m_driveDefaultEncoder.getPosition();
+    inputs.driveVelocityMetersPerSec = m_driveDefaultEncoder.getVelocity();
+
     inputs.driveTemperatureCelsius = m_driveMotor.getMotorTemperature();
     inputs.driveCurrent = m_driveMotor.getOutputCurrent();
     inputs.driveVoltage = m_driveMotor.getAppliedOutput() * RobotController.getBatteryVoltage();
@@ -71,8 +73,8 @@ public class SwerveModuleNEO implements SwerveModuleIO {
             .minus(m_turnAbsoluteEncoderOffset)
             .getRadians();
     inputs.turnVelocityRadPerSec =
-        Units.rotationsPerMinuteToRadiansPerSecond(turnRelativeEncoder.getVelocity())
-            / (150.0 / 7.0);
+        Units.rotationsPerMinuteToRadiansPerSecond(m_turnRelativeEncoder.getVelocity())
+            / (1 / SwerveConstants.Module.kTurningMotorGearRatio);
     ;
     inputs.turnTemperature = m_turnMotor.getMotorTemperature();
     inputs.turnCurrent = m_turnMotor.getOutputCurrent();

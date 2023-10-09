@@ -20,22 +20,32 @@ import org.littletonrobotics.junction.Logger;
 public class SwerveJoystickCmd extends CommandBase {
 
   private final SwerveDrive m_swerveSubsystem;
-  private final Supplier<Double> xSpdFunction, ySpdFunction, turningSpdFunction;
-  private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
+  private final Supplier<Double> m_xDrivePercentFunction,
+      m_yDrivePercentFunction,
+      m_turnDrivePercentFunction;
+  private final SlewRateLimiter m_xAccelerationLimiter,
+      m_yAccelerationLimiter,
+      m_angularAccelerationLimiter;
+  private final Supplier<Boolean> m_fieldOrientedFunction;
 
   /** Creates a new SwerveJoystickCmd. */
   public SwerveJoystickCmd(
-      SwerveDrive swerveDrive,
-      Supplier<Double> xSpdFnc,
-      Supplier<Double> ySpdFnc,
-      Supplier<Double> turningSpd) {
-    m_swerveSubsystem = swerveDrive;
-    xSpdFunction = xSpdFnc;
-    ySpdFunction = ySpdFnc;
-    turningSpdFunction = turningSpd;
-    xLimiter = new SlewRateLimiter(SwerveConstants.kMaxAccelerationXMetersPerSecondSquared);
-    yLimiter = new SlewRateLimiter(SwerveConstants.kMaxAccelerationYMetersPerSecondSquared);
-    turningLimiter =
+      SwerveDrive swerveSubsystem,
+      Supplier<Double> xDrivePercentFunction,
+      Supplier<Double> yDrivePercentFunction,
+      Supplier<Double> turnDrivePercentFunction,
+      Supplier<Boolean> fieldOrientedFunction) {
+    m_swerveSubsystem = swerveSubsystem;
+    m_xDrivePercentFunction = xDrivePercentFunction;
+    m_yDrivePercentFunction = yDrivePercentFunction;
+    m_turnDrivePercentFunction = turnDrivePercentFunction;
+    m_fieldOrientedFunction = fieldOrientedFunction;
+
+    m_xAccelerationLimiter =
+        new SlewRateLimiter(SwerveConstants.kMaxAccelerationXMetersPerSecondSquared);
+    m_yAccelerationLimiter =
+        new SlewRateLimiter(SwerveConstants.kMaxAccelerationYMetersPerSecondSquared);
+    m_angularAccelerationLimiter =
         new SlewRateLimiter(SwerveConstants.kMaxAccelerationAngularRadiansPerSecondSquared);
 
     addRequirements(m_swerveSubsystem);
@@ -48,17 +58,19 @@ public class SwerveJoystickCmd extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double xSpd = xSpdFunction.get();
-    double ySpd = ySpdFunction.get();
-    double turnSpd = turningSpdFunction.get();
-
-    xSpd = xLimiter.calculate(xSpd) * SwerveConstants.kMaxSpeedXMetersPerSecond;
-    ySpd = yLimiter.calculate(ySpd) * SwerveConstants.kMaxSpeedYMetersPerSecond;
-    turnSpd = turningLimiter.calculate(turnSpd) * SwerveConstants.kMaxSpeedAngularRadiansPerSecond;
+    double xSpd =
+        m_xAccelerationLimiter.calculate(m_xDrivePercentFunction.get())
+            * SwerveConstants.kMaxSpeedXMetersPerSecond;
+    double ySpd =
+        m_yAccelerationLimiter.calculate(m_yDrivePercentFunction.get())
+            * SwerveConstants.kMaxSpeedYMetersPerSecond;
+    double turnSpd =
+        m_angularAccelerationLimiter.calculate(m_turnDrivePercentFunction.get())
+            * SwerveConstants.kMaxSpeedAngularRadiansPerSecond;
 
     ChassisSpeeds chassisSpeeds;
     // Use field oriented drive
-    if (true) {
+    if (m_fieldOrientedFunction.get()) {
       chassisSpeeds =
           ChassisSpeeds.fromFieldRelativeSpeeds(
               xSpd, ySpd, turnSpd, m_swerveSubsystem.getRotation2d());
@@ -79,9 +91,7 @@ public class SwerveJoystickCmd extends CommandBase {
     SwerveModuleState[] moduleStates =
         SwerveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
 
-    // ChassisSpeeds updated = new ChassisSpeeds(robot_one_step.getX() );
-
-    Logger.getInstance().recordOutput("expected_cassis_speeds", moduleStates);
+    Logger.getInstance().recordOutput("expected_module_states", moduleStates);
     m_swerveSubsystem.setModuleStates(moduleStates);
   }
 

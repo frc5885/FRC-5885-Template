@@ -27,8 +27,6 @@ public class SwerveModuleSim implements SwerveModuleIO {
 
   private final PIDController m_turningPidController;
 
-  private double m_turnAbsoluteOffset;
-
   private boolean m_absoluteEncoderReversed;
 
   public SwerveModuleSim(boolean isReversed) {
@@ -36,7 +34,7 @@ public class SwerveModuleSim implements SwerveModuleIO {
     m_driveDistance = 0.0;
     m_driveVelocity = 0.0;
 
-    m_turnAngle = 0.0;
+    m_turnAngle = Math.PI * 2 * Math.random();
     m_turnAngleVelocity = 0.0;
 
     m_driveVoltage = 0.0;
@@ -44,8 +42,6 @@ public class SwerveModuleSim implements SwerveModuleIO {
 
     m_turningPidController = new PIDController(0.5 * 12, 0, 0);
     m_turningPidController.enableContinuousInput(-Math.PI, Math.PI);
-
-    m_turnAbsoluteOffset = Math.PI * 2 * Math.random();
 
     m_absoluteEncoderReversed = isReversed;
   }
@@ -75,11 +71,17 @@ public class SwerveModuleSim implements SwerveModuleIO {
   }
 
   public void setDriveVoltage(double voltage) {
+    // Fake "static" friction
+    voltage = MathUtil.applyDeadband(voltage/12, 0.15/12) * 12;
+
     m_driveVoltage = MathUtil.clamp(voltage, -12, 12);
     m_driveMotor.setInputVoltage(m_driveVoltage);
   }
 
   public void setTurnVoltage(double voltage) {
+    // Fake "static" friction
+    voltage = MathUtil.applyDeadband(voltage/12, 0.15/12) * 12;
+
     m_turnVoltage = MathUtil.clamp(voltage, -12, 12);
     m_turnMotor.setInputVoltage(m_turnVoltage);
   }
