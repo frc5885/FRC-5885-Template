@@ -72,7 +72,7 @@ public class SwerveModuleSim implements SwerveModuleIO {
 
   public void setDriveVoltage(double voltage) {
     // Fake "static" friction
-    voltage = MathUtil.applyDeadband(voltage/12, 0.15/12) * 12;
+    voltage = MathUtil.applyDeadband(voltage / 12, 0.15 / 12) * 12;
 
     m_driveVoltage = MathUtil.clamp(voltage, -12, 12);
     m_driveMotor.setInputVoltage(m_driveVoltage);
@@ -80,7 +80,7 @@ public class SwerveModuleSim implements SwerveModuleIO {
 
   public void setTurnVoltage(double voltage) {
     // Fake "static" friction
-    voltage = MathUtil.applyDeadband(voltage/12, 0.15/12) * 12;
+    voltage = MathUtil.applyDeadband(voltage / 12, 0.15 / 12) * 12;
 
     m_turnVoltage = MathUtil.clamp(voltage, -12, 12);
     m_turnMotor.setInputVoltage(m_turnVoltage);

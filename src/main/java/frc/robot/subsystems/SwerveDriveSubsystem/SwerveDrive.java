@@ -7,7 +7,6 @@ package frc.robot.subsystems.SwerveDriveSubsystem;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -61,9 +60,17 @@ public class SwerveDrive extends SubsystemBase {
       m_turnController[i].enableContinuousInput(-Math.PI, Math.PI);
 
       if (Constants.currentMode == Mode.REAL) {
-        m_driveFeedforward[i] = new SimpleMotorFeedforward(SwerveConstants.kFeedForwardKs, SwerveConstants.kFeedForwardKv, SwerveConstants.kFeedForwardKa);
+        m_driveFeedforward[i] =
+            new SimpleMotorFeedforward(
+                SwerveConstants.kFeedForwardKs,
+                SwerveConstants.kFeedForwardKv,
+                SwerveConstants.kFeedForwardKa);
       } else {
-        m_driveFeedforward[i] = new SimpleMotorFeedforward(SwerveConstants.Simulation.kFeedForwardKs, SwerveConstants.Simulation.kFeedForwardKv, SwerveConstants.Simulation.kFeedForwardKa);
+        m_driveFeedforward[i] =
+            new SimpleMotorFeedforward(
+                SwerveConstants.Simulation.kFeedForwardKs,
+                SwerveConstants.Simulation.kFeedForwardKv,
+                SwerveConstants.Simulation.kFeedForwardKa);
       }
     }
   }

@@ -81,10 +81,10 @@ public final class Constants {
             new Translation2d(kWheelBaseMeters / 2.0, -kTrackWidthMeters / 2.0),
             new Translation2d(-kWheelBaseMeters / 2.0, kTrackWidthMeters / 2.0),
             new Translation2d(-kWheelBaseMeters / 2.0, -kTrackWidthMeters / 2.0));
-    
-            public static final double kFeedForwardKs = 1.0;
-      public static final double kFeedForwardKv = 0.0;
-      public static final double kFeedForwardKa = 0.0;
+
+    public static final double kFeedForwardKs = 0.0892581;
+    public static final double kFeedForwardKv = 2.66314;
+    public static final double kFeedForwardKa = 0.0;
 
     // Automous constants
 
@@ -93,7 +93,6 @@ public final class Constants {
     // Order is {x, y, theta}
     public static final Matrix<N3, N1> kStateStdDevs = VecBuilder.fill(0.1, 0.1, 0.1);
     public static final Matrix<N3, N1> kVisionMeasurementStdDevs = VecBuilder.fill(0.9, 0.9, 0.9);
-
 
     // Module constants
 
