@@ -7,14 +7,11 @@ package frc.robot.kernal;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants;
 import frc.robot.Constants.SwerveConstants;
-import frc.robot.commands.SwerveFollowSquare;
 import frc.robot.commands.SwerveJoystickCmd;
 import frc.robot.subsystems.PoseEstimatorSubsystem.SwervePoseEstimator;
 import frc.robot.subsystems.SwerveDriveSubsystem.SwerveDrive;
@@ -108,8 +105,7 @@ public class RobotContainer {
     // new JoystickButton(controller.getHID(), Button.kX.value)
     //     .onTrue(new SwerveFollowSquare(swDrive, swPoseEstimator));
 
-    // swDrive.setDefaultCommand(
-    //   new SwerveSolveFeedForward(swDrive));
+    // swDrive.setDefaultCommand(new SwerveSolveFeedForward(swDrive));
   }
 
   public Command getAutonomousCommand() {

@@ -11,7 +11,7 @@ import edu.wpi.first.math.util.Units;
 
 public final class Constants {
 
-  public static final Mode currentMode = Mode.SIMULATOR;
+  public static final Mode currentMode = Mode.REAL;
 
   public static enum Mode {
     REAL,
@@ -23,8 +23,8 @@ public final class Constants {
   public static final class SwerveConstants {
 
     // Speed
-    public static final double kMaxSpeedXMetersPerSecond = 1.5;
-    public static final double kMaxSpeedYMetersPerSecond = 1.5;
+    public static final double kMaxSpeedXMetersPerSecond = 1;
+    public static final double kMaxSpeedYMetersPerSecond = 1;
     public static final double kMaxSpeedAngularRadiansPerSecond = Math.PI * 1;
 
     public static final double kMaxAccelerationXMetersPerSecondSquared = 6.0;
@@ -66,7 +66,7 @@ public final class Constants {
 
     // Controller
 
-    public static final double kDeadband = 0.075;
+    public static final double kDeadband = 0.12;
 
     // Physical constants
 

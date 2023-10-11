@@ -81,12 +81,12 @@ public class SwerveJoystickCmd extends CommandBase {
     // TODO: Check 3rd order problem solution involving the tracking of the twist over time
 
     // Comment below out if problem occures
-    // chassisSpeeds =
-    //     discretize(
-    //         chassisSpeeds.vxMetersPerSecond,
-    //         chassisSpeeds.vyMetersPerSecond,
-    //         chassisSpeeds.omegaRadiansPerSecond,
-    //         0.02);
+    chassisSpeeds =
+        discretize(
+            chassisSpeeds.vxMetersPerSecond,
+            chassisSpeeds.vyMetersPerSecond,
+            chassisSpeeds.omegaRadiansPerSecond,
+            0.02);
 
     SwerveModuleState[] moduleStates =
         SwerveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
@@ -131,7 +131,9 @@ public class SwerveJoystickCmd extends CommandBase {
     final Translation2d translation_part =
         transform
             .getTranslation()
-            .rotateBy(new Rotation2d(halftheta_by_tan_of_halfdtheta, -half_dtheta));
+            .rotateBy(new Rotation2d(halftheta_by_tan_of_halfdtheta, -half_dtheta))
+            .times(Math.hypot(halftheta_by_tan_of_halfdtheta, half_dtheta));
+
     return new Twist2d(translation_part.getX(), translation_part.getY(), dtheta);
   }
 
