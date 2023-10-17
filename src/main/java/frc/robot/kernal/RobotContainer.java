@@ -4,7 +4,6 @@
 
 package frc.robot.kernal;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -12,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 import frc.robot.Constants.SwerveConstants;
-import frc.robot.commands.SwerveJoystickCmd;
+import frc.robot.commands.SwerveSolveFeedForward;
 import frc.robot.subsystems.PoseEstimatorSubsystem.SwervePoseEstimator;
 import frc.robot.subsystems.SwerveDriveSubsystem.SwerveDrive;
 import frc.robot.subsystems.SwerveDriveSubsystem.SwerveModuleNEO;
@@ -31,7 +30,7 @@ public class RobotContainer {
   public RobotContainer() {
 
     // Setup controllers depending on the current mode
-    switch (Constants.currentMode) {
+    switch (Constants.kCurrentMode) {
       case REAL:
         if (!RobotBase.isReal()) {
           DriverStation.reportError("Attempted to run REAL on SIMULATED robot!", false);
@@ -94,18 +93,21 @@ public class RobotContainer {
 
   private void configureBindings() {
 
-    swDrive.setDefaultCommand(
-        new SwerveJoystickCmd(
-            swDrive,
-            () -> (-MathUtil.applyDeadband(controller.getLeftY(), SwerveConstants.kDeadband)),
-            () -> (-MathUtil.applyDeadband(controller.getLeftX(), SwerveConstants.kDeadband)),
-            () -> (-MathUtil.applyDeadband(controller.getRightX(), SwerveConstants.kDeadband)),
-            () -> (true)));
+    // swDrive.setDefaultCommand(
+    //     new SwerveJoystickCmd(
+    //         swDrive,
+    //         () -> (-MathUtil.applyDeadband(controller.getLeftY(),
+    // ControllerConstants.kDeadband)),
+    //         () -> (-MathUtil.applyDeadband(controller.getLeftX(),
+    // ControllerConstants.kDeadband)),
+    //         () -> (-MathUtil.applyDeadband(controller.getRightX(),
+    // ControllerConstants.kDeadband)),
+    //         () -> (true)));
 
     // new JoystickButton(controller.getHID(), Button.kX.value)
     //     .onTrue(new SwerveFollowSquare(swDrive, swPoseEstimator));
 
-    // swDrive.setDefaultCommand(new SwerveSolveFeedForward(swDrive));
+    swDrive.setDefaultCommand(new SwerveSolveFeedForward(swDrive));
   }
 
   public Command getAutonomousCommand() {

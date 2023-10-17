@@ -45,7 +45,7 @@ public class Robot extends LoggedRobot {
 
     // Copied from advtangekit examples
     // Set up data receivers & replay source
-    switch (Constants.currentMode) {
+    switch (Constants.kCurrentMode) {
         // Running on a real robot, log to a USB stick
       case REAL:
         logger.addDataReceiver(new WPILOGWriter("/media/sda1/"));

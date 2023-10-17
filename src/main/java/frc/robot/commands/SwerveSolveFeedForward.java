@@ -17,9 +17,8 @@ public class SwerveSolveFeedForward extends CommandBase {
   private final Timer m_timer = new Timer();
 
   private final double m_delay = 3.0;
-  private final double m_rampDelay = 0.3;
   private final double m_rampRate = 0.025;
-  private final double m_minimumWaitTime = 0.5;
+  private final double m_minimumWaitTime = 1;
 
   private final List<Double> m_xVelocityMetersPerSecond = new LinkedList<Double>();
   private final List<Double> m_yVoltage = new LinkedList<Double>();
@@ -54,7 +53,7 @@ public class SwerveSolveFeedForward extends CommandBase {
     } else {
       m_swerveSubsystem.setVoltage(m_currentVoltage);
 
-      if ((currentVelocityMetersPerSecond - m_previousVelocityMetersPerSecond) / 0.02 <= 0.005
+      if ((currentVelocityMetersPerSecond - m_previousVelocityMetersPerSecond) / 0.02 <= 0.0005
           && (m_timer.get() - m_lastSetTime) >= m_minimumWaitTime) {
         m_xVelocityMetersPerSecond.add(currentVelocityMetersPerSecond);
         m_yVoltage.add(m_currentVoltage);
@@ -69,14 +68,104 @@ public class SwerveSolveFeedForward extends CommandBase {
     m_previousVelocityMetersPerSecond = currentVelocityMetersPerSecond;
   }
 
+  public double[] calculateLeastSquares(List<Double> x, List<Double> y) {
+    double sumX = 0.0;
+    double sumY = 0.0;
+    double sumXY = 0.0;
+    double sumXX = 0.0;
+
+    for (int i = 0; i != x.size(); ++i) {
+      sumX += x.get(i);
+      sumY += y.get(i);
+      sumXY += x.get(i) * y.get(i);
+      sumXX += x.get(i) * x.get(i);
+    }
+
+    double slope = (x.size() * sumXY - sumX * sumY) / (x.size() * sumXX - sumX * sumX);
+    double intercept = (sumY - slope * sumX) / x.size();
+
+    return new double[] {slope, intercept};
+  }
+
+  public double calculateR2(List<Double> actual, List<Double> predicted) {
+    double sumActual = 0.0;
+    double sumPredicted = 0.0;
+    double sumSquaredActual = 0.0;
+    double sumSquaredPredicted = 0.0;
+    double sumProduct = 0.0;
+    int n = actual.size();
+
+    for (int i = 0; i < n; i++) {
+      double actualValue = actual.get(i);
+      double predictedValue = predicted.get(i);
+      sumActual += actualValue;
+      sumPredicted += predictedValue;
+      sumSquaredActual += actualValue * actualValue;
+      sumSquaredPredicted += predictedValue * predictedValue;
+      sumProduct += actualValue * predictedValue;
+    }
+
+    double numerator = n * sumProduct - sumActual * sumPredicted;
+    double denominator =
+        Math.sqrt(
+            (n * sumSquaredActual - sumActual * sumActual)
+                * (n * sumSquaredPredicted - sumPredicted * sumPredicted));
+    double r2 = numerator / denominator;
+    return r2 * r2;
+  }
+
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     m_swerveSubsystem.stop();
 
-    for (int i = 0; i != m_xVelocityMetersPerSecond.size(); ++i) {
-      System.out.println(m_xVelocityMetersPerSecond.get(i) + ", " + m_yVoltage.get(i));
+    // If we don't have enough data, don't try to calculate anything
+    if (m_xVelocityMetersPerSecond.size() < 3) {
+      System.out.println("Not enough data to calculate feed forward, exiting");
+      return;
     }
+
+    // Calculate the derivitive and find the point where the slope is >= 1
+    // This is an arbitrary value, but it should be greater then 1
+    int startPoint = 0;
+    for (int i = 0; i != m_xVelocityMetersPerSecond.size() - 1; ++i) {
+      double deriv =
+          (m_yVoltage.get(i + 1) - m_yVoltage.get(i))
+              / (m_xVelocityMetersPerSecond.get(i + 1) - m_xVelocityMetersPerSecond.get(i));
+      System.out.println(deriv);
+      if (deriv >= 1 && !Double.isInfinite(deriv) && !Double.isNaN(deriv)) {
+        startPoint = i;
+        System.out.println("Found start point at " + startPoint);
+        break;
+      }
+    }
+
+    if (startPoint == 0) {
+      System.out.println("Could not find start point, using all data. Data may be inaccurate.");
+    }
+
+    // Delete everything before the start point
+    for (int i = 0; i != startPoint; ++i) {
+      m_xVelocityMetersPerSecond.remove(0);
+      m_yVoltage.remove(0);
+    }
+
+    // for (int i = 0; i != m_xVelocityMetersPerSecond.size(); ++i) {
+    //   System.out.println(m_xVelocityMetersPerSecond.get(i) + ", " + m_yVoltage.get(i));
+    // }
+
+    double[] rslt = calculateLeastSquares(m_xVelocityMetersPerSecond, m_yVoltage);
+
+    System.out.println("Slope: " + rslt[0]);
+    System.out.println("Intercept: " + rslt[1]);
+
+    // Calculate predicted values
+    List<Double> predicted = new LinkedList<Double>();
+    for (int i = 0; i != m_xVelocityMetersPerSecond.size(); ++i) {
+      predicted.add(rslt[0] * m_xVelocityMetersPerSecond.get(i) + rslt[1]);
+    }
+
+    System.out.println("R2: " + calculateR2(m_yVoltage, predicted));
   }
 
   // Returns true when the command should end.

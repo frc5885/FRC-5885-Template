@@ -11,12 +11,21 @@ import edu.wpi.first.math.util.Units;
 
 public final class Constants {
 
-  public static final Mode currentMode = Mode.REAL;
+  public static final Mode kCurrentMode = Mode.SIMULATOR;
 
   public static enum Mode {
     REAL,
     SIMULATOR,
     REPLAY
+  }
+
+  // Controller constants
+  public static final class ControllerConstants {
+    public static final int kDriverControllerPort = 0;
+    public static final int kOperatorControllerPort = 1;
+
+    // Controller
+    public static final double kDeadband = 0.12;
   }
 
   // Swerve drive constants
@@ -53,20 +62,16 @@ public final class Constants {
     public static final boolean kRightRearTurnMotorInverted = false;
 
     // Module offsets
-    public static final Rotation2d kLeftFrontModuleOffset = new Rotation2d(2.50);
-    public static final Rotation2d kRightFrontModuleOffset = new Rotation2d(-0.265);
-    public static final Rotation2d kLeftRearModuleOffset = new Rotation2d(-2.4675);
-    public static final Rotation2d kRightRearModuleOffset = new Rotation2d(-1.225);
+    public static final Rotation2d kLeftFrontModuleOffset = Rotation2d.fromDegrees(143.239);
+    public static final Rotation2d kRightFrontModuleOffset = Rotation2d.fromDegrees(-15.183382);
+    public static final Rotation2d kLeftRearModuleOffset = Rotation2d.fromDegrees(-141.377336);
+    public static final Rotation2d kRightRearModuleOffset = Rotation2d.fromDegrees(-70.18733);
 
     // Analog encoders
     public static final int kLeftFrontAnalogEncoderPort = 3;
     public static final int kRightFrontAnalogEncoderPort = 2;
     public static final int kLeftRearAnalogEncoderPort = 0;
     public static final int kRightRearAnalogEncoderPort = 1;
-
-    // Controller
-
-    public static final double kDeadband = 0.12;
 
     // Physical constants
 

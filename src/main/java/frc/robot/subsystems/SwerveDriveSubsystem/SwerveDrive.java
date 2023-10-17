@@ -59,7 +59,7 @@ public class SwerveDrive extends SubsystemBase {
       m_turnController[i] = new PIDController(-0.5, 0, 0);
       m_turnController[i].enableContinuousInput(-Math.PI, Math.PI);
 
-      if (Constants.currentMode == Mode.REAL) {
+      if (Constants.kCurrentMode == Mode.REAL) {
         m_driveFeedforward[i] =
             new SimpleMotorFeedforward(
                 SwerveConstants.kFeedForwardKs,
@@ -84,7 +84,7 @@ public class SwerveDrive extends SubsystemBase {
     var chassisSpeeds = SwerveConstants.kDriveKinematics.toChassisSpeeds(getModuleStates());
     double chassisRotationSpeed = chassisSpeeds.omegaRadiansPerSecond;
 
-    if (Constants.currentMode == Mode.REAL) {
+    if (Constants.kCurrentMode == Mode.REAL) {
       m_heading = Rotation2d.fromDegrees(-m_gyro.getAngle());
     } else {
       m_heading = m_heading.plus(Rotation2d.fromRadians(chassisRotationSpeed * 0.02));
