@@ -49,6 +49,7 @@ public class SwerveDrive extends SubsystemBase {
       SwerveModuleIO backRight) {
 
     m_gyro = new AHRS(SPI.Port.kMXP);
+    resetGyro();
 
     m_modules[0] = frontLeft;
     m_modules[1] = frontRight;
@@ -56,7 +57,7 @@ public class SwerveDrive extends SubsystemBase {
     m_modules[3] = backRight;
 
     for (int i = 0; i != 4; i++) {
-      m_turnController[i] = new PIDController(-0.5, 0, 0);
+      m_turnController[i] = new PIDController(8, 0, 0);
       m_turnController[i].enableContinuousInput(-Math.PI, Math.PI);
 
       if (Constants.kCurrentMode == Mode.REAL) {
@@ -160,8 +161,7 @@ public class SwerveDrive extends SubsystemBase {
 
       m_modules[i].setTurnVoltage(
           (m_turnController[i].calculate(
-                  m_modulesInput[i].turnPositionRad, desiredStates[i].angle.getRadians()))
-              * 12);
+              m_modulesInput[i].turnPositionRad, desiredStates[i].angle.getRadians())));
     }
   }
 
@@ -174,7 +174,7 @@ public class SwerveDrive extends SubsystemBase {
 
     for (int i = 0; i != 4; i++) {
       m_modules[i].setTurnVoltage(
-          (m_turnController[i].calculate(m_modulesInput[i].turnPositionRad, angle)) * 12);
+          (m_turnController[i].calculate(m_modulesInput[i].turnPositionRad, angle)));
     }
   }
 

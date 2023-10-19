@@ -11,7 +11,7 @@ import edu.wpi.first.math.util.Units;
 
 public final class Constants {
 
-  public static final Mode kCurrentMode = Mode.SIMULATOR;
+  public static final Mode kCurrentMode = Mode.REAL;
 
   public static enum Mode {
     REAL,
@@ -34,11 +34,11 @@ public final class Constants {
     // Speed
     public static final double kMaxSpeedXMetersPerSecond = 1;
     public static final double kMaxSpeedYMetersPerSecond = 1;
-    public static final double kMaxSpeedAngularRadiansPerSecond = Math.PI * 1;
+    public static final double kMaxSpeedAngularRadiansPerSecond = Math.PI * 0.75;
 
-    public static final double kMaxAccelerationXMetersPerSecondSquared = 6.0;
-    public static final double kMaxAccelerationYMetersPerSecondSquared = 6.0;
-    public static final double kMaxAccelerationAngularRadiansPerSecondSquared = Math.PI * 2.0;
+    public static final double kMaxAccelerationXMetersPerSecondSquared = 16.0;
+    public static final double kMaxAccelerationYMetersPerSecondSquared = 16.0;
+    public static final double kMaxAccelerationAngularRadiansPerSecondSquared = Math.PI * 3.5;
 
     // Motors
     public static final int kLeftFrontDriveMotorID = 13;
@@ -56,10 +56,10 @@ public final class Constants {
     public static final int kLeftRearTurnMotorID = 20;
     public static final int kRightRearTurnMotorID = 21;
 
-    public static final boolean kLeftFrontTurnMotorInverted = false;
-    public static final boolean kRightFrontTurnMotorInverted = false;
-    public static final boolean kLeftRearTurnMotorInverted = false;
-    public static final boolean kRightRearTurnMotorInverted = false;
+    public static final boolean kLeftFrontTurnMotorInverted = true;
+    public static final boolean kRightFrontTurnMotorInverted = true;
+    public static final boolean kLeftRearTurnMotorInverted = true;
+    public static final boolean kRightRearTurnMotorInverted = true;
 
     // Module offsets
     public static final Rotation2d kLeftFrontModuleOffset = Rotation2d.fromDegrees(143.239);
@@ -87,8 +87,8 @@ public final class Constants {
             new Translation2d(-kWheelBaseMeters / 2.0, kTrackWidthMeters / 2.0),
             new Translation2d(-kWheelBaseMeters / 2.0, -kTrackWidthMeters / 2.0));
 
-    public static final double kFeedForwardKs = 0.0892581;
-    public static final double kFeedForwardKv = 2.66314;
+    public static final double kFeedForwardKs = 0.09214084677588957;
+    public static final double kFeedForwardKv = 2.6828478208373143;
     public static final double kFeedForwardKa = 0.0;
 
     // Automous constants

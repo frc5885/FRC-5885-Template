@@ -40,7 +40,7 @@ public class SwerveModuleSim implements SwerveModuleIO {
     m_driveVoltage = 0.0;
     m_turnVoltage = 0.0;
 
-    m_turningPidController = new PIDController(0.5 * 12, 0, 0);
+    m_turningPidController = new PIDController(12, 0, 0);
     m_turningPidController.enableContinuousInput(-Math.PI, Math.PI);
 
     m_absoluteEncoderReversed = isReversed;
