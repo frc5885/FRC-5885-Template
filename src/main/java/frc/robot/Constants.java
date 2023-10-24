@@ -32,9 +32,9 @@ public final class Constants {
   public static final class SwerveConstants {
 
     // Speed
-    public static final double kMaxSpeedXMetersPerSecond = 1;
-    public static final double kMaxSpeedYMetersPerSecond = 1;
-    public static final double kMaxSpeedAngularRadiansPerSecond = Math.PI * 0.75;
+    public static final double kMaxSpeedXMetersPerSecond = 2;
+    public static final double kMaxSpeedYMetersPerSecond = 2;
+    public static final double kMaxSpeedAngularRadiansPerSecond = Math.PI * 1;
 
     public static final double kMaxAccelerationXMetersPerSecondSquared = 16.0;
     public static final double kMaxAccelerationYMetersPerSecondSquared = 16.0;

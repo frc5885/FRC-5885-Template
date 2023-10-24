@@ -27,24 +27,29 @@ import java.util.List;
 public class SwerveFollowSquare extends SequentialCommandGroup {
 
   TrajectoryConfig trajectoryConfig =
-      new TrajectoryConfig(1, 1).setKinematics(SwerveConstants.kDriveKinematics);
+      new TrajectoryConfig(2, 4).setKinematics(SwerveConstants.kDriveKinematics);
 
   Trajectory trajectory;
 
   ProfiledPIDController thetaController =
-      new ProfiledPIDController(3, 0, 0, new TrapezoidProfile.Constraints(1, 1));
+      new ProfiledPIDController(3, 0, 0, new TrapezoidProfile.Constraints(Math.PI * 1.5, Math.PI));
 
   /** Creates a new SwerveFollowSquare. */
   public SwerveFollowSquare(SwerveDrive swerveSubsystem, SwervePoseEstimator poseEstimator) {
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
-    PIDController xController = new PIDController(1.5, 0, 0);
-    PIDController yController = new PIDController(1.5, 0, 0);
+    PIDController xController = new PIDController(1, 0, 0);
+    PIDController yController = new PIDController(1, 0, 0);
 
     trajectory =
         TrajectoryGenerator.generateTrajectory(
             new Pose2d(0, 0, new Rotation2d(0)),
-            List.of(new Translation2d(1, 0), new Translation2d(1, -1)),
-            new Pose2d(2, -1, Rotation2d.fromDegrees(0)),
+            List.of(
+                new Translation2d(1, 1),
+                new Translation2d(4, 1),
+                new Translation2d(4, -1),
+                new Translation2d(3, -1),
+                new Translation2d(1, 0)),
+            new Pose2d(3, 0, Rotation2d.fromDegrees(0)),
             trajectoryConfig);
 
     SwerveControllerCommand swerveControllerCommand =
@@ -60,7 +65,7 @@ public class SwerveFollowSquare extends SequentialCommandGroup {
 
     addCommands(
         new InstantCommand(() -> poseEstimator.reset(trajectory.getInitialPose())),
-        swerveControllerCommand,
-        new InstantCommand(() -> swerveSubsystem.stop()));
+        swerveControllerCommand);
+    // new InstantCommand(() -> swerveSubsystem.stop()));
   }
 }
