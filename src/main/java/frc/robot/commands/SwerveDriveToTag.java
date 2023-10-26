@@ -52,13 +52,14 @@ public class SwerveDriveToTag extends CommandBase {
     double xSpd =
         m_xAccelerationLimiter.calculate(
                 MathUtil.clamp((14.513558 - m_poseEstimator.getPose().getX()) * 0.5, -1, 1))
-            * SwerveConstants.kMaxSpeedXMetersPerSecond;
+            * 1;
     double ySpd =
         m_yAccelerationLimiter.calculate(
                 MathUtil.clamp((4.424426 - m_poseEstimator.getPose().getY()) * 0.5, -1, 1))
-            * SwerveConstants.kMaxSpeedYMetersPerSecond;
+            * 1;
     double turnSpd = 0;
-    // m_angularAccelerationLimiter.calculate(MathUtil.clamp((0-m_poseEstimator.getPose().getRotation().getRadians())*0.5,-1, 1))
+    // double turnSpd =
+    // m_angularAccelerationLimiter.calculate(MathUtil.clamp((0-m_poseEstimator.getPose().getRotation().getRadians())*0.05,-1, 1))
     //     * 3.14159;
 
     ChassisSpeeds chassisSpeeds;
