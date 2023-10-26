@@ -8,7 +8,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
@@ -43,12 +42,7 @@ public class SwerveFollowSquare extends SequentialCommandGroup {
     trajectory =
         TrajectoryGenerator.generateTrajectory(
             new Pose2d(0, 0, new Rotation2d(0)),
-            List.of(
-                new Translation2d(1, 1),
-                new Translation2d(4, 1),
-                new Translation2d(4, -1),
-                new Translation2d(3, -1),
-                new Translation2d(1, 0)),
+            List.of(),
             new Pose2d(3, 0, Rotation2d.fromDegrees(0)),
             trajectoryConfig);
 

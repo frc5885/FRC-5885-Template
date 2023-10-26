@@ -1,0 +1,17 @@
+{
+  "Connections": {
+    "open": true
+  },
+  "NetworkTables Settings": {
+    "listenAddress": "0.0.0.0",
+    "mode": "Client (NT4)"
+  },
+  "transitory": {
+    "NoodleVision": {
+      "open": true,
+      "output": {
+        "open": true
+      }
+    }
+  }
+}
