@@ -4,7 +4,8 @@
   },
   "NetworkTables Settings": {
     "listenAddress": "0.0.0.0",
-    "mode": "Client (NT4)"
+    "mode": "Client (NT4)",
+    "serverTeam": "localhost"
   },
   "transitory": {
     "NoodleVision": {
