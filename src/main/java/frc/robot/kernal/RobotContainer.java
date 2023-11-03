@@ -4,12 +4,25 @@
 
 package frc.robot.kernal;
 
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.auto.PIDConstants;
+import com.pathplanner.lib.auto.SwerveAutoBuilder;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.SwerveConstants;
@@ -98,6 +111,7 @@ public class RobotContainer {
     swDrive.setDefaultCommand(
         new SwerveJoystickCmd(
             swDrive,
+            swPoseEstimator,
             () -> (-MathUtil.applyDeadband(controller.getLeftY(), ControllerConstants.kDeadband)),
             () -> (-MathUtil.applyDeadband(controller.getLeftX(), ControllerConstants.kDeadband)),
             () -> (-MathUtil.applyDeadband(controller.getRightX(), ControllerConstants.kDeadband)),
@@ -118,6 +132,15 @@ public class RobotContainer {
     //     .onTrue(new SwerveFollowSquare(swDrive, swPoseEstimator));
 
     // swDrive.setDefaultCommand(new SwerveSolveFeedForward(swDrive));
+
+    // PathPlannerPath path = PathPlannerPath.fromPathFile("around the station");
+    // HashMap<String, Command> eventMap = new HashMap<>();
+    // List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("around the station", new PathConstraints(4, 3));
+    // SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(swPoseEstimator::getPose, swPoseEstimator::reset, new PIDConstants(5,0,0), new PIDConstants(0.5,0,0), swDrive::setChassisSpeeds, eventMap, swDrive);
+
+    // new JoystickButton(controller.getHID(), Button.kY.value)
+    //     .onTrue(
+    //         autoBuilder.fullAuto(pathGroup));
   }
 
   public Command getAutonomousCommand() {

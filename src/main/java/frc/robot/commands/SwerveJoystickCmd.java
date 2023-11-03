@@ -13,6 +13,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.SwerveConstants;
+import frc.robot.subsystems.PoseEstimatorSubsystem.SwervePoseEstimator;
 import frc.robot.subsystems.SwerveDriveSubsystem.SwerveDrive;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
@@ -20,6 +21,7 @@ import org.littletonrobotics.junction.Logger;
 public class SwerveJoystickCmd extends CommandBase {
 
   private final SwerveDrive m_swerveSubsystem;
+  private final SwervePoseEstimator m_poseEstimator;
   private final Supplier<Double> m_xDrivePercentFunction,
       m_yDrivePercentFunction,
       m_turnDrivePercentFunction;
@@ -31,11 +33,13 @@ public class SwerveJoystickCmd extends CommandBase {
   /** Creates a new SwerveJoystickCmd. */
   public SwerveJoystickCmd(
       SwerveDrive swerveSubsystem,
+      SwervePoseEstimator poseEstimator,
       Supplier<Double> xDrivePercentFunction,
       Supplier<Double> yDrivePercentFunction,
       Supplier<Double> turnDrivePercentFunction,
       Supplier<Boolean> fieldOrientedFunction) {
     m_swerveSubsystem = swerveSubsystem;
+    m_poseEstimator = poseEstimator;
     m_xDrivePercentFunction = xDrivePercentFunction;
     m_yDrivePercentFunction = yDrivePercentFunction;
     m_turnDrivePercentFunction = turnDrivePercentFunction;
@@ -49,6 +53,7 @@ public class SwerveJoystickCmd extends CommandBase {
         new SlewRateLimiter(SwerveConstants.kMaxAccelerationAngularRadiansPerSecondSquared);
 
     addRequirements(m_swerveSubsystem);
+    addRequirements(m_poseEstimator);
   }
 
   // Called when the command is initially scheduled.
@@ -73,7 +78,7 @@ public class SwerveJoystickCmd extends CommandBase {
     if (m_fieldOrientedFunction.get()) {
       chassisSpeeds =
           ChassisSpeeds.fromFieldRelativeSpeeds(
-              xSpd, ySpd, turnSpd, m_swerveSubsystem.getRotation2d());
+              xSpd, ySpd, turnSpd, m_poseEstimator.getPose().getRotation());
     } else {
       chassisSpeeds = new ChassisSpeeds(xSpd, ySpd, turnSpd);
     }

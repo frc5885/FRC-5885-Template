@@ -188,6 +188,12 @@ public class SwerveDrive extends SubsystemBase {
     return SwerveConstants.kDriveKinematics.toChassisSpeeds(getModuleStates());
   }
 
+  public void setChassisSpeeds(ChassisSpeeds speeds) {
+    SwerveModuleState[] moduleStates =
+        SwerveConstants.kDriveKinematics.toSwerveModuleStates(speeds);
+    setModuleStates(moduleStates);
+  }
+
   public double getAverageMotorVoltage() {
     return (m_modulesInput[0].driveVoltage
             + m_modulesInput[1].driveVoltage

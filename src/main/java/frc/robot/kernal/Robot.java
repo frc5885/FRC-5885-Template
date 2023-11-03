@@ -4,7 +4,6 @@
 
 package frc.robot.kernal;
 
-import com.pathplanner.lib.server.PathPlannerServer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants;
@@ -21,7 +20,6 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void robotInit() {
-    PathPlannerServer.startServer(5811);
     Logger logger = Logger.getInstance();
 
     // Copied from advtangekit examples
