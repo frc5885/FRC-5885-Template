@@ -53,7 +53,6 @@ public class SwerveJoystickCmd extends CommandBase {
         new SlewRateLimiter(SwerveConstants.kMaxAccelerationAngularRadiansPerSecondSquared);
 
     addRequirements(m_swerveSubsystem);
-    addRequirements(m_poseEstimator);
   }
 
   // Called when the command is initially scheduled.

@@ -18,6 +18,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.TimestampedDoubleArray;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.PoseEstimatorConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.subsystems.SwerveDriveSubsystem.SwerveDrive;
 import java.util.function.Supplier;
@@ -49,12 +50,12 @@ public class SwervePoseEstimator extends SubsystemBase {
             m_rotationSupplier.get(),
             m_swerveModulePositionSupplier.get(),
             new Pose2d(),
-            SwerveConstants.kStateStdDevs,
-            SwerveConstants.kVisionMeasurementStdDevs);
+            PoseEstimatorConstants.kStateStdDevs,
+            PoseEstimatorConstants.kVisionMeasurementStdDevs);
 
     m_sw = swerveDrive;
 
-    NetworkTable table = NetworkTableInstance.getDefault().getTable("NoodleVision/output");
+    NetworkTable table = NetworkTableInstance.getDefault().getTable("NoodleVision1/output");
     m_observationSubscriber = table.getDoubleArrayTopic("observations").subscribe(new double[] {});
     m_visibleTagsSubscriber = table.getIntegerArrayTopic("visible_tags").subscribe(new long[] {});
     // m_aprilTagFieldLayout = AprilTagFields.
@@ -67,7 +68,7 @@ public class SwervePoseEstimator extends SubsystemBase {
     // System.out.println(m_visibleTagsSubscriber.get().length);
 
     TimestampedDoubleArray obs_tm = m_observationSubscriber.getAtomic();
-    // System.out.println("obs_tm: " + obs_tm.value.length + " " + obs_tm.timestamp );
+    // System.out.println("obs_tm: " + obs_tm.value.length + " " + obs_tm.timestamp);
     if (obs_tm.value.length >= 1) {
       double timestmp = obs_tm.timestamp / 1000000.0;
 
@@ -114,6 +115,11 @@ public class SwervePoseEstimator extends SubsystemBase {
 
       if (cameraPose == null) return;
 
+      Logger.getInstance().recordOutput("Vision Think Pose pre-transform", cameraPose.toPose2d());
+
+      cameraPose =
+          cameraPose.transformBy(PoseEstimatorConstants.kCameraPositionMeters[0].inverse());
+
       if (cameraPose.getX() < 0
           || cameraPose.getY() < 0
           || cameraPose.getX() > Units.inchesToMeters(651.25)
@@ -142,6 +148,8 @@ public class SwervePoseEstimator extends SubsystemBase {
       // double avgDistance = totalDistance / tagPoses.size();
 
       // System.out.print("Lodding");
+      Logger.getInstance().recordOutput("Vision Think Pose", cameraPose.toPose2d());
+      Logger.getInstance().recordOutput("Vision Think Pose 3D", cameraPose);
       m_poseEstimator.addVisionMeasurement(cameraPose.toPose2d(), timestmp);
     }
   }

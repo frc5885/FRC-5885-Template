@@ -20,8 +20,13 @@
       "AdvantageKit": {
         "RealOutputs": {
           "open": true
-        },
-        "open": true
+        }
+      },
+      "NoodleVision": {
+        "open": true,
+        "output": {
+          "open": true
+        }
       },
       "Shuffleboard": {
         ".metadata": {

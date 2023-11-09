@@ -3,7 +3,10 @@ package frc.robot;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
@@ -26,6 +29,30 @@ public final class Constants {
 
     // Controller
     public static final double kDeadband = 0.12;
+  }
+
+  public static final class PoseEstimatorConstants {
+
+    // Camera Positions
+    // Relative to robot center to camera sensor, in order of IDs
+    // Rotation is in degrees, relative to robot center pointing forward
+    public static final Transform3d[] kCameraPositionMeters = {
+      new Transform3d(
+          new Translation3d(
+              Units.inchesToMeters(10), Units.inchesToMeters(0), Units.inchesToMeters(0)),
+          new Rotation3d(0, 0, 0)),
+      new Transform3d(
+          new Translation3d(
+              Units.inchesToMeters(0), Units.inchesToMeters(0), Units.inchesToMeters(0)),
+          new Rotation3d(0, 0, 0)),
+    };
+
+    // Kalman filter constants
+    // Higher number means less trust in the model
+    // Order is {x, y, theta}
+    public static final Matrix<N3, N1> kStateStdDevs = VecBuilder.fill(0.003, 0.003, 0.003);
+    public static final Matrix<N3, N1> kVisionMeasurementStdDevs =
+        VecBuilder.fill(0.015, 0.015, 0.015);
   }
 
   // Swerve drive constants
@@ -90,15 +117,6 @@ public final class Constants {
     public static final double kFeedForwardKs = 0.09214084677588957;
     public static final double kFeedForwardKv = 2.6828478208373143;
     public static final double kFeedForwardKa = 0.0;
-
-    // Automous constants
-
-    // Kalman filter constants
-    // Higher number means less trust in the model
-    // Order is {x, y, theta}
-    public static final Matrix<N3, N1> kStateStdDevs = VecBuilder.fill(0.003, 0.003, 0.003);
-    public static final Matrix<N3, N1> kVisionMeasurementStdDevs =
-        VecBuilder.fill(0.015, 0.015, 0.015);
 
     // Module constants
 
