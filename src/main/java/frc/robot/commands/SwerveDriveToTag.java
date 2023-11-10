@@ -51,11 +51,11 @@ public class SwerveDriveToTag extends CommandBase {
   public void execute() {
     double xSpd =
         m_xAccelerationLimiter.calculate(
-                MathUtil.clamp((14.513558 - m_poseEstimator.getPose().getX()) * 0.5, -1, 1))
+                MathUtil.clamp((14.513558 - m_poseEstimator.getPose().getX()) * 5, -1, 1))
             * 1;
     double ySpd =
         m_yAccelerationLimiter.calculate(
-                MathUtil.clamp((4.424426 - m_poseEstimator.getPose().getY()) * 0.5, -1, 1))
+                MathUtil.clamp((4.424426 - m_poseEstimator.getPose().getY()) * 5, -1, 1))
             * 1;
     double turnSpd = 0;
     // double turnSpd =

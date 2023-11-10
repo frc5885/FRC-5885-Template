@@ -14,7 +14,7 @@ import edu.wpi.first.math.util.Units;
 
 public final class Constants {
 
-  public static final Mode kCurrentMode = Mode.SIMULATOR;
+  public static final Mode kCurrentMode = Mode.REAL;
 
   public static enum Mode {
     REAL,
@@ -38,8 +38,7 @@ public final class Constants {
     // Rotation is in degrees, relative to robot center pointing forward
     public static final Transform3d[] kCameraPositionMeters = {
       new Transform3d(
-          new Translation3d(
-              Units.inchesToMeters(10), Units.inchesToMeters(0), Units.inchesToMeters(0)),
+          new Translation3d(34 / 100, Units.inchesToMeters(0), Units.inchesToMeters(0)),
           new Rotation3d(0, 0, 0)),
       new Transform3d(
           new Translation3d(

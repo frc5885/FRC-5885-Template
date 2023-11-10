@@ -4,15 +4,22 @@
 
 package frc.robot.kernal;
 
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.SwerveConstants;
+import frc.robot.commands.SwerveFollowSquare;
 import frc.robot.commands.SwerveJoystickCmd;
 import frc.robot.subsystems.PoseEstimatorSubsystem.SwervePoseEstimator;
 import frc.robot.subsystems.SwerveDriveSubsystem.SwerveDrive;
@@ -104,7 +111,10 @@ public class RobotContainer {
             () -> (-MathUtil.applyDeadband(controller.getRightX(), ControllerConstants.kDeadband)),
             () -> (true)));
 
-    // swDrive.setDefaultCommand(new SwerveDriveToTag(swDrive, swPoseEstimator));
+    PathPlannerTrajectory path = PathPlanner.loadPath("leftright", new PathConstraints(2, 3));
+
+    new JoystickButton(controller.getHID(), Button.kX.value)
+        .whileTrue(new SwerveFollowSquare(swDrive, swPoseEstimator));
 
     // new JoystickButton(controller.getHID(), Button.kX.value)
     //     .onTrue(
