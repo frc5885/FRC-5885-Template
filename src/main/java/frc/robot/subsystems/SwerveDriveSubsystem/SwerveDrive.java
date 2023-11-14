@@ -202,6 +202,10 @@ public class SwerveDrive extends SubsystemBase {
         / 4;
   }
 
+  public double getAngularVelocity() {
+    return getChassisSpeeds().omegaRadiansPerSecond;
+  }
+
   public void stop() {
     for (int i = 0; i != 4; i++) {
       m_modules[i].setDriveVoltage(0);

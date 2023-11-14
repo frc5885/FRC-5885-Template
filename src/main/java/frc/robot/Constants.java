@@ -14,7 +14,7 @@ import edu.wpi.first.math.util.Units;
 
 public final class Constants {
 
-  public static final Mode kCurrentMode = Mode.REAL;
+  public static final Mode kCurrentMode = Mode.SIMULATOR;
 
   public static enum Mode {
     REAL,

@@ -75,9 +75,19 @@ public class SwerveJoystickCmd extends CommandBase {
     ChassisSpeeds chassisSpeeds;
     // Use field oriented drive
     if (m_fieldOrientedFunction.get()) {
+      //   chassisSpeeds =
+      //       ChassisSpeeds.fromFieldRelativeSpeeds(
+      //           xSpd, ySpd, turnSpd, m_poseEstimator.getPose().getRotation());
+
       chassisSpeeds =
           ChassisSpeeds.fromFieldRelativeSpeeds(
-              xSpd, ySpd, turnSpd, m_poseEstimator.getPose().getRotation());
+              xSpd,
+              ySpd,
+              turnSpd,
+              m_poseEstimator
+                  .getPose()
+                  .getRotation()
+                  .plus(new Rotation2d(m_swerveSubsystem.getAngularVelocity() * 0.067)));
     } else {
       chassisSpeeds = new ChassisSpeeds(xSpd, ySpd, turnSpd);
     }
@@ -85,12 +95,12 @@ public class SwerveJoystickCmd extends CommandBase {
     // TODO: Check 3rd order problem solution involving the tracking of the twist over time
 
     // Comment below out if problem occures
-    chassisSpeeds =
-        discretize(
-            chassisSpeeds.vxMetersPerSecond,
-            chassisSpeeds.vyMetersPerSecond,
-            chassisSpeeds.omegaRadiansPerSecond,
-            0.02);
+    // chassisSpeeds =
+    //     discretize(
+    //         chassisSpeeds.vxMetersPerSecond,
+    //         chassisSpeeds.vyMetersPerSecond,
+    //         chassisSpeeds.omegaRadiansPerSecond,
+    //         0.02);
 
     SwerveModuleState[] moduleStates =
         SwerveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
