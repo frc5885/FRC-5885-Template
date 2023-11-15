@@ -113,8 +113,9 @@ public class RobotContainer {
             () -> (-MathUtil.applyDeadband(controller.getRightX(), ControllerConstants.kDeadband)),
             () -> (true)));
 
-            PathPlannerTrajectory path = PathPlanner.loadPath("leftright", new PathConstraints(1.5, 2));
-            PathPlannerTrajectory path_fig = PathPlanner.loadPath("figureeight", new PathConstraints(1.5, 2));
+    PathPlannerTrajectory path = PathPlanner.loadPath("leftright", new PathConstraints(2.5, 2.5));
+    PathPlannerTrajectory path_fig =
+        PathPlanner.loadPath("figureeight", new PathConstraints(2.5, 2));
 
     // new JoystickButton(controller.getHID(), Button.kX.value)
     //       .whileTrue(new SwerveFollowSquare(swDrive, swPoseEstimator));
@@ -122,20 +123,52 @@ public class RobotContainer {
     new JoystickButton(controller.getHID(), Button.kX.value)
         .whileTrue(
             new SequentialCommandGroup(
+                    new PPSwerveControllerCommand(
+                        path,
+                        swPoseEstimator::getPose, // Pose supplier
+                        SwerveConstants.kDriveKinematics, // SwerveDriveKinematics
+                        new PIDController(
+                            2, 0,
+                            0), // X controller. Tune these values for your robot. Leaving them 0
+                        // will
+                        // only
+                        // use feedforwards.
+                        new PIDController(
+                            2, 0, 0), // Y controller (usually the same values as X controller)
+                        new PIDController(
+                            3.14159 / 2,
+                            0,
+                            0), // Rotation controller. Tune these values for your robot. Leaving
+                        // them
+
+                        // will only use feedforwards.
+                        swDrive::setModuleStates, // Module states consumer
+                        false, // Should the path be automatically mirrored depending on alliance
+                        // color.
+                        // Optional, defaults to true
+                        swDrive // Requires this drive subsystem
+                        ),
+                    new WaitCommand(0))
+                .repeatedly());
+
+    new JoystickButton(controller.getHID(), Button.kA.value)
+        .whileTrue(
+            new SequentialCommandGroup(
                 new PPSwerveControllerCommand(
-                    path,
+                    path_fig,
                     swPoseEstimator::getPose, // Pose supplier
                     SwerveConstants.kDriveKinematics, // SwerveDriveKinematics
                     new PIDController(
-                        1.5, 0,
+                        2, 0,
                         0.5), // X controller. Tune these values for your robot. Leaving them 0 will
                     // only
                     // use feedforwards.
                     new PIDController(
-                        1.5, 0, 0.5), // Y controller (usually the same values as X controller)
+                        2, 0, 0), // Y controller (usually the same values as X controller)
                     new PIDController(
-                        3.14159, 0,
-                        0.5), // Rotation controller. Tune these values for your robot. Leaving them
+                        3.14159 / 2,
+                        0,
+                        0), // Rotation controller. Tune these values for your robot. Leaving them
 
                     // will only use feedforwards.
                     swDrive::setModuleStates, // Module states consumer
@@ -143,33 +176,7 @@ public class RobotContainer {
                     // Optional, defaults to true
                     swDrive // Requires this drive subsystem
                     ),
-                new WaitCommand(5)));
-
-                new JoystickButton(controller.getHID(), Button.kA.value)
-                .whileTrue(
-                    new SequentialCommandGroup(
-                        new PPSwerveControllerCommand(
-                          path_fig,
-                            swPoseEstimator::getPose, // Pose supplier
-                            SwerveConstants.kDriveKinematics, // SwerveDriveKinematics
-                            new PIDController(
-                                1.5, 0,
-                                0.5), // X controller. Tune these values for your robot. Leaving them 0 will
-                            // only
-                            // use feedforwards.
-                            new PIDController(
-                                1.5, 0, 0.5), // Y controller (usually the same values as X controller)
-                            new PIDController(
-                                3.14159, 0,
-                                0.5), // Rotation controller. Tune these values for your robot. Leaving them
-        
-                            // will only use feedforwards.
-                            swDrive::setModuleStates, // Module states consumer
-                            false, // Should the path be automatically mirrored depending on alliance color.
-                            // Optional, defaults to true
-                            swDrive // Requires this drive subsystem
-                            ),
-                        new WaitCommand(5)));
+                new WaitCommand(0)));
 
     // new JoystickButton(controller.getHID(), Button.kX.value)
     //     .whileTrue(new SwerveFollowSquare(swDrive, swPoseEstimator));

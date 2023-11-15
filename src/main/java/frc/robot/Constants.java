@@ -14,7 +14,7 @@ import edu.wpi.first.math.util.Units;
 
 public final class Constants {
 
-  public static final Mode kCurrentMode = Mode.SIMULATOR;
+  public static final Mode kCurrentMode = Mode.REAL;
 
   public static enum Mode {
     REAL,
@@ -49,9 +49,9 @@ public final class Constants {
     // Kalman filter constants
     // Higher number means less trust in the model
     // Order is {x, y, theta}
-    public static final Matrix<N3, N1> kStateStdDevs = VecBuilder.fill(0.003, 0.003, 0.003);
+    public static final Matrix<N3, N1> kStateStdDevs = VecBuilder.fill(0.03, 0.03, 0.03);
     public static final Matrix<N3, N1> kVisionMeasurementStdDevs =
-        VecBuilder.fill(0.015, 0.015, 0.015);
+        VecBuilder.fill(0.15, 0.15, 0.15);
   }
 
   // Swerve drive constants
@@ -62,8 +62,8 @@ public final class Constants {
     public static final double kMaxSpeedYMetersPerSecond = 2;
     public static final double kMaxSpeedAngularRadiansPerSecond = Math.PI * 1;
 
-    public static final double kMaxAccelerationXMetersPerSecondSquared = 16.0;
-    public static final double kMaxAccelerationYMetersPerSecondSquared = 16.0;
+    public static final double kMaxAccelerationXMetersPerSecondSquared = 2.0;
+    public static final double kMaxAccelerationYMetersPerSecondSquared = 2.0;
     public static final double kMaxAccelerationAngularRadiansPerSecondSquared = Math.PI * 3.5;
 
     // Motors
