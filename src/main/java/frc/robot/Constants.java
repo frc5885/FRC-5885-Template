@@ -93,11 +93,17 @@ public final class Constants {
     public static final Rotation2d kLeftRearModuleOffset = Rotation2d.fromDegrees(-141.377336);
     public static final Rotation2d kRightRearModuleOffset = Rotation2d.fromDegrees(-70.18733);
 
-    // Analog encoders
-    public static final int kLeftFrontAnalogEncoderPort = 3;
-    public static final int kRightFrontAnalogEncoderPort = 2;
-    public static final int kLeftRearAnalogEncoderPort = 0;
-    public static final int kRightRearAnalogEncoderPort = 1;
+    // Quadrature encoders
+    public static final int kLeftFrontQuadEncoderPortA = 0;
+    public static final int kLeftFrontQuadEncoderPortB = 1;
+    public static final int kRightFrontQuadEncoderPortA = 2;
+    public static final int kRightFrontQuadEncoderPortB = 3;
+    public static final int kLeftRearQuadEncoderPortA = 4;
+    public static final int kLeftRearQuadEncoderPortB = 5;
+    public static final int kRightRearQuadEncoderPortA = 6;
+    public static final int kRightRearQuadEncoderPortB = 7;
+
+    public static final double kQuadEncoderDistancePerPulse = 2.0 * Math.PI / 4096.0;
 
     // Physical constants
 

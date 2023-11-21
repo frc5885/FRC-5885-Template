@@ -10,9 +10,10 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.RobotController;
 import frc.robot.Constants.SwerveConstants;
+import org.littletonrobotics.junction.Logger;
 
 /** Add your docs here. */
 public class SwerveModuleNEO implements SwerveModuleIO {
@@ -20,7 +21,7 @@ public class SwerveModuleNEO implements SwerveModuleIO {
   private CANSparkMax m_driveMotor;
   private CANSparkMax m_turnMotor;
 
-  private AnalogInput m_turnAbsoluteEncoder;
+  private Encoder m_turnAbsoluteEncoder;
   private Rotation2d m_turnAbsoluteEncoderOffset;
 
   private final RelativeEncoder m_driveDefaultEncoder;
@@ -29,13 +30,17 @@ public class SwerveModuleNEO implements SwerveModuleIO {
   public SwerveModuleNEO(
       int driveMotorId,
       int turnMotorId,
-      int turnAbsoluteEncoderId,
+      int turnAbsoluteEncoderA,
+      int turnAbsoluteEncoderB,
       Rotation2d turnAbsoluteEncoderOffset,
       boolean turnMotorReversed,
       boolean driveMotorReversed) {
     m_driveMotor = new CANSparkMax(driveMotorId, MotorType.kBrushless);
     m_turnMotor = new CANSparkMax(turnMotorId, MotorType.kBrushless);
-    m_turnAbsoluteEncoder = new AnalogInput(turnAbsoluteEncoderId);
+
+    m_turnAbsoluteEncoder = new Encoder(turnAbsoluteEncoderA, turnAbsoluteEncoderB);
+    m_turnAbsoluteEncoder.setDistancePerPulse(SwerveConstants.kQuadEncoderDistancePerPulse);
+
     m_turnAbsoluteEncoderOffset = turnAbsoluteEncoderOffset;
 
     m_driveDefaultEncoder = m_driveMotor.getEncoder();
@@ -66,10 +71,25 @@ public class SwerveModuleNEO implements SwerveModuleIO {
     inputs.driveCurrent = m_driveMotor.getOutputCurrent();
     inputs.driveVoltage = m_driveMotor.getAppliedOutput() * RobotController.getBatteryVoltage();
 
-    double absolutePositionPercent =
-        (m_turnAbsoluteEncoder.getVoltage() / RobotController.getVoltage5V());
+    Logger.getInstance()
+        .recordOutput(
+            "module" + m_driveMotor.getDeviceId() + "_" + m_turnMotor.getDeviceId() + "/distance",
+            m_turnAbsoluteEncoder.getDistance());
+    Logger.getInstance()
+        .recordOutput(
+            "module"
+                + m_driveMotor.getDeviceId()
+                + "_"
+                + m_turnMotor.getDeviceId()
+                + "/distance_capped",
+            m_turnAbsoluteEncoder.getDistance() % (2 * Math.PI));
+    Logger.getInstance()
+        .recordOutput(
+            "module" + m_driveMotor.getDeviceId() + "_" + m_turnMotor.getDeviceId() + "/pulses",
+            m_turnAbsoluteEncoder.get());
+
     inputs.turnPositionRad =
-        new Rotation2d(absolutePositionPercent * 2.0 * Math.PI)
+        new Rotation2d(m_turnAbsoluteEncoder.getDistance() % (2 * Math.PI))
             .minus(m_turnAbsoluteEncoderOffset)
             .getRadians();
     inputs.turnVelocityRadPerSec =
