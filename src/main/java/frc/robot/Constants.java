@@ -128,7 +128,7 @@ public final class Constants {
     public static final class Module {
       public static final double kDriveEncoderCPR = 42.0;
       public static final double kTurningEncoderCPR = 42.0;
-      public static final double kRelativeEncoderCPR = 4096.0;
+      public static final double kRelativeEncoderCPR = 1024.0;
 
       public static final double kWheelDiameterMeters = Units.inchesToMeters(4);
       public static final double kDriveMotorGearRatio = 1.0 / 6.55;
