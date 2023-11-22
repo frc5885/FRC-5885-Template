@@ -131,8 +131,8 @@ public final class Constants {
       public static final double kRelativeEncoderCPR = 4096.0;
 
       public static final double kWheelDiameterMeters = Units.inchesToMeters(4);
-      public static final double kDriveMotorGearRatio = 1.0 / 6.75;
-      public static final double kTurningMotorGearRatio = 1.0 / (150.0 / 7.0);
+      public static final double kDriveMotorGearRatio = 1.0 / 6.55;
+      public static final double kTurningMotorGearRatio = 1.0 / 10.29;
 
       public static final double kDriveEncoderRot2Meter =
           kDriveMotorGearRatio * Math.PI * kWheelDiameterMeters;
