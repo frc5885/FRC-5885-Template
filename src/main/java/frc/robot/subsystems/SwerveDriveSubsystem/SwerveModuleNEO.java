@@ -39,7 +39,7 @@ public class SwerveModuleNEO implements SwerveModuleIO {
     m_turnMotor = new CANSparkMax(turnMotorId, MotorType.kBrushless);
 
     m_turnAbsoluteEncoder = new Encoder(turnAbsoluteEncoderA, turnAbsoluteEncoderB);
-    m_turnAbsoluteEncoder.setDistancePerPulse(SwerveConstants.kQuadEncoderDistancePerPulse);
+    m_turnAbsoluteEncoder.setDistancePerPulse(SwerveConstants.Module.kQuadEncoderDistancePerPulse);
 
     m_turnAbsoluteEncoderOffset = turnAbsoluteEncoderOffset;
 
