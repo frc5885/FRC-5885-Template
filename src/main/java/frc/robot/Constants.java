@@ -99,14 +99,10 @@ public final class Constants {
     public static final Rotation2d kRightRearModuleOffset = Rotation2d.fromDegrees(0);
 
     // Quadrature encoders
-    public static final int kLeftFrontQuadEncoderPortA = 0;
-    public static final int kLeftFrontQuadEncoderPortB = 1;
-    public static final int kRightFrontQuadEncoderPortA = 2;
-    public static final int kRightFrontQuadEncoderPortB = 3;
-    public static final int kLeftRearQuadEncoderPortA = 6;
-    public static final int kLeftRearQuadEncoderPortB = 7;
-    public static final int kRightRearQuadEncoderPortA = 4;
-    public static final int kRightRearQuadEncoderPortB = 5;
+    public static final int kLeftFrontPWMEncoder = 0;
+    public static final int kRightFrontPWMEncoder = 2;
+    public static final int kLeftRearPWMEncoder = 6;
+    public static final int kRightRearPWMEncoder = 4;
 
     // Physical constants
 

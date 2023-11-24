@@ -10,6 +10,8 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DutyCycle;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.RobotController;
 import frc.robot.Constants.SwerveConstants;
@@ -21,7 +23,7 @@ public class SwerveModuleNEO implements SwerveModuleIO {
   private CANSparkMax m_driveMotor;
   private CANSparkMax m_turnMotor;
 
-  private Encoder m_turnAbsoluteEncoder;
+  private DutyCycleEncoder m_turnAbsoluteEncoder;
   private Rotation2d m_turnAbsoluteEncoderOffset;
 
   private final RelativeEncoder m_driveDefaultEncoder;
@@ -30,16 +32,15 @@ public class SwerveModuleNEO implements SwerveModuleIO {
   public SwerveModuleNEO(
       int driveMotorId,
       int turnMotorId,
-      int turnAbsoluteEncoderA,
-      int turnAbsoluteEncoderB,
+      int turnAbsoluteEncoder,
       Rotation2d turnAbsoluteEncoderOffset,
       boolean turnMotorReversed,
       boolean driveMotorReversed) {
     m_driveMotor = new CANSparkMax(driveMotorId, MotorType.kBrushless);
     m_turnMotor = new CANSparkMax(turnMotorId, MotorType.kBrushless);
 
-    m_turnAbsoluteEncoder = new Encoder(turnAbsoluteEncoderA, turnAbsoluteEncoderB);
-    m_turnAbsoluteEncoder.setDistancePerPulse(SwerveConstants.Module.kQuadEncoderDistancePerPulse);
+    m_turnAbsoluteEncoder = new DutyCycleEncoder(turnAbsoluteEncoder);
+    m_turnAbsoluteEncoder.setDistancePerRotation(SwerveConstants.Module.kQuadEncoderDistancePerPulse);
 
     m_turnAbsoluteEncoderOffset = turnAbsoluteEncoderOffset;
 
@@ -85,11 +86,15 @@ public class SwerveModuleNEO implements SwerveModuleIO {
             m_turnAbsoluteEncoder.getDistance() % (2 * Math.PI));
     Logger.getInstance()
         .recordOutput(
-            "module" + m_driveMotor.getDeviceId() + "_" + m_turnMotor.getDeviceId() + "/pulses",
+            "module" + m_driveMotor.getDeviceId() + "_" + m_turnMotor.getDeviceId() + "/get",
             m_turnAbsoluteEncoder.get());
+            Logger.getInstance()
+            .recordOutput(
+                "module" + m_driveMotor.getDeviceId() + "_" + m_turnMotor.getDeviceId() + "/getAbsolutePosition",
+                m_turnAbsoluteEncoder.getAbsolutePosition());
 
     inputs.turnPositionRad =
-        new Rotation2d(m_turnAbsoluteEncoder.getDistance() % (2 * Math.PI))
+        new Rotation2d(m_turnAbsoluteEncoder.getAbsolutePosition() % (2 * Math.PI))
             .minus(m_turnAbsoluteEncoderOffset)
             .getRadians();
     inputs.turnVelocityRadPerSec =
