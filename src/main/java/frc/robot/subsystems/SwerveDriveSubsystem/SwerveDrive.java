@@ -57,7 +57,7 @@ public class SwerveDrive extends SubsystemBase {
     m_modules[3] = backRight;
 
     for (int i = 0; i != 4; i++) {
-      m_turnController[i] = new PIDController(8, 0, 0);
+      m_turnController[i] = new PIDController(5, 0, 0);
       m_turnController[i].enableContinuousInput(-Math.PI, Math.PI);
 
       if (Constants.kCurrentMode == Mode.REAL) {

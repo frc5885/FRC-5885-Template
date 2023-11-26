@@ -94,15 +94,15 @@ public final class Constants {
     // public static final Rotation2d kRightRearModuleOffset = Rotation2d.fromDegrees(-70.18733);
 
     public static final Rotation2d kLeftFrontModuleOffset = Rotation2d.fromDegrees(0);
-    public static final Rotation2d kRightFrontModuleOffset = Rotation2d.fromDegrees(0);
-    public static final Rotation2d kLeftRearModuleOffset = Rotation2d.fromDegrees(0);
-    public static final Rotation2d kRightRearModuleOffset = Rotation2d.fromDegrees(0);
+    public static final Rotation2d kRightFrontModuleOffset = Rotation2d.fromDegrees(142.5);
+    public static final Rotation2d kLeftRearModuleOffset = Rotation2d.fromDegrees(-36.7);
+    public static final Rotation2d kRightRearModuleOffset = Rotation2d.fromDegrees(-108.5);
 
     // Quadrature encoders
     public static final int kLeftFrontPWMEncoder = 0;
-    public static final int kRightFrontPWMEncoder = 2;
-    public static final int kLeftRearPWMEncoder = 6;
-    public static final int kRightRearPWMEncoder = 4;
+    public static final int kRightFrontPWMEncoder = 1;
+    public static final int kLeftRearPWMEncoder = 3;
+    public static final int kRightRearPWMEncoder = 2;
 
     // Physical constants
 

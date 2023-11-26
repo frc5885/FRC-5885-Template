@@ -10,9 +10,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DutyCycle;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.RobotController;
 import frc.robot.Constants.SwerveConstants;
 import org.littletonrobotics.junction.Logger;
@@ -40,7 +38,8 @@ public class SwerveModuleNEO implements SwerveModuleIO {
     m_turnMotor = new CANSparkMax(turnMotorId, MotorType.kBrushless);
 
     m_turnAbsoluteEncoder = new DutyCycleEncoder(turnAbsoluteEncoder);
-    m_turnAbsoluteEncoder.setDistancePerRotation(SwerveConstants.Module.kQuadEncoderDistancePerPulse);
+    m_turnAbsoluteEncoder.setDistancePerRotation(
+        SwerveConstants.Module.kQuadEncoderDistancePerPulse);
 
     m_turnAbsoluteEncoderOffset = turnAbsoluteEncoderOffset;
 
@@ -88,13 +87,17 @@ public class SwerveModuleNEO implements SwerveModuleIO {
         .recordOutput(
             "module" + m_driveMotor.getDeviceId() + "_" + m_turnMotor.getDeviceId() + "/get",
             m_turnAbsoluteEncoder.get());
-            Logger.getInstance()
-            .recordOutput(
-                "module" + m_driveMotor.getDeviceId() + "_" + m_turnMotor.getDeviceId() + "/getAbsolutePosition",
-                m_turnAbsoluteEncoder.getAbsolutePosition());
+    Logger.getInstance()
+        .recordOutput(
+            "module"
+                + m_driveMotor.getDeviceId()
+                + "_"
+                + m_turnMotor.getDeviceId()
+                + "/getAbsolutePosition",
+            m_turnAbsoluteEncoder.getAbsolutePosition());
 
     inputs.turnPositionRad =
-        new Rotation2d(m_turnAbsoluteEncoder.getAbsolutePosition() % (2 * Math.PI))
+        new Rotation2d(m_turnAbsoluteEncoder.getAbsolutePosition() * (2 * Math.PI))
             .minus(m_turnAbsoluteEncoderOffset)
             .getRadians();
     inputs.turnVelocityRadPerSec =
