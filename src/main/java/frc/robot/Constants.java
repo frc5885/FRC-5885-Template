@@ -14,7 +14,7 @@ import edu.wpi.first.math.util.Units;
 
 public final class Constants {
 
-  public static final Mode kCurrentMode = Mode.REAL;
+  public static final Mode kCurrentMode = Mode.SIMULATOR;
 
   public static enum Mode {
     REAL,
@@ -28,7 +28,7 @@ public final class Constants {
     public static final int kOperatorControllerPort = 1;
 
     // Controller
-    public static final double kDeadband = 0.12;
+    public static final double kDeadband = 0.1;
   }
 
   public static final class PoseEstimatorConstants {
@@ -58,13 +58,9 @@ public final class Constants {
   public static final class SwerveConstants {
 
     // Speed
-    public static final double kMaxSpeedXMetersPerSecond = 2;
-    public static final double kMaxSpeedYMetersPerSecond = 2;
-    public static final double kMaxSpeedAngularRadiansPerSecond = Math.PI * 1;
-
-    public static final double kMaxAccelerationXMetersPerSecondSquared = 2.0;
-    public static final double kMaxAccelerationYMetersPerSecondSquared = 2.0;
-    public static final double kMaxAccelerationAngularRadiansPerSecondSquared = Math.PI * 3.5;
+    public static final double kMaxSpeedXMetersPerSecond = 2.0;
+    public static final double kMaxSpeedYMetersPerSecond = 2.0;
+    public static final double kMaxSpeedAngularRadiansPerSecond = Math.PI * 2;
 
     // Motors
     public static final int kLeftFrontDriveMotorID = 13;

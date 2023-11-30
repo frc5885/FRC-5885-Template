@@ -4,7 +4,6 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -25,9 +24,6 @@ public class SwerveJoystickCmd extends CommandBase {
   private final Supplier<Double> m_xDrivePercentFunction,
       m_yDrivePercentFunction,
       m_turnDrivePercentFunction;
-  private final SlewRateLimiter m_xAccelerationLimiter,
-      m_yAccelerationLimiter,
-      m_angularAccelerationLimiter;
   private final Supplier<Boolean> m_fieldOrientedFunction;
 
   /** Creates a new SwerveJoystickCmd. */
@@ -45,13 +41,6 @@ public class SwerveJoystickCmd extends CommandBase {
     m_turnDrivePercentFunction = turnDrivePercentFunction;
     m_fieldOrientedFunction = fieldOrientedFunction;
 
-    m_xAccelerationLimiter =
-        new SlewRateLimiter(SwerveConstants.kMaxAccelerationXMetersPerSecondSquared);
-    m_yAccelerationLimiter =
-        new SlewRateLimiter(SwerveConstants.kMaxAccelerationYMetersPerSecondSquared);
-    m_angularAccelerationLimiter =
-        new SlewRateLimiter(SwerveConstants.kMaxAccelerationAngularRadiansPerSecondSquared);
-
     addRequirements(m_swerveSubsystem);
   }
 
@@ -62,45 +51,35 @@ public class SwerveJoystickCmd extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double xSpd =
-        m_xAccelerationLimiter.calculate(m_xDrivePercentFunction.get())
-            * SwerveConstants.kMaxSpeedXMetersPerSecond;
-    double ySpd =
-        m_yAccelerationLimiter.calculate(m_yDrivePercentFunction.get())
-            * SwerveConstants.kMaxSpeedYMetersPerSecond;
-    double turnSpd =
-        m_angularAccelerationLimiter.calculate(m_turnDrivePercentFunction.get())
-            * SwerveConstants.kMaxSpeedAngularRadiansPerSecond;
+    double xDir = m_xDrivePercentFunction.get();
+    double yDir = m_yDrivePercentFunction.get();
+
+    double linearVelocity = Math.hypot(xDir, yDir) * SwerveConstants.kMaxSpeedXMetersPerSecond;
+    Rotation2d linearDirection = new Rotation2d(xDir, yDir);
+    double angularVelocity =
+        m_turnDrivePercentFunction.get() * SwerveConstants.kMaxSpeedAngularRadiansPerSecond;
+
+    Translation2d translation = new Translation2d(linearVelocity, linearDirection);
 
     ChassisSpeeds chassisSpeeds;
+
     // Use field oriented drive
     if (m_fieldOrientedFunction.get()) {
-      //   chassisSpeeds =
-      //       ChassisSpeeds.fromFieldRelativeSpeeds(
-      //           xSpd, ySpd, turnSpd, m_poseEstimator.getPose().getRotation());
 
       chassisSpeeds =
           ChassisSpeeds.fromFieldRelativeSpeeds(
-              xSpd,
-              ySpd,
-              turnSpd,
+              translation.getX(),
+              translation.getY(),
+              angularVelocity,
               m_poseEstimator
                   .getPose()
                   .getRotation()
-                  .plus(new Rotation2d(m_swerveSubsystem.getAngularVelocity() * 0.067)));
+                  .plus(new Rotation2d(m_swerveSubsystem.getAngularVelocity() * 0.075)));
     } else {
-      chassisSpeeds = new ChassisSpeeds(xSpd, ySpd, turnSpd);
+      chassisSpeeds = new ChassisSpeeds(translation.getX(), translation.getY(), angularVelocity);
     }
 
-    // TODO: Check 3rd order problem solution involving the tracking of the twist over time
-
-    // Comment below out if problem occures
-    // chassisSpeeds =
-    //     discretize(
-    //         chassisSpeeds.vxMetersPerSecond,
-    //         chassisSpeeds.vyMetersPerSecond,
-    //         chassisSpeeds.omegaRadiansPerSecond,
-    //         0.02);
+    // chassisSpeeds = discretize(chassisSpeeds.vxMetersPerSecond, chassisSpeeds.vyMetersPerSecond, chassisSpeeds.omegaRadiansPerSecond, 0.135);
 
     SwerveModuleState[] moduleStates =
         SwerveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
