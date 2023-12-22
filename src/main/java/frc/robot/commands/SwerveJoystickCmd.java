@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -11,6 +12,7 @@ import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.subsystems.PoseEstimatorSubsystem.SwervePoseEstimator;
 import frc.robot.subsystems.SwerveDriveSubsystem.SwerveDrive;
@@ -54,10 +56,17 @@ public class SwerveJoystickCmd extends CommandBase {
     double xDir = m_xDrivePercentFunction.get();
     double yDir = m_yDrivePercentFunction.get();
 
-    double linearVelocity = Math.hypot(xDir, yDir) * SwerveConstants.kMaxSpeedXMetersPerSecond;
+    // Using the deadband here instead of the controllers
+    // improves the control over the direction of the robot
+    double magnitude =
+        MathUtil.applyDeadband(Math.hypot(xDir, yDir), ControllerConstants.kSwerveDriveDeadband);
+    double linearVelocity = Math.pow(magnitude, 2) * SwerveConstants.kMaxSpeedXMetersPerSecond;
     Rotation2d linearDirection = new Rotation2d(xDir, yDir);
+
     double angularVelocity =
-        m_turnDrivePercentFunction.get() * SwerveConstants.kMaxSpeedAngularRadiansPerSecond;
+        MathUtil.applyDeadband(
+                m_turnDrivePercentFunction.get(), ControllerConstants.kSwerveDriveDeadband)
+            * SwerveConstants.kMaxSpeedAngularRadiansPerSecond;
 
     Translation2d translation = new Translation2d(linearVelocity, linearDirection);
 
@@ -79,7 +88,9 @@ public class SwerveJoystickCmd extends CommandBase {
       chassisSpeeds = new ChassisSpeeds(translation.getX(), translation.getY(), angularVelocity);
     }
 
-    // chassisSpeeds = discretize(chassisSpeeds.vxMetersPerSecond, chassisSpeeds.vyMetersPerSecond, chassisSpeeds.omegaRadiansPerSecond, 0.135);
+    // chassisSpeeds = discretize(chassisSpeeds.vxMetersPerSecond,
+    // chassisSpeeds.vyMetersPerSecond,
+    // chassisSpeeds.omegaRadiansPerSecond, 0.135);
 
     SwerveModuleState[] moduleStates =
         SwerveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);

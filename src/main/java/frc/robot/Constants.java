@@ -14,7 +14,7 @@ import edu.wpi.first.math.util.Units;
 
 public final class Constants {
 
-  public static final Mode kCurrentMode = Mode.SIMULATOR;
+  public static final Mode kCurrentMode = Mode.REAL;
 
   public static enum Mode {
     REAL,
@@ -28,7 +28,7 @@ public final class Constants {
     public static final int kOperatorControllerPort = 1;
 
     // Controller
-    public static final double kDeadband = 0.1;
+    public static final double kSwerveDriveDeadband = 0.1;
   }
 
   public static final class PoseEstimatorConstants {
