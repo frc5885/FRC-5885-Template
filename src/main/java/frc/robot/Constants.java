@@ -22,17 +22,20 @@ public final class Constants {
     REPLAY
   }
 
+  ///////////////////////
   // Controller constants
   public static final class ControllerConstants {
     public static final int kDriverControllerPort = 0;
     public static final int kOperatorControllerPort = 1;
 
+    /////////////
     // Controller
     public static final double kSwerveDriveDeadband = 0.1;
   }
 
   public static final class PoseEstimatorConstants {
 
+    ///////////////////
     // Camera Positions
     // Relative to robot center to camera sensor, in order of IDs
     // Rotation is in degrees, relative to robot center pointing forward
@@ -46,6 +49,7 @@ public final class Constants {
           new Rotation3d(0, 0, 0)),
     };
 
+    //////////////////////////
     // Kalman filter constants
     // Higher number means less trust in the model
     // Order is {x, y, theta}
@@ -54,14 +58,17 @@ public final class Constants {
         VecBuilder.fill(0.15, 0.15, 0.15);
   }
 
+  /////////////////////////
   // Swerve drive constants
   public static final class SwerveConstants {
 
+    ////////
     // Speed
-    public static final double kMaxSpeedXMetersPerSecond = 2.0;
-    public static final double kMaxSpeedYMetersPerSecond = 2.0;
-    public static final double kMaxSpeedAngularRadiansPerSecond = Math.PI * 2;
+    public static final double kMaxSpeedXMetersPerSecond = 1.5;
+    public static final double kMaxSpeedYMetersPerSecond = 1.5;
+    public static final double kMaxSpeedAngularRadiansPerSecond = Math.PI * 1;
 
+    /////////
     // Motors
     public static final int kLeftFrontDriveMotorID = 13;
     public static final int kRightFrontDriveMotorID = 12;
@@ -83,18 +90,21 @@ public final class Constants {
     public static final boolean kLeftRearTurnMotorInverted = true;
     public static final boolean kRightRearTurnMotorInverted = true;
 
+    /////////////////
     // Module offsets
     public static final Rotation2d kLeftFrontModuleOffset = Rotation2d.fromDegrees(143.239);
     public static final Rotation2d kRightFrontModuleOffset = Rotation2d.fromDegrees(-15.183382);
     public static final Rotation2d kLeftRearModuleOffset = Rotation2d.fromDegrees(-141.377336);
     public static final Rotation2d kRightRearModuleOffset = Rotation2d.fromDegrees(-70.18733);
 
+    //////////////////
     // Analog encoders
     public static final int kLeftFrontAnalogEncoderPort = 3;
     public static final int kRightFrontAnalogEncoderPort = 2;
     public static final int kLeftRearAnalogEncoderPort = 0;
     public static final int kRightRearAnalogEncoderPort = 1;
 
+    /////////////////////
     // Physical constants
 
     public static final double kAttainableMaxSpeedMetersPerSecond = Units.feetToMeters(14.5);
@@ -109,10 +119,15 @@ public final class Constants {
             new Translation2d(-kWheelBaseMeters / 2.0, kTrackWidthMeters / 2.0),
             new Translation2d(-kWheelBaseMeters / 2.0, -kTrackWidthMeters / 2.0));
 
+    // These values are found by using the SwerveSolveFeedForward command
     public static final double kFeedForwardKs = 0.09214084677588957;
     public static final double kFeedForwardKv = 2.6828478208373143;
     public static final double kFeedForwardKa = 0.0;
 
+    // This corrects the skew when spinning and driving at the same time
+    public static final double kSpinCorrectionFactor = 0.075;
+
+    ///////////////////
     // Module constants
 
     public static final class Module {

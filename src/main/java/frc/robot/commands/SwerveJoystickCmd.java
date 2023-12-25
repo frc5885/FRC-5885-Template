@@ -5,10 +5,8 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -83,62 +81,19 @@ public class SwerveJoystickCmd extends CommandBase {
               m_poseEstimator
                   .getPose()
                   .getRotation()
-                  .plus(new Rotation2d(m_swerveSubsystem.getAngularVelocity() * 0.075)));
+                  .plus(
+                      new Rotation2d(
+                          m_swerveSubsystem.getAngularVelocity()
+                              * SwerveConstants.kSpinCorrectionFactor)));
     } else {
       chassisSpeeds = new ChassisSpeeds(translation.getX(), translation.getY(), angularVelocity);
     }
-
-    // chassisSpeeds = discretize(chassisSpeeds.vxMetersPerSecond,
-    // chassisSpeeds.vyMetersPerSecond,
-    // chassisSpeeds.omegaRadiansPerSecond, 0.135);
 
     SwerveModuleState[] moduleStates =
         SwerveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
 
     Logger.getInstance().recordOutput("expected_module_states", moduleStates);
     m_swerveSubsystem.setModuleStates(moduleStates);
-  }
-
-  // 2024
-  // https://github.wpilib.org/allwpilib/docs/development/java/edu/wpi/first/math/kinematics/ChassisSpeeds.html#discretize(edu.wpi.first.math.kinematics.ChassisSpeeds,double)
-  // Right now
-  // https://github.com/cachemoney8096/2023-charged-up/blob/main/src/main/java/frc/robot/subsystems/drive/DriveSubsystem.java#L174
-  public static ChassisSpeeds discretize(
-      double vxMetersPerSecond,
-      double vyMetersPerSecond,
-      double omegaRadiansPerSecond,
-      double dtSeconds) {
-    var desiredDeltaPose =
-        new Pose2d(
-            vxMetersPerSecond * dtSeconds,
-            vyMetersPerSecond * dtSeconds,
-            new Rotation2d(omegaRadiansPerSecond * dtSeconds));
-    var twist = log(desiredDeltaPose);
-    return new ChassisSpeeds(twist.dx / dtSeconds, twist.dy / dtSeconds, twist.dtheta / dtSeconds);
-  }
-
-  /**
-   * Logical inverse of the above. Borrowed from 254:
-   * https://github.com/Team254/FRC-2022-Public/blob/b5da3c760b78d598b492e1cc51d8331c2ad50f6a/src/main/java/com/team254/lib/geometry/Pose2d.java
-   */
-  public static Twist2d log(final Pose2d transform) {
-    final double dtheta = transform.getRotation().getRadians();
-    final double half_dtheta = 0.5 * dtheta;
-    final double cos_minus_one = Math.cos(transform.getRotation().getRadians()) - 1.0;
-    double halftheta_by_tan_of_halfdtheta;
-    if (Math.abs(cos_minus_one) < 1E-9) {
-      halftheta_by_tan_of_halfdtheta = 1.0 - 1.0 / 12.0 * dtheta * dtheta;
-    } else {
-      halftheta_by_tan_of_halfdtheta =
-          -(half_dtheta * Math.sin(transform.getRotation().getRadians())) / cos_minus_one;
-    }
-    final Translation2d translation_part =
-        transform
-            .getTranslation()
-            .rotateBy(new Rotation2d(halftheta_by_tan_of_halfdtheta, -half_dtheta))
-            .times(Math.hypot(halftheta_by_tan_of_halfdtheta, half_dtheta));
-
-    return new Twist2d(translation_part.getX(), translation_part.getY(), dtheta);
   }
 
   // Called once the command ends or is interrupted.

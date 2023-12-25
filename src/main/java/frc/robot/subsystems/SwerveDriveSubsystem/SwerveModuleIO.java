@@ -15,12 +15,14 @@ public interface SwerveModuleIO {
     public double driveTemperatureCelsius = 0.0;
     public double driveCurrent = 0.0;
     public double driveVoltage = 0.0;
-
+    
     public double turnPositionRad = 0.0;
     public double turnVelocityRadPerSec = 0.0;
     public double turnTemperature = 0.0;
     public double turnCurrent = 0.0;
     public double turnVoltage = 0.0;
+
+    public double turnAbsolutePositionRad = 0.0;
   }
 
   public default void updateInputs(SwerveModuleIOInputs inputs) {}
