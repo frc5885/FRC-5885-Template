@@ -56,18 +56,31 @@ public class SwerveJoystickCmd extends CommandBase {
 
     // Using the deadband here instead of the controllers
     // improves the control over the direction of the robot
-    double magnitude =
-        MathUtil.applyDeadband(Math.hypot(xDir, yDir), ControllerConstants.kSwerveDriveDeadband);
-    double linearVelocity = Math.pow(magnitude, 2) * SwerveConstants.kMaxSpeedXMetersPerSecond;
+    // since we no longer snap to the x/y axis.
+    //
+    // Another proble is that the magnitude of the x/y axis
+    // is not always 1.0, so we need to cap it to fix that.
+    // Ideally we would normalize the values but the max values
+    // are not always the same on every controller and position.
+    double magnitude = MathUtil.clamp(Math.hypot(xDir, yDir), -1.0, 1.0);
+    magnitude = MathUtil.applyDeadband(magnitude, ControllerConstants.kSwerveDriveDeadband);
+
+    // Square the magnitude (0-1), this gives us better control at slow speeds and
+    // lets us go fast when we want to. This is a per person preferance and might
+    // need to be changed.
+    double magnitudeSqrd = Math.pow(magnitude, 2);
+
+    double linearVelocity = magnitudeSqrd * SwerveConstants.kMaxSpeedXMetersPerSecond;
     Rotation2d linearDirection = new Rotation2d(xDir, yDir);
 
+    // Rotation speed stuff
     double angularVelocity =
         MathUtil.applyDeadband(
                 m_turnDrivePercentFunction.get(), ControllerConstants.kSwerveDriveDeadband)
             * SwerveConstants.kMaxSpeedAngularRadiansPerSecond;
 
+    // This does the trig for us and lets us get the x/y velocity
     Translation2d translation = new Translation2d(linearVelocity, linearDirection);
-
     ChassisSpeeds chassisSpeeds;
 
     // Use field oriented drive
@@ -78,7 +91,8 @@ public class SwerveJoystickCmd extends CommandBase {
               translation.getX(),
               translation.getY(),
               angularVelocity,
-              m_poseEstimator
+              m_poseEstimator // This is used to compensate for skew when driving and turning.
+                  // No idea how this works, but it does.
                   .getPose()
                   .getRotation()
                   .plus(

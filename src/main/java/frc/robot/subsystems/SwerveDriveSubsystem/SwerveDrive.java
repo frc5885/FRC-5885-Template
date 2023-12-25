@@ -33,6 +33,7 @@ public class SwerveDrive extends SubsystemBase {
   };
 
   private final PIDController[] m_turnController = new PIDController[4];
+  private final PIDController[] m_driveController = new PIDController[4];
   private final SimpleMotorFeedforward[] m_driveFeedforward = new SimpleMotorFeedforward[4];
 
   // private Pose2d lastPos = new Pose2d();
@@ -61,12 +62,20 @@ public class SwerveDrive extends SubsystemBase {
       m_turnController[i].enableContinuousInput(-Math.PI, Math.PI);
 
       if (Constants.kCurrentMode == Mode.REAL) {
+        m_driveController[i] =
+            new PIDController(
+                SwerveConstants.kFeedbackP, SwerveConstants.kFeedbackI, SwerveConstants.kFeedbackD);
         m_driveFeedforward[i] =
             new SimpleMotorFeedforward(
                 SwerveConstants.kFeedForwardKs,
                 SwerveConstants.kFeedForwardKv,
                 SwerveConstants.kFeedForwardKa);
       } else {
+        m_driveController[i] =
+            new PIDController(
+                SwerveConstants.Simulation.kFeedbackP,
+                SwerveConstants.Simulation.kFeedbackI,
+                SwerveConstants.Simulation.kFeedbackD);
         m_driveFeedforward[i] =
             new SimpleMotorFeedforward(
                 SwerveConstants.Simulation.kFeedForwardKs,
@@ -154,10 +163,15 @@ public class SwerveDrive extends SubsystemBase {
           SwerveModuleState.optimize(
               desiredStates[i], new Rotation2d(m_modulesInput[i].turnPositionRad));
 
+      // In case of a sharp wheel turn, this helps prevent the
+      // innertia of the robot from sliding too much.
       desiredStates[i].speedMetersPerSecond *= Math.cos(m_turnController[i].getPositionError());
 
       m_modules[i].setDriveVoltage(
-          m_driveFeedforward[i].calculate(desiredStates[i].speedMetersPerSecond));
+          m_driveController[i].calculate(
+                  m_modulesInput[i].driveVelocityMetersPerSec,
+                  desiredStates[i].speedMetersPerSecond)
+              + m_driveFeedforward[i].calculate(desiredStates[i].speedMetersPerSecond));
 
       m_modules[i].setTurnVoltage(
           (m_turnController[i].calculate(

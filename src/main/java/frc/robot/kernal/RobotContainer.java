@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants;
+import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.commands.SwerveJoystickCmd;
 import frc.robot.subsystems.PoseEstimatorSubsystem.SwervePoseEstimator;
@@ -24,16 +25,14 @@ import frc.robot.subsystems.SwerveDriveSubsystem.SwerveModuleSim;
 
 public class RobotContainer {
 
-  SwerveModuleSim sms;
-
   // Controller
-  private final CommandXboxController controller = new CommandXboxController(0);
+  private final CommandXboxController m_driverController;
+  private final CommandXboxController m_operatorController;
 
-  private final SwerveDrive swDrive;
-  private final SwervePoseEstimator swPoseEstimator;
+  private final SwerveDrive m_swerveDrive;
+  private final SwervePoseEstimator m_swervePoseEstimator;
 
   public RobotContainer() {
-
     // Setup controllers depending on the current mode
     switch (Constants.kCurrentMode) {
       case REAL:
@@ -41,7 +40,7 @@ public class RobotContainer {
           DriverStation.reportError("Attempted to run REAL on SIMULATED robot!", false);
           throw new NoSuchMethodError("Attempted to run REAL on SIMULATED robot!");
         }
-        swDrive =
+        m_swerveDrive =
             new SwerveDrive(
                 new SwerveModuleNEO(
                     SwerveConstants.kLeftFrontDriveMotorID,
@@ -78,7 +77,7 @@ public class RobotContainer {
           DriverStation.reportError("Attempted to run SIMULATED on REAL robot!", false);
           throw new NoSuchMethodError("Attempted to run SIMULATED on REAL robot!");
         }
-        swDrive =
+        m_swerveDrive =
             new SwerveDrive(
                 new SwerveModuleSim(false),
                 new SwerveModuleSim(false),
@@ -91,29 +90,32 @@ public class RobotContainer {
         throw new NoSuchMethodError("Not Implemented");
     }
 
-    swPoseEstimator = new SwervePoseEstimator(swDrive);
+    m_driverController = new CommandXboxController(ControllerConstants.kDriverControllerPort);
+    m_operatorController = new CommandXboxController(ControllerConstants.kOperatorControllerPort);
+
+    m_swervePoseEstimator = new SwervePoseEstimator(m_swerveDrive);
 
     configureBindings();
   }
 
   private void configureBindings() {
 
-    swDrive.setDefaultCommand(
+    m_swerveDrive.setDefaultCommand(
         new SwerveJoystickCmd(
-            swDrive,
-            swPoseEstimator,
-            () -> (-controller.getLeftY()),
-            () -> (-controller.getLeftX()),
-            () -> (-controller.getRightX()),
+            m_swerveDrive,
+            m_swervePoseEstimator,
+            () -> (-m_driverController.getLeftY()),
+            () -> (-m_driverController.getLeftX()),
+            () -> (-m_driverController.getRightX()),
             () -> (true)));
 
-    new JoystickButton(controller.getHID(), Button.kX.value)
+    new JoystickButton(m_driverController.getHID(), Button.kX.value)
         .onTrue(
             new SequentialCommandGroup(
                 new InstantCommand(
                     () -> {
-                      swDrive.resetGyro();
-                      swPoseEstimator.reset(new Pose2d(0, 0, new Rotation2d()));
+                      m_swerveDrive.resetGyro();
+                      m_swervePoseEstimator.reset(new Pose2d(0, 0, new Rotation2d()));
                     })));
   }
 

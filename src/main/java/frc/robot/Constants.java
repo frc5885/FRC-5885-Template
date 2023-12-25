@@ -14,13 +14,13 @@ import edu.wpi.first.math.util.Units;
 
 public final class Constants {
 
-  public static final Mode kCurrentMode = Mode.REAL;
-
   public static enum Mode {
     REAL,
-    SIMULATOR,
-    REPLAY
+    SIMULATOR
   }
+
+  // This is used to switch beteen simulator and real robot.
+  public static final Mode kCurrentMode = Mode.SIMULATOR;
 
   ///////////////////////
   // Controller constants
@@ -64,8 +64,8 @@ public final class Constants {
 
     ////////
     // Speed
-    public static final double kMaxSpeedXMetersPerSecond = 1.5;
-    public static final double kMaxSpeedYMetersPerSecond = 1.5;
+    public static final double kMaxSpeedXMetersPerSecond = 4.5;
+    public static final double kMaxSpeedYMetersPerSecond = 4.5;
     public static final double kMaxSpeedAngularRadiansPerSecond = Math.PI * 1;
 
     /////////
@@ -107,7 +107,7 @@ public final class Constants {
     /////////////////////
     // Physical constants
 
-    public static final double kAttainableMaxSpeedMetersPerSecond = Units.feetToMeters(14.5);
+    public static final double kAttainableMaxSpeedMetersPerSecond = Units.feetToMeters(15.1);
 
     public static final double kTrackWidthMeters = Units.inchesToMeters(25.5);
     public static final double kWheelBaseMeters = Units.inchesToMeters(25.5);
@@ -118,6 +118,10 @@ public final class Constants {
             new Translation2d(kWheelBaseMeters / 2.0, -kTrackWidthMeters / 2.0),
             new Translation2d(-kWheelBaseMeters / 2.0, kTrackWidthMeters / 2.0),
             new Translation2d(-kWheelBaseMeters / 2.0, -kTrackWidthMeters / 2.0));
+
+    public static final double kFeedbackP = 0.1;
+    public static final double kFeedbackI = 0.0;
+    public static final double kFeedbackD = 0.0;
 
     // These values are found by using the SwerveSolveFeedForward command
     public static final double kFeedForwardKs = 0.09214084677588957;
@@ -150,6 +154,10 @@ public final class Constants {
     }
 
     public static final class Simulation {
+      public static final double kFeedbackP = 0.1;
+      public static final double kFeedbackI = 0.0;
+      public static final double kFeedbackD = 0.0;
+
       public static final double kFeedForwardKs = 0.150551;
       public static final double kFeedForwardKv = 1.30222;
       public static final double kFeedForwardKa = 0.0;

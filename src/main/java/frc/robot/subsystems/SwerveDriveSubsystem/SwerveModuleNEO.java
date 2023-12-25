@@ -66,12 +66,16 @@ public class SwerveModuleNEO implements SwerveModuleIO {
     inputs.driveCurrent = m_driveMotor.getOutputCurrent();
     inputs.driveVoltage = m_driveMotor.getAppliedOutput() * RobotController.getBatteryVoltage();
 
+    ////////////////////////////////////////
+    // Calculate angle from absolute encoder
     double absolutePositionPercent =
         (m_turnAbsoluteEncoder.getVoltage() / RobotController.getVoltage5V());
-    inputs.turnPositionRad =
+    inputs.turnAbsolutePositionRad =
         new Rotation2d(absolutePositionPercent * 2.0 * Math.PI)
             .minus(m_turnAbsoluteEncoderOffset)
             .getRadians();
+
+    inputs.turnPositionRad = m_turnRelativeEncoder.getPosition();
     inputs.turnVelocityRadPerSec =
         Units.rotationsPerMinuteToRadiansPerSecond(m_turnRelativeEncoder.getVelocity())
             / (1 / SwerveConstants.Module.kTurningMotorGearRatio);

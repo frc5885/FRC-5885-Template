@@ -5,7 +5,6 @@
 package frc.robot.subsystems.SwerveDriveSubsystem;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import frc.robot.Constants.SwerveConstants;
@@ -25,8 +24,6 @@ public class SwerveModuleSim implements SwerveModuleIO {
   private double m_turnAngle; // rad
   private double m_turnVoltage;
 
-  private final PIDController m_turningPidController;
-
   private boolean m_absoluteEncoderReversed;
 
   public SwerveModuleSim(boolean isReversed) {
@@ -39,9 +36,6 @@ public class SwerveModuleSim implements SwerveModuleIO {
 
     m_driveVoltage = 0.0;
     m_turnVoltage = 0.0;
-
-    m_turningPidController = new PIDController(12, 0, 0);
-    m_turningPidController.enableContinuousInput(-Math.PI, Math.PI);
 
     m_absoluteEncoderReversed = isReversed;
   }
@@ -64,6 +58,7 @@ public class SwerveModuleSim implements SwerveModuleIO {
     inputs.driveVoltage = m_driveVoltage;
 
     inputs.turnPositionRad = m_turnAngle;
+    inputs.turnAbsolutePositionRad = m_turnAngle;
     inputs.turnVelocityRadPerSec = m_turnAngleVelocity;
     inputs.turnTemperature = 0.0;
     inputs.turnCurrent = m_turnMotor.getCurrentDrawAmps();
