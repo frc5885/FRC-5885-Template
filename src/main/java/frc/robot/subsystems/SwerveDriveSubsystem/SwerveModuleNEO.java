@@ -55,6 +55,13 @@ public class SwerveModuleNEO implements SwerveModuleIO {
         SwerveConstants.Module.kTurningEncoderRot2Rad);
     m_turnRelativeEncoder.setVelocityConversionFactor(
         SwerveConstants.Module.kTurningEncoderRPM2RadPerSec);
+
+    double absolutePositionPercent =
+        (m_turnAbsoluteEncoder.getVoltage() / RobotController.getVoltage5V());
+    m_turnRelativeEncoder.setPosition(
+        new Rotation2d(absolutePositionPercent * 2.0 * Math.PI)
+            .minus(m_turnAbsoluteEncoderOffset)
+            .getRadians());
   }
 
   public void updateInputs(SwerveModuleIOInputs inputs) {

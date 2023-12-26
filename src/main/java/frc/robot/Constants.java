@@ -20,7 +20,7 @@ public final class Constants {
   }
 
   // This is used to switch beteen simulator and real robot.
-  public static final Mode kCurrentMode = Mode.SIMULATOR;
+  public static final Mode kCurrentMode = Mode.REAL;
 
   ///////////////////////
   // Controller constants
@@ -64,8 +64,8 @@ public final class Constants {
 
     ////////
     // Speed
-    public static final double kMaxSpeedXMetersPerSecond = 4.5;
-    public static final double kMaxSpeedYMetersPerSecond = 4.5;
+    public static final double kMaxSpeedXMetersPerSecond = 1;
+    public static final double kMaxSpeedYMetersPerSecond = 1;
     public static final double kMaxSpeedAngularRadiansPerSecond = Math.PI * 1;
 
     /////////

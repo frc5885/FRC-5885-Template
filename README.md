@@ -1,5 +1,7 @@
 # TODO:
 
+ - [ ] Zips ties that keep the controllers on the modules make a clicking sound (I think?),
+       might be worth looking into before it becomes a problem.
  - [ ] Add feature to use analog absolute encoder for initial position and then switch to
        the NEOs built in encoders for (hopefully) better latency and redendency.
     - This will also let us use the built in PID controller taking more strain off the RoboRIO
