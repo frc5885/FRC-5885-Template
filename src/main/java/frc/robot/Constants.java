@@ -20,7 +20,7 @@ public final class Constants {
   }
 
   // This is used to switch beteen simulator and real robot.
-  public static final Mode kCurrentMode = Mode.REAL;
+  public static final Mode kCurrentMode = Mode.SIMULATOR;
 
   ///////////////////////
   // Controller constants

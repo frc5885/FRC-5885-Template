@@ -9,7 +9,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.subsystems.PoseEstimatorSubsystem.SwervePoseEstimator;
@@ -17,7 +17,7 @@ import frc.robot.subsystems.SwerveDriveSubsystem.SwerveDrive;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
-public class SwerveJoystickCmd extends CommandBase {
+public class SwerveJoystickCmd extends Command {
 
   private final SwerveDrive m_swerveSubsystem;
   private final SwervePoseEstimator m_poseEstimator;

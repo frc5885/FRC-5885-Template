@@ -25,6 +25,5 @@
       }
     },
   ],
-  "java.test.defaultConfig": "WPIlibUnitTests",
-  "java.jdt.ls.vmargs": "-Xmx12G"
+  "java.test.defaultConfig": "WPIlibUnitTests"
 }

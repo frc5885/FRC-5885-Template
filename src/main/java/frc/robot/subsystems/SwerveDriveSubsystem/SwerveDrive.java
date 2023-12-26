@@ -93,8 +93,7 @@ public class SwerveDrive extends SubsystemBase {
   public void periodic() {
     for (int i = 0; i != 4; i++) {
       m_modules[i].updateInputs(m_modulesInput[i]);
-      Logger.getInstance()
-          .processInputs("SwerveDrive/Modules/Module" + Integer.toString(i), m_modulesInput[i]);
+      Logger.processInputs("SwerveDrive/Modules/Module" + Integer.toString(i), m_modulesInput[i]);
     }
 
     var chassisSpeeds = SwerveConstants.kDriveKinematics.toChassisSpeeds(getModuleStates());
@@ -106,9 +105,9 @@ public class SwerveDrive extends SubsystemBase {
       m_heading = m_heading.plus(Rotation2d.fromRadians(chassisRotationSpeed * 0.02));
     }
 
-    Logger.getInstance().recordOutput("SwerveDrive/currentModuleStates", getModuleStates());
-    Logger.getInstance().recordOutput("SwerveDrive/headingDegrees", m_heading.getDegrees());
-    Logger.getInstance().recordOutput("SwerveDrive/headingRadians", m_heading.getRadians());
+    Logger.recordOutput("SwerveDrive/currentModuleStates", getModuleStates());
+    Logger.recordOutput("SwerveDrive/headingDegrees", m_heading.getDegrees());
+    Logger.recordOutput("SwerveDrive/headingRadians", m_heading.getRadians());
   }
 
   public Pose2d getFieldVelocity() {

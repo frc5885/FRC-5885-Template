@@ -5,12 +5,12 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.SwerveDriveSubsystem.SwerveDrive;
 import java.util.LinkedList;
 import java.util.List;
 
-public class SwerveSolveFeedForward extends CommandBase {
+public class SwerveSolveFeedForward extends Command {
 
   private final SwerveDrive m_swerveSubsystem;
 

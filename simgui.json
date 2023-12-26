@@ -1,44 +1,7 @@
 {
   "NTProvider": {
     "types": {
-      "/FMSInfo": "FMSInfo",
-      "/LiveWindow/Ungrouped/PIDController[1]": "PIDController",
-      "/LiveWindow/Ungrouped/PIDController[2]": "PIDController",
-      "/LiveWindow/Ungrouped/Scheduler": "Scheduler",
-      "/SmartDashboard/Auto Choices": "String Chooser"
-    },
-    "windows": {
-      "/SmartDashboard/Auto Choices": {
-        "window": {
-          "visible": true
-        }
-      }
+      "/FMSInfo": "FMSInfo"
     }
-  },
-  "NetworkTables": {
-    "transitory": {
-      "AdvantageKit": {
-        "RealOutputs": {
-          "open": true
-        }
-      },
-      "NoodleVision": {
-        "open": true,
-        "output": {
-          "open": true
-        }
-      },
-      "Shuffleboard": {
-        ".metadata": {
-          "open": true
-        }
-      }
-    }
-  },
-  "NetworkTables Info": {
-    "Connections": {
-      "open": true
-    },
-    "visible": true
   }
 }

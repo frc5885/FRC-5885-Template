@@ -65,7 +65,7 @@ public class SwervePoseEstimator extends SubsystemBase {
 
   @Override
   public void periodic() {
-    Logger.getInstance()
+    Logger
         .recordOutput("SwervePoseEstimator/estimatedPose", m_poseEstimator.getEstimatedPosition());
     m_poseEstimator.update(m_rotationSupplier.get(), m_swerveModulePositionSupplier.get());
     // System.out.println(m_visibleTagsSubscriber.get().length);
@@ -118,7 +118,7 @@ public class SwervePoseEstimator extends SubsystemBase {
 
       if (cameraPose == null) return;
 
-      Logger.getInstance().recordOutput("Vision Think Pose pre-transform", cameraPose.toPose2d());
+      Logger.recordOutput("Vision Think Pose pre-transform", cameraPose.toPose2d());
 
       cameraPose =
           cameraPose.transformBy(PoseEstimatorConstants.kCameraPositionMeters[0].inverse());
@@ -151,9 +151,8 @@ public class SwervePoseEstimator extends SubsystemBase {
       // double avgDistance = totalDistance / tagPoses.size();
 
       // System.out.print("Lodding");
-      Logger.getInstance()
-          .recordOutput("SwervePoseEstimator/visionEstimatedPose", cameraPose.toPose2d());
-      Logger.getInstance().recordOutput("SwervePoseEstimator/visionEstimatedPose3D", cameraPose);
+      Logger.recordOutput("SwervePoseEstimator/visionEstimatedPose", cameraPose.toPose2d());
+      Logger.recordOutput("SwervePoseEstimator/visionEstimatedPose3D", cameraPose);
       m_poseEstimator.addVisionMeasurement(cameraPose.toPose2d(), timestmp);
     }
   }

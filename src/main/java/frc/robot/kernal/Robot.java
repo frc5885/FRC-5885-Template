@@ -18,24 +18,23 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void robotInit() {
-    Logger logger = Logger.getInstance();
 
     // Copied from advtangekit examples
     // Record metadata
-    logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
-    logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
-    logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
-    logger.recordMetadata("GitDate", BuildConstants.GIT_DATE);
-    logger.recordMetadata("GitBranch", BuildConstants.GIT_BRANCH);
+    Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
+    Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
+    Logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
+    Logger.recordMetadata("GitDate", BuildConstants.GIT_DATE);
+    Logger.recordMetadata("GitBranch", BuildConstants.GIT_BRANCH);
     switch (BuildConstants.DIRTY) {
       case 0:
-        logger.recordMetadata("GitDirty", "All changes committed");
+        Logger.recordMetadata("GitDirty", "All changes committed");
         break;
       case 1:
-        logger.recordMetadata("GitDirty", "Uncomitted changes");
+        Logger.recordMetadata("GitDirty", "Uncomitted changes");
         break;
       default:
-        logger.recordMetadata("GitDirty", "Unknown");
+        Logger.recordMetadata("GitDirty", "Unknown");
         break;
     }
 
@@ -44,18 +43,19 @@ public class Robot extends LoggedRobot {
     switch (Constants.kCurrentMode) {
         // Running on a real robot, log to a USB stick
       case REAL:
-        logger.addDataReceiver(new WPILOGWriter("/media/sda1/"));
-        logger.addDataReceiver(new NT4Publisher());
+        // TODO: Wait for fix
+        // Logger.addDataReceiver(new WPILOGWriter("/media/sda1/"));
+        Logger.addDataReceiver(new NT4Publisher());
         break;
 
         // Running a physics simulator, log to local folder
       case SIMULATOR:
-        logger.addDataReceiver(new WPILOGWriter(""));
-        logger.addDataReceiver(new NT4Publisher());
+        Logger.addDataReceiver(new WPILOGWriter(""));
+        Logger.addDataReceiver(new NT4Publisher());
         break;
     }
 
-    logger.start();
+    Logger.start();
     m_robotContainer = new RobotContainer();
   }
 
