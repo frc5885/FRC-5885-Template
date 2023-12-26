@@ -56,14 +56,17 @@ public class SwervePoseEstimator extends SubsystemBase {
     m_sw = swerveDrive;
 
     NetworkTable table = NetworkTableInstance.getDefault().getTable("NoodleVision1/output");
-    m_observationSubscriber = table.getDoubleArrayTopic("observations").subscribe(new double[] {});
-    m_visibleTagsSubscriber = table.getIntegerArrayTopic("visible_tags").subscribe(new long[] {});
+    m_observationSubscriber =
+        table.getDoubleArrayTopic("SwervePoseEstimator/observations").subscribe(new double[] {});
+    m_visibleTagsSubscriber =
+        table.getIntegerArrayTopic("SwervePoseEstimator/visibleTags").subscribe(new long[] {});
     // m_aprilTagFieldLayout = AprilTagFields.
   }
 
   @Override
   public void periodic() {
-    Logger.getInstance().recordOutput("Pose Estimator", m_poseEstimator.getEstimatedPosition());
+    Logger.getInstance()
+        .recordOutput("SwervePoseEstimator/estimatedPose", m_poseEstimator.getEstimatedPosition());
     m_poseEstimator.update(m_rotationSupplier.get(), m_swerveModulePositionSupplier.get());
     // System.out.println(m_visibleTagsSubscriber.get().length);
 
@@ -148,8 +151,9 @@ public class SwervePoseEstimator extends SubsystemBase {
       // double avgDistance = totalDistance / tagPoses.size();
 
       // System.out.print("Lodding");
-      Logger.getInstance().recordOutput("Vision Think Pose", cameraPose.toPose2d());
-      Logger.getInstance().recordOutput("Vision Think Pose 3D", cameraPose);
+      Logger.getInstance()
+          .recordOutput("SwervePoseEstimator/visionEstimatedPose", cameraPose.toPose2d());
+      Logger.getInstance().recordOutput("SwervePoseEstimator/visionEstimatedPose3D", cameraPose);
       m_poseEstimator.addVisionMeasurement(cameraPose.toPose2d(), timestmp);
     }
   }

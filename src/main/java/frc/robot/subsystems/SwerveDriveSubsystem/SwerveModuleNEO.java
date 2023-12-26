@@ -56,12 +56,7 @@ public class SwerveModuleNEO implements SwerveModuleIO {
     m_turnRelativeEncoder.setVelocityConversionFactor(
         SwerveConstants.Module.kTurningEncoderRPM2RadPerSec);
 
-    double absolutePositionPercent =
-        (m_turnAbsoluteEncoder.getVoltage() / RobotController.getVoltage5V());
-    m_turnRelativeEncoder.setPosition(
-        new Rotation2d(absolutePositionPercent * 2.0 * Math.PI)
-            .minus(m_turnAbsoluteEncoderOffset)
-            .getRadians());
+    m_turnRelativeEncoder.setPosition(getAbsoluteEncoderValue().getRadians());
   }
 
   public void updateInputs(SwerveModuleIOInputs inputs) {
@@ -73,14 +68,7 @@ public class SwerveModuleNEO implements SwerveModuleIO {
     inputs.driveCurrent = m_driveMotor.getOutputCurrent();
     inputs.driveVoltage = m_driveMotor.getAppliedOutput() * RobotController.getBatteryVoltage();
 
-    ////////////////////////////////////////
-    // Calculate angle from absolute encoder
-    double absolutePositionPercent =
-        (m_turnAbsoluteEncoder.getVoltage() / RobotController.getVoltage5V());
-    inputs.turnAbsolutePositionRad =
-        new Rotation2d(absolutePositionPercent * 2.0 * Math.PI)
-            .minus(m_turnAbsoluteEncoderOffset)
-            .getRadians();
+    inputs.turnAbsolutePositionRad = getAbsoluteEncoderValue().getRadians();
 
     inputs.turnPositionRad = m_turnRelativeEncoder.getPosition();
     inputs.turnVelocityRadPerSec =
@@ -90,6 +78,15 @@ public class SwerveModuleNEO implements SwerveModuleIO {
     inputs.turnTemperature = m_turnMotor.getMotorTemperature();
     inputs.turnCurrent = m_turnMotor.getOutputCurrent();
     inputs.turnVoltage = m_turnMotor.getAppliedOutput() * RobotController.getBatteryVoltage();
+  }
+
+  ////////////////////////////////////////
+  // Calculate angle from absolute encoder
+  public Rotation2d getAbsoluteEncoderValue() {
+    double absolutePositionPercent =
+        (m_turnAbsoluteEncoder.getVoltage() / RobotController.getVoltage5V());
+    return new Rotation2d(absolutePositionPercent * 2.0 * Math.PI)
+        .minus(m_turnAbsoluteEncoderOffset);
   }
 
   public void setDriveVoltage(double voltage) {

@@ -106,8 +106,8 @@ public class SwerveJoystickCmd extends CommandBase {
     SwerveModuleState[] moduleStates =
         SwerveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
 
-    Logger.getInstance().recordOutput("expected_module_states", moduleStates);
-    Logger.getInstance().recordOutput("expected_velocity", linearVelocity);
+    Logger.getInstance().recordOutput("SwerveJoystickCmd/expectedModuleStates", moduleStates);
+    Logger.getInstance().recordOutput("SwerveJoystickCmd/expectedVelocity", linearVelocity);
     m_swerveSubsystem.setModuleStates(moduleStates);
   }
 

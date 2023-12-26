@@ -64,9 +64,9 @@ public final class Constants {
 
     ////////
     // Speed
-    public static final double kMaxSpeedXMetersPerSecond = 1;
-    public static final double kMaxSpeedYMetersPerSecond = 1;
-    public static final double kMaxSpeedAngularRadiansPerSecond = Math.PI * 1;
+    public static final double kMaxSpeedXMetersPerSecond = 1.0;
+    public static final double kMaxSpeedYMetersPerSecond = 1.0;
+    public static final double kMaxSpeedAngularRadiansPerSecond = Math.PI * 0.25;
 
     /////////
     // Motors
@@ -127,6 +127,10 @@ public final class Constants {
     public static final double kFeedForwardKs = 0.09214084677588957;
     public static final double kFeedForwardKv = 2.6828478208373143;
     public static final double kFeedForwardKa = 0.0;
+
+    public static final double kTurningFeedbackP = 8.0;
+    public static final double kTurningFeedbackI = 0.0;
+    public static final double kTurningFeedbackD = 0.0;
 
     // This corrects the skew when spinning and driving at the same time
     public static final double kSpinCorrectionFactor = 0.075;

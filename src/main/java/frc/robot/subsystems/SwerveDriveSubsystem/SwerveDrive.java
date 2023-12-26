@@ -58,7 +58,11 @@ public class SwerveDrive extends SubsystemBase {
     m_modules[3] = backRight;
 
     for (int i = 0; i != 4; i++) {
-      m_turnController[i] = new PIDController(8, 0, 0);
+      m_turnController[i] =
+          new PIDController(
+              SwerveConstants.kTurningFeedbackP,
+              SwerveConstants.kTurningFeedbackI,
+              SwerveConstants.kTurningFeedbackD);
       m_turnController[i].enableContinuousInput(-Math.PI, Math.PI);
 
       if (Constants.kCurrentMode == Mode.REAL) {
@@ -89,6 +93,8 @@ public class SwerveDrive extends SubsystemBase {
   public void periodic() {
     for (int i = 0; i != 4; i++) {
       m_modules[i].updateInputs(m_modulesInput[i]);
+      Logger.getInstance()
+          .processInputs("SwerveDrive/Modules/Module" + Integer.toString(i), m_modulesInput[i]);
     }
 
     var chassisSpeeds = SwerveConstants.kDriveKinematics.toChassisSpeeds(getModuleStates());
@@ -100,9 +106,9 @@ public class SwerveDrive extends SubsystemBase {
       m_heading = m_heading.plus(Rotation2d.fromRadians(chassisRotationSpeed * 0.02));
     }
 
-    Logger.getInstance().recordOutput("current module states", getModuleStates());
-    Logger.getInstance().recordOutput("m_heading degrees", m_heading.getDegrees());
-    Logger.getInstance().recordOutput("m_heading radians", m_heading.getRadians());
+    Logger.getInstance().recordOutput("SwerveDrive/currentModuleStates", getModuleStates());
+    Logger.getInstance().recordOutput("SwerveDrive/headingDegrees", m_heading.getDegrees());
+    Logger.getInstance().recordOutput("SwerveDrive/headingRadians", m_heading.getRadians());
   }
 
   public Pose2d getFieldVelocity() {
@@ -168,10 +174,10 @@ public class SwerveDrive extends SubsystemBase {
       desiredStates[i].speedMetersPerSecond *= Math.cos(m_turnController[i].getPositionError());
 
       m_modules[i].setDriveVoltage(
-          m_driveController[i].calculate(
+          m_driveFeedforward[i].calculate(desiredStates[i].speedMetersPerSecond)
+              + m_driveController[i].calculate(
                   m_modulesInput[i].driveVelocityMetersPerSec,
-                  desiredStates[i].speedMetersPerSecond)
-              + m_driveFeedforward[i].calculate(desiredStates[i].speedMetersPerSecond));
+                  desiredStates[i].speedMetersPerSecond));
 
       m_modules[i].setTurnVoltage(
           (m_turnController[i].calculate(
