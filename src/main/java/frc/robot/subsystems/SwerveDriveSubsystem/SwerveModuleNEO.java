@@ -13,6 +13,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.RobotController;
 import frc.robot.Constants.SwerveConstants;
+import frc.robot.utils.SparkMaxConfigurer;
 
 /** Add your docs here. */
 public class SwerveModuleNEO implements SwerveModuleIO {
@@ -43,6 +44,9 @@ public class SwerveModuleNEO implements SwerveModuleIO {
 
     m_driveMotor.setInverted(driveMotorReversed);
     m_turnMotor.setInverted(turnMotorReversed);
+
+    SparkMaxConfigurer.setFrameTimingsOptmized(m_driveMotor);
+    SparkMaxConfigurer.setFrameTimingsOptmized(m_turnMotor);
 
     // This sets the conversion factor in the spark max, apparently
     // this can cause some issues. Needs investigating.
