@@ -45,20 +45,26 @@ public class SwerveModuleNEO implements SwerveModuleIO {
     m_driveMotor.setInverted(driveMotorReversed);
     m_turnMotor.setInverted(turnMotorReversed);
 
+    // Optimize the spark max frame timings to clean up the CAN bus
     SparkMaxConfigurer.setFrameTimingsOptmized(m_driveMotor);
     SparkMaxConfigurer.setFrameTimingsOptmized(m_turnMotor);
+
+    // This sets the update rate of the spark max position value
+    m_driveMotor.setPeriodicFramePeriod(CANSparkMax.PeriodicFrame.kStatus2, 10);
+    if (!SwerveConstants.kUseExternalEncoders)
+      m_turnMotor.setPeriodicFramePeriod(CANSparkMax.PeriodicFrame.kStatus2, 10);
 
     // This sets the conversion factor in the spark max, apparently
     // this can cause some issues. Needs investigating.
     m_driveDefaultEncoder.setPositionConversionFactor(
-        SwerveConstants.Module.kDriveEncoderRot2Meter);
+        SwerveConstants.ModuleConstants.kDriveEncoderRot2Meter);
     m_driveDefaultEncoder.setVelocityConversionFactor(
-        SwerveConstants.Module.kDriveEncoderRPM2MeterPerSec);
+        SwerveConstants.ModuleConstants.kDriveEncoderRPM2MeterPerSec);
 
     m_turnRelativeEncoder.setPositionConversionFactor(
-        SwerveConstants.Module.kTurningEncoderRot2Rad);
+        SwerveConstants.ModuleConstants.kTurningEncoderRot2Rad);
     m_turnRelativeEncoder.setVelocityConversionFactor(
-        SwerveConstants.Module.kTurningEncoderRPM2RadPerSec);
+        SwerveConstants.ModuleConstants.kTurningEncoderRPM2RadPerSec);
 
     m_turnRelativeEncoder.setPosition(getAbsoluteEncoderValue().getRadians());
   }
@@ -74,11 +80,17 @@ public class SwerveModuleNEO implements SwerveModuleIO {
 
     inputs.turnAbsolutePositionRad = getAbsoluteEncoderValue().getRadians();
 
-    inputs.turnPositionRad = m_turnRelativeEncoder.getPosition();
+    // Use the absolute encoder value if UseExternalEncoders is true
+    if (SwerveConstants.kUseExternalEncoders) {
+      inputs.turnPositionRad = inputs.turnAbsolutePositionRad;
+    } else {
+      inputs.turnPositionRad = m_turnRelativeEncoder.getPosition();
+    }
+
     inputs.turnVelocityRadPerSec =
         Units.rotationsPerMinuteToRadiansPerSecond(m_turnRelativeEncoder.getVelocity())
-            / (1 / SwerveConstants.Module.kTurningMotorGearRatio);
-    ;
+            / (1 / SwerveConstants.ModuleConstants.kTurningMotorGearRatio);
+
     inputs.turnTemperature = m_turnMotor.getMotorTemperature();
     inputs.turnCurrent = m_turnMotor.getOutputCurrent();
     inputs.turnVoltage = m_turnMotor.getAppliedOutput() * RobotController.getBatteryVoltage();

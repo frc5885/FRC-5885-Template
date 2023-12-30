@@ -13,7 +13,6 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.DoubleArraySubscriber;
-import edu.wpi.first.networktables.IntegerArraySubscriber;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.TimestampedDoubleArray;
@@ -31,10 +30,11 @@ public class SwervePoseEstimator extends SubsystemBase {
 
   private final SwerveDrivePoseEstimator m_poseEstimator;
 
-  private final SwerveDrive m_sw;
+  private final SwerveDrive m_swerveDrive;
 
   private final DoubleArraySubscriber m_observationSubscriber;
-  private final IntegerArraySubscriber m_visibleTagsSubscriber;
+
+  // private final IntegerArraySubscriber m_visibleTagsSubscriber;
 
   // private final AprilTagFieldLayout m_aprilTagFieldLayout;
 
@@ -50,23 +50,23 @@ public class SwervePoseEstimator extends SubsystemBase {
             m_rotationSupplier.get(),
             m_swerveModulePositionSupplier.get(),
             new Pose2d(),
-            PoseEstimatorConstants.kStateStdDevs,
+            PoseEstimatorConstants.kEncoderMeasurementStdDevs,
             PoseEstimatorConstants.kVisionMeasurementStdDevs);
 
-    m_sw = swerveDrive;
+    m_swerveDrive = swerveDrive;
 
     NetworkTable table = NetworkTableInstance.getDefault().getTable("NoodleVision1/output");
     m_observationSubscriber =
         table.getDoubleArrayTopic("SwervePoseEstimator/observations").subscribe(new double[] {});
-    m_visibleTagsSubscriber =
-        table.getIntegerArrayTopic("SwervePoseEstimator/visibleTags").subscribe(new long[] {});
+    // m_visibleTagsSubscriber =
+    //     table.getIntegerArrayTopic("SwervePoseEstimator/visibleTags").subscribe(new long[] {});
     // m_aprilTagFieldLayout = AprilTagFields.
   }
 
   @Override
   public void periodic() {
-    Logger
-        .recordOutput("SwervePoseEstimator/estimatedPose", m_poseEstimator.getEstimatedPosition());
+    Logger.recordOutput(
+        "SwervePoseEstimator/estimatedPose", m_poseEstimator.getEstimatedPosition());
     m_poseEstimator.update(m_rotationSupplier.get(), m_swerveModulePositionSupplier.get());
     // System.out.println(m_visibleTagsSubscriber.get().length);
 
@@ -162,7 +162,7 @@ public class SwervePoseEstimator extends SubsystemBase {
   }
 
   public void reset(Pose2d newPos) {
-    m_sw.resetGyro();
+    m_swerveDrive.resetGyro();
     m_poseEstimator.resetPosition(
         m_rotationSupplier.get(), m_swerveModulePositionSupplier.get(), newPos);
   }

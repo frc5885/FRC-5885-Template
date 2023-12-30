@@ -70,7 +70,7 @@ public class SwerveJoystickCmd extends Command {
     // need to be changed.
     double magnitudeSqrd = Math.pow(magnitude, 2);
 
-    double linearVelocity = magnitudeSqrd * SwerveConstants.kMaxSpeedXMetersPerSecond;
+    double linearVelocity = magnitudeSqrd * SwerveConstants.kMaxSpeedMetersPerSecond;
     Rotation2d linearDirection = new Rotation2d(xDir, yDir);
 
     // Rotation speed stuff
@@ -106,8 +106,8 @@ public class SwerveJoystickCmd extends Command {
     SwerveModuleState[] moduleStates =
         SwerveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
 
-    Logger.getInstance().recordOutput("SwerveJoystickCmd/expectedModuleStates", moduleStates);
-    Logger.getInstance().recordOutput("SwerveJoystickCmd/expectedVelocity", linearVelocity);
+    Logger.recordOutput("SwerveJoystickCmd/expectedModuleStates", moduleStates);
+    Logger.recordOutput("SwerveJoystickCmd/expectedVelocity", linearVelocity);
     m_swerveSubsystem.setModuleStates(moduleStates);
   }
 

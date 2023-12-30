@@ -45,7 +45,8 @@ public class SwerveModuleSim implements SwerveModuleIO {
     m_turnMotor.update(0.02);
 
     m_driveVelocity =
-        m_driveMotor.getAngularVelocityRadPerSec() * SwerveConstants.Module.kWheelDiameterMeters;
+        m_driveMotor.getAngularVelocityRadPerSec()
+            * SwerveConstants.ModuleConstants.kWheelDiameterMeters;
     m_driveDistance += m_driveVelocity * 0.02;
 
     m_turnAngleVelocity = m_turnMotor.getAngularVelocityRadPerSec();

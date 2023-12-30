@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants;
 import frc.robot.Constants.ControllerConstants;
-import frc.robot.Constants.SwerveConstants;
+import frc.robot.Constants.SwerveConstants.ModuleConstants;
 import frc.robot.commands.SwerveJoystickCmd;
 import frc.robot.subsystems.PoseEstimatorSubsystem.SwervePoseEstimator;
 import frc.robot.subsystems.SwerveDriveSubsystem.SwerveDrive;
@@ -27,7 +27,7 @@ public class RobotContainer {
 
   // Controller
   private final CommandXboxController m_driverController;
-  private final CommandXboxController m_operatorController;
+  // private final CommandXboxController m_operatorController;
 
   private final SwerveDrive m_swerveDrive;
   private final SwervePoseEstimator m_swervePoseEstimator;
@@ -43,33 +43,33 @@ public class RobotContainer {
         m_swerveDrive =
             new SwerveDrive(
                 new SwerveModuleNEO(
-                    SwerveConstants.kLeftFrontDriveMotorID,
-                    SwerveConstants.kLeftFrontTurnMotorID,
-                    SwerveConstants.kLeftFrontAnalogEncoderPort,
-                    SwerveConstants.kLeftFrontModuleOffset,
-                    SwerveConstants.kLeftFrontTurnMotorInverted,
-                    SwerveConstants.kLeftFrontDriveMotorInverted),
+                    ModuleConstants.kLeftFrontDriveMotorID,
+                    ModuleConstants.kLeftFrontTurnMotorID,
+                    ModuleConstants.kLeftFrontAnalogEncoderPort,
+                    ModuleConstants.kLeftFrontModuleOffset,
+                    ModuleConstants.kLeftFrontTurnMotorInverted,
+                    ModuleConstants.kLeftFrontDriveMotorInverted),
                 new SwerveModuleNEO(
-                    SwerveConstants.kRightFrontDriveMotorID,
-                    SwerveConstants.kRightFrontTurnMotorID,
-                    SwerveConstants.kRightFrontAnalogEncoderPort,
-                    SwerveConstants.kRightFrontModuleOffset,
-                    SwerveConstants.kRightFrontTurnMotorInverted,
-                    SwerveConstants.kRightFrontDriveMotorInverted),
+                    ModuleConstants.kRightFrontDriveMotorID,
+                    ModuleConstants.kRightFrontTurnMotorID,
+                    ModuleConstants.kRightFrontAnalogEncoderPort,
+                    ModuleConstants.kRightFrontModuleOffset,
+                    ModuleConstants.kRightFrontTurnMotorInverted,
+                    ModuleConstants.kRightFrontDriveMotorInverted),
                 new SwerveModuleNEO(
-                    SwerveConstants.kLeftRearDriveMotorID,
-                    SwerveConstants.kLeftRearTurnMotorID,
-                    SwerveConstants.kLeftRearAnalogEncoderPort,
-                    SwerveConstants.kLeftRearModuleOffset,
-                    SwerveConstants.kLeftRearTurnMotorInverted,
-                    SwerveConstants.kLeftRearDriveMotorInverted),
+                    ModuleConstants.kLeftRearDriveMotorID,
+                    ModuleConstants.kLeftRearTurnMotorID,
+                    ModuleConstants.kLeftRearAnalogEncoderPort,
+                    ModuleConstants.kLeftRearModuleOffset,
+                    ModuleConstants.kLeftRearTurnMotorInverted,
+                    ModuleConstants.kLeftRearDriveMotorInverted),
                 new SwerveModuleNEO(
-                    SwerveConstants.kRightRearDriveMotorID,
-                    SwerveConstants.kRightRearTurnMotorID,
-                    SwerveConstants.kRightRearAnalogEncoderPort,
-                    SwerveConstants.kRightRearModuleOffset,
-                    SwerveConstants.kRightRearTurnMotorInverted,
-                    SwerveConstants.kRightRearDriveMotorInverted));
+                    ModuleConstants.kRightRearDriveMotorID,
+                    ModuleConstants.kRightRearTurnMotorID,
+                    ModuleConstants.kRightRearAnalogEncoderPort,
+                    ModuleConstants.kRightRearModuleOffset,
+                    ModuleConstants.kRightRearTurnMotorInverted,
+                    ModuleConstants.kRightRearDriveMotorInverted));
         break;
 
       case SIMULATOR:
@@ -91,9 +91,11 @@ public class RobotContainer {
     }
 
     m_driverController = new CommandXboxController(ControllerConstants.kDriverControllerPort);
-    m_operatorController = new CommandXboxController(ControllerConstants.kOperatorControllerPort);
+    // m_operatorController = new
+    // CommandXboxController(ControllerConstants.kOperatorControllerPort);
 
     m_swervePoseEstimator = new SwervePoseEstimator(m_swerveDrive);
+    m_swervePoseEstimator.reset(new Pose2d(0, 0, new Rotation2d()));
 
     configureBindings();
   }

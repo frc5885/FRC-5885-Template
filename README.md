@@ -2,7 +2,7 @@
 
  - [ ] Zips ties that keep the controllers on the modules make a clicking sound (I think?),
        might be worth looking into before it becomes a problem.
- - [ ] Add feature to use analog absolute encoder for initial position and then switch to
+ - [x] Add feature to use analog absolute encoder for initial position and then switch to
        the NEOs built in encoders for (hopefully) better latency and redendency.
     - This will also let us use the built in PID controller taking more strain off the RoboRIO
     - (NEEDS TESTING) Is this worth it? The high current could be causing noise and the poor
@@ -27,7 +27,8 @@
       the pi 5 15ish watts, **coral consumes 900mA at full power (ugh, higher then rpi5 supports, kind of?)**
  - [ ] Add smart dashboard options for configuring different modes
     - Make the whole design code based, no more desiging in smart dash board since it keeps breaking.
- - [ ] Implement PIDF for driving to obtain better speed correction
- - [ ] Switch to 2024 beta
+ - [x] Implement PIDF for driving to obtain better speed correction
+    - This needs better tuning, might not be worth it since it causes overshoot
+ - [x] Switch to 2024 beta
  - [ ] Rename loggers to be better organized
  - [x] Switch to polar cordinates for the drive system to get around deadband along both x and y axis

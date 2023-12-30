@@ -13,12 +13,12 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
 import frc.robot.Constants.SwerveConstants;
+import frc.robot.Constants.SwerveConstants.ModuleConstants;
 import org.littletonrobotics.junction.Logger;
 
 public class SwerveDrive extends SubsystemBase {
@@ -61,31 +61,33 @@ public class SwerveDrive extends SubsystemBase {
     for (int i = 0; i != 4; i++) {
       m_turnController[i] =
           new PIDController(
-              SwerveConstants.kTurningFeedbackP,
-              SwerveConstants.kTurningFeedbackI,
-              SwerveConstants.kTurningFeedbackD);
+              ModuleConstants.kTurningFeedbackP,
+              ModuleConstants.kTurningFeedbackI,
+              ModuleConstants.kTurningFeedbackD);
       m_turnController[i].enableContinuousInput(-Math.PI, Math.PI);
 
       if (Constants.kCurrentMode == Mode.REAL) {
         m_driveController[i] =
             new PIDController(
-                SwerveConstants.kFeedbackP, SwerveConstants.kFeedbackI, SwerveConstants.kFeedbackD);
+                ModuleConstants.kDriveFeedbackP,
+                ModuleConstants.kDriveFeedbackI,
+                ModuleConstants.kDriveFeedbackD);
         m_driveFeedforward[i] =
             new SimpleMotorFeedforward(
-                SwerveConstants.kFeedForwardKs,
-                SwerveConstants.kFeedForwardKv,
-                SwerveConstants.kFeedForwardKa);
+                ModuleConstants.kDriveFeedForwardKs,
+                ModuleConstants.kDriveFeedForwardKv,
+                ModuleConstants.kDriveFeedForwardKa);
       } else {
         m_driveController[i] =
             new PIDController(
-                SwerveConstants.Simulation.kFeedbackP,
-                SwerveConstants.Simulation.kFeedbackI,
-                SwerveConstants.Simulation.kFeedbackD);
+                ModuleConstants.Simulation.kDriveFeedbackP,
+                ModuleConstants.Simulation.kDriveFeedbackI,
+                ModuleConstants.Simulation.kDriveFeedbackD);
         m_driveFeedforward[i] =
             new SimpleMotorFeedforward(
-                SwerveConstants.Simulation.kFeedForwardKs,
-                SwerveConstants.Simulation.kFeedForwardKv,
-                SwerveConstants.Simulation.kFeedForwardKa);
+                ModuleConstants.Simulation.kDriveFeedForwardKs,
+                ModuleConstants.Simulation.kDriveFeedForwardKv,
+                ModuleConstants.Simulation.kDriveFeedForwardKa);
       }
     }
   }
