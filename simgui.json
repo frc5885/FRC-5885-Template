@@ -1,7 +1,10 @@
 {
   "NTProvider": {
     "types": {
-      "/FMSInfo": "FMSInfo"
+      "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/Angular Speed Limit": "String Chooser",
+      "/SmartDashboard/Auto Routine": "String Chooser",
+      "/SmartDashboard/Linear Speed Limit": "String Chooser"
     }
   }
 }

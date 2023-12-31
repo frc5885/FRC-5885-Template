@@ -228,6 +228,13 @@ public class SwerveDrive extends SubsystemBase {
     return getChassisSpeeds().omegaRadiansPerSecond;
   }
 
+  public double getAbsoluteEncoderValue(int index) {
+    if (index < 0 || index > 3) {
+      return 0.0;
+    }
+    return m_modulesInput[index].turnAbsolutePositionRad;
+  }
+
   public void stop() {
     for (int i = 0; i != 4; i++) {
       m_modules[i].setDriveVoltage(0);

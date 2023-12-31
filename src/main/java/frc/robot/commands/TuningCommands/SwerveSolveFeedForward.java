@@ -2,9 +2,11 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.TuningCommands;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.SwerveDriveSubsystem.SwerveDrive;
 import java.util.LinkedList;
@@ -39,6 +41,13 @@ public class SwerveSolveFeedForward extends Command {
   public void initialize() {
     m_timer.reset();
     m_timer.start();
+    m_swerveSubsystem.resetGyro();
+
+    m_xVelocityMetersPerSecond.clear();
+    m_yVoltage.clear();
+    m_currentVoltage = 0.0;
+    m_previousVelocityMetersPerSecond = 0.0;
+    m_lastSetTime = 0.0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -61,7 +70,7 @@ public class SwerveSolveFeedForward extends Command {
 
         m_currentVoltage += m_rampRate;
 
-        System.out.println("Steady state reached, increasing voltage to " + m_currentVoltage);
+        System.out.printf("Steady state reached, increasing voltage to %.5f\n", m_currentVoltage);
       }
     }
 
@@ -121,7 +130,7 @@ public class SwerveSolveFeedForward extends Command {
 
     // If we don't have enough data, don't try to calculate anything
     if (m_xVelocityMetersPerSecond.size() < 3) {
-      System.out.println("Not enough data to calculate feed forward, exiting");
+      System.out.println("ERROR: Not enough data to calculate feed forward, exiting");
       return;
     }
 
@@ -132,7 +141,6 @@ public class SwerveSolveFeedForward extends Command {
       double deriv =
           (m_yVoltage.get(i + 1) - m_yVoltage.get(i))
               / (m_xVelocityMetersPerSecond.get(i + 1) - m_xVelocityMetersPerSecond.get(i));
-      System.out.println(deriv);
       if (deriv >= 1 && !Double.isInfinite(deriv) && !Double.isNaN(deriv)) {
         startPoint = i;
         System.out.println("Found start point at " + startPoint);
@@ -141,7 +149,7 @@ public class SwerveSolveFeedForward extends Command {
     }
 
     if (startPoint == 0) {
-      System.out.println("Could not find start point, using all data. Data may be inaccurate.");
+      System.out.println("WARNING: Could not find start point, using all data. Result may be inaccurate.");
     }
 
     // Delete everything before the start point
@@ -150,14 +158,10 @@ public class SwerveSolveFeedForward extends Command {
       m_yVoltage.remove(0);
     }
 
-    // for (int i = 0; i != m_xVelocityMetersPerSecond.size(); ++i) {
-    //   System.out.println(m_xVelocityMetersPerSecond.get(i) + ", " + m_yVoltage.get(i));
-    // }
-
     double[] rslt = calculateLeastSquares(m_xVelocityMetersPerSecond, m_yVoltage);
 
-    System.out.println("Slope: " + rslt[0]);
-    System.out.println("Intercept: " + rslt[1]);
+    System.out.printf("kS: %.8f\n", rslt[1]);
+    System.out.printf("kV: %.8f\n", rslt[0]);
 
     // Calculate predicted values
     List<Double> predicted = new LinkedList<Double>();
@@ -165,7 +169,7 @@ public class SwerveSolveFeedForward extends Command {
       predicted.add(rslt[0] * m_xVelocityMetersPerSecond.get(i) + rslt[1]);
     }
 
-    System.out.println("R2: " + calculateR2(m_yVoltage, predicted));
+    System.out.printf("R2: %.8f\n", calculateR2(m_yVoltage, predicted));
   }
 
   // Returns true when the command should end.

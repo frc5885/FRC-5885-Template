@@ -84,8 +84,8 @@ public final class Constants {
   public static final class SwerveConstants {
     ////////////////
     // Driving Speed
-    public static final double kMaxSpeedMetersPerSecond = 1.0;
-    public static final double kMaxSpeedAngularRadiansPerSecond = Math.PI * 0.25;
+    public static final double kMaxSpeedMetersPerSecond = 3.0;
+    public static final double kMaxSpeedAngularRadiansPerSecond = Math.PI * 1.5;
 
     /////////////////////////
     // Spin Correction Factor
