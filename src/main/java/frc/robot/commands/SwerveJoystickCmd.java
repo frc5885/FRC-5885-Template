@@ -87,14 +87,16 @@ public class SwerveJoystickCmd extends Command {
     // need to be changed.
     double magnitudeSqrd = Math.pow(magnitude, 2);
 
-    double linearVelocity = magnitudeSqrd * SwerveConstants.kMaxSpeedMetersPerSecond * m_linearSpeedLimitChooser.get();
+    double linearVelocity =
+        magnitudeSqrd * SwerveConstants.kMaxSpeedMetersPerSecond * m_linearSpeedLimitChooser.get();
     Rotation2d linearDirection = new Rotation2d(xDir, yDir);
 
     // Rotation speed stuff
     double angularVelocity =
         MathUtil.applyDeadband(
                 m_turnDrivePercentFunction.get(), ControllerConstants.kSwerveDriveDeadband)
-            * SwerveConstants.kMaxSpeedAngularRadiansPerSecond * m_angularSpeedLimitChooser.get();
+            * SwerveConstants.kMaxSpeedAngularRadiansPerSecond
+            * m_angularSpeedLimitChooser.get();
 
     // This does the trig for us and lets us get the x/y velocity
     Translation2d translation = new Translation2d(linearVelocity, linearDirection);
@@ -125,6 +127,7 @@ public class SwerveJoystickCmd extends Command {
 
     Logger.recordOutput("SwerveJoystickCmd/expectedModuleStates", moduleStates);
     Logger.recordOutput("SwerveJoystickCmd/expectedVelocity", linearVelocity);
+    Logger.recordOutput("SwerveJoystickCmd/expectedAngularVelocity", angularVelocity);
     m_swerveSubsystem.setModuleStates(moduleStates);
   }
 

@@ -5,6 +5,7 @@ import com.revrobotics.CANSparkMax;
 public class SparkMaxConfigurer {
   /**
    * Sets the default frame timings for a CANSparkMax motor.
+   * https://docs.revrobotics.com/sparkmax/operating-modes/control-interfaces#periodic-status-frames
    *
    * @param motor the CANSparkMax motor to set the frame timings for
    */
@@ -27,6 +28,7 @@ public class SparkMaxConfigurer {
 
   /**
    * Sets the frame timings for optimized performance.
+   * https://docs.revrobotics.com/sparkmax/operating-modes/control-interfaces#periodic-status-frames
    *
    * @param motor the CANSparkMax motor to configure
    */
@@ -44,6 +46,7 @@ public class SparkMaxConfigurer {
 
   /**
    * Sets the frame timings for an optimized follower CANSparkMax motor.
+   * https://docs.revrobotics.com/sparkmax/operating-modes/control-interfaces#periodic-status-frames
    *
    * @param motor the CANSparkMax motor to configure
    */

@@ -8,7 +8,6 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.SwerveConstants.ModuleConstants;
 import frc.robot.subsystems.SwerveDriveSubsystem.SwerveDrive;
-
 import java.util.ArrayList;
 
 public class SwerveGetModuleOffsets extends Command {
@@ -32,23 +31,31 @@ public class SwerveGetModuleOffsets extends Command {
   @Override
   public void initialize() {
     m_leftFrontValues = new ArrayList<>();
-  m_rightFrontValues = new ArrayList<>();
-  m_leftRearValues = new ArrayList<>();
-  m_rightRearValues = new ArrayList<>();
+    m_rightFrontValues = new ArrayList<>();
+    m_leftRearValues = new ArrayList<>();
+    m_rightRearValues = new ArrayList<>();
 
-    m_leftFrontValues.ensureCapacity(m_bufferSize+1);
-    m_rightFrontValues.ensureCapacity(m_bufferSize+1);
-    m_leftRearValues.ensureCapacity(m_bufferSize+1);
-    m_rightRearValues.ensureCapacity(m_bufferSize+1);
+    m_leftFrontValues.ensureCapacity(m_bufferSize + 1);
+    m_rightFrontValues.ensureCapacity(m_bufferSize + 1);
+    m_leftRearValues.ensureCapacity(m_bufferSize + 1);
+    m_rightRearValues.ensureCapacity(m_bufferSize + 1);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_leftFrontValues.add(m_swerveSubsystem.getAbsoluteEncoderValue(0) + ModuleConstants.kLeftFrontModuleOffset.getRadians());
-    m_rightFrontValues.add(m_swerveSubsystem.getAbsoluteEncoderValue(1) + ModuleConstants.kRightFrontModuleOffset.getRadians());
-    m_leftRearValues.add(m_swerveSubsystem.getAbsoluteEncoderValue(2) + ModuleConstants.kLeftRearModuleOffset.getRadians());
-    m_rightRearValues.add(m_swerveSubsystem.getAbsoluteEncoderValue(3) + ModuleConstants.kRightRearModuleOffset.getRadians());
+    m_leftFrontValues.add(
+        m_swerveSubsystem.getAbsoluteEncoderValue(0)
+            + ModuleConstants.kLeftFrontModuleOffset.getRadians());
+    m_rightFrontValues.add(
+        m_swerveSubsystem.getAbsoluteEncoderValue(1)
+            + ModuleConstants.kRightFrontModuleOffset.getRadians());
+    m_leftRearValues.add(
+        m_swerveSubsystem.getAbsoluteEncoderValue(2)
+            + ModuleConstants.kLeftRearModuleOffset.getRadians());
+    m_rightRearValues.add(
+        m_swerveSubsystem.getAbsoluteEncoderValue(3)
+            + ModuleConstants.kRightRearModuleOffset.getRadians());
 
     if (m_leftFrontValues.size() > m_bufferSize) {
       m_leftFrontValues.remove(0);
@@ -79,7 +86,9 @@ public class SwerveGetModuleOffsets extends Command {
     leftRearAverage = Units.radiansToDegrees(leftRearAverage);
     rightRearAverage = Units.radiansToDegrees(rightRearAverage);
 
-    System.out.printf("FL: %.2f, FR: %.2f, RL: %.2f, RR: %.2f\n", leftFrontAverage, rightFrontAverage, leftRearAverage, rightRearAverage);
+    System.out.printf(
+        "FL: %.2f, FR: %.2f, RL: %.2f, RR: %.2f\n",
+        leftFrontAverage, rightFrontAverage, leftRearAverage, rightRearAverage);
   }
 
   // Called once the command ends or is interrupted.

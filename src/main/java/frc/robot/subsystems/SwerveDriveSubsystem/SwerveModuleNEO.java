@@ -50,9 +50,10 @@ public class SwerveModuleNEO implements SwerveModuleIO {
     SparkMaxConfigurer.setFrameTimingsOptmized(m_turnMotor);
 
     // This sets the update rate of the spark max position value
-    m_driveMotor.setPeriodicFramePeriod(CANSparkMax.PeriodicFrame.kStatus2, 10);
-    if (!SwerveConstants.kUseExternalEncoders)
-      m_turnMotor.setPeriodicFramePeriod(CANSparkMax.PeriodicFrame.kStatus2, 10);
+    // TODO: Motors has timeout issues, needs to find a way to detect and fix
+    // m_driveMotor.setPeriodicFramePeriod(CANSparkMax.PeriodicFrame.kStatus2, 10);
+    // if (!SwerveConstants.kUseExternalEncoders)
+    //   m_turnMotor.setPeriodicFramePeriod(CANSparkMax.PeriodicFrame.kStatus2, 10);
 
     // This sets the conversion factor in the spark max, apparently
     // this can cause some issues. Needs investigating.

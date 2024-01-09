@@ -4,8 +4,6 @@
 
 package frc.robot.kernal;
 
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -26,6 +24,7 @@ import frc.robot.subsystems.PoseEstimatorSubsystem.SwervePoseEstimator;
 import frc.robot.subsystems.SwerveDriveSubsystem.SwerveDrive;
 import frc.robot.subsystems.SwerveDriveSubsystem.SwerveModuleNEO;
 import frc.robot.subsystems.SwerveDriveSubsystem.SwerveModuleSim;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class RobotContainer {
 
@@ -36,7 +35,8 @@ public class RobotContainer {
   private final SwerveDrive m_swerveDrive;
   private final SwervePoseEstimator m_swervePoseEstimator;
 
-  private final LoggedDashboardChooser<Command> m_autoChooser = new LoggedDashboardChooser<>("Auto Routine");
+  private final LoggedDashboardChooser<Command> m_autoChooser =
+      new LoggedDashboardChooser<>("Auto Routine");
 
   public RobotContainer() {
     // Setup controllers depending on the current mode
@@ -119,18 +119,20 @@ public class RobotContainer {
 
     // m_swerveDrive.setDefaultCommand(new SwerveGetModuleOffsets(m_swerveDrive));
 
-    // new JoystickButton(m_driverController.getHID(), Button.kX.value)
-    //     .onTrue(
-    //         new SequentialCommandGroup(
-    //             new InstantCommand(
-    //                 () -> {
-    //                   m_swerveDrive.resetGyro();
-    //                   m_swervePoseEstimator.reset(new Pose2d(0, 0, new Rotation2d()));
-    //                 })));
+    new JoystickButton(m_driverController.getHID(), Button.kX.value)
+        .onTrue(
+            new SequentialCommandGroup(
+                new InstantCommand(
+                    () -> {
+                      m_swerveDrive.resetGyro();
+                      m_swervePoseEstimator.reset(new Pose2d(0, 0, new Rotation2d()));
+                    })));
 
     m_autoChooser.addDefaultOption("Do Nothing", new InstantCommand());
-    m_autoChooser.addOption("[TUNING] Get Module Offsets", new SwerveGetModuleOffsets(m_swerveDrive));
-    m_autoChooser.addOption("[TUNING] Get Swerve FF Characteristics", new SwerveSolveFeedForward(m_swerveDrive));
+    m_autoChooser.addOption(
+        "[TUNING] Get Module Offsets", new SwerveGetModuleOffsets(m_swerveDrive));
+    m_autoChooser.addOption(
+        "[TUNING] Get Swerve FF Characteristics", new SwerveSolveFeedForward(m_swerveDrive));
   }
 
   public Command getAutonomousCommand() {

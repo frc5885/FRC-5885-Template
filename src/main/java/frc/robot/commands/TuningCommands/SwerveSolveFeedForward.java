@@ -5,8 +5,6 @@
 package frc.robot.commands.TuningCommands;
 
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.SwerveDriveSubsystem.SwerveDrive;
 import java.util.LinkedList;
@@ -149,7 +147,8 @@ public class SwerveSolveFeedForward extends Command {
     }
 
     if (startPoint == 0) {
-      System.out.println("WARNING: Could not find start point, using all data. Result may be inaccurate.");
+      System.out.println(
+          "WARNING: Could not find start point, using all data. Result may be inaccurate.");
     }
 
     // Delete everything before the start point
