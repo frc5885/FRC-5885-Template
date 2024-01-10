@@ -106,6 +106,8 @@ public class RobotContainer {
     configureBindings();
   }
 
+  boolean m_isFieldOriented = true;
+
   private void configureBindings() {
 
     m_swerveDrive.setDefaultCommand(
@@ -115,7 +117,7 @@ public class RobotContainer {
             () -> (-m_driverController.getLeftY()),
             () -> (-m_driverController.getLeftX()),
             () -> (-m_driverController.getRightX()),
-            () -> (true)));
+            () -> (m_isFieldOriented)));
 
     // m_swerveDrive.setDefaultCommand(new SwerveGetModuleOffsets(m_swerveDrive));
 
@@ -127,6 +129,13 @@ public class RobotContainer {
                       m_swerveDrive.resetGyro();
                       m_swervePoseEstimator.reset(new Pose2d(0, 0, new Rotation2d()));
                     })));
+
+    new JoystickButton(m_driverController.getHID(), Button.kY.value)
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  m_isFieldOriented = !m_isFieldOriented;
+                }));
 
     m_autoChooser.addDefaultOption("Do Nothing", new InstantCommand());
     m_autoChooser.addOption(
