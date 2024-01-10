@@ -20,7 +20,7 @@ public final class Constants {
   }
 
   // This is used to switch beteen simulator and real robot.
-  public static final Mode kCurrentMode = Mode.REAL;
+  public static final Mode kCurrentMode = Mode.SIMULATOR;
 
   /**
    * Constants related to the controller configurations. Anything that is controller specific should
@@ -90,7 +90,8 @@ public final class Constants {
     /////////////////////////
     // Spin Correction Factor
     //
-    // This valued is guessed.
+    // This value is used to offset some countersteering when turning
+    // and driving at the same time. It is a guessed value but 0.075 works well.
     public static final double kSpinCorrectionFactor = 0.075;
 
     ////////////////////////
