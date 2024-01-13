@@ -17,9 +17,9 @@ public class NoodleVision implements NoodleVisionIO {
 
   /** Creates a new TankDrivePoseEstimator. */
   public NoodleVision(int id) {
-    NetworkTable table = NetworkTableInstance.getDefault().getTable("NoodleVision" + id + "/output");
-    m_observationSubscriber =
-        table.getDoubleArrayTopic("observations").subscribe(new double[] {});
+    NetworkTable table =
+        NetworkTableInstance.getDefault().getTable("NoodleVision" + id + "/output");
+    m_observationSubscriber = table.getDoubleArrayTopic("observations").subscribe(new double[] {});
     m_fpsSubscriber = table.getDoubleTopic("fps").subscribe(0.0);
   }
 
@@ -29,5 +29,4 @@ public class NoodleVision implements NoodleVisionIO {
     inputs.timestamp = observation.timestamp;
     inputs.fps = m_fpsSubscriber.get();
   }
-
 }

@@ -13,11 +13,6 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.networktables.DoubleArraySubscriber;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.TimestampedDoubleArray;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.PoseEstimatorConstants;
 import frc.robot.Constants.SwerveConstants;
@@ -40,10 +35,7 @@ public class SwervePoseEstimator extends SubsystemBase {
     new NoodleVisionIOInputsAutoLogged(),
   };
 
-  private final Transform3d[] m_cameraPoses = {
-    PoseEstimatorConstants.kCameraPositionMeters[0]
-  };
-
+  private final Transform3d[] m_cameraPoses = {PoseEstimatorConstants.kCameraPositionMeters[0]};
 
   /** Creates a new TankDrivePoseEstimator. */
   public SwervePoseEstimator(SwerveDrive swerveDrive) {
@@ -79,8 +71,9 @@ public class SwervePoseEstimator extends SubsystemBase {
 
       double[] obs = m_noodleVisionInputs[i].observations;
       double timestamp = m_noodleVisionInputs[i].timestamp / 1000000.0;
-      
-      // System.out.println("obs_tm: " + obs.length + " " + (Timer.getFPGATimestamp() - obs_tm.timestamp/1000000.0)*1000);
+
+      // System.out.println("obs_tm: " + obs.length + " " + (Timer.getFPGATimestamp() -
+      // obs_tm.timestamp/1000000.0)*1000);
       if (obs.length >= 1) {
 
         Pose3d cameraPose = null;
@@ -91,9 +84,7 @@ public class SwervePoseEstimator extends SubsystemBase {
                   obs[2],
                   obs[3],
                   obs[4],
-                  new Rotation3d(
-                      new Quaternion(
-                          obs[5], obs[6], obs[7], obs[8])));
+                  new Rotation3d(new Quaternion(obs[5], obs[6], obs[7], obs[8])));
         }
 
         if (obs[0] == 2) {
@@ -105,17 +96,13 @@ public class SwervePoseEstimator extends SubsystemBase {
                   obs[2],
                   obs[3],
                   obs[4],
-                  new Rotation3d(
-                      new Quaternion(
-                          obs[5], obs[6], obs[7], obs[8])));
+                  new Rotation3d(new Quaternion(obs[5], obs[6], obs[7], obs[8])));
           Pose3d cameraPose1 =
               new Pose3d(
                   obs[10],
                   obs[11],
                   obs[12],
-                  new Rotation3d(
-                      new Quaternion(
-                          obs[13], obs[14], obs[15], obs[16])));
+                  new Rotation3d(new Quaternion(obs[13], obs[14], obs[15], obs[16])));
 
           if (error0 < error1 * 0.15) {
             cameraPose = cameraPose0;
@@ -128,8 +115,7 @@ public class SwervePoseEstimator extends SubsystemBase {
 
         // Logger.recordOutput("Vision Think Pose pre-transform", cameraPose.toPose2d());
 
-        cameraPose =
-            cameraPose.transformBy(m_cameraPoses[0].inverse());
+        cameraPose = cameraPose.transformBy(m_cameraPoses[0].inverse());
 
         if (cameraPose.getX() < 0
             || cameraPose.getY() < 0
@@ -146,7 +132,8 @@ public class SwervePoseEstimator extends SubsystemBase {
         // Rotation3d(q2).getZ()));
 
         // Pose2d using = m_poseEstimator.getEstimatedPosition().nearest(List.of(pos1, pos2));
-        // Pose2d camera_loc = new Pose2d(SwerveConstants.kTrackWidthMeters / 2, 0, new Rotation2d());
+        // Pose2d camera_loc = new Pose2d(SwerveConstants.kTrackWidthMeters / 2, 0, new
+        // Rotation2d());
         // using =
         //     using.transformBy(
         //         (new Transform2d(camera_loc.getTranslation(),
@@ -164,7 +151,6 @@ public class SwervePoseEstimator extends SubsystemBase {
         m_poseEstimator.addVisionMeasurement(cameraPose.toPose2d(), timestamp);
       }
     }
-    
   }
 
   public void addVisionPose(Pose2d pose, double timestamp) {

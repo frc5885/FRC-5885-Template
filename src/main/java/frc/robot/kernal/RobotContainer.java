@@ -4,6 +4,10 @@
 
 package frc.robot.kernal;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -17,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.SwerveConstants.ModuleConstants;
+import frc.robot.commands.SimplePathPlanner;
 import frc.robot.commands.SwerveJoystickCmd;
 import frc.robot.commands.TuningCommands.SwerveGetModuleOffsets;
 import frc.robot.commands.TuningCommands.SwerveSolveFeedForward;
@@ -103,6 +108,36 @@ public class RobotContainer {
     m_swervePoseEstimator = new SwervePoseEstimator(m_swerveDrive);
     m_swervePoseEstimator.reset(new Pose2d(0, 0, new Rotation2d()));
 
+    AutoBuilder.configureHolonomic(
+        m_swervePoseEstimator::getPose, // Robot pose supplier
+        m_swervePoseEstimator
+            ::reset, // Method to reset odometry (will be called if your auto has a starting pose)
+        m_swerveDrive::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+        m_swerveDrive::setChassisSpeeds, // Method that will drive the robot given ROBOT RELATIVE
+        // ChassisSpeeds
+        new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in
+            // your Constants class
+            new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+            new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
+            3.5, // Max module speed, in m/s
+            0.53, // Drive base radius in meters. Distance from robot center to furthest module.
+            new ReplanningConfig() // Default path replanning config. See the API for the options
+            // here
+            ),
+        () -> {
+          // Boolean supplier that controls when the path will be mirrored for the red alliance
+          // This will flip the path being followed to the red side of the field.
+          // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+          var alliance = DriverStation.getAlliance();
+          if (alliance.isPresent()) {
+            return alliance.get() == DriverStation.Alliance.Red;
+          }
+          return false;
+        },
+        m_swerveDrive // Reference to this subsystem to set requirements
+        );
+
     configureBindings();
   }
 
@@ -136,6 +171,9 @@ public class RobotContainer {
                 () -> {
                   m_isFieldOriented = !m_isFieldOriented;
                 }));
+
+    // new JoystickButton(m_driverController.getHID(), Button.kB.value)
+    //     .whileTrue(new SimplePathPlanner(m_swervePoseEstimator));
 
     m_autoChooser.addDefaultOption("Do Nothing", new InstantCommand());
     m_autoChooser.addOption(
