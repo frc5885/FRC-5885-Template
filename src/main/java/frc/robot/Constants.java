@@ -20,7 +20,7 @@ public final class Constants {
   }
 
   // This is used to switch beteen simulator and real robot.
-  public static final Mode kCurrentMode = Mode.SIMULATOR;
+  public static final Mode kCurrentMode = Mode.REAL;
 
   /**
    * Constants related to the controller configurations. Anything that is controller specific should
@@ -84,7 +84,7 @@ public final class Constants {
   public static final class SwerveConstants {
     ////////////////
     // Driving Speed
-    public static final double kMaxSpeedMetersPerSecond = 3.0;
+    public static final double kMaxSpeedMetersPerSecond = 4.5;
     public static final double kMaxSpeedAngularRadiansPerSecond = Math.PI * 1.5;
 
     /////////////////////////
@@ -184,8 +184,8 @@ public final class Constants {
       // Drive Feed Forward Constants
       //
       // These values are found by using the SwerveSolveFeedForward command.
-      public static final double kDriveFeedForwardKs = 0.09214084677588957;
-      public static final double kDriveFeedForwardKv = 2.6828478208373143;
+      public static final double kDriveFeedForwardKs = 0.16200507;
+      public static final double kDriveFeedForwardKv = 2.91403978;
       public static final double kDriveFeedForwardKa = 0.0;
 
       //////////////////////

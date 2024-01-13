@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.SwerveConstants.ModuleConstants;
+import frc.robot.commands.DriveTwoMeters;
 import frc.robot.commands.SimplePathPlanner;
 import frc.robot.commands.SwerveJoystickCmd;
 import frc.robot.commands.TuningCommands.SwerveGetModuleOffsets;
@@ -130,9 +131,9 @@ public class RobotContainer {
           // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
 
           var alliance = DriverStation.getAlliance();
-          if (alliance.isPresent()) {
-            return alliance.get() == DriverStation.Alliance.Red;
-          }
+          // if (alliance.isPresent()) {
+          //   return alliance.get() == DriverStation.Alliance.Red;
+          // }
           return false;
         },
         m_swerveDrive // Reference to this subsystem to set requirements
@@ -172,8 +173,11 @@ public class RobotContainer {
                   m_isFieldOriented = !m_isFieldOriented;
                 }));
 
-    // new JoystickButton(m_driverController.getHID(), Button.kB.value)
-    //     .whileTrue(new SimplePathPlanner(m_swervePoseEstimator));
+    new JoystickButton(m_driverController.getHID(), Button.kB.value)
+        .whileTrue(new SimplePathPlanner(m_swervePoseEstimator));
+
+    new JoystickButton(m_driverController.getHID(), Button.kA.value)
+        .whileTrue(new DriveTwoMeters(m_swervePoseEstimator));
 
     m_autoChooser.addDefaultOption("Do Nothing", new InstantCommand());
     m_autoChooser.addOption(
