@@ -18,7 +18,7 @@ public class SimplePathPlanner extends SequentialCommandGroup {
   public SimplePathPlanner(SwervePoseEstimator poseEstimator) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    PathPlannerPath path = PathPlannerPath.fromPathFile("square");
+    PathPlannerPath path = PathPlannerPath.fromPathFile("donut_test");
 
     addCommands(
         new InstantCommand(

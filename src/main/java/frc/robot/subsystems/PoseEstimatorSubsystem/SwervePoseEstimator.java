@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems.PoseEstimatorSubsystem;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -17,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.PoseEstimatorConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.subsystems.SwerveDriveSubsystem.SwerveDrive;
+import java.io.IOException;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
@@ -26,8 +29,8 @@ public class SwervePoseEstimator extends SubsystemBase {
   private final Supplier<SwerveModulePosition[]> m_swerveModulePositionSupplier;
 
   private final SwerveDrivePoseEstimator m_poseEstimator;
-
   private final SwerveDrive m_swerveDrive;
+  private AprilTagFieldLayout m_aprilTagLayout;
 
   private final NoodleVision m_noodleVision1;
 
@@ -55,6 +58,13 @@ public class SwervePoseEstimator extends SubsystemBase {
     m_swerveDrive = swerveDrive;
 
     m_noodleVision1 = new NoodleVision(0);
+    try {
+      m_aprilTagLayout =
+          AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
+    } catch (IOException e) {
+      System.out.println("[ERROR] Could not load apriltag resource file!");
+      m_aprilTagLayout = null;
+    }
   }
 
   @Override
@@ -109,27 +119,21 @@ public class SwervePoseEstimator extends SubsystemBase {
           } else if (error1 < error0 * 0.15) {
             cameraPose = cameraPose1;
           }
+
+          Logger.recordOutput("SwervePoseEstimator/visionEstimatedPose0", cameraPose0.toPose2d());
+          Logger.recordOutput("SwervePoseEstimator/visionEstimatedPose1", cameraPose1.toPose2d());
         }
 
         if (cameraPose == null) return;
 
         // Logger.recordOutput("Vision Think Pose pre-transform", cameraPose.toPose2d());
 
-        cameraPose = cameraPose.transformBy(m_cameraPoses[0].inverse());
+        // cameraPose = cameraPose.transformBy(m_cameraPoses[0].inverse());
 
         if (cameraPose.getX() < 0
             || cameraPose.getY() < 0
             || cameraPose.getX() > Units.inchesToMeters(651.25)
             || cameraPose.getY() > Units.inchesToMeters(315.5)) return;
-        // Quaternion q =
-        //     new Quaternion(obs[7], obs[4], obs[5], obs[6]);
-        // Pose2d pos1 =
-        //     new Pose2d(obs[1], obs[2], new Rotation2d(new Rotation3d(q).getZ()));
-        // Quaternion q2 =
-        //     new Quaternion(obs[14], obs[11], obs[12], obs[13]);
-        // Pose2d pos2 =
-        //     new Pose2d(obs[8], obs[9], new Rotation2d(new
-        // Rotation3d(q2).getZ()));
 
         // Pose2d using = m_poseEstimator.getEstimatedPosition().nearest(List.of(pos1, pos2));
         // Pose2d camera_loc = new Pose2d(SwerveConstants.kTrackWidthMeters / 2, 0, new

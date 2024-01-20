@@ -4,9 +4,13 @@
 
 package frc.robot.kernal;
 
+import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
@@ -44,8 +48,13 @@ public class Robot extends LoggedRobot {
         // Running on a real robot, log to a USB stick
       case REAL:
         // TODO: Wait for fix
-        // Logger.addDataReceiver(new WPILOGWriter("/media/sda1/"));
+        if (Files.exists(Paths.get("/media/sda1/"))) {
+          Logger.addDataReceiver(new WPILOGWriter("/media/sda1/"));
+        } else {
+          System.out.println("[Logger] Could not find USB! Not storing logs to file...");
+        }
         Logger.addDataReceiver(new NT4Publisher());
+        new PowerDistribution(1, ModuleType.kRev);
         break;
 
         // Running a physics simulator, log to local folder

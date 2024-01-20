@@ -59,11 +59,7 @@ public final class Constants {
     public static final Transform3d[] kCameraPositionMeters = {
       new Transform3d(
           new Translation3d(34 / 100, Units.inchesToMeters(0), Units.inchesToMeters(0)),
-          new Rotation3d(0, 0, 0)),
-      new Transform3d(
-          new Translation3d(
-              Units.inchesToMeters(0), Units.inchesToMeters(0), Units.inchesToMeters(0)),
-          new Rotation3d(0, 0, 0)),
+          new Rotation3d(0, Units.degreesToRadians(-21.0), 0))
     };
 
     //////////////////////////
@@ -73,10 +69,8 @@ public final class Constants {
     // Order is {x, y, theta}
     // Encoder measurements are from the encoders inside the Rev NEO motors.
     // Vision measurements are from the NoodleVision systems.
-    public static final Matrix<N3, N1> kEncoderMeasurementStdDevs =
-        VecBuilder.fill(0.03, 0.03, 0.03);
-    public static final Matrix<N3, N1> kVisionMeasurementStdDevs =
-        VecBuilder.fill(0.15, 0.15, 0.15);
+    public static final Matrix<N3, N1> kEncoderMeasurementStdDevs = VecBuilder.fill(0.1, 0.1, 0.1);
+    public static final Matrix<N3, N1> kVisionMeasurementStdDevs = VecBuilder.fill(0.8, 0.8, 0.8);
   }
 
   /////////////////////////
@@ -203,7 +197,7 @@ public final class Constants {
 
       /////////////
       // Wheel Size
-      public static final double kWheelDiameterMeters = Units.inchesToMeters(4);
+      public static final double kWheelDiameterMeters = Units.inchesToMeters(3.75);
 
       //////////////
       // Gear Ratios
