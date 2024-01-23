@@ -13,8 +13,19 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.proto.System;
+import edu.wpi.first.units.Distance;
+import edu.wpi.first.units.Measure;
+import edu.wpi.first.units.MutableMeasure;
+import edu.wpi.first.units.Unit;
+import edu.wpi.first.units.Units;
+import edu.wpi.first.units.Velocity;
+import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
 import frc.robot.Constants.SwerveConstants;
@@ -43,6 +54,8 @@ public class SwerveDrive extends SubsystemBase {
 
   private Rotation2d m_heading = new Rotation2d(0);
 
+  private SysIdRoutine m_sysIdRoutine;
+
   /** Creates a new SwerveDrive. */
   public SwerveDrive(
       SwerveModuleIO frontLeft,
@@ -65,6 +78,7 @@ public class SwerveDrive extends SubsystemBase {
               ModuleConstants.kTurningFeedbackI,
               ModuleConstants.kTurningFeedbackD);
       m_turnController[i].enableContinuousInput(-Math.PI, Math.PI);
+      m_turnController[i].setTolerance(ModuleConstants.kTurningFeedbackTolerance);
 
       if (Constants.kCurrentMode == Mode.REAL) {
         m_driveController[i] =
@@ -90,6 +104,11 @@ public class SwerveDrive extends SubsystemBase {
                 ModuleConstants.Simulation.kDriveFeedForwardKa);
       }
     }
+
+    m_sysIdRoutine = new SysIdRoutine(
+      new SysIdRoutine.Config(), 
+      new SysIdRoutine.Mechanism(this::sysidSetVoltageDrive, this::sysidGetLog, this)  
+    );
   }
 
   @Override
@@ -163,17 +182,15 @@ public class SwerveDrive extends SubsystemBase {
     for (int i = 0; i != 4; i++) {
       if (Math.abs(desiredStates[i].speedMetersPerSecond) < 0.001) {
         m_modules[i].setDriveVoltage(0);
-        m_modules[i].setTurnVoltage(0);
-        continue;
       }
-
-      desiredStates[i] =
-          SwerveModuleState.optimize(
-              desiredStates[i], new Rotation2d(m_modulesInput[i].turnPositionRad));
 
       // In case of a sharp wheel turn, this helps prevent the
       // innertia of the robot from sliding too much.
       desiredStates[i].speedMetersPerSecond *= Math.cos(m_turnController[i].getPositionError());
+
+      desiredStates[i] =
+          SwerveModuleState.optimize(
+              desiredStates[i], new Rotation2d(m_modulesInput[i].turnPositionRad));
 
       m_modules[i].setDriveVoltage(
           m_driveFeedforward[i].calculate(desiredStates[i].speedMetersPerSecond)
@@ -205,6 +222,43 @@ public class SwerveDrive extends SubsystemBase {
       m_modules[i].setDriveVoltage(voltage);
     }
   }
+
+  private void sysidSetVoltageDrive(Measure<Voltage> volts) {
+    for (int i = 0; i != 4; i++) {
+      setModulesAngle(0.0);
+      m_modules[i].setDriveVoltage(volts.in(Units.Volts));
+    }
+  }
+
+  // Mutable holder for unit-safe voltage values, persisted to avoid reallocation.
+  private final MutableMeasure<Voltage> m_appliedVoltage = MutableMeasure.mutable(Units.Volts.of(0));
+  // Mutable holder for unit-safe linear distance values, persisted to avoid reallocation.
+  private final MutableMeasure<Distance> m_distance = MutableMeasure.mutable(Units.Meters.of(0));
+  // Mutable holder for unit-safe linear velocity values, persisted to avoid reallocation.
+  private final MutableMeasure<Velocity<Distance>> m_velocity = MutableMeasure.mutable(Units.MetersPerSecond.of(0));
+  private SysIdRoutineLog sysidGetLog(SysIdRoutineLog log) {
+    log.motor("drive-left")
+      .voltage(m_appliedVoltage.mut_replace((m_modulesInput[0].driveVoltage+m_modulesInput[3].driveVoltage)/2.0, Units.Volts))
+      .linearPosition(m_distance.mut_replace((m_modulesInput[0].drivePositionMeters+m_modulesInput[3].drivePositionMeters)/2.0, Units.Meters))
+      .linearVelocity(m_velocity.mut_replace((m_modulesInput[0].driveVelocityMetersPerSec+m_modulesInput[3].driveVelocityMetersPerSec)/2.0, Units.MetersPerSecond));
+
+    log.motor("drive-right")
+      .voltage(m_appliedVoltage.mut_replace((m_modulesInput[1].driveVoltage+m_modulesInput[2].driveVoltage)/2.0, Units.Volts))
+      .linearPosition(m_distance.mut_replace((m_modulesInput[1].drivePositionMeters+m_modulesInput[2].drivePositionMeters)/2.0, Units.Meters))
+      .linearVelocity(m_velocity.mut_replace((m_modulesInput[1].driveVelocityMetersPerSec+m_modulesInput[2].driveVelocityMetersPerSec)/2.0, Units.MetersPerSecond));
+
+    return log;
+  }
+
+  public Command getSysIdQuasistatic(SysIdRoutine.Direction direction) {
+    return m_sysIdRoutine.quasistatic(direction);
+  }
+
+  public Command getSysIdDynamic(SysIdRoutine.Direction direction) {
+    return m_sysIdRoutine.dynamic(direction);
+  }
+
+
 
   public ChassisSpeeds getChassisSpeeds() {
     return SwerveConstants.kDriveKinematics.toChassisSpeeds(getModuleStates());

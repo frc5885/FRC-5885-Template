@@ -185,3 +185,6 @@ Log_*.wpilog
 src/main/java/frc/robot/kernal/BuildConstants.java
 simgui-ds.json
 simgui.json
+
+.DataLogTool/
+.SysId/

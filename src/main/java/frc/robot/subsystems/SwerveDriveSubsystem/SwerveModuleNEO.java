@@ -77,7 +77,7 @@ public class SwerveModuleNEO implements SwerveModuleIO {
 
     inputs.driveTemperatureCelsius = m_driveMotor.getMotorTemperature();
     inputs.driveCurrent = m_driveMotor.getOutputCurrent();
-    inputs.driveVoltage = m_driveMotor.getAppliedOutput() * RobotController.getBatteryVoltage();
+    inputs.driveVoltage = m_driveMotor.getAppliedOutput() * m_driveMotor.getBusVoltage();
 
     inputs.turnAbsolutePositionRad = getAbsoluteEncoderValue().getRadians();
 
@@ -94,7 +94,7 @@ public class SwerveModuleNEO implements SwerveModuleIO {
 
     inputs.turnTemperature = m_turnMotor.getMotorTemperature();
     inputs.turnCurrent = m_turnMotor.getOutputCurrent();
-    inputs.turnVoltage = m_turnMotor.getAppliedOutput() * RobotController.getBatteryVoltage();
+    inputs.turnVoltage = m_turnMotor.getAppliedOutput() * m_turnMotor.getBusVoltage();
   }
 
   ////////////////////////////////////////

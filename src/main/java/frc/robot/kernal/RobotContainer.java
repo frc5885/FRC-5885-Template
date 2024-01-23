@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.SwerveConstants.ModuleConstants;
@@ -28,6 +29,8 @@ import frc.robot.subsystems.PoseEstimatorSubsystem.SwervePoseEstimator;
 import frc.robot.subsystems.SwerveDriveSubsystem.SwerveDrive;
 import frc.robot.subsystems.SwerveDriveSubsystem.SwerveModuleNEO;
 import frc.robot.subsystems.SwerveDriveSubsystem.SwerveModuleSim;
+
+import org.littletonrobotics.conduit.schema.Joystick;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class RobotContainer {
@@ -179,6 +182,14 @@ public class RobotContainer {
         "[TUNING] Get Module Offsets", new SwerveGetModuleOffsets(m_swerveDrive));
     m_autoChooser.addOption(
         "[TUNING] Get Swerve FF Characteristics", new SwerveSolveFeedForward(m_swerveDrive));
+    m_autoChooser.addOption(
+        "[TUNING] SysID Quasistatic Forward", m_swerveDrive.getSysIdQuasistatic(Direction.kForward));
+    m_autoChooser.addOption(
+        "[TUNING] SysID Quasistatic Backwards", m_swerveDrive.getSysIdQuasistatic(Direction.kReverse));
+    m_autoChooser.addOption(
+        "[TUNING] SysID Dynamic Forward", m_swerveDrive.getSysIdDynamic(Direction.kForward));
+    m_autoChooser.addOption(
+        "[TUNING] SysID Dynamic Backwards", m_swerveDrive.getSysIdDynamic(Direction.kReverse));
   }
 
   public Command getAutonomousCommand() {

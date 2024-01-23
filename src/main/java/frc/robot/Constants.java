@@ -118,6 +118,7 @@ public final class Constants {
 
     //////////////////////////
     // Swerve Drive Kinematics
+    // Front left, front right, rear right, rear left
     public static final SwerveDriveKinematics kDriveKinematics =
         new SwerveDriveKinematics(
             new Translation2d(kWheelBaseWidthMeters / 2.0, kTrackWidthMeters / 2.0),
@@ -195,6 +196,7 @@ public final class Constants {
       public static final double kTurningFeedbackP = 8.0;
       public static final double kTurningFeedbackI = 0.0;
       public static final double kTurningFeedbackD = 0.0;
+      public static final double kTurningFeedbackTolerance = Units.degreesToRadians(0.65);
 
       //////////////////////////////////////
       // Motor Encoder Counts Per Revolution
