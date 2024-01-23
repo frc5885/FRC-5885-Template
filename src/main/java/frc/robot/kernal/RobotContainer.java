@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
@@ -31,8 +32,9 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
 
   // Controller
-  private final CommandXboxController m_driverController;
+  // private final CommandXboxController m_driverController;
   // private final CommandXboxController m_operatorController;
+  private final CommandJoystick m_joystickDancepad;
 
   private final SwerveDrive m_swerveDrive;
   private final SwervePoseEstimator m_swervePoseEstimator;
@@ -98,9 +100,10 @@ public class RobotContainer {
         throw new NoSuchMethodError("Not Implemented");
     }
 
-    m_driverController = new CommandXboxController(ControllerConstants.kDriverControllerPort);
+    // m_driverController = new CommandXboxController(ControllerConstants.kDriverControllerPort);
     // m_operatorController = new
     // CommandXboxController(ControllerConstants.kOperatorControllerPort);
+    m_joystickDancepad = new CommandJoystick(0);
 
     m_swervePoseEstimator = new SwervePoseEstimator(m_swerveDrive);
     m_swervePoseEstimator.reset(new Pose2d(0, 0, new Rotation2d()));
@@ -116,14 +119,14 @@ public class RobotContainer {
         new SwerveJoystickCmd(
             m_swerveDrive,
             m_swervePoseEstimator,
-            () -> (-m_driverController.getLeftY()),
-            () -> (-m_driverController.getLeftX()),
-            () -> (-m_driverController.getRightX()),
+            () -> (((m_joystickDancepad.getHID().getRawButton(1) ? 1.0 : 0.0) + (m_joystickDancepad.getHID().getRawButton(2) ? -1.0 : 0.0))*1.0),
+            () -> (((m_joystickDancepad.getHID().getRawButton(4) ? -1.0 : 0.0) + (m_joystickDancepad.getHID().getRawButton(3) ? 1.0 : 0.0))*1.0),
+            () -> (((m_joystickDancepad.getHID().getRawButton(7) ? 1.0 : 0.0) + (m_joystickDancepad.getHID().getRawButton(8) ? -1.0 : 0.0))*1.0),
             () -> (m_isFieldOriented)));
 
     // m_swerveDrive.setDefaultCommand(new SwerveGetModuleOffsets(m_swerveDrive));
 
-    new JoystickButton(m_driverController.getHID(), Button.kX.value)
+    new JoystickButton(m_joystickDancepad.getHID(), 9)
         .onTrue(
             new SequentialCommandGroup(
                 new InstantCommand(
@@ -132,15 +135,15 @@ public class RobotContainer {
                       m_swervePoseEstimator.reset(new Pose2d(0, 0, new Rotation2d()));
                     })));
 
-    new JoystickButton(m_driverController.getHID(), Button.kY.value)
+    new JoystickButton(m_joystickDancepad.getHID(), 10)
         .onTrue(
             new InstantCommand(
                 () -> {
                   m_isFieldOriented = !m_isFieldOriented;
                 }));
 
-    new JoystickButton(m_driverController.getHID(), Button.kB.value)
-        .whileTrue(new SimplePathPlanner(m_swervePoseEstimator, m_swerveDrive));
+    // new JoystickButton(m_driverController.getHID(), Button.kB.value)
+    //     .whileTrue(new SimplePathPlanner(m_swervePoseEstimator, m_swerveDrive));
 
     m_autoChooser.addDefaultOption("Do Nothing", new InstantCommand());
     m_autoChooser.addOption(
