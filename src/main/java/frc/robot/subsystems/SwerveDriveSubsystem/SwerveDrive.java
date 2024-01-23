@@ -13,11 +13,9 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.proto.System;
 import edu.wpi.first.units.Distance;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.MutableMeasure;
-import edu.wpi.first.units.Unit;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.Velocity;
 import edu.wpi.first.units.Voltage;
@@ -105,10 +103,10 @@ public class SwerveDrive extends SubsystemBase {
       }
     }
 
-    m_sysIdRoutine = new SysIdRoutine(
-      new SysIdRoutine.Config(), 
-      new SysIdRoutine.Mechanism(this::sysidSetVoltageDrive, this::sysidGetLog, this)  
-    );
+    m_sysIdRoutine =
+        new SysIdRoutine(
+            new SysIdRoutine.Config(),
+            new SysIdRoutine.Mechanism(this::sysidSetVoltageDrive, this::sysidGetLog, this));
   }
 
   @Override
@@ -231,21 +229,48 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   // Mutable holder for unit-safe voltage values, persisted to avoid reallocation.
-  private final MutableMeasure<Voltage> m_appliedVoltage = MutableMeasure.mutable(Units.Volts.of(0));
+  private final MutableMeasure<Voltage> m_appliedVoltage =
+      MutableMeasure.mutable(Units.Volts.of(0));
   // Mutable holder for unit-safe linear distance values, persisted to avoid reallocation.
   private final MutableMeasure<Distance> m_distance = MutableMeasure.mutable(Units.Meters.of(0));
   // Mutable holder for unit-safe linear velocity values, persisted to avoid reallocation.
-  private final MutableMeasure<Velocity<Distance>> m_velocity = MutableMeasure.mutable(Units.MetersPerSecond.of(0));
+  private final MutableMeasure<Velocity<Distance>> m_velocity =
+      MutableMeasure.mutable(Units.MetersPerSecond.of(0));
+
   private SysIdRoutineLog sysidGetLog(SysIdRoutineLog log) {
     log.motor("drive-left")
-      .voltage(m_appliedVoltage.mut_replace((m_modulesInput[0].driveVoltage+m_modulesInput[3].driveVoltage)/2.0, Units.Volts))
-      .linearPosition(m_distance.mut_replace((m_modulesInput[0].drivePositionMeters+m_modulesInput[3].drivePositionMeters)/2.0, Units.Meters))
-      .linearVelocity(m_velocity.mut_replace((m_modulesInput[0].driveVelocityMetersPerSec+m_modulesInput[3].driveVelocityMetersPerSec)/2.0, Units.MetersPerSecond));
+        .voltage(
+            m_appliedVoltage.mut_replace(
+                (m_modulesInput[0].driveVoltage + m_modulesInput[3].driveVoltage) / 2.0,
+                Units.Volts))
+        .linearPosition(
+            m_distance.mut_replace(
+                (m_modulesInput[0].drivePositionMeters + m_modulesInput[3].drivePositionMeters)
+                    / 2.0,
+                Units.Meters))
+        .linearVelocity(
+            m_velocity.mut_replace(
+                (m_modulesInput[0].driveVelocityMetersPerSec
+                        + m_modulesInput[3].driveVelocityMetersPerSec)
+                    / 2.0,
+                Units.MetersPerSecond));
 
     log.motor("drive-right")
-      .voltage(m_appliedVoltage.mut_replace((m_modulesInput[1].driveVoltage+m_modulesInput[2].driveVoltage)/2.0, Units.Volts))
-      .linearPosition(m_distance.mut_replace((m_modulesInput[1].drivePositionMeters+m_modulesInput[2].drivePositionMeters)/2.0, Units.Meters))
-      .linearVelocity(m_velocity.mut_replace((m_modulesInput[1].driveVelocityMetersPerSec+m_modulesInput[2].driveVelocityMetersPerSec)/2.0, Units.MetersPerSecond));
+        .voltage(
+            m_appliedVoltage.mut_replace(
+                (m_modulesInput[1].driveVoltage + m_modulesInput[2].driveVoltage) / 2.0,
+                Units.Volts))
+        .linearPosition(
+            m_distance.mut_replace(
+                (m_modulesInput[1].drivePositionMeters + m_modulesInput[2].drivePositionMeters)
+                    / 2.0,
+                Units.Meters))
+        .linearVelocity(
+            m_velocity.mut_replace(
+                (m_modulesInput[1].driveVelocityMetersPerSec
+                        + m_modulesInput[2].driveVelocityMetersPerSec)
+                    / 2.0,
+                Units.MetersPerSecond));
 
     return log;
   }
@@ -257,8 +282,6 @@ public class SwerveDrive extends SubsystemBase {
   public Command getSysIdDynamic(SysIdRoutine.Direction direction) {
     return m_sysIdRoutine.dynamic(direction);
   }
-
-
 
   public ChassisSpeeds getChassisSpeeds() {
     return SwerveConstants.kDriveKinematics.toChassisSpeeds(getModuleStates());
