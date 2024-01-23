@@ -6,7 +6,6 @@ package frc.robot.commands;
 
 import com.choreo.lib.Choreo;
 import com.choreo.lib.ChoreoTrajectory;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -30,27 +29,31 @@ public class SimplePathPlanner extends SequentialCommandGroup {
     var thetaController = new PIDController(1, 0, 0);
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
-
     addCommands(
         new InstantCommand(
             () -> {
               poseEstimator.reset(traj.getInitialPose());
-            }), Choreo.choreoSwerveCommand(
-              traj, // Choreo trajectory from above
-              poseEstimator::getPose, // A function that returns the current field-relative pose of the robot: your
-                                     // wheel or vision odometry
-              new PIDController(1, 0.0, 0.0), // PIDController for field-relative X
-                                                                                         // translation (input: X error in meters,
-                                                                                         // output: m/s).
-              new PIDController(1, 0.0, 0.0), // PIDController for field-relative Y
-                                                                                         // translation (input: Y error in meters,
-                                                                                         // output: m/s).
-              thetaController, // PID constants to correct for rotation
-                               // error
-               m_robotDrive::setChassisSpeeds,
-              () -> {return false;}, // Whether or not to mirror the path based on alliance (this assumes the path is created for the blue alliance)
-              m_robotDrive // The subsystem(s) to require, typically your drive subsystem only
-          )
-    );
+            }),
+        Choreo.choreoSwerveCommand(
+            traj, // Choreo trajectory from above
+            poseEstimator
+                ::getPose, // A function that returns the current field-relative pose of the robot:
+            // your
+            // wheel or vision odometry
+            new PIDController(1, 0.0, 0.0), // PIDController for field-relative X
+            // translation (input: X error in meters,
+            // output: m/s).
+            new PIDController(1, 0.0, 0.0), // PIDController for field-relative Y
+            // translation (input: Y error in meters,
+            // output: m/s).
+            thetaController, // PID constants to correct for rotation
+            // error
+            m_robotDrive::setChassisSpeeds,
+            () -> {
+              return false;
+            }, // Whether or not to mirror the path based on alliance (this assumes the path is
+            // created for the blue alliance)
+            m_robotDrive // The subsystem(s) to require, typically your drive subsystem only
+            ));
   }
 }
