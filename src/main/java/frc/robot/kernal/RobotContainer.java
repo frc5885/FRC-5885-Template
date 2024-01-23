@@ -21,7 +21,6 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.SwerveConstants.ModuleConstants;
-import frc.robot.commands.SimplePathPlanner;
 import frc.robot.commands.SwerveJoystickCmd;
 import frc.robot.commands.TuningCommands.SwerveGetModuleOffsets;
 import frc.robot.commands.TuningCommands.SwerveSolveFeedForward;
