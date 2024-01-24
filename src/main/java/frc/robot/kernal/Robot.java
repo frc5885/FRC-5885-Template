@@ -4,9 +4,9 @@
 
 package frc.robot.kernal;
 
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.Constants;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
@@ -40,19 +40,15 @@ public class Robot extends LoggedRobot {
 
     // Copied from advtangekit examples
     // Set up data receivers & replay source
-    switch (Constants.kCurrentMode) {
-        // Running on a real robot, log to a USB stick
-      case REAL:
-        // TODO: Wait for fix
-        // Logger.addDataReceiver(new WPILOGWriter("/media/sda1/"));
-        Logger.addDataReceiver(new NT4Publisher());
-        break;
-
-        // Running a physics simulator, log to local folder
-      case SIMULATOR:
-        Logger.addDataReceiver(new WPILOGWriter("logs/"));
-        Logger.addDataReceiver(new NT4Publisher());
-        break;
+    if (RobotBase.isReal()) {
+      // Running on a real robot, log to a USB stick
+      // TODO: Wait for fix
+      // Logger.addDataReceiver(new WPILOGWriter("/media/sda1/"));
+      Logger.addDataReceiver(new NT4Publisher());
+    } else {
+      // Running a physics simulator, log to local folder
+      Logger.addDataReceiver(new WPILOGWriter("logs/"));
+      Logger.addDataReceiver(new NT4Publisher());
     }
 
     Logger.start();

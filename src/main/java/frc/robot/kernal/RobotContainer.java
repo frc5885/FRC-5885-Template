@@ -6,7 +6,6 @@ package frc.robot.kernal;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -15,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
-import frc.robot.Constants;
+import frc.robot.AutoConstants.AutoStartingPositions;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.SwerveConstants.ModuleConstants;
 import frc.robot.commands.SimplePathPlanner;
@@ -40,62 +39,50 @@ public class RobotContainer {
   private final LoggedDashboardChooser<Command> m_autoChooser =
       new LoggedDashboardChooser<>("Auto Routine");
 
+  private final LoggedDashboardChooser<Command> m_initialPoseChooser =
+      new LoggedDashboardChooser<>("Starting Pose");
+
   public RobotContainer() {
     // Setup controllers depending on the current mode
-    switch (Constants.kCurrentMode) {
-      case REAL:
-        if (!RobotBase.isReal()) {
-          DriverStation.reportError("Attempted to run REAL on SIMULATED robot!", false);
-          throw new NoSuchMethodError("Attempted to run REAL on SIMULATED robot!");
-        }
-        m_swerveDrive =
-            new SwerveDrive(
-                new SwerveModuleNEO(
-                    ModuleConstants.kLeftFrontDriveMotorID,
-                    ModuleConstants.kLeftFrontTurnMotorID,
-                    ModuleConstants.kLeftFrontAnalogEncoderPort,
-                    ModuleConstants.kLeftFrontModuleOffset,
-                    ModuleConstants.kLeftFrontTurnMotorInverted,
-                    ModuleConstants.kLeftFrontDriveMotorInverted),
-                new SwerveModuleNEO(
-                    ModuleConstants.kRightFrontDriveMotorID,
-                    ModuleConstants.kRightFrontTurnMotorID,
-                    ModuleConstants.kRightFrontAnalogEncoderPort,
-                    ModuleConstants.kRightFrontModuleOffset,
-                    ModuleConstants.kRightFrontTurnMotorInverted,
-                    ModuleConstants.kRightFrontDriveMotorInverted),
-                new SwerveModuleNEO(
-                    ModuleConstants.kLeftRearDriveMotorID,
-                    ModuleConstants.kLeftRearTurnMotorID,
-                    ModuleConstants.kLeftRearAnalogEncoderPort,
-                    ModuleConstants.kLeftRearModuleOffset,
-                    ModuleConstants.kLeftRearTurnMotorInverted,
-                    ModuleConstants.kLeftRearDriveMotorInverted),
-                new SwerveModuleNEO(
-                    ModuleConstants.kRightRearDriveMotorID,
-                    ModuleConstants.kRightRearTurnMotorID,
-                    ModuleConstants.kRightRearAnalogEncoderPort,
-                    ModuleConstants.kRightRearModuleOffset,
-                    ModuleConstants.kRightRearTurnMotorInverted,
-                    ModuleConstants.kRightRearDriveMotorInverted));
-        break;
-
-      case SIMULATOR:
-        if (RobotBase.isReal()) {
-          DriverStation.reportError("Attempted to run SIMULATED on REAL robot!", false);
-          throw new NoSuchMethodError("Attempted to run SIMULATED on REAL robot!");
-        }
-        m_swerveDrive =
-            new SwerveDrive(
-                new SwerveModuleSim(false),
-                new SwerveModuleSim(false),
-                new SwerveModuleSim(false),
-                new SwerveModuleSim(false));
-
-        break;
-
-      default:
-        throw new NoSuchMethodError("Not Implemented");
+    if (RobotBase.isReal()) {
+      m_swerveDrive =
+          new SwerveDrive(
+              new SwerveModuleNEO(
+                  ModuleConstants.kLeftFrontDriveMotorID,
+                  ModuleConstants.kLeftFrontTurnMotorID,
+                  ModuleConstants.kLeftFrontAnalogEncoderPort,
+                  ModuleConstants.kLeftFrontModuleOffset,
+                  ModuleConstants.kLeftFrontTurnMotorInverted,
+                  ModuleConstants.kLeftFrontDriveMotorInverted),
+              new SwerveModuleNEO(
+                  ModuleConstants.kRightFrontDriveMotorID,
+                  ModuleConstants.kRightFrontTurnMotorID,
+                  ModuleConstants.kRightFrontAnalogEncoderPort,
+                  ModuleConstants.kRightFrontModuleOffset,
+                  ModuleConstants.kRightFrontTurnMotorInverted,
+                  ModuleConstants.kRightFrontDriveMotorInverted),
+              new SwerveModuleNEO(
+                  ModuleConstants.kLeftRearDriveMotorID,
+                  ModuleConstants.kLeftRearTurnMotorID,
+                  ModuleConstants.kLeftRearAnalogEncoderPort,
+                  ModuleConstants.kLeftRearModuleOffset,
+                  ModuleConstants.kLeftRearTurnMotorInverted,
+                  ModuleConstants.kLeftRearDriveMotorInverted),
+              new SwerveModuleNEO(
+                  ModuleConstants.kRightRearDriveMotorID,
+                  ModuleConstants.kRightRearTurnMotorID,
+                  ModuleConstants.kRightRearAnalogEncoderPort,
+                  ModuleConstants.kRightRearModuleOffset,
+                  ModuleConstants.kRightRearTurnMotorInverted,
+                  ModuleConstants.kRightRearDriveMotorInverted));
+    } else {
+      // Running in a simulator
+      m_swerveDrive =
+          new SwerveDrive(
+              new SwerveModuleSim(false),
+              new SwerveModuleSim(false),
+              new SwerveModuleSim(false),
+              new SwerveModuleSim(false));
     }
 
     m_driverController = new CommandXboxController(ControllerConstants.kDriverControllerPort);
@@ -104,6 +91,37 @@ public class RobotContainer {
 
     m_swervePoseEstimator = new SwervePoseEstimator(m_swerveDrive);
     m_swervePoseEstimator.reset(new Pose2d(0, 0, new Rotation2d()));
+
+    m_autoChooser.addDefaultOption("Do Nothing", new InstantCommand());
+    m_autoChooser.addOption(
+        "[TUNING] Get Module Offsets", new SwerveGetModuleOffsets(m_swerveDrive));
+    m_autoChooser.addOption(
+        "[TUNING] Get Swerve FF Characteristics", new SwerveSolveFeedForward(m_swerveDrive));
+    m_autoChooser.addOption(
+        "[TUNING] SysID Quasistatic Forward",
+        m_swerveDrive.getSysIdQuasistatic(Direction.kForward));
+    m_autoChooser.addOption(
+        "[TUNING] SysID Quasistatic Backwards",
+        m_swerveDrive.getSysIdQuasistatic(Direction.kReverse));
+    m_autoChooser.addOption(
+        "[TUNING] SysID Dynamic Forward", m_swerveDrive.getSysIdDynamic(Direction.kForward));
+    m_autoChooser.addOption(
+        "[TUNING] SysID Dynamic Backwards", m_swerveDrive.getSysIdDynamic(Direction.kReverse));
+
+    m_initialPoseChooser.addDefaultOption(
+        "Left OFF of Subwoofer",
+        new InstantCommand(
+            () -> {
+              m_swervePoseEstimator.reset(AutoStartingPositions.kLeftOffSubwoofer);
+            },
+            m_swervePoseEstimator));
+    m_initialPoseChooser.addOption(
+        "Left ON of Subwoofer",
+        new InstantCommand(
+            () -> {
+              m_swervePoseEstimator.reset(AutoStartingPositions.kLeftOnSubwoofer);
+            },
+            m_swervePoseEstimator));
 
     configureBindings();
   }
@@ -121,8 +139,6 @@ public class RobotContainer {
             () -> (-m_driverController.getRightX()),
             () -> (m_isFieldOriented)));
 
-    // m_swerveDrive.setDefaultCommand(new SwerveGetModuleOffsets(m_swerveDrive));
-
     new JoystickButton(m_driverController.getHID(), Button.kX.value)
         .onTrue(
             new SequentialCommandGroup(
@@ -139,27 +155,11 @@ public class RobotContainer {
                   m_isFieldOriented = !m_isFieldOriented;
                 }));
 
-    new JoystickButton(m_driverController.getHID(), Button.kB.value)
-        .whileTrue(new SimplePathPlanner(m_swervePoseEstimator, m_swerveDrive));
-
-    m_autoChooser.addDefaultOption("Do Nothing", new InstantCommand());
-    m_autoChooser.addOption(
-        "[TUNING] Get Module Offsets", new SwerveGetModuleOffsets(m_swerveDrive));
-    m_autoChooser.addOption(
-        "[TUNING] Get Swerve FF Characteristics", new SwerveSolveFeedForward(m_swerveDrive));
-    m_autoChooser.addOption(
-        "[TUNING] SysID Quasistatic Forward",
-        m_swerveDrive.getSysIdQuasistatic(Direction.kForward));
-    m_autoChooser.addOption(
-        "[TUNING] SysID Quasistatic Backwards",
-        m_swerveDrive.getSysIdQuasistatic(Direction.kReverse));
-    m_autoChooser.addOption(
-        "[TUNING] SysID Dynamic Forward", m_swerveDrive.getSysIdDynamic(Direction.kForward));
-    m_autoChooser.addOption(
-        "[TUNING] SysID Dynamic Backwards", m_swerveDrive.getSysIdDynamic(Direction.kReverse));
+    // new JoystickButton(m_driverController.getHID(), Button.kB.value)
+    //     .whileTrue(new SimplePathPlanner(m_swervePoseEstimator, m_swerveDrive));
   }
 
   public Command getAutonomousCommand() {
-    return m_autoChooser.get();
+    return new SequentialCommandGroup(m_initialPoseChooser.get(), m_autoChooser.get());
   }
 }

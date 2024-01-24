@@ -1,27 +1,11 @@
 package frc.robot;
 
-import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.numbers.N1;
-import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 
 public final class Constants {
-
-  public static enum Mode {
-    REAL,
-    SIMULATOR
-  }
-
-  // This is used to switch beteen simulator and real robot.
-  public static final Mode kCurrentMode = Mode.SIMULATOR;
-
   /**
    * Constants related to the controller configurations. Anything that is controller specific should
    * be in here. This includes button mappings, controller ports, physical constants, power maps,
@@ -44,41 +28,6 @@ public final class Constants {
     public static final int kOperatorControllerPort = 1;
   }
 
-  /**
-   * Constants related to the robots pose estimation. This includes camera positions, kalman filter
-   * constants, and other pose estimation related constants.
-   */
-  public static final class PoseEstimatorConstants {
-    ///////////////////
-    // Camera Positions
-    //
-    // All positions are measured from the robots center to camera sensor, in order
-    // of IDs.
-    // Rotation is in degrees, relative to robot center pointing forward. Try to
-    // keep this as close to 45/90/135/180/etc. as possible.
-    public static final Transform3d[] kCameraPositionMeters = {
-      new Transform3d(
-          new Translation3d(34 / 100, Units.inchesToMeters(0), Units.inchesToMeters(0)),
-          new Rotation3d(0, 0, 0)),
-      new Transform3d(
-          new Translation3d(
-              Units.inchesToMeters(0), Units.inchesToMeters(0), Units.inchesToMeters(0)),
-          new Rotation3d(0, 0, 0)),
-    };
-
-    //////////////////////////
-    // Kalman filter constants
-    //
-    // Higher number means less trust in the model (more spread in the measurement)
-    // Order is {x, y, theta}
-    // Encoder measurements are from the encoders inside the Rev NEO motors.
-    // Vision measurements are from the NoodleVision systems.
-    public static final Matrix<N3, N1> kEncoderMeasurementStdDevs =
-        VecBuilder.fill(0.03, 0.03, 0.03);
-    public static final Matrix<N3, N1> kVisionMeasurementStdDevs =
-        VecBuilder.fill(0.15, 0.15, 0.15);
-  }
-
   /////////////////////////
   // Swerve drive constants
   public static final class SwerveConstants {
@@ -92,7 +41,7 @@ public final class Constants {
     //
     // This value is used to offset some countersteering when turning
     // and driving at the same time. It is a guessed value but 0.075 works well.
-    public static final double kSpinCorrectionFactor = 0.075;
+    public static final double kDriftFactor = 0.075;
 
     ////////////////////////
     // Use External Encoders
@@ -193,7 +142,7 @@ public final class Constants {
       // Drive PID Constants
       //
       // These are gussed values.
-      public static final double kTurningFeedbackP = 8.0;
+      public static final double kTurningFeedbackP = 16.0;
       public static final double kTurningFeedbackI = 0.0;
       public static final double kTurningFeedbackD = 0.0;
       public static final double kTurningFeedbackTolerance = Units.degreesToRadians(0.65);

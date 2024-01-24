@@ -116,8 +116,7 @@ public class SwerveJoystickCmd extends Command {
                   .getRotation()
                   .plus(
                       new Rotation2d(
-                          m_swerveSubsystem.getAngularVelocity()
-                              * SwerveConstants.kSpinCorrectionFactor)));
+                          m_swerveSubsystem.getAngularVelocity() * SwerveConstants.kDriftFactor)));
 
     } else {
       chassisSpeeds = new ChassisSpeeds(translation.getX(), translation.getY(), angularVelocity);

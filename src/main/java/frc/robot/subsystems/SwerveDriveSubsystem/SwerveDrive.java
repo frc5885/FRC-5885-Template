@@ -19,13 +19,12 @@ import edu.wpi.first.units.MutableMeasure;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.Velocity;
 import edu.wpi.first.units.Voltage;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.Constants;
-import frc.robot.Constants.Mode;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.Constants.SwerveConstants.ModuleConstants;
 import org.littletonrobotics.junction.Logger;
@@ -78,7 +77,7 @@ public class SwerveDrive extends SubsystemBase {
       m_turnController[i].enableContinuousInput(-Math.PI, Math.PI);
       m_turnController[i].setTolerance(ModuleConstants.kTurningFeedbackTolerance);
 
-      if (Constants.kCurrentMode == Mode.REAL) {
+      if (RobotBase.isReal()) {
         m_driveController[i] =
             new PIDController(
                 ModuleConstants.kDriveFeedbackP,
@@ -119,7 +118,7 @@ public class SwerveDrive extends SubsystemBase {
     var chassisSpeeds = SwerveConstants.kDriveKinematics.toChassisSpeeds(getModuleStates());
     double chassisRotationSpeed = chassisSpeeds.omegaRadiansPerSecond;
 
-    if (Constants.kCurrentMode == Mode.REAL) {
+    if (RobotBase.isReal()) {
       m_heading = Rotation2d.fromDegrees(-m_gyro.getAngle());
     } else {
       m_heading = m_heading.plus(Rotation2d.fromRadians(chassisRotationSpeed * 0.02));

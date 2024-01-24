@@ -14,7 +14,7 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.PoseEstimatorConstants;
+import frc.robot.AutoConstants.PoseEstimatorConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.subsystems.SwerveDriveSubsystem.SwerveDrive;
 import java.util.function.Supplier;

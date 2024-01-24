@@ -7,6 +7,8 @@ package frc.robot.commands;
 import com.choreo.lib.Choreo;
 import com.choreo.lib.ChoreoTrajectory;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.PoseEstimatorSubsystem.SwervePoseEstimator;
@@ -49,9 +51,7 @@ public class SimplePathPlanner extends SequentialCommandGroup {
             thetaController, // PID constants to correct for rotation
             // error
             m_robotDrive::setChassisSpeeds,
-            () -> {
-              return false;
-            }, // Whether or not to mirror the path based on alliance (this assumes the path is
+            () -> {return DriverStation.getAlliance().get().equals(DriverStation.Alliance.Red);}, // Whether or not to mirror the path based on alliance (this assumes the path is
             // created for the blue alliance)
             m_robotDrive // The subsystem(s) to require, typically your drive subsystem only
             ));

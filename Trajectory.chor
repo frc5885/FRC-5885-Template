@@ -546,21 +546,21 @@
                         "first"
                     ],
                     "type": "StopPoint",
-                    "uuid": "8f7482f5-054e-4539-9cdf-1c43b4075590"
+                    "uuid": "5e3f12f0-9acf-45e4-8c73-1f7d41431b95"
                 },
                 {
                     "scope": [
                         "last"
                     ],
                     "type": "StopPoint",
-                    "uuid": "f3fc1055-115f-459e-8551-d4e149900d3f"
+                    "uuid": "7fca3ad5-374b-4139-a68d-4f9978fa7db8"
                 },
                 {
                     "scope": [
                         2
                     ],
                     "type": "StopPoint",
-                    "uuid": "4bfc2c5f-b15d-4f7b-9114-f93e3bd780f5"
+                    "uuid": "e4bf92d5-0b1e-48df-8ec6-ddd1e449de74"
                 },
                 {
                     "scope": [
@@ -568,7 +568,7 @@
                         4
                     ],
                     "type": "MaxVelocity",
-                    "uuid": "de3ae2c6-f0a5-48db-a2f6-45e26dec3e99",
+                    "uuid": "621be81a-bd8b-4bf3-a7e3-53dc474721c8",
                     "velocity": 1.4
                 },
                 {
@@ -576,7 +576,7 @@
                         2
                     ],
                     "type": "WptVelocityDirection",
-                    "uuid": "9c45562a-0d10-4d88-96c5-cafda5d56a60",
+                    "uuid": "44cd627a-e103-45a5-8809-23e9eb5bf83a",
                     "direction": 0
                 }
             ],
