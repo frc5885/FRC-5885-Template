@@ -4,7 +4,6 @@
 
 package frc.robot.kernal;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -44,7 +43,7 @@ public class RobotContainer {
   private final LoggedDashboardChooser<Command> m_initialPoseChooser =
       new LoggedDashboardChooser<>("Starting Pose");
 
-    private final Beambreak m_beambreak = new Beambreak();
+  private final Beambreak m_beambreak = new Beambreak();
 
   public RobotContainer() {
     // Setup controllers depending on the current mode
@@ -158,12 +157,10 @@ public class RobotContainer {
                 () -> {
                   m_isFieldOriented = !m_isFieldOriented;
                 }));
-    
+
     IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem(m_beambreak);
 
-    m_intakeSubsystem.setDefaultCommand(
-        new InstantCommand(
-            () -> {}, m_intakeSubsystem));
+    m_intakeSubsystem.setDefaultCommand(new InstantCommand(() -> {}, m_intakeSubsystem));
   }
 
   public Command getAutonomousCommand() {
