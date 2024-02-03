@@ -142,7 +142,7 @@ public final class Constants {
       // Drive PID Constants
       //
       // These are gussed values.
-      public static final double kTurningFeedbackP = 16.0;
+      public static final double kTurningFeedbackP = 8.0;
       public static final double kTurningFeedbackI = 0.0;
       public static final double kTurningFeedbackD = 0.0;
       public static final double kTurningFeedbackTolerance = Units.degreesToRadians(0.65);

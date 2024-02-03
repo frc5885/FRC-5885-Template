@@ -14,10 +14,8 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
-import frc.robot.AutoConstants.AutoStartingPositions;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.SwerveConstants.ModuleConstants;
-import frc.robot.commands.SimplePathPlanner;
 import frc.robot.commands.SwerveJoystickCmd;
 import frc.robot.commands.TuningCommands.SwerveGetModuleOffsets;
 import frc.robot.commands.TuningCommands.SwerveSolveFeedForward;
@@ -108,20 +106,20 @@ public class RobotContainer {
     m_autoChooser.addOption(
         "[TUNING] SysID Dynamic Backwards", m_swerveDrive.getSysIdDynamic(Direction.kReverse));
 
-    m_initialPoseChooser.addDefaultOption(
-        "Left OFF of Subwoofer",
-        new InstantCommand(
-            () -> {
-              m_swervePoseEstimator.reset(AutoStartingPositions.kLeftOffSubwoofer);
-            },
-            m_swervePoseEstimator));
-    m_initialPoseChooser.addOption(
-        "Left ON of Subwoofer",
-        new InstantCommand(
-            () -> {
-              m_swervePoseEstimator.reset(AutoStartingPositions.kLeftOnSubwoofer);
-            },
-            m_swervePoseEstimator));
+    // m_initialPoseChooser.addDefaultOption(
+    //     "Left OFF of Subwoofer",
+    //     new InstantCommand(
+    //         () -> {
+    //           m_swervePoseEstimator.reset(AutoStartingPositions.kLeftOffSubwoofer);
+    //         },
+    //         m_swervePoseEstimator));
+    // m_initialPoseChooser.addOption(
+    //     "Left ON of Subwoofer",
+    //     new InstantCommand(
+    //         () -> {
+    //           m_swervePoseEstimator.reset(AutoStartingPositions.kLeftOnSubwoofer);
+    //         },
+    //         m_swervePoseEstimator));
 
     configureBindings();
   }
