@@ -7,9 +7,10 @@ import edu.wpi.first.math.util.Units;
 
 public final class Constants {
   // Intake Motor IDs
-  public static final int kIntakeLeft = 32;
-  public static final int kIntakeRight = 31;
+  public static final int kIntakeLeft = 31;
+  public static final int kIntakeRight = 30;
   public static final int kBeambreak = 6;
+  public static final int kFeeder = 40;
 
   /**
    * Constants related to the controller configurations. Anything that is controller specific should
