@@ -11,6 +11,8 @@ public final class Constants {
   public static final int kIntakeRight = 30;
   public static final int kBeambreak = 6;
   public static final int kFeeder = 40;
+  public static final int kShooterTop = 50;
+  public static final int kShooterBottom = 51;
 
   /**
    * Constants related to the controller configurations. Anything that is controller specific should

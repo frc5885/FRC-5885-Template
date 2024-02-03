@@ -9,11 +9,11 @@ import frc.robot.components.Beambreak;
 public class FeederSubsystem extends SubsystemBase {
 
   private CANSparkMax m_feeder;
-  private double m_speed = 0.5;
+  private double m_speed = 0.0;
   private Beambreak m_beambreak;
 
   /** Creates a new Shooter. */
-    public FeederSubsystem(Beambreak m_beambreak) {
+  public FeederSubsystem(Beambreak m_beambreak) {
     m_feeder = new CANSparkMax(Constants.kFeeder, MotorType.kBrushless);
     this.m_beambreak = m_beambreak;
   }
@@ -21,10 +21,14 @@ public class FeederSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    if (m_beambreak.isBroken()) {
-      m_feeder.setVoltage(0);
+    m_feeder.setVoltage(m_speed * 12.0);
+  }
+
+  public void feedShooter(boolean isFromDriver) {
+    if (isFromDriver || !m_beambreak.isBroken()) {
+      m_speed = 0.5;
     } else {
-      m_feeder.setVoltage(m_speed * 12);
+      m_speed = 0.0;
     }
   }
 }
