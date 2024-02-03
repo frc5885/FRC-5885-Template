@@ -6,6 +6,9 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
 
 public final class Constants {
+  // Intake Motor IDs
+  public static final int kIntakeLeft = 32;
+  public static final int kIntakeRight = 31;
   /**
    * Constants related to the controller configurations. Anything that is controller specific should
    * be in here. This includes button mappings, controller ports, physical constants, power maps,
