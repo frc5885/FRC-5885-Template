@@ -9,6 +9,8 @@ public final class Constants {
   // Intake Motor IDs
   public static final int kIntakeLeft = 32;
   public static final int kIntakeRight = 31;
+  public static final int kBeambreak = 6;
+
   /**
    * Constants related to the controller configurations. Anything that is controller specific should
    * be in here. This includes button mappings, controller ports, physical constants, power maps,
