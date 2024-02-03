@@ -4,6 +4,7 @@
 
 package frc.robot.kernal;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -20,6 +21,8 @@ import frc.robot.Constants.SwerveConstants.ModuleConstants;
 import frc.robot.commands.SwerveJoystickCmd;
 import frc.robot.commands.TuningCommands.SwerveGetModuleOffsets;
 import frc.robot.commands.TuningCommands.SwerveSolveFeedForward;
+import frc.robot.components.Beambreak;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.PoseEstimatorSubsystem.SwervePoseEstimator;
 import frc.robot.subsystems.SwerveDriveSubsystem.SwerveDrive;
 import frc.robot.subsystems.SwerveDriveSubsystem.SwerveModuleNEO;
@@ -40,6 +43,8 @@ public class RobotContainer {
 
   private final LoggedDashboardChooser<Command> m_initialPoseChooser =
       new LoggedDashboardChooser<>("Starting Pose");
+
+    private final Beambreak m_beambreak = new Beambreak();
 
   public RobotContainer() {
     // Setup controllers depending on the current mode
@@ -153,9 +158,12 @@ public class RobotContainer {
                 () -> {
                   m_isFieldOriented = !m_isFieldOriented;
                 }));
+    
+    IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem(m_beambreak);
 
-    // new JoystickButton(m_driverController.getHID(), Button.kB.value)
-    //     .whileTrue(new SimplePathPlanner(m_swervePoseEstimator, m_swerveDrive));
+    m_intakeSubsystem.setDefaultCommand(
+        new InstantCommand(
+            () -> {}, m_intakeSubsystem));
   }
 
   public Command getAutonomousCommand() {
