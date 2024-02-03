@@ -22,6 +22,7 @@ import frc.robot.commands.TuningCommands.SwerveGetModuleOffsets;
 import frc.robot.commands.TuningCommands.SwerveSolveFeedForward;
 import frc.robot.components.Beambreak;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.PoseEstimatorSubsystem.SwervePoseEstimator;
 import frc.robot.subsystems.SwerveDriveSubsystem.SwerveDrive;
 import frc.robot.subsystems.SwerveDriveSubsystem.SwerveModuleNEO;
@@ -161,6 +162,10 @@ public class RobotContainer {
     IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem(m_beambreak);
 
     m_intakeSubsystem.setDefaultCommand(new InstantCommand(() -> {}, m_intakeSubsystem));
+
+    FeederSubsystem m_feederSubsystem = new FeederSubsystem(m_beambreak);
+
+    m_feederSubsystem.setDefaultCommand(new InstantCommand(() -> {}, m_feederSubsystem));
   }
 
   public Command getAutonomousCommand() {
