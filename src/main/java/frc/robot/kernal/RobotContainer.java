@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
@@ -158,6 +159,8 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return new SequentialCommandGroup(m_initialPoseChooser.get(), m_autoChooser.get());
+    return new SequentialCommandGroup(new InstantCommand(() -> {
+        m_swervePoseEstimator.reset(new Pose2d());
+    }), new WaitCommand(1) ,m_autoChooser.get());
   }
 }
