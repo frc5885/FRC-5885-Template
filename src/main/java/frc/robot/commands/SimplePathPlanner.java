@@ -51,7 +51,9 @@ public class SimplePathPlanner extends SequentialCommandGroup {
             // error
             m_robotDrive::setChassisSpeeds,
             () -> {
-              return DriverStation.getAlliance().get().equals(DriverStation.Alliance.Red);
+              return DriverStation.getAlliance()
+                  .orElse(DriverStation.Alliance.Blue)
+                  .equals(DriverStation.Alliance.Red);
             }, // Whether or not to mirror the path based on alliance (this assumes the path is
             // created for the blue alliance)
             m_robotDrive // The subsystem(s) to require, typically your drive subsystem only

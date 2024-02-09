@@ -9,6 +9,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.SwerveConstants;
@@ -104,6 +107,7 @@ public class SwerveJoystickCmd extends Command {
 
     // Use field oriented drive
     if (m_fieldOrientedFunction.get()) {
+      Alliance alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
 
       chassisSpeeds =
           ChassisSpeeds.fromFieldRelativeSpeeds(
@@ -116,7 +120,10 @@ public class SwerveJoystickCmd extends Command {
                   .getRotation()
                   .plus(
                       new Rotation2d(
-                          m_swerveSubsystem.getAngularVelocity() * SwerveConstants.kDriftFactor)));
+                          m_swerveSubsystem.getAngularVelocity() * SwerveConstants.kDriftFactor))
+                  .plus(
+                      new Rotation2d(
+                          Units.degreesToRadians(alliance == Alliance.Blue ? 0.0 : 180.0))));
 
     } else {
       chassisSpeeds = new ChassisSpeeds(translation.getX(), translation.getY(), angularVelocity);

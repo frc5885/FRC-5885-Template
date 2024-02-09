@@ -150,7 +150,7 @@ public final class Constants {
       // Drive PID Constants
       //
       // These are gussed values.
-      public static final double kTurningFeedbackP = 16.0;
+      public static final double kTurningFeedbackP = 8.0;
       public static final double kTurningFeedbackI = 0.0;
       public static final double kTurningFeedbackD = 0.0;
       public static final double kTurningFeedbackTolerance = Units.degreesToRadians(0.65);
@@ -181,13 +181,13 @@ public final class Constants {
       //////////////////////////////
       // Module Simulation Constants
       public static final class Simulation {
-        public static final double kDriveFeedbackP = 0.1;
+        public static final double kDriveFeedbackP = 0.99627;
         public static final double kDriveFeedbackI = 0.0;
         public static final double kDriveFeedbackD = 0.0;
 
-        public static final double kDriveFeedForwardKs = 0.150551;
-        public static final double kDriveFeedForwardKv = 1.30222;
-        public static final double kDriveFeedForwardKa = 0.0;
+        public static final double kDriveFeedForwardKs = -0.0096792;
+        public static final double kDriveFeedForwardKv = 1.3184;
+        public static final double kDriveFeedForwardKa = 0.16811;
       }
     }
   }
