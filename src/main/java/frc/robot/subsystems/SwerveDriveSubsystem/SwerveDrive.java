@@ -178,7 +178,9 @@ public class SwerveDrive extends SubsystemBase {
 
     for (int i = 0; i != 4; i++) {
       if (Math.abs(desiredStates[i].speedMetersPerSecond) < 0.001) {
-        m_modules[i].setDriveVoltage(0);
+        m_modules[i].setDriveVoltage(0.0);
+        m_modules[i].setTurnVoltage(0.0);
+        continue;
       }
 
       // In case of a sharp wheel turn, this helps prevent the

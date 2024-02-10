@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.SwerveConstants.ModuleConstants;
 import frc.robot.commands.SwerveJoystickCmd;
+import frc.robot.commands.SimplePathPlanner;
 import frc.robot.commands.TuningCommands.SwerveGetModuleOffsets;
 import frc.robot.commands.TuningCommands.SwerveSolveFeedForward;
 import frc.robot.subsystems.PoseEstimatorSubsystem.SwervePoseEstimator;
@@ -159,8 +160,12 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return new SequentialCommandGroup(new InstantCommand(() -> {
-        m_swervePoseEstimator.reset(new Pose2d());
-    }), new WaitCommand(1) ,m_autoChooser.get());
+    return new SequentialCommandGroup(
+        new InstantCommand(
+            () -> {
+              m_swervePoseEstimator.reset(new Pose2d());
+            }),
+        new WaitCommand(1),
+        m_autoChooser.get());
   }
 }
