@@ -7,9 +7,7 @@ package frc.robot.kernal;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-
 import java.io.File;
-
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
@@ -46,13 +44,32 @@ public class Robot extends LoggedRobot {
     if (RobotBase.isReal()) {
       // Running on a real robot, log to a USB stick
       // TODO: Wait for fix
-      if (new File("/media/sdb/start_logging").exists()) {
-        System.out.println("Writting to USB!");
-        Logger.addDataReceiver(new WPILOGWriter("/media/sdb/"));
-      } else {
-        System.out.println("Not writting to usb!");
+      boolean found_thumbdrive = false;
+      File directory = new File("/media/");
+      if (directory.isDirectory()) {
+        File[] subdirectories = directory.listFiles(File::isDirectory);
+        if (subdirectories != null) {
+          for (File subdirectory : subdirectories) {
+            File[] files = subdirectory.listFiles();
+            if (files != null) {
+              for (File file : files) {
+                if (file.getName().equals("start_logging")) {
+                  // Do something when the file is found
+                  Logger.addDataReceiver(new WPILOGWriter(file.getParent()));
+                  System.out.println("Writting to USB! @" + file.getParent());
+                  found_thumbdrive = true;
+                  break;
+                }
+              }
+            }
+          }
+        }
       }
       Logger.addDataReceiver(new NT4Publisher());
+
+      if (!found_thumbdrive) {
+        System.out.println("Not logging to usb!");
+      }
     } else {
       // Running a physics simulator, log to local folder
       Logger.addDataReceiver(new WPILOGWriter("logs/"));
