@@ -5,6 +5,10 @@ import com.ctre.phoenix6.hardware.*;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
+// NEXT STEPS
+// add encoder limits
+// maybe set position function
+
 public class ArmSubsystem extends SubsystemBase {
 
   private TalonFX m_arm;
