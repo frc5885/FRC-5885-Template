@@ -27,6 +27,7 @@ import frc.robot.subsystems.PoseEstimatorSubsystem.SwervePoseEstimator;
 import frc.robot.subsystems.SwerveDriveSubsystem.SwerveDrive;
 import frc.robot.subsystems.SwerveDriveSubsystem.SwerveModuleNEO;
 import frc.robot.subsystems.SwerveDriveSubsystem.SwerveModuleSim;
+import frc.robot.subsystems.WristSubsystem;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class RobotContainer {
@@ -138,6 +139,8 @@ public class RobotContainer {
 
     ArmSubsystem m_armSubsystem = new ArmSubsystem();
 
+    WristSubsystem m_wristSubsystem = new WristSubsystem();
+
     FeederSubsystem m_feederSubsystem = new FeederSubsystem(m_beambreak);
     // m_initialPoseChooser.addDefaultOption(
     //         "Left OFF of Subwoofer",
@@ -203,6 +206,20 @@ public class RobotContainer {
             new InstantCommand(
                 () -> {
                   m_armSubsystem.moveArm(true);
+                  ;
+                }));
+    new JoystickButton(m_driverController.getHID(), Button.kStart.value)
+        .whileTrue(
+            new InstantCommand(
+                () -> {
+                  m_wristSubsystem.moveWrist(false);
+                  ;
+                }));
+    new JoystickButton(m_driverController.getHID(), Button.kBack.value)
+        .whileTrue(
+            new InstantCommand(
+                () -> {
+                  m_wristSubsystem.moveWrist(true);
                   ;
                 }));
 

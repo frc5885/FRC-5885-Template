@@ -14,6 +14,7 @@ public final class Constants {
   public static final int kShooterTop = 50;
   public static final int kShooterBottom = 51;
   public static final int kArm = 60;
+  public static final int kWrist = 70;
 
   /**
    * Constants related to the controller configurations. Anything that is controller specific should
