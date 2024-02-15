@@ -16,6 +16,14 @@ public final class Constants {
   public static final int kArm = 60;
   public static final int kWrist = 70;
 
+  // Arm Encoder Max And Min
+  public static final double kArmEncoderMax = 1.0;
+  public static final double kArmEncoderMin = 0.0;
+
+  // Wrist Encoder Max And Min
+  public static final double kWristEncoderMax = 1.0;
+  public static final double kWristEncoderMin = 0.0;
+
   /**
    * Constants related to the controller configurations. Anything that is controller specific should
    * be in here. This includes button mappings, controller ports, physical constants, power maps,

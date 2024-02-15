@@ -198,29 +198,47 @@ public class RobotContainer {
         .whileTrue(
             new InstantCommand(
                 () -> {
-                  m_armSubsystem.moveArm(false);
+                  m_armSubsystem.moveArm(false, false);
+                }))
+        .whileFalse(
+            new InstantCommand(
+                () -> {
+                  m_armSubsystem.moveArm(false, true);
                   ;
                 }));
     new JoystickButton(m_driverController.getHID(), Button.kLeftBumper.value)
         .whileTrue(
             new InstantCommand(
                 () -> {
-                  m_armSubsystem.moveArm(true);
-                  ;
+                  m_armSubsystem.moveArm(true, false);
+                }))
+        .whileFalse(
+            new InstantCommand(
+                () -> {
+                  m_armSubsystem.moveArm(true, true);
                 }));
     new JoystickButton(m_driverController.getHID(), Button.kStart.value)
         .whileTrue(
             new InstantCommand(
                 () -> {
-                  m_wristSubsystem.moveWrist(false);
-                  ;
+                  m_wristSubsystem.moveWrist(false, false);
+                }))
+        .whileFalse(
+            new InstantCommand(
+                () -> {
+                  m_wristSubsystem.moveWrist(false, true);
                 }));
     new JoystickButton(m_driverController.getHID(), Button.kBack.value)
         .whileTrue(
             new InstantCommand(
                 () -> {
-                  m_wristSubsystem.moveWrist(true);
+                  m_wristSubsystem.moveWrist(true, false);
                   ;
+                }))
+        .whileFalse(
+            new InstantCommand(
+                () -> {
+                  m_wristSubsystem.moveWrist(true, true);
                 }));
 
     // m_intakeSubsystem.setDefaultCommand(new InstantCommand(() -> {

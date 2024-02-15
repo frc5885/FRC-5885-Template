@@ -11,26 +11,26 @@ import frc.robot.Constants;
 
 public class WristSubsystem extends SubsystemBase {
 
-  private TalonFX m_arm;
+  private TalonFX m_wrist;
   private double m_speed = 0.1;
-  private Boolean m_isReversed;
 
   /** Creates a new Shooter. */
   public WristSubsystem() {
-    m_arm = new TalonFX(Constants.kWrist);
+    m_wrist = new TalonFX(Constants.kWrist);
     // m_arm.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 1, 0);
-    TalonFXConfiguration config = new TalonFXConfiguration();
+    // TalonFXConfiguration config = new TalonFXConfiguration();
   }
 
   @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-    m_arm.setVoltage(m_speed * 12.0);
-  }
+  public void periodic() {}
 
-  public void moveWrist(boolean isReversed) {
-    if (isReversed) {
-      m_speed = -m_speed;
+  public void moveWrist(boolean isReversed, boolean isOff) {
+    if (isOff) {
+      m_wrist.setVoltage(0.0);
+    } else if (isReversed) {
+      m_wrist.setVoltage(-m_speed * 12.0);
+    } else {
+      m_wrist.setVoltage(m_speed * 12.0);
     }
   }
 }
