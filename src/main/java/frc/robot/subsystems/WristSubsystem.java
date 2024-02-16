@@ -11,6 +11,14 @@ import frc.robot.Constants;
 
 public class WristSubsystem extends SubsystemBase {
 
+  enum WristAction {
+    ON,
+    OFF;
+  }
+
+  private WristAction startAction = WristAction.OFF;
+  private WristAction backAction = WristAction.OFF;
+
   private TalonFX m_wrist;
   private double m_speed = 0.1;
 
@@ -22,15 +30,29 @@ public class WristSubsystem extends SubsystemBase {
   }
 
   @Override
-  public void periodic() {}
-
-  public void moveWrist(boolean isReversed, boolean isOff) {
-    if (isOff) {
-      m_wrist.setVoltage(0.0);
-    } else if (isReversed) {
-      m_wrist.setVoltage(-m_speed * 12.0);
-    } else {
+  public void periodic() {
+    if (startAction == WristAction.ON) {
       m_wrist.setVoltage(m_speed * 12.0);
+    } else if (backAction == WristAction.ON) {
+      m_wrist.setVoltage(m_speed * 12.0);
+    } else {
+      m_wrist.setVoltage(0.0);
+    }
+  }
+
+  public void startButton(boolean isPressed) {
+    if (isPressed) {
+      startAction = WristAction.ON;
+    } else {
+      startAction = WristAction.OFF;
+    }
+  }
+
+  public void backButton(boolean isPressed) {
+    if (isPressed) {
+      backAction = WristAction.ON;
+    } else {
+      backAction = WristAction.OFF;
     }
   }
 }

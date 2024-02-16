@@ -198,47 +198,46 @@ public class RobotContainer {
         .whileTrue(
             new InstantCommand(
                 () -> {
-                  m_armSubsystem.moveArm(false, false);
+                  m_armSubsystem.rightBumperButton(true);
                 }))
         .whileFalse(
             new InstantCommand(
                 () -> {
-                  m_armSubsystem.moveArm(false, true);
-                  ;
+                  m_armSubsystem.rightBumperButton(false);
                 }));
     new JoystickButton(m_driverController.getHID(), Button.kLeftBumper.value)
         .whileTrue(
             new InstantCommand(
                 () -> {
-                  m_armSubsystem.moveArm(true, false);
+                  m_armSubsystem.leftBumperButton(true);
                 }))
         .whileFalse(
             new InstantCommand(
                 () -> {
-                  m_armSubsystem.moveArm(true, true);
+                  m_armSubsystem.leftBumperButton(false);
                 }));
     new JoystickButton(m_driverController.getHID(), Button.kStart.value)
         .whileTrue(
             new InstantCommand(
                 () -> {
-                  m_wristSubsystem.moveWrist(false, false);
+                  m_wristSubsystem.startButton(true);
                 }))
         .whileFalse(
             new InstantCommand(
                 () -> {
-                  m_wristSubsystem.moveWrist(false, true);
+                  m_wristSubsystem.startButton(false);
                 }));
     new JoystickButton(m_driverController.getHID(), Button.kBack.value)
         .whileTrue(
             new InstantCommand(
                 () -> {
-                  m_wristSubsystem.moveWrist(true, false);
+                  m_wristSubsystem.backButton(true);
                   ;
                 }))
         .whileFalse(
             new InstantCommand(
                 () -> {
-                  m_wristSubsystem.moveWrist(true, true);
+                  m_wristSubsystem.backButton(false);
                 }));
 
     // m_intakeSubsystem.setDefaultCommand(new InstantCommand(() -> {

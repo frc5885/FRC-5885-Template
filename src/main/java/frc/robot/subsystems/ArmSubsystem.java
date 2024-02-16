@@ -11,6 +11,14 @@ import frc.robot.Constants;
 
 public class ArmSubsystem extends SubsystemBase {
 
+  enum ArmAction {
+    ON,
+    OFF;
+  }
+
+  private ArmAction rightBumperAction = ArmAction.OFF;
+  private ArmAction leftBumperAction = ArmAction.OFF;
+
   private TalonFX m_arm;
   private double m_speed = 0.1;
 
@@ -22,15 +30,29 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   @Override
-  public void periodic() {}
-
-  public void moveArm(boolean isReversed, boolean isOff) {
-    if (isOff) {
-      m_arm.setVoltage(0.0);
-    } else if (isReversed) {
-      m_arm.setVoltage(-m_speed * 12.0);
-    } else {
+  public void periodic() {
+    if (rightBumperAction == ArmAction.ON) {
       m_arm.setVoltage(m_speed * 12.0);
+    } else if (rightBumperAction == ArmAction.ON) {
+      m_arm.setVoltage(m_speed * 12.0);
+    } else {
+      m_arm.setVoltage(0.0);
+    }
+  }
+
+  public void rightBumperButton(boolean isPressed) {
+    if (isPressed) {
+      rightBumperAction = ArmAction.ON;
+    } else {
+      rightBumperAction = ArmAction.OFF;
+    }
+  }
+
+  public void leftBumperButton(boolean isPressed) {
+    if (isPressed) {
+      leftBumperAction = ArmAction.ON;
+    } else {
+      leftBumperAction = ArmAction.OFF;
     }
   }
 }
