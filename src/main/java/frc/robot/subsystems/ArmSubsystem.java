@@ -16,6 +16,9 @@ public class ArmSubsystem extends SubsystemBase {
     OFF;
   }
 
+  // Buffer is value slightly above 0 to ensure doesn't smack
+  private double buffer = 0.0;
+
   private ArmAction rightBumperAction = ArmAction.OFF;
   private ArmAction leftBumperAction = ArmAction.OFF;
 
@@ -31,10 +34,13 @@ public class ArmSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if (rightBumperAction == ArmAction.ON) {
+    System.out.println("Arm Position" + m_arm.getPosition().getValueAsDouble());
+    if (rightBumperAction == ArmAction.ON
+        && m_arm.getPosition().getValueAsDouble() > Constants.kArmEncoderMin + buffer) {
       m_arm.setVoltage(m_speed * 12.0);
-    } else if (rightBumperAction == ArmAction.ON) {
-      m_arm.setVoltage(m_speed * 12.0);
+    } else if (leftBumperAction == ArmAction.ON
+        && m_arm.getPosition().getValueAsDouble() < Constants.kArmEncoderMax - buffer) {
+      m_arm.setVoltage(m_speed * -12.0);
     } else {
       m_arm.setVoltage(0.0);
     }

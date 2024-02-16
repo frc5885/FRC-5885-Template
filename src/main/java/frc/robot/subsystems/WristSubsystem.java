@@ -16,6 +16,9 @@ public class WristSubsystem extends SubsystemBase {
     OFF;
   }
 
+  // Buffer is value slightly above 0 to ensure doesn't smack
+  private double buffer = 0.0;
+
   private WristAction startAction = WristAction.OFF;
   private WristAction backAction = WristAction.OFF;
 
@@ -31,10 +34,13 @@ public class WristSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if (startAction == WristAction.ON) {
+    System.out.println("Wrist Position" + m_wrist.getPosition().getValueAsDouble());
+    if (startAction == WristAction.ON
+        && m_wrist.getPosition().getValueAsDouble() > Constants.kArmEncoderMin + buffer) {
       m_wrist.setVoltage(m_speed * 12.0);
-    } else if (backAction == WristAction.ON) {
-      m_wrist.setVoltage(m_speed * 12.0);
+    } else if (backAction == WristAction.ON
+        && m_wrist.getPosition().getValueAsDouble() < Constants.kArmEncoderMax - buffer) {
+      m_wrist.setVoltage(m_speed * -12.0);
     } else {
       m_wrist.setVoltage(0.0);
     }
