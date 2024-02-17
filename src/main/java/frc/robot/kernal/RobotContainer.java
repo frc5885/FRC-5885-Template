@@ -17,8 +17,8 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.SwerveConstants.ModuleConstants;
-import frc.robot.commands.SwerveJoystickCmd;
 import frc.robot.commands.SimplePathPlanner;
+import frc.robot.commands.SwerveJoystickCmd;
 import frc.robot.commands.TuningCommands.SwerveGetModuleOffsets;
 import frc.robot.commands.TuningCommands.SwerveSolveFeedForward;
 import frc.robot.subsystems.PoseEstimatorSubsystem.SwervePoseEstimator;
@@ -146,7 +146,9 @@ public class RobotContainer {
                     () -> {
                       m_swerveDrive.resetGyro();
                       m_swervePoseEstimator.reset(new Pose2d(0, 0, new Rotation2d()));
-                    })));
+                    },
+                    m_swerveDrive,
+                    m_swervePoseEstimator)));
 
     new JoystickButton(m_driverController.getHID(), Button.kY.value)
         .onTrue(
@@ -155,8 +157,8 @@ public class RobotContainer {
                   m_isFieldOriented = !m_isFieldOriented;
                 }));
 
-    // new JoystickButton(m_driverController.getHID(), Button.kB.value)
-    //     .whileTrue(new SimplePathPlanner(m_swervePoseEstimator, m_swerveDrive));
+    new JoystickButton(m_driverController.getHID(), Button.kB.value)
+        .whileTrue(new SimplePathPlanner(m_swervePoseEstimator, m_swerveDrive));
   }
 
   public Command getAutonomousCommand() {

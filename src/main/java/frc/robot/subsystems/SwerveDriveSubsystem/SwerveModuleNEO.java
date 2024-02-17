@@ -46,8 +46,8 @@ public class SwerveModuleNEO implements SwerveModuleIO {
     m_turnMotor.setInverted(turnMotorReversed);
 
     // Optimize the spark max frame timings to clean up the CAN bus
-    SparkMaxConfigurer.setFrameTimingsOptmized(m_driveMotor);
-    SparkMaxConfigurer.setFrameTimingsOptmized(m_turnMotor);
+    SparkMaxConfigurer.setFrameTimingsDefault(m_driveMotor);
+    SparkMaxConfigurer.setFrameTimingsDefault(m_turnMotor);
 
     // This sets the update rate of the spark max position value
     // TODO: Motors has timeout issues, needs to find a way to detect and fix

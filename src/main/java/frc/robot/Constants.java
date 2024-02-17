@@ -41,7 +41,7 @@ public final class Constants {
     //
     // This value is used to offset some countersteering when turning
     // and driving at the same time. It is a guessed value but 0.075 works well.
-    public static final double kDriftFactor = 0.075;
+    public static final double kDriftFactor = 0.0; // 0.075;
 
     ////////////////////////
     // Use External Encoders
@@ -50,7 +50,7 @@ public final class Constants {
     // and the absolute encoders on the modules. The absolute encoders
     // are more accurate, but risk loosing connection mid match and analog
     // noise.
-    public static final boolean kUseExternalEncoders = false;
+    public static final boolean kUseExternalEncoders = true;
 
     ///////////////////////////
     // Maximum Attainable Speed
@@ -126,7 +126,7 @@ public final class Constants {
       // Drive PID Constants
       //
       // These are gussed values, changing this too much causes a lot of overshoot.
-      public static final double kDriveFeedbackP = 0.1;
+      public static final double kDriveFeedbackP = 0.23216;
       public static final double kDriveFeedbackI = 0.0;
       public static final double kDriveFeedbackD = 0.0;
 
@@ -134,9 +134,9 @@ public final class Constants {
       // Drive Feed Forward Constants
       //
       // These values are found by using the SwerveSolveFeedForward command.
-      public static final double kDriveFeedForwardKs = 0.09214084677588957;
-      public static final double kDriveFeedForwardKv = 2.6828478208373143;
-      public static final double kDriveFeedForwardKa = 0.0;
+      public static final double kDriveFeedForwardKs = 0.16918;
+      public static final double kDriveFeedForwardKv = 2.661;
+      public static final double kDriveFeedForwardKa = 0.36169;
 
       //////////////////////
       // Drive PID Constants
@@ -156,6 +156,10 @@ public final class Constants {
       // Wheel Size
       public static final double kWheelDiameterMeters = Units.inchesToMeters(4);
 
+      /////////////////////////////
+      // Distance correction factor
+      public static final double kDistanceCorrectionFactor = 1.035;
+
       //////////////
       // Gear Ratios
       public static final double kDriveMotorGearRatio = 1.0 / 6.75;
@@ -164,7 +168,7 @@ public final class Constants {
       ////////////////////////////////
       // Encoder Calculation Constants
       public static final double kDriveEncoderRot2Meter =
-          kDriveMotorGearRatio * Math.PI * kWheelDiameterMeters;
+          kDriveMotorGearRatio * Math.PI * kWheelDiameterMeters * kDistanceCorrectionFactor;
       public static final double kTurningEncoderRot2Rad = kTurningMotorGearRatio * 2 * Math.PI;
 
       public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter / 60.0;
