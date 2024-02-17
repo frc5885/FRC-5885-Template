@@ -13,6 +13,10 @@ public final class Constants {
   public static final int kFeeder = 40;
   public static final int kShooterTop = 50;
   public static final int kShooterBottom = 51;
+  public static final int kClimberLeft = 80;
+  public static final int kClimberRight = 81;
+
+  public static final double kClimberSpeedFactor = 0.5;
 
   /**
    * Constants related to the controller configurations. Anything that is controller specific should
