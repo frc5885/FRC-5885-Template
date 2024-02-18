@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems.SwerveDriveSubsystem;
+package frc.robot.base.subsystems.swerve;
 
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.math.controller.PIDController;
@@ -25,20 +25,19 @@ import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.Constants.SwerveConstants;
-import frc.robot.Constants.SwerveConstants.ModuleConstants;
+import frc.robot.base.modules.swerve.*;
 import org.littletonrobotics.junction.Logger;
 
-public class SwerveDrive extends SubsystemBase {
+public class SwerveDriveSubsystem extends SubsystemBase {
 
-  private final SwerveModuleIO[] m_modules = new SwerveModuleIO[4];
+  private final SwerveModule[] m_modules = new SwerveModule[4];
   private final AHRS m_gyro;
   // IO Modules can't be defined in constructor, so they are defined here
-  private final SwerveModuleIOInputsAutoLogged[] m_modulesInput = {
-    new SwerveModuleIOInputsAutoLogged(),
-    new SwerveModuleIOInputsAutoLogged(),
-    new SwerveModuleIOInputsAutoLogged(),
-    new SwerveModuleIOInputsAutoLogged()
+  private final SwerveModuleInputAutoLogged[] m_modulesInput = {
+      new SwerveModuleInputAutoLogged(),
+      new SwerveModuleInputAutoLogged(),
+      new SwerveModuleInputAutoLogged(),
+      new SwerveModuleInputAutoLogged()
   };
 
   private final PIDController[] m_turnController = new PIDController[4];
@@ -53,12 +52,54 @@ public class SwerveDrive extends SubsystemBase {
 
   private SysIdRoutine m_sysIdRoutine;
 
-  /** Creates a new SwerveDrive. */
-  public SwerveDrive(
-      SwerveModuleIO frontLeft,
-      SwerveModuleIO frontRight,
-      SwerveModuleIO backLeft,
-      SwerveModuleIO backRight) {
+  /**
+   * Creates a new SwerveDrive.
+   */
+  public SwerveDriveSubsystem() {
+    SwerveModule frontLeft;
+    SwerveModule frontRight;
+    SwerveModule backLeft;
+    SwerveModule backRight;
+
+    if (RobotBase.isReal()) {
+      frontLeft = new NEOSwerveModule(
+          SwerveConstants.Module.kLeftFrontDriveMotorID,
+          SwerveConstants.Module.kLeftFrontTurnMotorID,
+          SwerveConstants.Module.kLeftFrontAnalogEncoderPort,
+          SwerveConstants.Module.kLeftFrontModuleOffset,
+          SwerveConstants.Module.kLeftFrontTurnMotorInverted,
+          SwerveConstants.Module.kLeftFrontDriveMotorInverted
+      );
+      frontRight = new NEOSwerveModule(
+          SwerveConstants.Module.kRightFrontDriveMotorID,
+          SwerveConstants.Module.kRightFrontTurnMotorID,
+          SwerveConstants.Module.kRightFrontAnalogEncoderPort,
+          SwerveConstants.Module.kRightFrontModuleOffset,
+          SwerveConstants.Module.kRightFrontTurnMotorInverted,
+          SwerveConstants.Module.kRightFrontDriveMotorInverted
+      );
+      backLeft = new NEOSwerveModule(
+          SwerveConstants.Module.kLeftRearDriveMotorID,
+          SwerveConstants.Module.kLeftRearTurnMotorID,
+          SwerveConstants.Module.kLeftRearAnalogEncoderPort,
+          SwerveConstants.Module.kLeftRearModuleOffset,
+          SwerveConstants.Module.kLeftRearTurnMotorInverted,
+          SwerveConstants.Module.kLeftRearDriveMotorInverted
+      );
+      backRight = new NEOSwerveModule(
+          SwerveConstants.Module.kRightRearDriveMotorID,
+          SwerveConstants.Module.kRightRearTurnMotorID,
+          SwerveConstants.Module.kRightRearAnalogEncoderPort,
+          SwerveConstants.Module.kRightRearModuleOffset,
+          SwerveConstants.Module.kRightRearTurnMotorInverted,
+          SwerveConstants.Module.kRightRearDriveMotorInverted
+      );
+    } else {
+      frontLeft = new SimulatedSwerveModule(false);
+      frontRight = new SimulatedSwerveModule(false);
+      backLeft = new SimulatedSwerveModule(false);
+      backRight = new SimulatedSwerveModule(false);
+    }
 
     m_gyro = new AHRS(SPI.Port.kMXP);
     resetGyro();
@@ -71,34 +112,34 @@ public class SwerveDrive extends SubsystemBase {
     for (int i = 0; i != 4; i++) {
       m_turnController[i] =
           new PIDController(
-              ModuleConstants.kTurningFeedbackP,
-              ModuleConstants.kTurningFeedbackI,
-              ModuleConstants.kTurningFeedbackD);
+              SwerveConstants.Module.kTurningFeedbackP,
+              SwerveConstants.Module.kTurningFeedbackI,
+              SwerveConstants.Module.kTurningFeedbackD);
       m_turnController[i].enableContinuousInput(-Math.PI, Math.PI);
-      m_turnController[i].setTolerance(ModuleConstants.kTurningFeedbackTolerance);
+      m_turnController[i].setTolerance(SwerveConstants.Module.kTurningFeedbackTolerance);
 
       if (RobotBase.isReal()) {
         m_driveController[i] =
             new PIDController(
-                ModuleConstants.kDriveFeedbackP,
-                ModuleConstants.kDriveFeedbackI,
-                ModuleConstants.kDriveFeedbackD);
+                SwerveConstants.Module.kDriveFeedbackP,
+                SwerveConstants.Module.kDriveFeedbackI,
+                SwerveConstants.Module.kDriveFeedbackD);
         m_driveFeedforward[i] =
             new SimpleMotorFeedforward(
-                ModuleConstants.kDriveFeedForwardKs,
-                ModuleConstants.kDriveFeedForwardKv,
-                ModuleConstants.kDriveFeedForwardKa);
+                SwerveConstants.Module.kDriveFeedForwardKs,
+                SwerveConstants.Module.kDriveFeedForwardKv,
+                SwerveConstants.Module.kDriveFeedForwardKa);
       } else {
         m_driveController[i] =
             new PIDController(
-                ModuleConstants.Simulation.kDriveFeedbackP,
-                ModuleConstants.Simulation.kDriveFeedbackI,
-                ModuleConstants.Simulation.kDriveFeedbackD);
+                SwerveConstants.Module.Simulation.kDriveFeedbackP,
+                SwerveConstants.Module.Simulation.kDriveFeedbackI,
+                SwerveConstants.Module.Simulation.kDriveFeedbackD);
         m_driveFeedforward[i] =
             new SimpleMotorFeedforward(
-                ModuleConstants.Simulation.kDriveFeedForwardKs,
-                ModuleConstants.Simulation.kDriveFeedForwardKv,
-                ModuleConstants.Simulation.kDriveFeedForwardKa);
+                SwerveConstants.Module.Simulation.kDriveFeedForwardKs,
+                SwerveConstants.Module.Simulation.kDriveFeedForwardKv,
+                SwerveConstants.Module.Simulation.kDriveFeedForwardKa);
       }
     }
 
@@ -134,15 +175,15 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   public SwerveModulePosition[] getModulePositions() {
-    return new SwerveModulePosition[] {
-      new SwerveModulePosition(
-          m_modulesInput[0].drivePositionMeters, new Rotation2d(m_modulesInput[0].turnPositionRad)),
-      new SwerveModulePosition(
-          m_modulesInput[1].drivePositionMeters, new Rotation2d(m_modulesInput[1].turnPositionRad)),
-      new SwerveModulePosition(
-          m_modulesInput[2].drivePositionMeters, new Rotation2d(m_modulesInput[2].turnPositionRad)),
-      new SwerveModulePosition(
-          m_modulesInput[3].drivePositionMeters, new Rotation2d(m_modulesInput[3].turnPositionRad)),
+    return new SwerveModulePosition[]{
+        new SwerveModulePosition(
+            m_modulesInput[0].drivePositionMeters, new Rotation2d(m_modulesInput[0].turnPositionRad)),
+        new SwerveModulePosition(
+            m_modulesInput[1].drivePositionMeters, new Rotation2d(m_modulesInput[1].turnPositionRad)),
+        new SwerveModulePosition(
+            m_modulesInput[2].drivePositionMeters, new Rotation2d(m_modulesInput[2].turnPositionRad)),
+        new SwerveModulePosition(
+            m_modulesInput[3].drivePositionMeters, new Rotation2d(m_modulesInput[3].turnPositionRad)),
     };
   }
 
@@ -156,19 +197,19 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   public SwerveModuleState[] getModuleStates() {
-    return new SwerveModuleState[] {
-      new SwerveModuleState(
-          m_modulesInput[0].driveVelocityMetersPerSec,
-          new Rotation2d(m_modulesInput[0].turnPositionRad)),
-      new SwerveModuleState(
-          m_modulesInput[1].driveVelocityMetersPerSec,
-          new Rotation2d(m_modulesInput[1].turnPositionRad)),
-      new SwerveModuleState(
-          m_modulesInput[2].driveVelocityMetersPerSec,
-          new Rotation2d(m_modulesInput[2].turnPositionRad)),
-      new SwerveModuleState(
-          m_modulesInput[3].driveVelocityMetersPerSec,
-          new Rotation2d(m_modulesInput[3].turnPositionRad)),
+    return new SwerveModuleState[]{
+        new SwerveModuleState(
+            m_modulesInput[0].driveVelocityMetersPerSec,
+            new Rotation2d(m_modulesInput[0].turnPositionRad)),
+        new SwerveModuleState(
+            m_modulesInput[1].driveVelocityMetersPerSec,
+            new Rotation2d(m_modulesInput[1].turnPositionRad)),
+        new SwerveModuleState(
+            m_modulesInput[2].driveVelocityMetersPerSec,
+            new Rotation2d(m_modulesInput[2].turnPositionRad)),
+        new SwerveModuleState(
+            m_modulesInput[3].driveVelocityMetersPerSec,
+            new Rotation2d(m_modulesInput[3].turnPositionRad)),
     };
   }
 
@@ -192,8 +233,8 @@ public class SwerveDrive extends SubsystemBase {
       m_modules[i].setDriveVoltage(
           m_driveFeedforward[i].calculate(desiredStates[i].speedMetersPerSecond)
               + m_driveController[i].calculate(
-                  m_modulesInput[i].driveVelocityMetersPerSec,
-                  desiredStates[i].speedMetersPerSecond));
+              m_modulesInput[i].driveVelocityMetersPerSec,
+              desiredStates[i].speedMetersPerSecond));
 
       m_modules[i].setTurnVoltage(
           (m_turnController[i].calculate(
@@ -250,7 +291,7 @@ public class SwerveDrive extends SubsystemBase {
         .linearVelocity(
             m_velocity.mut_replace(
                 (m_modulesInput[0].driveVelocityMetersPerSec
-                        + m_modulesInput[3].driveVelocityMetersPerSec)
+                    + m_modulesInput[3].driveVelocityMetersPerSec)
                     / 2.0,
                 Units.MetersPerSecond));
 
@@ -267,7 +308,7 @@ public class SwerveDrive extends SubsystemBase {
         .linearVelocity(
             m_velocity.mut_replace(
                 (m_modulesInput[1].driveVelocityMetersPerSec
-                        + m_modulesInput[2].driveVelocityMetersPerSec)
+                    + m_modulesInput[2].driveVelocityMetersPerSec)
                     / 2.0,
                 Units.MetersPerSecond));
 
@@ -294,9 +335,9 @@ public class SwerveDrive extends SubsystemBase {
 
   public double getAverageMotorVoltage() {
     return (m_modulesInput[0].driveVoltage
-            + m_modulesInput[1].driveVoltage
-            + m_modulesInput[2].driveVoltage
-            + m_modulesInput[3].driveVoltage)
+        + m_modulesInput[1].driveVoltage
+        + m_modulesInput[2].driveVoltage
+        + m_modulesInput[3].driveVoltage)
         / 4;
   }
 

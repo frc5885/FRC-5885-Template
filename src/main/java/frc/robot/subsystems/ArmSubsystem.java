@@ -1,64 +1,64 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.configs.*;
 import com.ctre.phoenix6.hardware.*;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import frc.robot.Constants;
+import frc.robot.base.subsystems.SubsystemAction;
+import frc.robot.base.subsystems.WCStaticSubsystem;
+
+import java.util.List;
 
 // NEXT STEPS
 // add encoder limits
 // maybe set position function
 
-public class ArmSubsystem extends SubsystemBase {
-
-  enum ArmAction {
-    ON,
-    OFF;
-  }
+public class ArmSubsystem extends WCStaticSubsystem {
 
   // Buffer is value slightly above 0 to ensure doesn't smack
-  private double buffer = 0.0;
-
-  private ArmAction rightBumperAction = ArmAction.OFF;
-  private ArmAction leftBumperAction = ArmAction.OFF;
+  private final double buffer = 0.0;
 
   private TalonFX m_arm;
-  private double m_speed = 0.1;
 
-  /** Creates a new Shooter. */
-  public ArmSubsystem() {
+  @Override
+  protected double getBaseSpeed() {
+    return 0.1;
+  }
+
+  @Override
+  protected List<MotorController> initMotors() {
     m_arm = new TalonFX(Constants.kArm);
     // m_arm.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 1, 0);
     // TalonFXConfiguration config = new TalonFXConfiguration();
+    return List.of(m_arm);
   }
 
   @Override
   public void periodic() {
-    System.out.println("Arm Position" + m_arm.getPosition().getValueAsDouble());
-    if (rightBumperAction == ArmAction.ON
-        && m_arm.getPosition().getValueAsDouble() > Constants.kArmEncoderMin + buffer) {
-      m_arm.setVoltage(m_speed * 12.0);
-    } else if (leftBumperAction == ArmAction.ON
-        && m_arm.getPosition().getValueAsDouble() < Constants.kArmEncoderMax - buffer) {
-      m_arm.setVoltage(m_speed * -12.0);
+//    System.out.println("Arm Position" + m_arm.getPosition().getValueAsDouble());
+    if (subsystemAction == SubsystemAction.UP && !isAtUpperLimit()) {
+      forwardMotors();
+    } else if (subsystemAction == SubsystemAction.DOWN && !isAtLowerLimit()) {
+      reverseMotors();
     } else {
-      m_arm.setVoltage(0.0);
+      stopMotors();
     }
   }
 
-  public void rightBumperButton(boolean isPressed) {
-    if (isPressed) {
-      rightBumperAction = ArmAction.ON;
-    } else {
-      rightBumperAction = ArmAction.OFF;
-    }
+  private boolean isAtUpperLimit() {
+    double armPosition = m_arm.getPosition().getValueAsDouble();
+    return armPosition >= Constants.kArmEncoderMax + buffer;
   }
 
-  public void leftBumperButton(boolean isPressed) {
-    if (isPressed) {
-      leftBumperAction = ArmAction.ON;
-    } else {
-      leftBumperAction = ArmAction.OFF;
-    }
+  private boolean isAtLowerLimit() {
+    double armPosition = m_arm.getPosition().getValueAsDouble();
+    return armPosition <= Constants.kArmEncoderMin - buffer;
+  }
+
+  public void up() {
+    subsystemAction = SubsystemAction.UP;
+  }
+
+  public void down() {
+    subsystemAction = SubsystemAction.DOWN;
   }
 }

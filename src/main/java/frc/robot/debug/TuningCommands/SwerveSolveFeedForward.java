@@ -2,17 +2,17 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.TuningCommands;
+package frc.robot.debug.TuningCommands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.SwerveDriveSubsystem.SwerveDrive;
+import frc.robot.base.subsystems.swerve.SwerveDriveSubsystem;
 import java.util.LinkedList;
 import java.util.List;
 
 public class SwerveSolveFeedForward extends Command {
 
-  private final SwerveDrive m_swerveSubsystem;
+  private final SwerveDriveSubsystem m_swerveSubsystem;
 
   private final Timer m_timer = new Timer();
 
@@ -28,7 +28,7 @@ public class SwerveSolveFeedForward extends Command {
   private double m_lastSetTime = 0.0;
 
   /** Creates a new SwerveJoystickCmd. */
-  public SwerveSolveFeedForward(SwerveDrive swerveDrive) {
+  public SwerveSolveFeedForward(SwerveDriveSubsystem swerveDrive) {
     m_swerveSubsystem = swerveDrive;
 
     addRequirements(m_swerveSubsystem);

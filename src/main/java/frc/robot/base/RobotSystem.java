@@ -2,19 +2,20 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.kernal;
+package frc.robot.base;
 
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Robot;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
-public class Robot extends LoggedRobot {
+public class RobotSystem extends LoggedRobot {
   private Command m_autonomousCommand;
-  private RobotContainer m_robotContainer;
+  private WCRobot m_robotContainer;
 
   @Override
   public void robotInit() {
@@ -52,7 +53,7 @@ public class Robot extends LoggedRobot {
     }
 
     Logger.start();
-    m_robotContainer = new RobotContainer();
+    m_robotContainer = new Robot();
   }
 
   @Override
@@ -71,8 +72,6 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }

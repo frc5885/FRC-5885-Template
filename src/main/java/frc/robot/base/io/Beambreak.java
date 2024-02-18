@@ -1,4 +1,4 @@
-package frc.robot.components;
+package frc.robot.base.io;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.Constants;
@@ -10,5 +10,9 @@ public class Beambreak extends DigitalInput {
 
   public Boolean isBroken() {
     return !get();
+  }
+
+  public Boolean isOpen() {
+    return get();
   }
 }

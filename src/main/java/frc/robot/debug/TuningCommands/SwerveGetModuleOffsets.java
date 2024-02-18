@@ -2,17 +2,17 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.TuningCommands;
+package frc.robot.debug.TuningCommands;
 
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.SwerveConstants.ModuleConstants;
-import frc.robot.subsystems.SwerveDriveSubsystem.SwerveDrive;
+import frc.robot.base.modules.swerve.SwerveConstants;
+import frc.robot.base.subsystems.swerve.SwerveDriveSubsystem;
 import java.util.ArrayList;
 
 public class SwerveGetModuleOffsets extends Command {
 
-  private final SwerveDrive m_swerveSubsystem;
+  private final SwerveDriveSubsystem m_swerveSubsystem;
 
   private final int m_bufferSize = 100;
   private ArrayList<Double> m_leftFrontValues = new ArrayList<>();
@@ -21,7 +21,7 @@ public class SwerveGetModuleOffsets extends Command {
   private ArrayList<Double> m_rightRearValues = new ArrayList<>();
 
   /** Creates a new SwerveJoystickCmd. */
-  public SwerveGetModuleOffsets(SwerveDrive swerveDrive) {
+  public SwerveGetModuleOffsets(SwerveDriveSubsystem swerveDrive) {
     m_swerveSubsystem = swerveDrive;
 
     addRequirements(m_swerveSubsystem);
@@ -46,16 +46,16 @@ public class SwerveGetModuleOffsets extends Command {
   public void execute() {
     m_leftFrontValues.add(
         m_swerveSubsystem.getAbsoluteEncoderValue(0)
-            + ModuleConstants.kLeftFrontModuleOffset.getRadians());
+            + SwerveConstants.Module.kLeftFrontModuleOffset.getRadians());
     m_rightFrontValues.add(
         m_swerveSubsystem.getAbsoluteEncoderValue(1)
-            + ModuleConstants.kRightFrontModuleOffset.getRadians());
+            + SwerveConstants.Module.kRightFrontModuleOffset.getRadians());
     m_leftRearValues.add(
         m_swerveSubsystem.getAbsoluteEncoderValue(2)
-            + ModuleConstants.kLeftRearModuleOffset.getRadians());
+            + SwerveConstants.Module.kLeftRearModuleOffset.getRadians());
     m_rightRearValues.add(
         m_swerveSubsystem.getAbsoluteEncoderValue(3)
-            + ModuleConstants.kRightRearModuleOffset.getRadians());
+            + SwerveConstants.Module.kRightRearModuleOffset.getRadians());
 
     if (m_leftFrontValues.size() > m_bufferSize) {
       m_leftFrontValues.remove(0);

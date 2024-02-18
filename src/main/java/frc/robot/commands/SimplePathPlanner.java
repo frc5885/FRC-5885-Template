@@ -10,8 +10,8 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.subsystems.PoseEstimatorSubsystem.SwervePoseEstimator;
-import frc.robot.subsystems.SwerveDriveSubsystem.SwerveDrive;
+import frc.robot.debug.PoseEstimatorSubsystem.SwervePoseEstimator;
+import frc.robot.base.subsystems.swerve.SwerveDriveSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -21,7 +21,7 @@ public class SimplePathPlanner extends SequentialCommandGroup {
   ChoreoTrajectory traj;
 
   /** Creates a new SimplePathPlanner. */
-  public SimplePathPlanner(SwervePoseEstimator poseEstimator, SwerveDrive m_robotDrive) {
+  public SimplePathPlanner(SwervePoseEstimator poseEstimator, SwerveDriveSubsystem m_robotDrive) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
 

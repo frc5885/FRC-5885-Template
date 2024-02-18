@@ -2,15 +2,14 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems.SwerveDriveSubsystem;
+package frc.robot.base.modules.swerve;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
-import frc.robot.Constants.SwerveConstants;
 
 /** Add your docs here. */
-public class SwerveModuleSim implements SwerveModuleIO {
+public class SimulatedSwerveModule implements SwerveModule {
 
   private FlywheelSim m_driveMotor = new FlywheelSim(DCMotor.getNEO(1), 6.75, 0.025);
 
@@ -26,7 +25,7 @@ public class SwerveModuleSim implements SwerveModuleIO {
 
   private boolean m_absoluteEncoderReversed;
 
-  public SwerveModuleSim(boolean isReversed) {
+  public SimulatedSwerveModule(boolean isReversed) {
 
     m_driveDistance = 0.0;
     m_driveVelocity = 0.0;
@@ -40,13 +39,13 @@ public class SwerveModuleSim implements SwerveModuleIO {
     m_absoluteEncoderReversed = isReversed;
   }
 
-  public void updateInputs(SwerveModuleIOInputs inputs) {
+  public void updateInputs(SwerveModuleInput inputs) {
     m_driveMotor.update(0.02);
     m_turnMotor.update(0.02);
 
     m_driveVelocity =
         m_driveMotor.getAngularVelocityRadPerSec()
-            * SwerveConstants.ModuleConstants.kWheelDiameterMeters;
+            * SwerveConstants.Module.kWheelDiameterMeters;
     m_driveDistance += m_driveVelocity * 0.02;
 
     m_turnAngleVelocity = m_turnMotor.getAngularVelocityRadPerSec();

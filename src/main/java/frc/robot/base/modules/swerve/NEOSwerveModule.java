@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems.SwerveDriveSubsystem;
+package frc.robot.base.modules.swerve;
 
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -12,11 +12,10 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.RobotController;
-import frc.robot.Constants.SwerveConstants;
-import frc.robot.utils.SparkMaxConfigurer;
+import frc.robot.base.utils.SparkMaxConfigurer;
 
 /** Add your docs here. */
-public class SwerveModuleNEO implements SwerveModuleIO {
+public class NEOSwerveModule implements SwerveModule {
 
   private CANSparkMax m_driveMotor;
   private CANSparkMax m_turnMotor;
@@ -27,7 +26,7 @@ public class SwerveModuleNEO implements SwerveModuleIO {
   private final RelativeEncoder m_driveDefaultEncoder;
   private final RelativeEncoder m_turnRelativeEncoder;
 
-  public SwerveModuleNEO(
+  public NEOSwerveModule(
       int driveMotorId,
       int turnMotorId,
       int turnAbsoluteEncoderId,
@@ -58,19 +57,19 @@ public class SwerveModuleNEO implements SwerveModuleIO {
     // This sets the conversion factor in the spark max, apparently
     // this can cause some issues. Needs investigating.
     m_driveDefaultEncoder.setPositionConversionFactor(
-        SwerveConstants.ModuleConstants.kDriveEncoderRot2Meter);
+        SwerveConstants.Module.kDriveEncoderRot2Meter);
     m_driveDefaultEncoder.setVelocityConversionFactor(
-        SwerveConstants.ModuleConstants.kDriveEncoderRPM2MeterPerSec);
+        SwerveConstants.Module.kDriveEncoderRPM2MeterPerSec);
 
     m_turnRelativeEncoder.setPositionConversionFactor(
-        SwerveConstants.ModuleConstants.kTurningEncoderRot2Rad);
+        SwerveConstants.Module.kTurningEncoderRot2Rad);
     m_turnRelativeEncoder.setVelocityConversionFactor(
-        SwerveConstants.ModuleConstants.kTurningEncoderRPM2RadPerSec);
+        SwerveConstants.Module.kTurningEncoderRPM2RadPerSec);
 
     m_turnRelativeEncoder.setPosition(getAbsoluteEncoderValue().getRadians());
   }
 
-  public void updateInputs(SwerveModuleIOInputs inputs) {
+  public void updateInputs(SwerveModuleInput inputs) {
 
     inputs.drivePositionMeters = m_driveDefaultEncoder.getPosition();
     inputs.driveVelocityMetersPerSec = m_driveDefaultEncoder.getVelocity();
@@ -90,7 +89,7 @@ public class SwerveModuleNEO implements SwerveModuleIO {
 
     inputs.turnVelocityRadPerSec =
         Units.rotationsPerMinuteToRadiansPerSecond(m_turnRelativeEncoder.getVelocity())
-            / (1 / SwerveConstants.ModuleConstants.kTurningMotorGearRatio);
+            / (1 / SwerveConstants.Module.kTurningMotorGearRatio);
 
     inputs.turnTemperature = m_turnMotor.getMotorTemperature();
     inputs.turnCurrent = m_turnMotor.getOutputCurrent();

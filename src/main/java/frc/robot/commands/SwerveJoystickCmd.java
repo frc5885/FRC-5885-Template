@@ -13,17 +13,16 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.ControllerConstants;
-import frc.robot.Constants.SwerveConstants;
-import frc.robot.subsystems.PoseEstimatorSubsystem.SwervePoseEstimator;
-import frc.robot.subsystems.SwerveDriveSubsystem.SwerveDrive;
+import frc.robot.base.modules.swerve.SwerveConstants;
+import frc.robot.debug.PoseEstimatorSubsystem.SwervePoseEstimator;
+import frc.robot.base.subsystems.swerve.SwerveDriveSubsystem;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class SwerveJoystickCmd extends Command {
 
-  private final SwerveDrive m_swerveSubsystem;
+  private final SwerveDriveSubsystem m_swerveSubsystem;
   private final SwervePoseEstimator m_poseEstimator;
   private final Supplier<Double> m_xDrivePercentFunction,
       m_yDrivePercentFunction,
@@ -48,7 +47,7 @@ public class SwerveJoystickCmd extends Command {
 
   /** Creates a new SwerveJoystickCmd. */
   public SwerveJoystickCmd(
-      SwerveDrive swerveSubsystem,
+      SwerveDriveSubsystem swerveSubsystem,
       SwervePoseEstimator poseEstimator,
       Supplier<Double> xDrivePercentFunction,
       Supplier<Double> yDrivePercentFunction,
@@ -83,7 +82,7 @@ public class SwerveJoystickCmd extends Command {
     // Ideally we would normalize the values but the max values
     // are not always the same on every controller and position.
     double magnitude = MathUtil.clamp(Math.hypot(xDir, yDir), -1.0, 1.0);
-    magnitude = MathUtil.applyDeadband(magnitude, ControllerConstants.kSwerveDriveDeadband);
+    magnitude = MathUtil.applyDeadband(magnitude, SwerveConstants.kSwerveDriveDeadband);
 
     // Square the magnitude (0-1), this gives us better control at slow speeds and
     // lets us go fast when we want to. This is a per person preferance and might
@@ -97,7 +96,7 @@ public class SwerveJoystickCmd extends Command {
     // Rotation speed stuff
     double angularVelocity =
         MathUtil.applyDeadband(
-                m_turnDrivePercentFunction.get(), ControllerConstants.kSwerveDriveDeadband)
+                m_turnDrivePercentFunction.get(), SwerveConstants.kSwerveDriveDeadband)
             * SwerveConstants.kMaxSpeedAngularRadiansPerSecond
             * m_angularSpeedLimitChooser.get();
 

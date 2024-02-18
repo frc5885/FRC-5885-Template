@@ -1,4 +1,4 @@
-package frc.robot.utils;
+package frc.robot.base.utils;
 
 import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
 import com.revrobotics.CANSparkMax;

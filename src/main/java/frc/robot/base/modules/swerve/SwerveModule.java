@@ -2,14 +2,14 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems.SwerveDriveSubsystem;
+package frc.robot.base.modules.swerve;
 
 import org.littletonrobotics.junction.AutoLog;
 
-public interface SwerveModuleIO {
+public interface SwerveModule {
 
   @AutoLog
-  public static class SwerveModuleIOInputs {
+  class SwerveModuleInput {
     public double drivePositionMeters = 0.0;
     public double driveVelocityMetersPerSec = 0.0;
     public double driveTemperatureCelsius = 0.0;
@@ -25,13 +25,13 @@ public interface SwerveModuleIO {
     public double turnAbsolutePositionRad = 0.0;
   }
 
-  public default void updateInputs(SwerveModuleIOInputs inputs) {}
+  default void updateInputs(SwerveModuleInput inputs) {}
 
-  public default void setDriveVoltage(double volts) {}
+  default void setDriveVoltage(double volts) {}
 
-  public default void setTurnVoltage(double volts) {}
+  default void setTurnVoltage(double volts) {}
 
-  public default void setDriveBrakeMode(boolean state) {}
+  default void setDriveBrakeMode(boolean state) {}
 
-  public default void setTurnBrakeMode(boolean enabled) {}
+  default void setTurnBrakeMode(boolean enabled) {}
 }

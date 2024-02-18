@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems.PoseEstimatorSubsystem;
+package frc.robot.debug.PoseEstimatorSubsystem;
 
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -15,8 +15,8 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.AutoConstants.PoseEstimatorConstants;
-import frc.robot.Constants.SwerveConstants;
-import frc.robot.subsystems.SwerveDriveSubsystem.SwerveDrive;
+import frc.robot.base.modules.swerve.SwerveConstants;
+import frc.robot.base.subsystems.swerve.SwerveDriveSubsystem;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
@@ -27,7 +27,7 @@ public class SwervePoseEstimator extends SubsystemBase {
 
   private final SwerveDrivePoseEstimator m_poseEstimator;
 
-  private final SwerveDrive m_swerveDrive;
+  private final SwerveDriveSubsystem m_swerveDrive;
 
   private final NoodleVision m_noodleVision1;
 
@@ -38,7 +38,7 @@ public class SwervePoseEstimator extends SubsystemBase {
   private final Transform3d[] m_cameraPoses = {PoseEstimatorConstants.kCameraPositionMeters[0]};
 
   /** Creates a new TankDrivePoseEstimator. */
-  public SwervePoseEstimator(SwerveDrive swerveDrive) {
+  public SwervePoseEstimator(SwerveDriveSubsystem swerveDrive) {
 
     m_rotationSupplier = swerveDrive::getRotation2d;
     m_swerveModulePositionSupplier = swerveDrive::getModulePositions;
@@ -55,6 +55,7 @@ public class SwervePoseEstimator extends SubsystemBase {
     m_swerveDrive = swerveDrive;
 
     m_noodleVision1 = new NoodleVision(0);
+    reset();
   }
 
   @Override
@@ -165,5 +166,9 @@ public class SwervePoseEstimator extends SubsystemBase {
     m_swerveDrive.resetGyro();
     m_poseEstimator.resetPosition(
         m_rotationSupplier.get(), m_swerveModulePositionSupplier.get(), newPos);
+  }
+
+  public void reset() {
+    reset(new Pose2d(0, 0, new Rotation2d()));
   }
 }

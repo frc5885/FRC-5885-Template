@@ -1,64 +1,63 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.configs.*;
-import com.ctre.phoenix6.hardware.*;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import com.ctre.phoenix6.hardware.TalonFX;
+import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import frc.robot.Constants;
+import frc.robot.base.subsystems.SubsystemAction;
+import frc.robot.base.subsystems.WCStaticSubsystem;
+
+import java.util.List;
 
 // NEXT STEPS
 // add encoder limits
 // maybe set position function
 
-public class WristSubsystem extends SubsystemBase {
-
-  enum WristAction {
-    ON,
-    OFF;
-  }
+public class WristSubsystem extends WCStaticSubsystem {
 
   // Buffer is value slightly above 0 to ensure doesn't smack
-  private double buffer = 0.0;
-
-  private WristAction startAction = WristAction.OFF;
-  private WristAction backAction = WristAction.OFF;
+  private final double buffer = 0.0;
 
   private TalonFX m_wrist;
-  private double m_speed = 0.1;
 
-  /** Creates a new Shooter. */
-  public WristSubsystem() {
+  @Override
+  protected double getBaseSpeed() {
+    return 0.1;
+  }
+
+  @Override
+  protected List<MotorController> initMotors() {
     m_wrist = new TalonFX(Constants.kWrist);
     // m_arm.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 1, 0);
     // TalonFXConfiguration config = new TalonFXConfiguration();
+    return List.of(m_wrist);
   }
 
   @Override
   public void periodic() {
-    System.out.println("Wrist Position" + m_wrist.getPosition().getValueAsDouble());
-    if (startAction == WristAction.ON
-        && m_wrist.getPosition().getValueAsDouble() > Constants.kArmEncoderMin + buffer) {
-      m_wrist.setVoltage(m_speed * 12.0);
-    } else if (backAction == WristAction.ON
-        && m_wrist.getPosition().getValueAsDouble() < Constants.kArmEncoderMax - buffer) {
-      m_wrist.setVoltage(m_speed * -12.0);
+    if (subsystemAction == SubsystemAction.FORWARD && !isAtUpperLimit()) {
+      forwardMotors();
+    } else if (subsystemAction == SubsystemAction.REVERSE && !isAtLowerLimit()) {
+      reverseMotors();
     } else {
-      m_wrist.setVoltage(0.0);
+      stopMotors();
     }
   }
 
-  public void startButton(boolean isPressed) {
-    if (isPressed) {
-      startAction = WristAction.ON;
-    } else {
-      startAction = WristAction.OFF;
-    }
+  private boolean isAtUpperLimit() {
+    double armPosition = m_wrist.getPosition().getValueAsDouble();
+    return armPosition >= Constants.kWristEncoderMax + buffer;
   }
 
-  public void backButton(boolean isPressed) {
-    if (isPressed) {
-      backAction = WristAction.ON;
-    } else {
-      backAction = WristAction.OFF;
-    }
+  private boolean isAtLowerLimit() {
+    double armPosition = m_wrist.getPosition().getValueAsDouble();
+    return armPosition <= Constants.kWristEncoderMin - buffer;
+  }
+
+  public void forward() {
+    subsystemAction = SubsystemAction.FORWARD;
+  }
+
+  public void reverse() {
+    subsystemAction = SubsystemAction.REVERSE;
   }
 }

@@ -2,33 +2,52 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import frc.robot.Constants;
-import frc.robot.components.Beambreak;
+import frc.robot.base.io.Beambreak;
+import frc.robot.base.subsystems.SubsystemAction;
+import frc.robot.base.subsystems.WCStaticSubsystem;
 
-public class FeederSubsystem extends SubsystemBase {
+import java.util.Arrays;
+import java.util.List;
+
+public class FeederSubsystem extends WCStaticSubsystem {
 
   private CANSparkMax m_feeder;
-  private double m_speed = 0.0;
   private Beambreak m_beambreak;
 
-  /** Creates a new Shooter. */
+  @Override
+  protected double getBaseSpeed() {
+    return 0.5;
+  }
+
   public FeederSubsystem(Beambreak m_beambreak) {
-    m_feeder = new CANSparkMax(Constants.kFeeder, MotorType.kBrushless);
+    super();
     this.m_beambreak = m_beambreak;
   }
 
   @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-    m_feeder.setVoltage(m_speed * 12.0);
+  protected List<MotorController> initMotors() {
+    m_feeder = new CANSparkMax(Constants.kFeeder, MotorType.kBrushless);
+    return List.of(m_feeder);
   }
 
-  public void feedShooter(boolean isFromDriver) {
-    if (isFromDriver || !m_beambreak.isBroken()) {
-      m_speed = 0.5;
+  @Override
+  public void periodic() {
+    if (subsystemAction == SubsystemAction.INTAKE || m_beambreak.isOpen()) {
+      forwardMotors();
+    } else if (subsystemAction == SubsystemAction.OUTTAKE) {
+      reverseMotors();
     } else {
-      m_speed = 0.0;
+      stopMotors();
     }
+  }
+
+  public void intake() {
+    subsystemAction = SubsystemAction.INTAKE;
+  }
+
+  public void outtake() {
+    subsystemAction = SubsystemAction.OUTTAKE;
   }
 }
