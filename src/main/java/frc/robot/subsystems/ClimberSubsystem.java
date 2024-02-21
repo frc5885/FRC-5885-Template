@@ -37,11 +37,19 @@ public class ClimberSubsystem extends WCDualSubsystem {
   }
 
   public void leftStickPosition(double leftPosition) {
-    speed1 = leftPosition;
+    if (Math.abs(leftPosition) > Constants.kOperatorLeftDeadzone) {
+      speed1 = leftPosition;
+    } else {
+      speed1 = 0.0;
+    }
   }
 
   public void rightStickPosition(double rightPosition) {
-    speed2 = rightPosition;
+    if (Math.abs(rightPosition) > Constants.kOperatorRightDeadzone) {
+      speed2 = rightPosition;
+    } else {
+      speed2 = 0.0;
+    }
   }
 
   @Override

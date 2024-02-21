@@ -5,7 +5,6 @@ import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import frc.robot.Constants;
 import frc.robot.base.io.Beambreak;
-import frc.robot.base.subsystems.SubsystemAction;
 import frc.robot.base.subsystems.WCStaticSubsystem;
 import java.util.List;
 

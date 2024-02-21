@@ -20,4 +20,8 @@ public final class Constants {
   // Wrist Encoder Max And Min
   public static final double kWristEncoderMax = 1.0;
   public static final double kWristEncoderMin = 0.0;
+
+  // Climber Deadzones
+  public static final double kOperatorRightDeadzone = 0.02;
+  public static final double kOperatorLeftDeadzone = 0.02;
 }
