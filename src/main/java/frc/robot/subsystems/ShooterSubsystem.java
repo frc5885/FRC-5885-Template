@@ -38,19 +38,9 @@ public class ShooterSubsystem extends WCStaticSubsystem {
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
-    // if (!m_beambreak.isBroken()) {
-    //   m_top.setVoltage(0);
-    //   m_bottom.setVoltage(0);
-    // } else {
-    //   m_top.setVoltage(m_speed * 12);
-    //   m_bottom.setVoltage(m_speed * -12);
-    // }
 
-    if (subsystemAction == SubsystemAction.INTAKE || m_beambreak.isBroken()) {
+    if (m_beambreak.isBroken()) {
       forwardMotors();
-    } else if (subsystemAction == SubsystemAction.OUTTAKE) {
-      reverseMotors();
     } else {
       stopMotors();
     }

@@ -10,6 +10,7 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.WristSubsystem;
 
 public class Robot extends WCRobot {
@@ -20,6 +21,7 @@ public class Robot extends WCRobot {
   FeederSubsystem m_feederSubsystem;
   IntakeSubsystem m_intakeSubsystem;
   ClimberSubsystem m_climberSubsystem;
+  ShooterSubsystem m_shooterSubsystem;
 
   @Override
   protected void initComponents() {
@@ -33,6 +35,7 @@ public class Robot extends WCRobot {
     m_wristSubsystem = new WristSubsystem();
     m_feederSubsystem = new FeederSubsystem(m_beambreak);
     m_climberSubsystem = new ClimberSubsystem();
+    m_shooterSubsystem = new ShooterSubsystem(m_beambreak);
   }
 
   @Override

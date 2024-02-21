@@ -50,7 +50,7 @@ public class IntakeSubsystem extends WCStaticSubsystem {
     //   m_right.setVoltage(m_speed * -12);
     // }
 
-    if (subsystemAction == SubsystemAction.INTAKE || m_beambreak.isBroken()) {
+    if (subsystemAction == SubsystemAction.INTAKE || m_beambreak.isOpen()) {
       forwardMotors();
     } else if (subsystemAction == SubsystemAction.OUTTAKE) {
       reverseMotors();
