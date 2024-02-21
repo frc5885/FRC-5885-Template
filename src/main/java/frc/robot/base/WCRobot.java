@@ -26,17 +26,14 @@ public abstract class WCRobot {
     m_swerveDrive = new SwerveDriveSubsystem();
     m_swervePoseEstimator = new SwervePoseEstimator(m_swerveDrive);
     m_operatorController = new OperatorController();
-    m_driverController = new DriverController(
-        new InstantCommand(
-            () -> {
-              m_swerveDrive.resetGyro();
-              m_swervePoseEstimator.reset();
-            }
-        ),
-        new InstantCommand(
-            () -> m_isFieldOriented = !m_isFieldOriented
-        )
-    );
+    m_driverController =
+        new DriverController(
+            new InstantCommand(
+                () -> {
+                  m_swerveDrive.resetGyro();
+                  m_swervePoseEstimator.reset();
+                }),
+            new InstantCommand(() -> m_isFieldOriented = !m_isFieldOriented));
 
     initComponents();
     initSubsystems();
@@ -53,13 +50,14 @@ public abstract class WCRobot {
             () -> -m_driverController.getLeftY(),
             () -> -m_driverController.getLeftX(),
             () -> -m_driverController.getRightX(),
-            () -> m_isFieldOriented
-        )
-    );
+            () -> m_isFieldOriented));
   }
 
   protected abstract void initComponents();
+
   protected abstract void initSubsystems();
+
   protected abstract void initDriverControllerBindings(DriverController m_driverController);
+
   protected abstract void initOperatorControllerBindings(OperatorController m_operatorController);
 }

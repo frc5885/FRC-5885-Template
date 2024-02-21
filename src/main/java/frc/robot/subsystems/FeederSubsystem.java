@@ -7,8 +7,6 @@ import frc.robot.Constants;
 import frc.robot.base.io.Beambreak;
 import frc.robot.base.subsystems.SubsystemAction;
 import frc.robot.base.subsystems.WCStaticSubsystem;
-
-import java.util.Arrays;
 import java.util.List;
 
 public class FeederSubsystem extends WCStaticSubsystem {

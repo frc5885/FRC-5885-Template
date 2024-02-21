@@ -2,8 +2,6 @@ package frc.robot.base.subsystems;
 
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
-import java.util.Arrays;
 import java.util.List;
 
 public abstract class WCStaticSubsystem extends SubsystemBase {
@@ -13,6 +11,7 @@ public abstract class WCStaticSubsystem extends SubsystemBase {
   private final List<MotorController> motors;
 
   protected abstract double getBaseSpeed();
+
   protected abstract List<MotorController> initMotors();
 
   protected WCStaticSubsystem() {
@@ -23,19 +22,19 @@ public abstract class WCStaticSubsystem extends SubsystemBase {
     subsystemAction = null;
   }
 
-  final protected void forwardMotors() {
+  protected final void forwardMotors() {
     for (MotorController motor : motors) {
       motor.setVoltage(getBaseSpeed() * baseVoltage);
     }
   }
 
-  final protected void reverseMotors() {
+  protected final void reverseMotors() {
     for (MotorController motor : motors) {
       motor.setVoltage(-getBaseSpeed() * baseVoltage);
     }
   }
 
-  final protected void stopMotors() {
+  protected final void stopMotors() {
     for (MotorController motor : motors) {
       motor.setVoltage(0);
     }

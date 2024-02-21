@@ -10,8 +10,8 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.debug.PoseEstimatorSubsystem.SwervePoseEstimator;
 import frc.robot.base.subsystems.swerve.SwerveDriveSubsystem;
+import frc.robot.debug.PoseEstimatorSubsystem.SwervePoseEstimator;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:

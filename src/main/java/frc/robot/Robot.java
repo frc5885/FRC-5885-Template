@@ -5,7 +5,9 @@ import frc.robot.base.WCRobot;
 import frc.robot.base.io.Beambreak;
 import frc.robot.base.io.DriverController;
 import frc.robot.base.io.OperatorController;
+import frc.robot.commands.ClimberCommand;
 import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.WristSubsystem;
@@ -17,6 +19,7 @@ public class Robot extends WCRobot {
   WristSubsystem m_wristSubsystem;
   FeederSubsystem m_feederSubsystem;
   IntakeSubsystem m_intakeSubsystem;
+  ClimberSubsystem m_climberSubsystem;
 
   @Override
   protected void initComponents() {
@@ -29,59 +32,45 @@ public class Robot extends WCRobot {
     m_armSubsystem = new ArmSubsystem();
     m_wristSubsystem = new WristSubsystem();
     m_feederSubsystem = new FeederSubsystem(m_beambreak);
+    m_climberSubsystem = new ClimberSubsystem();
   }
 
   @Override
   protected void initDriverControllerBindings(DriverController m_driverController) {
 
     // Feeder
-    m_driverController.getAButton()
+    m_driverController
+        .getAButton()
         .whileTrue(
-            new StartEndCommand(
-                () -> m_feederSubsystem.intake(),
-                () -> m_feederSubsystem.stop()
-            )
-        );
+            new StartEndCommand(() -> m_feederSubsystem.intake(), () -> m_feederSubsystem.stop()));
 
     // Arm - Up
-    m_driverController.getRightBumper()
-        .whileTrue(
-            new StartEndCommand(
-                () -> m_armSubsystem.up(),
-                () -> m_armSubsystem.stop()
-            )
-        );
+    m_driverController
+        .getRightBumper()
+        .whileTrue(new StartEndCommand(() -> m_armSubsystem.up(), () -> m_armSubsystem.stop()));
 
     // Arm - Down
-    m_driverController.getLeftBumper()
-        .whileTrue(
-            new StartEndCommand(
-                () -> m_armSubsystem.down(),
-                () -> m_armSubsystem.stop()
-            )
-        );
+    m_driverController
+        .getLeftBumper()
+        .whileTrue(new StartEndCommand(() -> m_armSubsystem.down(), () -> m_armSubsystem.stop()));
 
     // Wrist - Forward
-    m_driverController.getStartButton()
+    m_driverController
+        .getStartButton()
         .whileTrue(
-            new StartEndCommand(
-                () -> m_wristSubsystem.forward(),
-                () -> m_wristSubsystem.stop()
-            )
-        );
+            new StartEndCommand(() -> m_wristSubsystem.forward(), () -> m_wristSubsystem.stop()));
 
     // Wrist - Reverse
-    m_driverController.getBackButton()
+    m_driverController
+        .getBackButton()
         .whileTrue(
-            new StartEndCommand(
-                () -> m_wristSubsystem.reverse(),
-                () -> m_wristSubsystem.stop()
-            )
-        );
+            new StartEndCommand(() -> m_wristSubsystem.reverse(), () -> m_wristSubsystem.stop()));
   }
 
   @Override
   protected void initOperatorControllerBindings(OperatorController m_operatorController) {
 
+    m_climberSubsystem.setDefaultCommand(
+        new ClimberCommand(m_climberSubsystem, m_operatorController));
   }
 }
