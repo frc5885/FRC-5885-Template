@@ -1,5 +1,7 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.robot.base.WCRobot;
 import frc.robot.base.io.Beambreak;
@@ -75,5 +77,11 @@ public class Robot extends WCRobot {
 
     m_climberSubsystem.setDefaultCommand(
         new ClimberCommand(m_climberSubsystem, m_operatorController));
+
+    // Arm ToPos
+    m_operatorController
+        .getYButton()
+        .whileTrue(new InstantCommand(() -> m_armSubsystem.toPos(Constants.kWristAmp)));
+
   }
 }

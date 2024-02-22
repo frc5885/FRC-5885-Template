@@ -9,6 +9,8 @@ import frc.robot.base.subsystems.SubsystemAction;
 import frc.robot.base.subsystems.WCStaticSubsystem;
 import java.util.List;
 
+import org.littletonrobotics.junction.Logger;
+
 public class FeederSubsystem extends WCStaticSubsystem {
 
   private CANSparkMax m_feeder;
@@ -39,6 +41,7 @@ public class FeederSubsystem extends WCStaticSubsystem {
     } else {
       stopMotors();
     }
+    Logger.recordOutput("feeder", m_feeder.getAppliedOutput());
   }
 
   public void intake() {

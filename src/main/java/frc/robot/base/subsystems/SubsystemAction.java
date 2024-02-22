@@ -6,6 +6,7 @@ public enum SubsystemAction {
 
   UP,
   DOWN,
+  POS,
 
   FORWARD,
   REVERSE,

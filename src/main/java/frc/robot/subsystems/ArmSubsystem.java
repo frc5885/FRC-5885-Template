@@ -1,11 +1,16 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.*;
+
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import frc.robot.Constants;
 import frc.robot.base.subsystems.SubsystemAction;
 import frc.robot.base.subsystems.WCStaticSubsystem;
 import java.util.List;
+
+import org.littletonrobotics.junction.Logger;
 
 // NEXT STEPS
 // add encoder limits
@@ -17,6 +22,9 @@ public class ArmSubsystem extends WCStaticSubsystem {
   private final double buffer = 0.0;
 
   private TalonFX m_arm;
+  private PIDController m_PidController;
+  private double m_SetPoint;
+  // private Rotation2d m_SetPoint;
 
   @Override
   protected double getBaseSpeed() {
@@ -26,6 +34,8 @@ public class ArmSubsystem extends WCStaticSubsystem {
   @Override
   protected List<MotorController> initMotors() {
     m_arm = new TalonFX(Constants.kArm);
+    m_PidController = new PIDController(5.0, 0.0, 0.0);
+    // m_PidController.enableContinuousInput(-Math.PI, Math.PI);
     // m_arm.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 1, 0);
     // TalonFXConfiguration config = new TalonFXConfiguration();
     return List.of(m_arm);
@@ -33,14 +43,19 @@ public class ArmSubsystem extends WCStaticSubsystem {
 
   @Override
   public void periodic() {
-    //    System.out.println("Arm Position" + m_arm.getPosition().getValueAsDouble());
-    if (subsystemAction == SubsystemAction.UP && !isAtUpperLimit()) {
+    // System.out.println("Arm Position" + m_arm.getPosition().getValueAsDouble());
+    if (subsystemAction == SubsystemAction.UP /*&& !isAtUpperLimit()/* */) {
       forwardMotors();
-    } else if (subsystemAction == SubsystemAction.DOWN && !isAtLowerLimit()) {
+    } else if (subsystemAction == SubsystemAction.DOWN /* && !isAtLowerLimit()/* */) {
       reverseMotors();
+    } else if (subsystemAction == SubsystemAction.POS /*&& !isAtUpperLimit() && !isAtLowerLimit() /* */) {
+      // m_arm.setVoltage(m_PidController.calculate(m_arm.getPosition().getValue() * 2 * Math.PI, m_SetPoint.getRadians()));
+      m_arm.setVoltage(m_PidController.calculate(m_arm.getPosition().getValue(), m_SetPoint));
     } else {
       stopMotors();
     }
+    Logger.recordOutput("armOutput", m_arm.getMotorVoltage().getValueAsDouble());
+    Logger.recordOutput("armPosition", m_arm.getPosition().getValueAsDouble());
   }
 
   private boolean isAtUpperLimit() {
@@ -59,5 +74,14 @@ public class ArmSubsystem extends WCStaticSubsystem {
 
   public void down() {
     subsystemAction = SubsystemAction.DOWN;
+  }
+
+  // public void toPos(Rotation2d desired) {
+  //   subsystemAction = SubsystemAction.POS;
+  //   m_SetPoint = desired;
+  // }
+  public void toPos(double desired) {
+    subsystemAction = SubsystemAction.POS;
+    m_SetPoint = desired;
   }
 }

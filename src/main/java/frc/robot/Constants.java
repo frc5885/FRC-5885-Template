@@ -13,15 +13,20 @@ public final class Constants {
   public static final int kClimberLeft = 55;
   public static final int kClimberRight = 56;
 
-  // Arm Encoder Max And Min
+  // Arm Encoder Stuff
   public static final double kArmEncoderMax = 1.0;
   public static final double kArmEncoderMin = 0.0;
+  public static final double kArmStow = 0.0;
+  public static final double kArmAmp = 1000.0;
 
-  // Wrist Encoder Max And Min
+  // Wrist Encoder Stuff
   public static final double kWristEncoderMax = 1.0;
   public static final double kWristEncoderMin = 0.0;
+  public static final double kWristStow = 0.0;
+  public static final double kWristAmp = 0.0;
 
   // Climber Deadzones
   public static final double kOperatorRightDeadzone = 0.02;
   public static final double kOperatorLeftDeadzone = 0.02;
+  
 }
