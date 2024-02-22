@@ -81,7 +81,7 @@ public class Robot extends WCRobot {
     // Arm ToPos
     m_operatorController
         .getYButton()
-        .whileTrue(new InstantCommand(() -> m_armSubsystem.toPos(Constants.kWristAmp)));
+        .whileTrue(new InstantCommand(() -> m_armSubsystem.toPos(Rotation2d.fromRadians(Math.PI/2))));
 
   }
 }

@@ -23,8 +23,7 @@ public class ArmSubsystem extends WCStaticSubsystem {
 
   private TalonFX m_arm;
   private PIDController m_PidController;
-  private double m_SetPoint;
-  // private Rotation2d m_SetPoint;
+  private Rotation2d m_SetPoint;
 
   @Override
   protected double getBaseSpeed() {
@@ -35,7 +34,7 @@ public class ArmSubsystem extends WCStaticSubsystem {
   protected List<MotorController> initMotors() {
     m_arm = new TalonFX(Constants.kArm);
     m_PidController = new PIDController(5.0, 0.0, 0.0);
-    // m_PidController.enableContinuousInput(-Math.PI, Math.PI);
+    m_PidController.enableContinuousInput(-Math.PI, Math.PI);
     // m_arm.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 1, 0);
     // TalonFXConfiguration config = new TalonFXConfiguration();
     return List.of(m_arm);
@@ -44,13 +43,12 @@ public class ArmSubsystem extends WCStaticSubsystem {
   @Override
   public void periodic() {
     // System.out.println("Arm Position" + m_arm.getPosition().getValueAsDouble());
-    if (subsystemAction == SubsystemAction.UP /*&& !isAtUpperLimit()/* */) {
+    if (subsystemAction == SubsystemAction.UP && !isAtUpperLimit()) {
       forwardMotors();
-    } else if (subsystemAction == SubsystemAction.DOWN /* && !isAtLowerLimit()/* */) {
+    } else if (subsystemAction == SubsystemAction.DOWN && !isAtLowerLimit()) {
       reverseMotors();
-    } else if (subsystemAction == SubsystemAction.POS /*&& !isAtUpperLimit() && !isAtLowerLimit() /* */) {
-      // m_arm.setVoltage(m_PidController.calculate(m_arm.getPosition().getValue() * 2 * Math.PI, m_SetPoint.getRadians()));
-      m_arm.setVoltage(m_PidController.calculate(m_arm.getPosition().getValue(), m_SetPoint));
+    } else if (subsystemAction == SubsystemAction.POS && !isAtUpperLimit() && !isAtLowerLimit()) {
+      m_arm.setVoltage(m_PidController.calculate(m_arm.getPosition().getValue() * 2 * Math.PI, m_SetPoint.getRadians()));
     } else {
       stopMotors();
     }
@@ -76,11 +74,7 @@ public class ArmSubsystem extends WCStaticSubsystem {
     subsystemAction = SubsystemAction.DOWN;
   }
 
-  // public void toPos(Rotation2d desired) {
-  //   subsystemAction = SubsystemAction.POS;
-  //   m_SetPoint = desired;
-  // }
-  public void toPos(double desired) {
+  public void toPos(Rotation2d desired) {
     subsystemAction = SubsystemAction.POS;
     m_SetPoint = desired;
   }
