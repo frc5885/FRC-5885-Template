@@ -42,6 +42,7 @@ public class ArmSubsystem extends WCStaticSubsystem {
 
   @Override
   public void periodic() {
+    Logger.recordOutput("armmoving", false);
     // System.out.println("Arm Position" + m_arm.getPosition().getValueAsDouble());
     if (subsystemAction == SubsystemAction.UP && !isAtUpperLimit()) {
       forwardMotors();
@@ -49,10 +50,10 @@ public class ArmSubsystem extends WCStaticSubsystem {
       reverseMotors();
     } else if (subsystemAction == SubsystemAction.POS && !isAtUpperLimit() && !isAtLowerLimit()) {
       m_arm.setVoltage(m_PidController.calculate(m_arm.getPosition().getValue() * 2 * Math.PI, m_SetPoint.getRadians()));
+      Logger.recordOutput("armmoving", true);
     } else {
       stopMotors();
     }
-    Logger.recordOutput("armOutput", m_arm.getMotorVoltage().getValueAsDouble());
     Logger.recordOutput("armPosition", m_arm.getPosition().getValueAsDouble());
   }
 

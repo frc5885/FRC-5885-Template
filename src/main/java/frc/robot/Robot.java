@@ -79,9 +79,13 @@ public class Robot extends WCRobot {
         new ClimberCommand(m_climberSubsystem, m_operatorController));
 
     // Arm ToPos
-    m_operatorController
-        .getYButton()
-        .whileTrue(new InstantCommand(() -> m_armSubsystem.toPos(Rotation2d.fromRadians(Math.PI/2))));
+    // m_operatorController
+    //     .getYButton()
+    //     .whileTrue(new InstantCommand(() -> m_armSubsystem.toPos(Rotation2d.fromRadians(Math.PI/2))));
 
+    m_operatorController
+          .getYButton()
+          .whileTrue(
+            new StartEndCommand(() -> m_armSubsystem.toPos(Rotation2d.fromRadians(Math.PI/2)), () -> m_armSubsystem.stop()));
   }
 }
