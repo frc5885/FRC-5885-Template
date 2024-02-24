@@ -24,7 +24,7 @@ public class ArmSubsystem extends WCStaticSubsystem {
 
   @Override
   protected double getBaseSpeed() {
-    return 0.1;
+    return -0.1;
   }
 
   @Override

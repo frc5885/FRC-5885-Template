@@ -2,7 +2,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.base.WCRobot;
 import frc.robot.base.io.Beambreak;
 import frc.robot.base.io.DriverController;
@@ -62,8 +61,7 @@ public class Robot extends WCRobot {
     // Wrist - Forward
     m_driverController
         .getStartButton()
-        .whileTrue(
-            new StartEndCommand(() -> m_wristSubsystem.up(), () -> m_wristSubsystem.stop()));
+        .whileTrue(new StartEndCommand(() -> m_wristSubsystem.up(), () -> m_wristSubsystem.stop()));
 
     // Wrist - Reverse
     m_driverController
@@ -84,16 +82,31 @@ public class Robot extends WCRobot {
     // .whileTrue(new InstantCommand(
     // () -> m_armSubsystem.toPos(Rotation2d.fromRadians(Math.PI / 2))));
 
+    // Menglins code for keyboard simulation
+    // // Arm Up
+    // new JoystickButton(m_operatorController.getHID(), 1)
+    //     .whileTrue(new StartEndCommand(() -> m_armSubsystem.up(), () -> m_armSubsystem.stop()));
+
+    // // Arm Down
+    // new JoystickButton(m_operatorController.getHID(), 2)
+    //     .whileTrue(new StartEndCommand(() -> m_armSubsystem.down(), () ->
+    // m_armSubsystem.stop()));
+
+    // // Arm Pos
+    // new JoystickButton(m_operatorController.getHID(), 3)
+    //     .whileTrue(new InstantCommand(() -> m_armSubsystem.pos()));
+
     // Arm Up
-    new JoystickButton(m_operatorController.getHID(), 1)
+    m_operatorController
+        .getAButton()
         .whileTrue(new StartEndCommand(() -> m_armSubsystem.up(), () -> m_armSubsystem.stop()));
 
-    // Arm Down
-    new JoystickButton(m_operatorController.getHID(), 2)
+    // Arm down
+    m_operatorController
+        .getBButton()
         .whileTrue(new StartEndCommand(() -> m_armSubsystem.down(), () -> m_armSubsystem.stop()));
 
     // Arm Pos
-    new JoystickButton(m_operatorController.getHID(), 3)
-        .whileTrue(new InstantCommand(() -> m_armSubsystem.pos()));
+    m_operatorController.getXButton().whileTrue(new InstantCommand(() -> m_armSubsystem.pos()));
   }
 }

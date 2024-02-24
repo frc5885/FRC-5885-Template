@@ -35,13 +35,13 @@ public class FeederSubsystem extends WCStaticSubsystem {
 
   @Override
   public void periodic() {
-    if (subsystemAction == SubsystemAction.INTAKE || m_beambreak.isOpen()) {
-      forwardMotors();
-    } else if (subsystemAction == SubsystemAction.OUTTAKE) {
-      reverseMotors();
-    } else {
-      stopMotors();
-    }
+    // if (subsystemAction == SubsystemAction.INTAKE || m_beambreak.isOpen()) {
+    //   forwardMotors();
+    // } else if (subsystemAction == SubsystemAction.OUTTAKE) {
+    //   reverseMotors();
+    // } else {
+    //   stopMotors();
+    // }
     // Logger.recordOutput("feeder", m_feeder.getAppliedOutput());
   }
 
