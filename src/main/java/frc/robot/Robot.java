@@ -63,13 +63,13 @@ public class Robot extends WCRobot {
     m_driverController
         .getStartButton()
         .whileTrue(
-            new StartEndCommand(() -> m_wristSubsystem.forward(), () -> m_wristSubsystem.stop()));
+            new StartEndCommand(() -> m_wristSubsystem.up(), () -> m_wristSubsystem.stop()));
 
     // Wrist - Reverse
     m_driverController
         .getBackButton()
         .whileTrue(
-            new StartEndCommand(() -> m_wristSubsystem.reverse(), () -> m_wristSubsystem.stop()));
+            new StartEndCommand(() -> m_wristSubsystem.down(), () -> m_wristSubsystem.stop()));
   }
 
   @Override
