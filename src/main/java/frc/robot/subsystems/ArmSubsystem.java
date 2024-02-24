@@ -32,7 +32,7 @@ public class ArmSubsystem extends WCStaticSubsystem {
   protected List<MotorController> initMotors() {
     m_arm = new TalonFX(Constants.kArm);
     m_PidController = new PIDController(1.0, 0.0, 0.0);
-    m_PidController.enableContinuousInput(0, 2* Math.PI);
+    m_PidController.enableContinuousInput(0, 2 * Math.PI);
     // m_arm.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 1, 0);
     // TalonFXConfiguration config = new TalonFXConfiguration();
     return List.of(m_arm);
