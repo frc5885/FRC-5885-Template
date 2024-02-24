@@ -107,6 +107,9 @@ public class Robot extends WCRobot {
         .whileTrue(new StartEndCommand(() -> m_armSubsystem.down(), () -> m_armSubsystem.stop()));
 
     // Arm Pos
-    m_operatorController.getXButton().whileTrue(new InstantCommand(() -> m_armSubsystem.pos()));
+    m_operatorController.getXButton().whileTrue(new InstantCommand(() -> m_armSubsystem.pos(Constants.kSetPoint)));
+
+    // Wrist Pos Amp
+    m_operatorController.getYButton().whileTrue(new InstantCommand(() -> m_wristSubsystem.pos(Constants.kWristAmp)));
   }
 }

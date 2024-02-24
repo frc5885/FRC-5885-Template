@@ -18,15 +18,19 @@ public final class Constants {
   // Arm Encoder Stuff
   public static final double kArmEncoderMax = Math.PI / 2;
   public static final double kArmEncoderMin = 0.0;
+  // The rotation 2d will have to be changed to doubles when we know our setpoint
   public static final Rotation2d kArmAmp = Rotation2d.fromRadians(kArmEncoderMax);
-  public static final Rotation2d kSetPoint = Rotation2d.fromRadians(Math.PI / 3);
+  public static final double kSetPoint = 0.2;
   public static final Rotation2d kArmStow = Rotation2d.fromRadians(kArmEncoderMin);
 
   // Wrist Encoder Stuff
-  public static final double kWristEncoderMax = 1.0;
-  public static final double kWristEncoderMin = 0.0;
-  public static final double kWristStow = 0.0;
-  public static final double kWristAmp = 0.0;
+  // STOW POS 0.168
+  // AMP POS 0.762
+  // ALL THE WAY DOWN -1.677
+  public static final double kWristEncoderMax = 0.762;
+  public static final double kWristEncoderMin = -1.677;
+  public static final double kWristStow = 0.168;
+  public static final double kWristAmp = 0.762;
 
   // Climber Deadzones
   public static final double kOperatorRightDeadzone = 0.02;

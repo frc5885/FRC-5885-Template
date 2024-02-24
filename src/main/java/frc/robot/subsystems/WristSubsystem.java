@@ -21,6 +21,7 @@ public class WristSubsystem extends WCStaticSubsystem {
 
   private TalonFX m_wrist;
   private PIDController m_PidController;
+  private double m_setPoint;
 
   @Override
   protected double getBaseSpeed() {
@@ -31,25 +32,30 @@ public class WristSubsystem extends WCStaticSubsystem {
   protected List<MotorController> initMotors() {
     m_wrist = new TalonFX(Constants.kWrist);
     m_PidController = new PIDController(1.0, 0.0, 0.0);
-    m_PidController.enableContinuousInput(-Math.PI, Math.PI);
+    m_PidController.enableContinuousInput(0, 2 * Math.PI);
     // m_arm.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 1, 0);
     // TalonFXConfiguration config = new TalonFXConfiguration();
     return List.of(m_wrist);
   }
 
+
+  //LOWER LIMIT ISNT ZERO IT WILL START IN AN IN BETWEEN
+  // STOW POS 0.168
+  // AMP POS 0.762
+  // ALL THE WAY DOWN -1.677
   @Override
   public void periodic() {
     System.out.println("Wrist Position" + m_wrist.getPosition().getValueAsDouble());
-    if (subsystemAction == SubsystemAction.UP /*&& isAtUpperLimit()/* */) {
+    if (subsystemAction == SubsystemAction.UP && isAtUpperLimit()) {
       forwardMotors();
-    } else if (subsystemAction == SubsystemAction.DOWN /*&& isAtLowerLimit()/* */) {
+    } else if (subsystemAction == SubsystemAction.DOWN && isAtLowerLimit()) {
       reverseMotors();
     } else if (subsystemAction == SubsystemAction.POS) {
       double measurement =
           RobotSystem.isReal()
               ? m_wrist.getPosition().getValueAsDouble() * 2 * Math.PI
               : positionSim;
-      double setpoint = Constants.kSetPoint.getRadians();
+      double setpoint = m_setPoint * 2 * Math.PI;
       m_wrist.setVoltage(m_PidController.calculate(measurement, setpoint));
       if (measurement == setpoint) {
         subsystemAction = null;
@@ -58,13 +64,13 @@ public class WristSubsystem extends WCStaticSubsystem {
       stopMotors();
     }
     positionSim += m_wrist.getMotorVoltage().getValueAsDouble() * 0.02;
-    Logger.recordOutput("armOutput", m_wrist.getMotorVoltage().getValueAsDouble());
+    Logger.recordOutput("wristOutput", m_wrist.getMotorVoltage().getValueAsDouble());
     Logger.recordOutput(
-        "armPosition",
+        "wristPosition",
         RobotSystem.isReal() ? m_wrist.getPosition().getValueAsDouble() : positionSim);
-    Logger.recordOutput("UP", subsystemAction == SubsystemAction.UP);
-    Logger.recordOutput("Down", subsystemAction == SubsystemAction.DOWN);
-    Logger.recordOutput("Pos", subsystemAction == SubsystemAction.POS);
+    Logger.recordOutput("wristUP", subsystemAction == SubsystemAction.UP);
+    Logger.recordOutput("wristDown", subsystemAction == SubsystemAction.DOWN);
+    Logger.recordOutput("wristPos", subsystemAction == SubsystemAction.POS);
   }
 
   private boolean isAtUpperLimit() {
@@ -95,7 +101,8 @@ public class WristSubsystem extends WCStaticSubsystem {
     subsystemAction = SubsystemAction.DOWN;
   }
 
-  public void pos() {
+  public void pos(double setpoint) {
+    m_setPoint = setpoint;
     subsystemAction = SubsystemAction.POS;
   }
 }
