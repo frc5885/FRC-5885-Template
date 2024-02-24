@@ -1,12 +1,7 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.SparkAbsoluteEncoder;
-import com.revrobotics.SparkAbsoluteEncoder.Type;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.DutyCycle;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import frc.robot.Constants;
 import frc.robot.base.RobotSystem;
@@ -53,7 +48,9 @@ public class WristSubsystem extends WCStaticSubsystem {
       reverseMotors();
     } else if (subsystemAction == SubsystemAction.POS) {
       double measurement =
-          RobotSystem.isReal() ? m_wrist.getPosition().getValueAsDouble() * 2 * Math.PI : positionSim;
+          RobotSystem.isReal()
+              ? m_wrist.getPosition().getValueAsDouble() * 2 * Math.PI
+              : positionSim;
       double setpoint = m_setPoint * 2 * Math.PI;
       m_wrist.setVoltage(m_PidController.calculate(measurement, setpoint));
       if (measurement == setpoint) {
@@ -65,19 +62,22 @@ public class WristSubsystem extends WCStaticSubsystem {
     positionSim += m_wrist.getMotorVoltage().getValueAsDouble() * 0.02;
     Logger.recordOutput("wristOutput", m_wrist.getMotorVoltage().getValueAsDouble());
     Logger.recordOutput(
-        "wristPosition", RobotSystem.isReal() ? m_wrist.getPosition().getValueAsDouble() : positionSim);
+        "wristPosition",
+        RobotSystem.isReal() ? m_wrist.getPosition().getValueAsDouble() : positionSim);
     Logger.recordOutput("wristUP", subsystemAction == SubsystemAction.UP);
     Logger.recordOutput("wristDown", subsystemAction == SubsystemAction.DOWN);
     Logger.recordOutput("wristPos", subsystemAction == SubsystemAction.POS);
   }
 
   private boolean isAtUpperLimit() {
-    double wristPosition = RobotSystem.isReal() ? m_wrist.getPosition().getValueAsDouble() : positionSim;
+    double wristPosition =
+        RobotSystem.isReal() ? m_wrist.getPosition().getValueAsDouble() : positionSim;
     return wristPosition < Constants.kWristEncoderMax + buffer;
   }
 
   private boolean isAtLowerLimit() {
-    double wristPosition = RobotSystem.isReal() ? m_wrist.getPosition().getValueAsDouble() : positionSim;
+    double wristPosition =
+        RobotSystem.isReal() ? m_wrist.getPosition().getValueAsDouble() : positionSim;
     return wristPosition > Constants.kWristEncoderMin - buffer;
   }
 

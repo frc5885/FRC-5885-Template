@@ -33,7 +33,7 @@ public final class Constants {
   public static final double kOperatorRightDeadzone = 0.02;
   public static final double kOperatorLeftDeadzone = 0.02;
   // public static final double kRightClimberMin =
-  // pulbic static final double kRightClimberMax = 
-  // public static final double kLeftClimberMin = 
-  // public static final doubel kLeftClimberMax = 
+  // pulbic static final double kRightClimberMax =
+  // public static final double kLeftClimberMin =
+  // public static final doubel kLeftClimberMax =
 }
