@@ -24,9 +24,6 @@ public final class Constants {
   public static final Rotation2d kArmStow = Rotation2d.fromRadians(kArmEncoderMin);
 
   // Wrist Encoder Stuff
-  // STOW POS 0.168
-  // AMP POS 0.762
-  // ALL THE WAY DOWN -1.677
   public static final double kWristEncoderMax = 0.762;
   public static final double kWristEncoderMin = -1.677;
   public static final double kWristStow = 0.168;
@@ -35,4 +32,8 @@ public final class Constants {
   // Climber Deadzones
   public static final double kOperatorRightDeadzone = 0.02;
   public static final double kOperatorLeftDeadzone = 0.02;
+  // public static final double kRightClimberMin =
+  // pulbic static final double kRightClimberMax = 
+  // public static final double kLeftClimberMin = 
+  // public static final doubel kLeftClimberMax = 
 }

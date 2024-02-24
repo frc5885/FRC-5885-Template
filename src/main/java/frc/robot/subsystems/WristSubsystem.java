@@ -5,6 +5,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.SparkAbsoluteEncoder.Type;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DutyCycle;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import frc.robot.Constants;
 import frc.robot.base.RobotSystem;
@@ -44,12 +45,9 @@ public class WristSubsystem extends WCStaticSubsystem {
   }
 
   // LOWER LIMIT ISNT ZERO IT WILL START IN AN IN BETWEEN
-  // STOW POS 0.168
-  // AMP POS 0.762
-  // ALL THE WAY DOWN -1.677
   @Override
   public void periodic() {
-    System.out.println("Wrist Position" + m_absoluteEncoder.getPosition());
+    // System.out.println("Wrist Position" + m_absoluteEncoder.getPosition());
     if (subsystemAction == SubsystemAction.UP && isAtUpperLimit()) {
       forwardMotors();
     } else if (subsystemAction == SubsystemAction.DOWN && isAtLowerLimit()) {
