@@ -4,10 +4,12 @@
 
 package frc.robot.base;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.base.io.DriverController;
 import frc.robot.base.io.OperatorController;
 import frc.robot.base.subsystems.swerve.SwerveDriveSubsystem;
+import frc.robot.commands.SimplePathPlanner;
 import frc.robot.commands.SwerveJoystickCmd;
 import frc.robot.debug.PoseEstimatorSubsystem.SwervePoseEstimator;
 
@@ -26,14 +28,13 @@ public abstract class WCRobot {
     m_swerveDrive = new SwerveDriveSubsystem();
     m_swervePoseEstimator = new SwervePoseEstimator(m_swerveDrive);
     m_operatorController = new OperatorController();
-    m_driverController =
-        new DriverController(
-            new InstantCommand(
-                () -> {
-                  m_swerveDrive.resetGyro();
-                  m_swervePoseEstimator.reset();
-                }),
-            new InstantCommand(() -> m_isFieldOriented = !m_isFieldOriented));
+    m_driverController = new DriverController(
+        new InstantCommand(
+            () -> {
+              m_swerveDrive.resetGyro();
+              m_swervePoseEstimator.reset();
+            }),
+        new InstantCommand(() -> m_isFieldOriented = !m_isFieldOriented));
 
     initComponents();
     initSubsystems();
@@ -60,4 +61,8 @@ public abstract class WCRobot {
   protected abstract void initDriverControllerBindings(DriverController m_driverController);
 
   protected abstract void initOperatorControllerBindings(OperatorController m_operatorController);
+
+  protected Command getAutonomousCommand() {
+    return new SimplePathPlanner(m_swervePoseEstimator, m_swerveDrive);
+  };
 }

@@ -25,7 +25,7 @@ public class SimplePathPlanner extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
 
-    traj = Choreo.getTrajectory("NewPath");
+    traj = Choreo.getTrajectory("path close 1");
 
     var thetaController = new PIDController(1, 0, 0);
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
@@ -37,8 +37,7 @@ public class SimplePathPlanner extends SequentialCommandGroup {
             }),
         Choreo.choreoSwerveCommand(
             traj, // Choreo trajectory from above
-            poseEstimator
-                ::getPose, // A function that returns the current field-relative pose of the robot:
+            poseEstimator::getPose, // A function that returns the current field-relative pose of the robot:
             // your
             // wheel or vision odometry
             new PIDController(1, 0.0, 0.0), // PIDController for field-relative X
@@ -50,13 +49,40 @@ public class SimplePathPlanner extends SequentialCommandGroup {
             thetaController, // PID constants to correct for rotation
             // error
             m_robotDrive::setChassisSpeeds,
-            () -> {
-              return DriverStation.getAlliance()
-                  .orElse(DriverStation.Alliance.Blue)
-                  .equals(DriverStation.Alliance.Red);
-            }, // Whether or not to mirror the path based on alliance (this assumes the path is
+            () -> false, // Whether or not to mirror the path based on alliance (this assumes the path is
             // created for the blue alliance)
             m_robotDrive // The subsystem(s) to require, typically your drive subsystem only
-            ));
+        ));
+    // addCommands(
+    // new InstantCommand(
+    // () -> {
+    // poseEstimator.reset(traj.getInitialPose());
+    // }),
+    // Choreo.choreoSwerveCommand(
+    // traj, // Choreo trajectory from above
+    // poseEstimator
+    // ::getPose, // A function that returns the current field-relative pose of the
+    // robot:
+    // // your
+    // // wheel or vision odometry
+    // new PIDController(1, 0.0, 0.0), // PIDController for field-relative X
+    // // translation (input: X error in meters,
+    // // output: m/s).
+    // new PIDController(1, 0.0, 0.0), // PIDController for field-relative Y
+    // // translation (input: Y error in meters,
+    // // output: m/s).
+    // thetaController, // PID constants to correct for rotation
+    // // error
+    // m_robotDrive::setChassisSpeeds,
+    // () -> {
+    // return DriverStation.getAlliance()
+    // .orElse(DriverStation.Alliance.Blue)
+    // .equals(DriverStation.Alliance.Red);
+    // }, // Whether or not to mirror the path based on alliance (this assumes the
+    // path is
+    // // created for the blue alliance)
+    // m_robotDrive // The subsystem(s) to require, typically your drive subsystem
+    // only
+    // ));
   }
 }

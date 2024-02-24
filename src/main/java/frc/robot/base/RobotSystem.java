@@ -54,6 +54,7 @@ public class RobotSystem extends LoggedRobot {
 
     Logger.start();
     m_robotContainer = new Robot();
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
   }
 
   @Override
