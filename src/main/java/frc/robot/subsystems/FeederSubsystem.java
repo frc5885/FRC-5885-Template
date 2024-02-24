@@ -8,7 +8,6 @@ import frc.robot.base.io.Beambreak;
 import frc.robot.base.subsystems.SubsystemAction;
 import frc.robot.base.subsystems.WCStaticSubsystem;
 import java.util.List;
-
 import org.littletonrobotics.junction.Logger;
 
 public class FeederSubsystem extends WCStaticSubsystem {

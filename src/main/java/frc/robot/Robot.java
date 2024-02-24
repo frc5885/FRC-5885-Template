@@ -1,8 +1,8 @@
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.base.WCRobot;
 import frc.robot.base.io.Beambreak;
 import frc.robot.base.io.DriverController;
@@ -80,12 +80,20 @@ public class Robot extends WCRobot {
 
     // Arm ToPos
     // m_operatorController
-    //     .getYButton()
-    //     .whileTrue(new InstantCommand(() -> m_armSubsystem.toPos(Rotation2d.fromRadians(Math.PI/2))));
+    // .getYButton()
+    // .whileTrue(new InstantCommand(
+    // () -> m_armSubsystem.toPos(Rotation2d.fromRadians(Math.PI / 2))));
 
-    m_operatorController
-          .getYButton()
-          .whileTrue(
-            new StartEndCommand(() -> m_armSubsystem.toPos(Rotation2d.fromRadians(Math.PI/2)), () -> m_armSubsystem.stop()));
+    // Arm Up
+    new JoystickButton(m_operatorController.getHID(), 1)
+        .whileTrue(new StartEndCommand(() -> m_armSubsystem.up(), () -> m_armSubsystem.stop()));
+
+    // Arm Down
+    new JoystickButton(m_operatorController.getHID(), 2)
+        .whileTrue(new StartEndCommand(() -> m_armSubsystem.down(), () -> m_armSubsystem.stop()));
+
+    // Arm Pos
+    new JoystickButton(m_operatorController.getHID(), 3)
+        .whileTrue(new InstantCommand(() -> m_armSubsystem.pos()));
   }
 }

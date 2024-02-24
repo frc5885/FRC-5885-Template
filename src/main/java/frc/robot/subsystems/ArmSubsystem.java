@@ -1,15 +1,13 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.*;
-
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import frc.robot.Constants;
+import frc.robot.base.RobotSystem;
 import frc.robot.base.subsystems.SubsystemAction;
 import frc.robot.base.subsystems.WCStaticSubsystem;
 import java.util.List;
-
 import org.littletonrobotics.junction.Logger;
 
 // NEXT STEPS
@@ -23,7 +21,6 @@ public class ArmSubsystem extends WCStaticSubsystem {
 
   private TalonFX m_arm;
   private PIDController m_PidController;
-  private Rotation2d m_SetPoint;
 
   @Override
   protected double getBaseSpeed() {
@@ -33,7 +30,7 @@ public class ArmSubsystem extends WCStaticSubsystem {
   @Override
   protected List<MotorController> initMotors() {
     m_arm = new TalonFX(Constants.kArm);
-    m_PidController = new PIDController(5.0, 0.0, 0.0);
+    m_PidController = new PIDController(1.0, 0.0, 0.0);
     m_PidController.enableContinuousInput(-Math.PI, Math.PI);
     // m_arm.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 1, 0);
     // TalonFXConfiguration config = new TalonFXConfiguration();
@@ -42,29 +39,41 @@ public class ArmSubsystem extends WCStaticSubsystem {
 
   @Override
   public void periodic() {
-    Logger.recordOutput("armmoving", false);
     // System.out.println("Arm Position" + m_arm.getPosition().getValueAsDouble());
-    if (subsystemAction == SubsystemAction.UP && !isAtUpperLimit()) {
+    if (subsystemAction == SubsystemAction.UP && withinUpperLimit()) {
       forwardMotors();
-    } else if (subsystemAction == SubsystemAction.DOWN && !isAtLowerLimit()) {
+    } else if (subsystemAction == SubsystemAction.DOWN && withinLowerLimit()) {
       reverseMotors();
-    } else if (subsystemAction == SubsystemAction.POS && !isAtUpperLimit() && !isAtLowerLimit()) {
-      m_arm.setVoltage(m_PidController.calculate(m_arm.getPosition().getValue() * 2 * Math.PI, m_SetPoint.getRadians()));
-      Logger.recordOutput("armmoving", true);
+    } else if (subsystemAction == SubsystemAction.POS) {
+      double measurement =
+          RobotSystem.isReal() ? m_arm.getPosition().getValueAsDouble() * 2 * Math.PI : positionSim;
+      double setpoint = Constants.kSetPoint.getRadians();
+      m_arm.setVoltage(m_PidController.calculate(measurement, setpoint));
+      if (measurement == setpoint) {
+        subsystemAction = null;
+      }
     } else {
       stopMotors();
     }
-    Logger.recordOutput("armPosition", m_arm.getPosition().getValueAsDouble());
+    positionSim += m_arm.getMotorVoltage().getValueAsDouble() * 0.02;
+    Logger.recordOutput("armOutput", m_arm.getMotorVoltage().getValueAsDouble());
+    Logger.recordOutput(
+        "armPosition", RobotSystem.isReal() ? m_arm.getPosition().getValueAsDouble() : positionSim);
+    Logger.recordOutput("UP", subsystemAction == SubsystemAction.UP);
+    Logger.recordOutput("Down", subsystemAction == SubsystemAction.DOWN);
+    Logger.recordOutput("Pos", subsystemAction == SubsystemAction.POS);
   }
 
-  private boolean isAtUpperLimit() {
-    double armPosition = m_arm.getPosition().getValueAsDouble();
-    return armPosition >= Constants.kArmEncoderMax + buffer;
+  private boolean withinUpperLimit() {
+    double armPosition =
+        RobotSystem.isReal() ? m_arm.getPosition().getValueAsDouble() : positionSim;
+    return armPosition < Constants.kArmEncoderMax + buffer;
   }
 
-  private boolean isAtLowerLimit() {
-    double armPosition = m_arm.getPosition().getValueAsDouble();
-    return armPosition <= Constants.kArmEncoderMin - buffer;
+  private boolean withinLowerLimit() {
+    double armPosition =
+        RobotSystem.isReal() ? m_arm.getPosition().getValueAsDouble() : positionSim;
+    return armPosition > Constants.kArmEncoderMin - buffer;
   }
 
   public void up() {
@@ -75,8 +84,7 @@ public class ArmSubsystem extends WCStaticSubsystem {
     subsystemAction = SubsystemAction.DOWN;
   }
 
-  public void toPos(Rotation2d desired) {
+  public void pos() {
     subsystemAction = SubsystemAction.POS;
-    m_SetPoint = desired;
   }
 }

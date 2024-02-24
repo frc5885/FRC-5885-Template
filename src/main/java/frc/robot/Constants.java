@@ -1,5 +1,7 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+
 public final class Constants {
   // Intake Motor IDs
   public static final int kIntakeLeft = 31;
@@ -14,10 +16,11 @@ public final class Constants {
   public static final int kClimberRight = 56;
 
   // Arm Encoder Stuff
-  public static final double kArmEncoderMax = 1.0;
+  public static final double kArmEncoderMax = Math.PI / 2;
   public static final double kArmEncoderMin = 0.0;
-  public static final double kArmStow = 0.0;
-  public static final double kArmAmp = 1000.0;
+  public static final Rotation2d kArmAmp = Rotation2d.fromRadians(kArmEncoderMax);
+  public static final Rotation2d kSetPoint = Rotation2d.fromRadians(Math.PI / 3);
+  public static final Rotation2d kArmStow = Rotation2d.fromRadians(kArmEncoderMin);
 
   // Wrist Encoder Stuff
   public static final double kWristEncoderMax = 1.0;
@@ -28,5 +31,4 @@ public final class Constants {
   // Climber Deadzones
   public static final double kOperatorRightDeadzone = 0.02;
   public static final double kOperatorLeftDeadzone = 0.02;
-  
 }

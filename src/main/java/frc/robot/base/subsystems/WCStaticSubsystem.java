@@ -8,6 +8,7 @@ public abstract class WCStaticSubsystem extends SubsystemBase {
 
   private final double baseVoltage = 12.0;
   protected SubsystemAction subsystemAction;
+  protected double positionSim;
   private final List<MotorController> motors;
 
   protected abstract double getBaseSpeed();

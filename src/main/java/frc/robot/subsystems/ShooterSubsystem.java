@@ -12,7 +12,7 @@ public class ShooterSubsystem extends WCStaticSubsystem {
 
   private CANSparkMax m_top;
   private CANSparkMax m_bottom;
-  private double m_speed = 0.25;
+  // private double m_speed = 0.25;
   private Beambreak m_beambreak;
 
   @Override
