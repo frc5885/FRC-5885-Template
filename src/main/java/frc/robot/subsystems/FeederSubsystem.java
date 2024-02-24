@@ -1,23 +1,26 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.revrobotics.CANSparkMax;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix6.hardware.*;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
+import edu.wpi.first.wpilibj.motorcontrol.PWMTalonSRX;
 import frc.robot.Constants;
 import frc.robot.base.io.Beambreak;
 import frc.robot.base.subsystems.SubsystemAction;
 import frc.robot.base.subsystems.WCStaticSubsystem;
 import java.util.List;
-import org.littletonrobotics.junction.Logger;
 
 public class FeederSubsystem extends WCStaticSubsystem {
 
-  private CANSparkMax m_feeder;
+  // private CANSparkMax m_feeder;
+  // private PWMTalonSRX m_feeder;
+  // private DeviceType TALONSRXTYPE m_feeder;
+  private WPI_TalonSRX m_feeder;
   private Beambreak m_beambreak;
 
   @Override
   protected double getBaseSpeed() {
-    return 0.5;
+    return -0.3;
   }
 
   public FeederSubsystem(Beambreak m_beambreak) {
@@ -27,7 +30,8 @@ public class FeederSubsystem extends WCStaticSubsystem {
 
   @Override
   protected List<MotorController> initMotors() {
-    m_feeder = new CANSparkMax(Constants.kFeeder, MotorType.kBrushless);
+    // m_feeder = new CANSparkMax(Constants.kFeeder, MotorType.kBrushless);
+    m_feeder = new WPI_TalonSRX(Constants.kFeeder);
     return List.of(m_feeder);
   }
 
@@ -40,7 +44,7 @@ public class FeederSubsystem extends WCStaticSubsystem {
     } else {
       stopMotors();
     }
-    Logger.recordOutput("feeder", m_feeder.getAppliedOutput());
+    // Logger.recordOutput("feeder", m_feeder.getAppliedOutput());
   }
 
   public void intake() {

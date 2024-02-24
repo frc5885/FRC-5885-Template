@@ -41,15 +41,6 @@ public class IntakeSubsystem extends WCStaticSubsystem {
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
-    // if (m_beambreak.isBroken()) {
-    //   m_left.setVoltage(0);
-    //   m_right.setVoltage(0);
-    // } else {
-    //   m_left.setVoltage(m_speed * 12);
-    //   m_right.setVoltage(m_speed * -12);
-    // }
-
     if (subsystemAction == SubsystemAction.INTAKE || m_beambreak.isOpen()) {
       forwardMotors();
     } else if (subsystemAction == SubsystemAction.OUTTAKE) {

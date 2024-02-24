@@ -17,7 +17,7 @@ public class ShooterSubsystem extends WCStaticSubsystem {
 
   @Override
   protected double getBaseSpeed() {
-    return 0.5;
+    return -0.5;
   }
 
   /** Creates a new Shooter. */
