@@ -36,4 +36,12 @@ public final class Constants {
   // pulbic static final double kRightClimberMax =
   // public static final double kLeftClimberMin =
   // public static final doubel kLeftClimberMax =
+
+  public static final String kCameraName = "Lenovo_FHD_Webcam";
+  public static final double kCameraPositionX = 0.5;
+  public static final double kCameraPositonY = 0.5;
+  public static final double kCameraPositionZ = 0.5;
+  public static final double kCameraRoll = 0.0;
+  public static final double kCameraPitch = 0.0;
+  public static final double kCameraYaw = 0.0;
 }
