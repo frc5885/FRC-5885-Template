@@ -11,7 +11,8 @@ import frc.robot.base.io.OperatorController;
 import frc.robot.base.subsystems.swerve.SwerveDriveSubsystem;
 import frc.robot.commands.SimplePathPlanner;
 import frc.robot.commands.SwerveJoystickCmd;
-import frc.robot.debug.PoseEstimatorSubsystem.SwervePoseEstimator;
+import frc.robot.subsystems.PoseEstimatorSubsystem.SwervePoseEstimator;
+import frc.robot.subsystems.PoseEstimatorSubsystem.PhotonVisionSystem;
 
 public abstract class WCRobot {
 
@@ -21,12 +22,14 @@ public abstract class WCRobot {
 
   private final SwerveDriveSubsystem m_swerveDrive;
   private final SwervePoseEstimator m_swervePoseEstimator;
+  private final PhotonVisionSystem m_photonVision;
 
   boolean m_isFieldOriented = true;
 
   public WCRobot() {
     m_swerveDrive = new SwerveDriveSubsystem();
-    m_swervePoseEstimator = new SwervePoseEstimator(m_swerveDrive);
+    m_photonVision = new PhotonVisionSystem();
+    m_swervePoseEstimator = new SwervePoseEstimator(m_swerveDrive, m_photonVision);
     m_operatorController = new OperatorController();
     m_driverController =
         new DriverController(
