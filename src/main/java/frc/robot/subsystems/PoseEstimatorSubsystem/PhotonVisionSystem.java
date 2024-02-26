@@ -1,4 +1,4 @@
-package frc.robot.debug.PoseEstimatorSubsystem;
+package frc.robot.subsystems.PoseEstimatorSubsystem;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
@@ -14,7 +14,8 @@ import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
-public class Vision extends SubsystemBase {
+// this object is created in the WCRobot class
+public class PhotonVisionSystem extends SubsystemBase {
 
   private PhotonCamera m_photonCamera;
 
@@ -25,7 +26,7 @@ public class Vision extends SubsystemBase {
 
   private PhotonPoseEstimator m_photonPoseEstimator;
 
-  public Vision() {
+  public PhotonVisionSystem() {
     m_photonCamera = new PhotonCamera(Constants.kCameraName);
     m_robotToCam =
         new Transform3d(
@@ -34,9 +35,7 @@ public class Vision extends SubsystemBase {
             new Rotation3d(
                 Constants.kCameraRoll,
                 Constants.kCameraPitch,
-                Constants
-                    .kCameraYaw)); // Cam mounted facing forward, half a meter forward of center,
-    // half a meter up from center.
+                Constants.kCameraYaw));
     m_photonPoseEstimator =
         new PhotonPoseEstimator(
             aprilTagFieldLayout,
@@ -49,4 +48,7 @@ public class Vision extends SubsystemBase {
     m_photonPoseEstimator.setReferencePose(prevEstimatedRobotPose);
     return m_photonPoseEstimator.update();
   }
+
+  // can add other functions here later to check for specific april tags I think
+
 }

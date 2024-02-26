@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.debug.PoseEstimatorSubsystem;
+package frc.robot.subsystems.PoseEstimatorSubsystem;
 
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -13,9 +13,11 @@ import frc.robot.AutoConstants.PoseEstimatorConstants;
 import frc.robot.base.modules.swerve.SwerveConstants;
 import frc.robot.base.subsystems.swerve.SwerveDriveSubsystem;
 import java.util.function.Supplier;
+import org.littletonrobotics.junction.Logger;
+
 import org.photonvision.EstimatedRobotPose;
 
-/** Add your docs here. */
+// This object is created in the WCRobot class
 public class SwervePoseEstimator extends SubsystemBase {
   private final Supplier<Rotation2d> m_rotationSupplier;
   private final Supplier<SwerveModulePosition[]> m_swerveModulePositionSupplier;
@@ -24,10 +26,10 @@ public class SwervePoseEstimator extends SubsystemBase {
 
   private final SwerveDriveSubsystem m_swerveDrive;
 
-  private final Vision m_photonVision;
+  private final PhotonVisionSystem m_photonVision;
 
   /** Creates a new TankDrivePoseEstimator. */
-  public SwervePoseEstimator(SwerveDriveSubsystem swerveDrive) {
+  public SwervePoseEstimator(SwerveDriveSubsystem swerveDrive, PhotonVisionSystem photonVision) {
 
     m_rotationSupplier = swerveDrive::getRotation2d;
     m_swerveModulePositionSupplier = swerveDrive::getModulePositions;
@@ -43,20 +45,34 @@ public class SwervePoseEstimator extends SubsystemBase {
 
     m_swerveDrive = swerveDrive;
 
-    m_photonVision = new Vision();
+    m_photonVision = photonVision;
 
     reset();
   }
 
   @Override
   public void periodic() {
-    m_poseEstimator.update(m_rotationSupplier.get(), m_swerveModulePositionSupplier.get());
+    // This method will be called once per scheduler run
 
+    // Update the WPI pose estimator with the latest rotation and position measurements from swerve system
+    m_poseEstimator.update(m_rotationSupplier.get(), m_swerveModulePositionSupplier.get());
+    Logger.recordOutput("SwervePoseEstimator/estimatedPose", m_poseEstimator.getEstimatedPosition());
+
+
+    // Update the WPI pose estimator with the latest vision measurements from photon vision if they are present
     if (m_photonVision.getEstimatedGlobalPose(m_poseEstimator.getEstimatedPosition()).isPresent()) {
-      EstimatedRobotPose estimatedRobotPose =
+      
+      // have to call .get() to get the value from the optional
+      EstimatedRobotPose estimatedVisionPose =
           m_photonVision.getEstimatedGlobalPose(m_poseEstimator.getEstimatedPosition()).get();
+
+      // actually add the vision measurement
       m_poseEstimator.addVisionMeasurement(
-          estimatedRobotPose.estimatedPose.toPose2d(), estimatedRobotPose.timestampSeconds);
+              estimatedVisionPose.estimatedPose.toPose2d(), estimatedVisionPose.timestampSeconds);
+
+      Logger.recordOutput("SwervePoseEstimator/visionEstimatedPose", estimatedVisionPose.estimatedPose.toPose2d());
+      Logger.recordOutput("SwervePoseEstimator/visionEstimatedPose3D", estimatedVisionPose.estimatedPose);
+
     }
   }
 
@@ -68,10 +84,10 @@ public class SwervePoseEstimator extends SubsystemBase {
     return m_poseEstimator.getEstimatedPosition();
   }
 
-  public void reset(Pose2d newPos) {
+  public void reset(Pose2d newPose) {
     m_swerveDrive.resetGyro();
     m_poseEstimator.resetPosition(
-        m_rotationSupplier.get(), m_swerveModulePositionSupplier.get(), newPos);
+        m_rotationSupplier.get(), m_swerveModulePositionSupplier.get(), newPose);
   }
 
   public void reset() {
