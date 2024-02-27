@@ -4,23 +4,23 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.subsystems.*;
+import frc.robot.subsystems.FeederSubsystem;
 
-public class ClimberCommand extends Command {
-  /** Creates a new ClimberCommand. */
-  private final ClimberSubsystem m_climberSubsystem;
+public class ShootCommand extends Command {
 
-  private final CommandXboxController m_xboxController;
+  private FeederSubsystem m_feederSubsystem;
 
-  public ClimberCommand(ClimberSubsystem climberSubsystem, CommandXboxController xboxController) {
+  private CommandXboxController m_xboxController;
+  /** Creates a new Shoot. */
+  public ShootCommand(FeederSubsystem feederSubsystem, CommandXboxController xboxController) {
     // Use addRequirements() here to declare subsystem dependencies.
-
-    m_climberSubsystem = climberSubsystem;
+    m_feederSubsystem = feederSubsystem;
     m_xboxController = xboxController;
 
-    addRequirements(m_climberSubsystem);
+    addRequirements(m_feederSubsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -30,10 +30,13 @@ public class ClimberCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double leftPosition = m_xboxController.getLeftY();
-    double rightPosition = m_xboxController.getRightY();
-    m_climberSubsystem.rightStickPosition(rightPosition);
-    m_climberSubsystem.leftStickPosition(leftPosition);
+    double position = m_xboxController.getRightTriggerAxis();
+    if (position > 0.1) {
+      m_feederSubsystem.intake();
+    } else {
+      m_feederSubsystem.stop();
+    }
+
   }
 
   // Called once the command ends or is interrupted.

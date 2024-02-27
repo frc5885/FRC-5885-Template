@@ -8,8 +8,8 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import java.util.Optional;
 import java.util.List;
+import java.util.Optional;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
@@ -35,10 +35,7 @@ public class PhotonVisionSystem extends SubsystemBase {
         new Transform3d(
             new Translation3d(
                 Constants.kCameraPositionX, Constants.kCameraPositonY, Constants.kCameraPositionZ),
-            new Rotation3d(
-                Constants.kCameraRoll,
-                Constants.kCameraPitch,
-                Constants.kCameraYaw));
+            new Rotation3d(Constants.kCameraRoll, Constants.kCameraPitch, Constants.kCameraYaw));
     m_photonPoseEstimator =
         new PhotonPoseEstimator(
             aprilTagFieldLayout,
@@ -70,5 +67,4 @@ public class PhotonVisionSystem extends SubsystemBase {
     }
     return Optional.empty();
   }
-
 }

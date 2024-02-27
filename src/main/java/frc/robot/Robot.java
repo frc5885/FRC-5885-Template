@@ -1,12 +1,15 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.robot.base.WCRobot;
 import frc.robot.base.io.Beambreak;
 import frc.robot.base.io.DriverController;
 import frc.robot.base.io.OperatorController;
 import frc.robot.commands.ClimberCommand;
+import frc.robot.commands.ShootCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.FeederSubsystem;
@@ -42,32 +45,54 @@ public class Robot extends WCRobot {
   @Override
   protected void initDriverControllerBindings(DriverController m_driverController) {
 
-    // Feeder
+    
+
+    m_feederSubsystem.setDefaultCommand(new ShootCommand(m_feederSubsystem, m_driverController));
+
     m_driverController
-        .getAButton()
+        .getYButton()
+        .whileTrue(new StartEndCommand(() -> m_feederSubsystem.outtake(), () -> m_feederSubsystem.stop()));
+
+    m_driverController
+        .getYButton()
+        .whileTrue(new InstantCommand(() -> m_wristSubsystem.pos(Constants.kWristEject)));
+
+    // m_driverController
+    //     .getYButton()
+    //     .whileTrue();
+
+    // new SequentialCommandGroup(
+    //     new InstantCommand(() -> m_wristSubsystem.pos(Constants.kWristEject)),
+    //     new 
+    //     new InstantCommand()
+    // );
+
+    // Intake
+    m_driverController
+        .getXButton()
         .whileTrue(
-            new StartEndCommand(() -> m_feederSubsystem.intake(), () -> m_feederSubsystem.stop()));
+            new StartEndCommand(() -> m_intakeSubsystem.outtake(), () -> m_intakeSubsystem.stop())); 
 
-    // Arm - Up
-    m_driverController
-        .getRightBumper()
-        .whileTrue(new StartEndCommand(() -> m_armSubsystem.up(), () -> m_armSubsystem.stop()));
+    // // Arm - Up
+    // m_driverController
+    //     .getRightBumper()
+    //     .whileTrue(new StartEndCommand(() -> m_armSubsystem.up(), () -> m_armSubsystem.stop()));
 
-    // Arm - Down
-    m_driverController
-        .getLeftBumper()
-        .whileTrue(new StartEndCommand(() -> m_armSubsystem.down(), () -> m_armSubsystem.stop()));
+    // // Arm - Down
+    // m_driverController
+    //     .getLeftBumper()
+    //     .whileTrue(new StartEndCommand(() -> m_armSubsystem.down(), () -> m_armSubsystem.stop()));
 
-    // Wrist - Forward
-    m_driverController
-        .getStartButton()
-        .whileTrue(new StartEndCommand(() -> m_wristSubsystem.up(), () -> m_wristSubsystem.stop()));
+    // // Wrist - Forward
+    // m_driverController
+    //     .getStartButton()
+    //     .whileTrue(new StartEndCommand(() -> m_wristSubsystem.up(), () -> m_wristSubsystem.stop()));
 
-    // Wrist - Reverse
-    m_driverController
-        .getBackButton()
-        .whileTrue(
-            new StartEndCommand(() -> m_wristSubsystem.down(), () -> m_wristSubsystem.stop()));
+    // // Wrist - Reverse
+    // m_driverController
+    //     .getBackButton()
+    //     .whileTrue(
+    //         new StartEndCommand(() -> m_wristSubsystem.down(), () -> m_wristSubsystem.stop()));
   }
 
   @Override

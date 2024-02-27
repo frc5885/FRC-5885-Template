@@ -28,14 +28,15 @@ public final class Constants {
   public static final double kWristEncoderMin = -1.677;
   public static final double kWristStow = 0.168;
   public static final double kWristAmp = 0.762;
+  public static final double kWristEject = 0.0;
 
   // Climber Deadzones
   public static final double kOperatorRightDeadzone = 0.02;
   public static final double kOperatorLeftDeadzone = 0.02;
-  // public static final double kRightClimberMin =
-  // pulbic static final double kRightClimberMax =
-  // public static final double kLeftClimberMin =
-  // public static final doubel kLeftClimberMax =
+  public static final double kRightClimberMin = 0.0;
+  public static final double kRightClimberMax = -45.8;
+  public static final double kLeftClimberMin = 0.0;
+  public static final double kLeftClimberMax = -45.8;
 
   public static final String kCameraName = "Lenovo_FHD_Webcam";
   public static final double kCameraPositionX = 0.5;

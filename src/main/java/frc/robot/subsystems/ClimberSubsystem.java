@@ -44,12 +44,32 @@ public class ClimberSubsystem extends WCDualSubsystem {
 
   public void leftStickPosition(double leftPosition) {
     System.out.println("Left Climber:" + m_leftRelativeEncoder.getPosition());
-    speed1 = MathUtil.applyDeadband(leftPosition, Constants.kOperatorLeftDeadzone);
+    leftPosition = MathUtil.applyDeadband(leftPosition, Constants.kOperatorLeftDeadzone);
+    // if (leftPosition < 0 && m_leftRelativeEncoder.getPosition() > Constants.kLeftClimberMin){
+    //   speed1 = leftPosition;
+    // }
+    // else if (leftPosition > 0 && m_leftRelativeEncoder.getPosition() < Constants.kLeftClimberMax){
+    //   speed1 = leftPosition;
+    // }
+    // else{
+    //   speed1 = 0;
+    // }
+    speed1 = leftPosition;
   }
 
   public void rightStickPosition(double rightPosition) {
     System.out.println("Right Climber:" + m_rightRelativeEncoder.getPosition());
-    speed2 = MathUtil.applyDeadband(rightPosition, Constants.kOperatorRightDeadzone);
+    rightPosition = MathUtil.applyDeadband(rightPosition, Constants.kOperatorRightDeadzone);  
+    speed2 = rightPosition;
+    // if (rightPosition < 0 && m_rightRelativeEncoder.getPosition() > Constants.kRightClimberMin){
+    //   speed2 = rightPosition;
+    // }
+    // else if (rightPosition > 0 && m_rightRelativeEncoder.getPosition() < Math.abs(Constants.kRightClimberMax)){
+    //   speed2 = rightPosition;
+    // }
+    // else{
+    //   speed2 = 0;
+    // }
   }
 
   @Override

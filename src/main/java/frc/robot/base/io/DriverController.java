@@ -7,17 +7,17 @@ public class DriverController extends WCXboxController {
 
   public DriverController(Command xCommand, Command yCommand) {
     super(ControllerConstants.kDriverControllerPort);
-    xButton.onTrue(xCommand);
-    yButton.onTrue(yCommand);
+    leftStick.onTrue(xCommand);
+    rightStick.onTrue(yCommand);
   }
 
   @Override
-  public JoystickButton getXButton() {
-    throw new RuntimeException("X is reserved for resetting the swerve gyro!");
+  public JoystickButton getLeftStick() {
+    throw new RuntimeException("Left stick is reserved for resetting the swerve gyro!");
   }
 
   @Override
-  public JoystickButton getYButton() {
-    throw new RuntimeException("Y is reserved for changing swerve field orientation!");
+  public JoystickButton getRightStick() {
+    throw new RuntimeException("Right stick is reserved for changing swerve field orientation!");
   }
 }

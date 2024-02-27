@@ -14,7 +14,6 @@ import frc.robot.base.modules.swerve.SwerveConstants;
 import frc.robot.base.subsystems.swerve.SwerveDriveSubsystem;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
-
 import org.photonvision.EstimatedRobotPose;
 
 // This object is created in the WCRobot class
@@ -54,25 +53,28 @@ public class SwervePoseEstimator extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
 
-    // Update the WPI pose estimator with the latest rotation and position measurements from swerve system
+    // Update the WPI pose estimator with the latest rotation and position measurements from swerve
+    // system
     m_poseEstimator.update(m_rotationSupplier.get(), m_swerveModulePositionSupplier.get());
-    Logger.recordOutput("SwervePoseEstimator/estimatedPose", m_poseEstimator.getEstimatedPosition());
+    Logger.recordOutput(
+        "SwervePoseEstimator/estimatedPose", m_poseEstimator.getEstimatedPosition());
 
-
-    // Update the WPI pose estimator with the latest vision measurements from photon vision if they are present
+    // Update the WPI pose estimator with the latest vision measurements from photon vision if they
+    // are present
     if (m_photonVision.getEstimatedGlobalPose(m_poseEstimator.getEstimatedPosition()).isPresent()) {
-      
+
       // have to call .get() to get the value from the optional
       EstimatedRobotPose estimatedVisionPose =
           m_photonVision.getEstimatedGlobalPose(m_poseEstimator.getEstimatedPosition()).get();
 
       // actually add the vision measurement
       m_poseEstimator.addVisionMeasurement(
-              estimatedVisionPose.estimatedPose.toPose2d(), estimatedVisionPose.timestampSeconds);
+          estimatedVisionPose.estimatedPose.toPose2d(), estimatedVisionPose.timestampSeconds);
 
-      Logger.recordOutput("SwervePoseEstimator/visionEstimatedPose", estimatedVisionPose.estimatedPose.toPose2d());
-      Logger.recordOutput("SwervePoseEstimator/visionEstimatedPose3D", estimatedVisionPose.estimatedPose);
-
+      Logger.recordOutput(
+          "SwervePoseEstimator/visionEstimatedPose", estimatedVisionPose.estimatedPose.toPose2d());
+      Logger.recordOutput(
+          "SwervePoseEstimator/visionEstimatedPose3D", estimatedVisionPose.estimatedPose);
     }
   }
 

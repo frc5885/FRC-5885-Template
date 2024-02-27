@@ -17,9 +17,9 @@ public class IntakeSubsystem extends WCStaticSubsystem {
 
   /** Creates a new Shooter. */
   // public IntakeSubsystem(Beambreak m_beambreak) {
-  //   m_left = new CANSparkMax(Constants.kIntakeLeft, MotorType.kBrushless);
-  //   m_right = new CANSparkMax(Constants.kIntakeRight, MotorType.kBrushless);
-  //   this.m_beambreak = m_beambreak;
+  // m_left = new CANSparkMax(Constants.kIntakeLeft, MotorType.kBrushless);
+  // m_right = new CANSparkMax(Constants.kIntakeRight, MotorType.kBrushless);
+  // this.m_beambreak = m_beambreak;
   // }
 
   @Override
@@ -41,10 +41,10 @@ public class IntakeSubsystem extends WCStaticSubsystem {
 
   @Override
   public void periodic() {
-    // if (subsystemAction == SubsystemAction.INTAKE || m_beambreak.isOpen()) {
-    //   forwardMotors();
-    // } else if (subsystemAction == SubsystemAction.OUTTAKE) {
+    // if (subsystemAction == SubsystemAction.OUTTAKE) {
     //   reverseMotors();
+    // } else if (subsystemAction == SubsystemAction.INTAKE || m_beambreak.isOpen()) {
+    //   forwardMotors();
     // } else {
     //   stopMotors();
     // }
