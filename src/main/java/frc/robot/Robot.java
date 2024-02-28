@@ -37,7 +37,6 @@ public class Robot extends WCRobot {
     m_wristSubsystem = new WristSubsystem();
     m_feederSubsystem = new FeederSubsystem(m_beambreak);
     m_climberSubsystem = new ClimberSubsystem();
-    m_climberSubsystem.resetEncoders();
     m_shooterSubsystem = new ShooterSubsystem(m_beambreak);
   }
 
