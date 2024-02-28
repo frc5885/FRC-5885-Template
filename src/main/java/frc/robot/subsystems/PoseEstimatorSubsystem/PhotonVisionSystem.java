@@ -45,6 +45,7 @@ public class PhotonVisionSystem extends SubsystemBase {
   }
 
   public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose) {
+    System.out.println("UpdatedCameraPose");
     m_photonPoseEstimator.setReferencePose(prevEstimatedRobotPose);
     return m_photonPoseEstimator.update();
   }
