@@ -34,9 +34,9 @@ public final class Constants {
   public static final double kOperatorRightDeadzone = 0.02;
   public static final double kOperatorLeftDeadzone = 0.02;
   public static final double kRightClimberMin = 0.0;
-  public static final double kRightClimberMax = -45.8;
+  public static final double kRightClimberMax = 43.6;
   public static final double kLeftClimberMin = 0.0;
-  public static final double kLeftClimberMax = -45.8;
+  public static final double kLeftClimberMax = 43.6;
 
   public static final String kCameraName = "Lenovo_FHD_Webcam";
   public static final double kCameraPositionX = 0.5;
