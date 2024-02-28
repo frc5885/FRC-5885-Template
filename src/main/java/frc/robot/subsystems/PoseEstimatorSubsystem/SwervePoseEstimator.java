@@ -12,6 +12,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.AutoConstants.PoseEstimatorConstants;
 import frc.robot.base.modules.swerve.SwerveConstants;
 import frc.robot.base.subsystems.swerve.SwerveDriveSubsystem;
+
+import java.util.Optional;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 import org.photonvision.EstimatedRobotPose;
@@ -56,16 +58,19 @@ public class SwervePoseEstimator extends SubsystemBase {
     // Update the WPI pose estimator with the latest rotation and position measurements from swerve
     // system
     m_poseEstimator.update(m_rotationSupplier.get(), m_swerveModulePositionSupplier.get());
+    Pose2d estimatedPosition = getPose();
     Logger.recordOutput(
-        "SwervePoseEstimator/estimatedPose", m_poseEstimator.getEstimatedPosition());
+        "SwervePoseEstimator/estimatedPose",
+        estimatedPosition
+    );
 
     // Update the WPI pose estimator with the latest vision measurements from photon vision if they
     // are present
-    if (m_photonVision.getEstimatedGlobalPose(m_poseEstimator.getEstimatedPosition()).isPresent()) {
+    Optional<EstimatedRobotPose> estimatedGlobalPosition = m_photonVision.getEstimatedGlobalPose(estimatedPosition);
+    if (estimatedGlobalPosition.isPresent()) {
 
       // have to call .get() to get the value from the optional
-      EstimatedRobotPose estimatedVisionPose =
-          m_photonVision.getEstimatedGlobalPose(m_poseEstimator.getEstimatedPosition()).get();
+      EstimatedRobotPose estimatedVisionPose = estimatedGlobalPosition.get();
 
       // actually add the vision measurement
       m_poseEstimator.addVisionMeasurement(
