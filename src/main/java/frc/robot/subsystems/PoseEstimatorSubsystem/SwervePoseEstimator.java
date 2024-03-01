@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.AutoConstants.PoseEstimatorConstants;
 import frc.robot.base.modules.swerve.SwerveConstants;
 import frc.robot.base.subsystems.swerve.SwerveDriveSubsystem;
-
 import java.util.Optional;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
@@ -59,14 +58,12 @@ public class SwervePoseEstimator extends SubsystemBase {
     // system
     m_poseEstimator.update(m_rotationSupplier.get(), m_swerveModulePositionSupplier.get());
     Pose2d estimatedPosition = getPose();
-    Logger.recordOutput(
-        "SwervePoseEstimator/estimatedPose",
-        estimatedPosition
-    );
+    Logger.recordOutput("SwervePoseEstimator/estimatedPose", estimatedPosition);
 
     // Update the WPI pose estimator with the latest vision measurements from photon vision if they
     // are present
-    Optional<EstimatedRobotPose> estimatedGlobalPosition = m_photonVision.getEstimatedGlobalPose(estimatedPosition);
+    Optional<EstimatedRobotPose> estimatedGlobalPosition =
+        m_photonVision.getEstimatedGlobalPose(estimatedPosition);
     if (estimatedGlobalPosition.isPresent()) {
 
       // have to call .get() to get the value from the optional

@@ -5,6 +5,8 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -15,6 +17,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.base.modules.swerve.SwerveConstants;
 import frc.robot.base.subsystems.swerve.SwerveDriveSubsystem;
+import frc.robot.subsystems.PoseEstimatorSubsystem.PhotonVisionSystem;
 import frc.robot.subsystems.PoseEstimatorSubsystem.SwervePoseEstimator;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
@@ -24,10 +27,14 @@ public class SwerveJoystickCmd extends Command {
 
   private final SwerveDriveSubsystem m_swerveSubsystem;
   private final SwervePoseEstimator m_poseEstimator;
+  private final PhotonVisionSystem m_photonVision;
   private final Supplier<Double> m_xDrivePercentFunction,
       m_yDrivePercentFunction,
       m_turnDrivePercentFunction;
   private final Supplier<Boolean> m_fieldOrientedFunction;
+  private final Supplier<Boolean> m_aimBotFunction;
+
+  private PIDController m_aimBotPID;
 
   private static final LoggedDashboardChooser<Double> m_linearSpeedLimitChooser =
       new LoggedDashboardChooser<>("Linear Speed Limit");
@@ -49,16 +56,24 @@ public class SwerveJoystickCmd extends Command {
   public SwerveJoystickCmd(
       SwerveDriveSubsystem swerveSubsystem,
       SwervePoseEstimator poseEstimator,
+      PhotonVisionSystem photonVision,
       Supplier<Double> xDrivePercentFunction,
       Supplier<Double> yDrivePercentFunction,
       Supplier<Double> turnDrivePercentFunction,
-      Supplier<Boolean> fieldOrientedFunction) {
+      Supplier<Boolean> fieldOrientedFunction,
+      Supplier<Boolean> aimBotFunction) {
     m_swerveSubsystem = swerveSubsystem;
     m_poseEstimator = poseEstimator;
+    m_photonVision = photonVision;
     m_xDrivePercentFunction = xDrivePercentFunction;
     m_yDrivePercentFunction = yDrivePercentFunction;
     m_turnDrivePercentFunction = turnDrivePercentFunction;
     m_fieldOrientedFunction = fieldOrientedFunction;
+    m_aimBotFunction = aimBotFunction;
+
+    m_aimBotPID = new PIDController(0.6, 0.05, 0.0);
+    m_aimBotPID.enableContinuousInput(-Math.PI, Math.PI);
+    m_aimBotPID.setTolerance(SwerveConstants.Module.kTurningFeedbackTolerance);
 
     addRequirements(m_swerveSubsystem);
   }
@@ -93,12 +108,27 @@ public class SwerveJoystickCmd extends Command {
         magnitudeSqrd * SwerveConstants.kMaxSpeedMetersPerSecond * m_linearSpeedLimitChooser.get();
     Rotation2d linearDirection = new Rotation2d(xDir, yDir);
 
+    Alliance alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
     // Rotation speed stuff
-    double angularVelocity =
-        MathUtil.applyDeadband(
-                m_turnDrivePercentFunction.get(), SwerveConstants.kSwerveDriveDeadband)
-            * SwerveConstants.kMaxSpeedAngularRadiansPerSecond
-            * m_angularSpeedLimitChooser.get();
+    double angularVelocity;
+    if (m_aimBotFunction.get()) {
+      Pose2d robotPose = m_poseEstimator.getPose();
+      if (alliance == Alliance.Blue) {
+        double angleToTarget = m_photonVision.getAngleToTarget(robotPose, 7);
+        angularVelocity =
+            m_aimBotPID.calculate(robotPose.getRotation().getRadians(), angleToTarget);
+      } else {
+        double angleToTarget = m_photonVision.getAngleToTarget(robotPose, 4);
+        angularVelocity =
+            m_aimBotPID.calculate(robotPose.getRotation().getRadians(), angleToTarget);
+      }
+    } else {
+      angularVelocity =
+          MathUtil.applyDeadband(
+              m_turnDrivePercentFunction.get(), SwerveConstants.kSwerveDriveDeadband);
+    }
+    angularVelocity *=
+        SwerveConstants.kMaxSpeedAngularRadiansPerSecond * m_angularSpeedLimitChooser.get();
 
     // This does the trig for us and lets us get the x/y velocity
     Translation2d translation = new Translation2d(linearVelocity, linearDirection);
@@ -106,7 +136,6 @@ public class SwerveJoystickCmd extends Command {
 
     // Use field oriented drive
     if (m_fieldOrientedFunction.get()) {
-      Alliance alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
 
       chassisSpeeds =
           ChassisSpeeds.fromFieldRelativeSpeeds(

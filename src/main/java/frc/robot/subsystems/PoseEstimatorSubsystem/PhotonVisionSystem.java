@@ -6,16 +6,14 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.AprilTagCameraConstants;
-import java.util.List;
 import java.util.Optional;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
-import org.photonvision.targeting.PhotonPipelineResult;
-import org.photonvision.targeting.PhotonTrackedTarget;
 
 // this object is created in the WCRobot class
 public class PhotonVisionSystem extends SubsystemBase {
@@ -50,7 +48,7 @@ public class PhotonVisionSystem extends SubsystemBase {
   }
 
   public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose) {
-    System.out.println("UpdatedCameraPose");
+    // System.out.println("UpdatedCameraPose");
     m_photonPoseEstimator.setReferencePose(prevEstimatedRobotPose);
     return m_photonPoseEstimator.update();
   }
@@ -58,19 +56,14 @@ public class PhotonVisionSystem extends SubsystemBase {
   // can add other functions here later to check for specific april tags I think
 
   // this one might get the angle up to april tag ID 7 (middle of blue speaker) but idk
-  public Optional<Double> GetYawToSpeaker() {
-    PhotonPipelineResult result = m_photonCamera.getLatestResult();
-    if (result.hasTargets()) {
-      List<PhotonTrackedTarget> targets = result.getTargets();
-      // check each result for the tag ID
-      for (int i = 0; i < targets.size(); i++) {
-        if (targets.get(i).getFiducialId() == 7) {
-          // do something with the angle
-          double angle = targets.get(i).getPitch();
-          return Optional.of(angle);
-        }
-      }
-    }
-    return Optional.empty();
+  public double getAngleToTarget(Pose2d robotPose, int targetID) {
+    Pose2d aprilTagLocation = aprilTagFieldLayout.getTagPose(targetID).get().toPose2d();
+    double targetX = aprilTagLocation.getTranslation().getX();
+    double targetY = aprilTagLocation.getTranslation().getY();
+    double robotX = robotPose.getTranslation().getX();
+    double robotY = robotPose.getTranslation().getY();
+    double angleToTarget = Math.atan2(targetY - robotY, targetX - robotX);
+    SmartDashboard.putNumber("AngleToTarget", angleToTarget);
+    return angleToTarget;
   }
 }

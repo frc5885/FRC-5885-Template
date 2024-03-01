@@ -26,6 +26,8 @@ public abstract class WCRobot {
 
   boolean m_isFieldOriented = true;
 
+  boolean m_isAimbotting = false;
+
   public WCRobot() {
     m_swerveDrive = new SwerveDriveSubsystem();
     m_photonVision = new PhotonVisionSystem();
@@ -38,7 +40,9 @@ public abstract class WCRobot {
                   m_swerveDrive.resetGyro();
                   m_swervePoseEstimator.reset();
                 }),
-            new InstantCommand(() -> m_isFieldOriented = !m_isFieldOriented));
+            new InstantCommand(() -> m_isFieldOriented = !m_isFieldOriented),
+            // new StartEndCommand(() -> m_isAimbotting = true, () -> m_isAimbotting = false));
+            new InstantCommand(() -> m_isAimbotting = !m_isAimbotting));
 
     initComponents();
     initSubsystems();
@@ -52,10 +56,12 @@ public abstract class WCRobot {
         new SwerveJoystickCmd(
             m_swerveDrive,
             m_swervePoseEstimator,
+            m_photonVision,
             () -> -m_driverController.getLeftY(),
             () -> -m_driverController.getLeftX(),
             () -> -m_driverController.getRightX(),
-            () -> m_isFieldOriented));
+            () -> m_isFieldOriented,
+            () -> m_isAimbotting));
   }
 
   protected abstract void initComponents();

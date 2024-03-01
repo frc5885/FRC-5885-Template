@@ -5,10 +5,12 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 public class DriverController extends WCXboxController {
 
-  public DriverController(Command leftStickCommand, Command rightStickCommand) {
+  public DriverController(
+      Command leftStickCommand, Command rightStickCommand, Command leftBumperCommand) {
     super(ControllerConstants.kDriverControllerPort);
     leftStick.onTrue(leftStickCommand);
     rightStick.onTrue(rightStickCommand);
+    leftBumper.onTrue(leftBumperCommand);
   }
 
   @Override
@@ -19,5 +21,10 @@ public class DriverController extends WCXboxController {
   @Override
   public JoystickButton getRightStick() {
     throw new RuntimeException("Right stick is reserved for changing swerve field orientation!");
+  }
+
+  @Override
+  public JoystickButton getLeftBumper() {
+    throw new RuntimeException("Left bumper is reserved for aimbot!");
   }
 }
