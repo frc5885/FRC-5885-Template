@@ -8,11 +8,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.base.io.DriverController;
 import frc.robot.base.io.OperatorController;
+import frc.robot.base.subsystems.PoseEstimator.PhotonVisionSystem;
+import frc.robot.base.subsystems.PoseEstimator.SwervePoseEstimator;
 import frc.robot.base.subsystems.swerve.SwerveDriveSubsystem;
 import frc.robot.commands.SimplePathPlanner;
 import frc.robot.commands.SwerveJoystickCmd;
-import frc.robot.subsystems.PoseEstimatorSubsystem.PhotonVisionSystem;
-import frc.robot.subsystems.PoseEstimatorSubsystem.SwervePoseEstimator;
 
 public abstract class WCRobot {
 
@@ -40,9 +40,7 @@ public abstract class WCRobot {
                   m_swerveDrive.resetGyro();
                   m_swervePoseEstimator.reset();
                 }),
-            new InstantCommand(() -> m_isFieldOriented = !m_isFieldOriented),
-            // new StartEndCommand(() -> m_isAimbotting = true, () -> m_isAimbotting = false));
-            new InstantCommand(() -> m_isAimbotting = !m_isAimbotting));
+            new InstantCommand(() -> m_isFieldOriented = !m_isFieldOriented));
 
     initComponents();
     initSubsystems();
@@ -62,6 +60,14 @@ public abstract class WCRobot {
             () -> -m_driverController.getRightX(),
             () -> m_isFieldOriented,
             () -> m_isAimbotting));
+  }
+
+  // so that aimBotting can be set and accessed by other stuff in Robot.java
+  protected Boolean isAimBotting() {
+    return m_isAimbotting;
+  }
+  protected void setAimBotting(Boolean value) {
+    m_isAimbotting = value;
   }
 
   protected abstract void initComponents();

@@ -54,6 +54,12 @@ public class Robot extends WCRobot {
         .getYButton()
         .whileTrue(new InstantCommand(() -> m_wristSubsystem.pos(Constants.kWristEject)));
 
+    // aimbot mode (toggle on/off)
+    m_driverController
+        .getLeftBumper()
+        .whileTrue(new InstantCommand(() -> setAimBotting(!isAimBotting())));
+        // new StartEndCommand(() -> m_isAimbotting = true, () -> m_isAimbotting = false));
+
     // m_driverController
     //     .getYButton()
     //     .whileTrue();
