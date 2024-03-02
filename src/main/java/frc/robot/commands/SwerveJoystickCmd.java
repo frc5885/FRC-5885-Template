@@ -71,9 +71,10 @@ public class SwerveJoystickCmd extends Command {
     m_fieldOrientedFunction = fieldOrientedFunction;
     m_aimBotFunction = aimBotFunction;
 
-    m_aimBotPID = new PIDController(1.0, 0.0, 0.0);
+    // F = 1.54hz
+    m_aimBotPID = new PIDController(2.5, 0.25, 0.08);
     m_aimBotPID.enableContinuousInput(-Math.PI, Math.PI);
-    m_aimBotPID.setTolerance(SwerveConstants.Module.kTurningFeedbackTolerance);
+    m_aimBotPID.setTolerance(SwerveConstants.Module.kAimbotTolerance);
 
     addRequirements(m_swerveSubsystem);
   }
@@ -112,16 +113,21 @@ public class SwerveJoystickCmd extends Command {
     // Rotation speed stuff
     double angularVelocity;
     if (m_aimBotFunction.get()) {
-      Pose2d robotPose = m_poseEstimator.getPose();
-      if (alliance == Alliance.Blue) {
-        double angleToTarget = m_photonVision.getAngleToTarget(robotPose, 7);
-        angularVelocity =
-            m_aimBotPID.calculate(robotPose.getRotation().getRadians(), angleToTarget);
-      } else {
-        double angleToTarget = m_photonVision.getAngleToTarget(robotPose, 4);
-        angularVelocity =
-            m_aimBotPID.calculate(robotPose.getRotation().getRadians(), angleToTarget);
-      }
+      
+        Pose2d robotPose = m_poseEstimator.getPose();
+        if (alliance == Alliance.Blue) {
+          double angleToTarget = m_photonVision.getAngleToTarget(robotPose, 7);
+          angularVelocity =
+              m_aimBotPID.calculate(robotPose.getRotation().getRadians(), angleToTarget);
+        } else {
+          double angleToTarget = m_photonVision.getAngleToTarget(robotPose, 4);
+          angularVelocity =
+              m_aimBotPID.calculate(robotPose.getRotation().getRadians(), angleToTarget);
+        }
+        
+        if (m_aimBotPID.atSetpoint()) {
+          angularVelocity = 0;
+        }
     } else {
       angularVelocity =
           MathUtil.applyDeadband(

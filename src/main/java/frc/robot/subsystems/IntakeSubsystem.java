@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.base.io.Beambreak;
 import frc.robot.base.subsystems.SubsystemAction;
@@ -24,7 +25,7 @@ public class IntakeSubsystem extends WCStaticSubsystem {
 
   @Override
   protected double getBaseSpeed() {
-    return 0.7;
+    return 1.0;
   }
 
   public IntakeSubsystem(Beambreak m_beambreak) {
@@ -42,7 +43,7 @@ public class IntakeSubsystem extends WCStaticSubsystem {
 
   @Override
   public void periodic() {
-    // SmartDashboard.putNumber("Intake", m_right.getAppliedOutput());
+    SmartDashboard.putNumber("Intake", m_right.getAppliedOutput());
     if (subsystemAction == SubsystemAction.OUTTAKE) {
       reverseMotors();
     } else if (subsystemAction == SubsystemAction.INTAKE || m_beambreak.isOpen()) {

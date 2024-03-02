@@ -123,6 +123,7 @@ public final class SwerveConstants {
     public static final double kTurningFeedbackI = 0.0;
     public static final double kTurningFeedbackD = 0.0;
     public static final double kTurningFeedbackTolerance = Units.degreesToRadians(0.65);
+    public static final double kAimbotTolerance = Units.degreesToRadians(1.5);
 
     //////////////////////////////////////
     // Motor Encoder Counts Per Revolution

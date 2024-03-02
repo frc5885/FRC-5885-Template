@@ -1,5 +1,7 @@
 package frc.robot;
 
+import com.fasterxml.jackson.databind.deser.std.ContainerDeserializerBase;
+
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.robot.base.WCRobot;
@@ -45,10 +47,10 @@ public class Robot extends WCRobot {
 
     m_feederSubsystem.setDefaultCommand(new ShootCommand(m_feederSubsystem, m_driverController));
 
-    m_driverController
-        .getYButton()
-        .whileTrue(
-            new StartEndCommand(() -> m_feederSubsystem.outtake(), () -> m_feederSubsystem.stop()));
+    // m_driverController
+    //     .getYButton()
+    //     .whileTrue(
+    //         new StartEndCommand(() -> m_feederSubsystem.outtake(), () -> m_feederSubsystem.stop()));
 
     m_driverController
         .getYButton()
@@ -60,9 +62,15 @@ public class Robot extends WCRobot {
         .whileTrue(new InstantCommand(() -> setAimBotting(!isAimBotting())));
 
     m_driverController
-        .getRightBumper()
-        .whileTrue(
-            new StartEndCommand(() -> m_intakeSubsystem.outtake(), () -> m_intakeSubsystem.stop()));
+        .getAButton()
+        .whileTrue(new InstantCommand(() -> m_armSubsystem.pos(Constants.kArmAmp)));
+
+    // For testing
+    // m_driverController
+    //     .getRightBumper()
+    //     .whileTrue(
+    //         new StartEndCommand(() -> m_intakeSubsystem.outtake(), () ->
+    // m_intakeSubsystem.stop()));
     // new StartEndCommand(() -> m_isAimbotting = true, () -> m_isAimbotting = false));
 
     // m_driverController
@@ -76,10 +84,10 @@ public class Robot extends WCRobot {
     // );
 
     // Intake
-    m_driverController
-        .getXButton()
-        .whileTrue(
-            new StartEndCommand(() -> m_intakeSubsystem.outtake(), () -> m_intakeSubsystem.stop()));
+    // m_driverController
+    //     .getXButton()
+    //     .whileTrue(
+    //         new StartEndCommand(() -> m_intakeSubsystem.outtake(), () -> m_intakeSubsystem.stop()));
 
     // // Arm - Up
     // m_driverController
@@ -110,6 +118,8 @@ public class Robot extends WCRobot {
 
     m_climberSubsystem.setDefaultCommand(
         new ClimberCommand(m_climberSubsystem, m_operatorController));
+
+    m_feederSubsystem.setDefaultCommand(new ShootCommand(m_feederSubsystem, m_operatorController));
 
     // Arm ToPos
     // m_operatorController
@@ -143,14 +153,29 @@ public class Robot extends WCRobot {
         .whileTrue(
             new StartEndCommand(() -> m_wristSubsystem.down(), () -> m_wristSubsystem.stop()));
 
+    m_operatorController
+        .getLeftBumper()
+        .whileTrue(
+            new StartEndCommand(() -> m_armSubsystem.up(), () -> m_armSubsystem.stop()));
+
+    // DOWN
+    m_operatorController
+        .getRightBumper()
+        .whileTrue(
+            new StartEndCommand(() -> m_armSubsystem.down(), () -> m_armSubsystem.stop()));
+
     // Arm Pos
     m_operatorController
         .getXButton()
-        .whileTrue(new InstantCommand(() -> m_wristSubsystem.pos(Constants.kSetPoint)));
+        .whileTrue(new InstantCommand(() -> m_wristSubsystem.pos(Constants.kWristStow)));
 
     // Wrist Pos Amp
     m_operatorController
         .getYButton()
         .whileTrue(new InstantCommand(() -> m_wristSubsystem.pos(Constants.kWristAmp)));
+
+    m_operatorController
+        .getStartButton()
+        .whileTrue(new InstantCommand(() -> m_wristSubsystem.pos(Constants.kWristSubwoofer)));
   }
 }
