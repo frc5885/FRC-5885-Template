@@ -9,10 +9,10 @@ public class Beambreak extends DigitalInput {
   }
 
   public Boolean isBroken() {
-    return !get();
+    return get();
   }
 
   public Boolean isOpen() {
-    return get();
+    return !get();
   }
 }

@@ -19,7 +19,6 @@ import frc.robot.base.modules.swerve.SwerveConstants;
 import frc.robot.base.subsystems.PoseEstimator.PhotonVisionSystem;
 import frc.robot.base.subsystems.PoseEstimator.SwervePoseEstimator;
 import frc.robot.base.subsystems.swerve.SwerveDriveSubsystem;
-
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -72,7 +71,7 @@ public class SwerveJoystickCmd extends Command {
     m_fieldOrientedFunction = fieldOrientedFunction;
     m_aimBotFunction = aimBotFunction;
 
-    m_aimBotPID = new PIDController(0.6, 0.05, 0.0);
+    m_aimBotPID = new PIDController(1.0, 0.0, 0.0);
     m_aimBotPID.enableContinuousInput(-Math.PI, Math.PI);
     m_aimBotPID.setTolerance(SwerveConstants.Module.kTurningFeedbackTolerance);
 

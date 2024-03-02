@@ -38,10 +38,10 @@ public class ShooterSubsystem extends WCStaticSubsystem {
   @Override
   public void periodic() {
 
-    // if (m_beambreak.isBroken()) {
-    //   forwardMotors();
-    // } else {
-    //   stopMotors();
-    // }
+    if (m_beambreak.isBroken()) {
+      forwardMotors();
+    } else {
+      stopMotors();
+    }
   }
 }

@@ -66,6 +66,7 @@ public abstract class WCRobot {
   protected Boolean isAimBotting() {
     return m_isAimbotting;
   }
+
   protected void setAimBotting(Boolean value) {
     m_isAimbotting = value;
   }

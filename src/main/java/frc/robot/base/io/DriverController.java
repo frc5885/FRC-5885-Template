@@ -5,8 +5,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 public class DriverController extends WCXboxController {
 
-  public DriverController(
-      Command leftStickCommand, Command rightStickCommand) {
+  public DriverController(Command leftStickCommand, Command rightStickCommand) {
     super(ControllerConstants.kDriverControllerPort);
     leftStick.onTrue(leftStickCommand);
     rightStick.onTrue(rightStickCommand);

@@ -66,4 +66,16 @@ public class PhotonVisionSystem extends SubsystemBase {
     SmartDashboard.putNumber("AngleToTarget", angleToTarget);
     return angleToTarget;
   }
+
+  public double distanceToTarget(Pose2d robotPose, int targetID) {
+    Pose2d aprilTagLocation = aprilTagFieldLayout.getTagPose(targetID).get().toPose2d();
+    double targetX = aprilTagLocation.getTranslation().getX();
+    double targetY = aprilTagLocation.getTranslation().getY();
+    double robotX = robotPose.getTranslation().getX();
+    double robotY = robotPose.getTranslation().getY();
+    double distanceToTarget =
+        Math.sqrt(Math.pow(targetX - robotX, 2) + Math.pow(targetY - robotY, 2));
+    SmartDashboard.putNumber("DistanceToTarget", distanceToTarget);
+    return distanceToTarget;
+  }
 }
