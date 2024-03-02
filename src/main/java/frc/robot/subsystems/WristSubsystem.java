@@ -27,7 +27,7 @@ public class WristSubsystem extends WCStaticSubsystem {
 
   @Override
   protected double getBaseSpeed() {
-    return 1.0;
+    return 0.7;
   }
 
   @Override
