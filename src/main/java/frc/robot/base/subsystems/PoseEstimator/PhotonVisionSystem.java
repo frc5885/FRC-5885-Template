@@ -28,7 +28,12 @@ public class PhotonVisionSystem extends SubsystemBase {
   private PhotonPoseEstimator m_photonPoseEstimator;
 
   public PhotonVisionSystem() {
-    m_photonCamera = new PhotonCamera(AprilTagCameraConstants.kCameraName);
+    try {
+      m_photonCamera = new PhotonCamera(AprilTagCameraConstants.kCameraName);
+    } catch (Exception e) {
+      System.out.println("Photon camera not found: " + e.getMessage());
+      return; // Exit the constructor if the camera isn't found
+    }
     m_robotToCam =
         new Transform3d(
             new Translation3d(
