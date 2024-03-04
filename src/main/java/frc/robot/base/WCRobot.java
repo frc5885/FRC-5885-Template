@@ -14,9 +14,7 @@ import frc.robot.base.subsystems.PoseEstimator.SwervePoseEstimator;
 import frc.robot.base.subsystems.swerve.SwerveDriveSubsystem;
 import frc.robot.commands.SimplePathPlanner;
 import frc.robot.commands.SwerveJoystickCmd;
-
 import java.util.Optional;
-
 
 public abstract class WCRobot {
 
@@ -47,7 +45,7 @@ public abstract class WCRobot {
                   m_swervePoseEstimator.reset();
                 }),
             new InstantCommand(() -> m_isFieldOriented = !m_isFieldOriented));
-    
+
     initComponents();
     initSubsystems();
     initAutos();
@@ -55,7 +53,8 @@ public abstract class WCRobot {
     initOperatorControllerBindings(m_operatorController);
     initSwerveBindings();
 
-    // PATHPLANNER AUTO STUFF (building the auto chooser has to be done after named commands are registered in initAutos())
+    // PATHPLANNER AUTO STUFF (building the auto chooser has to be done after named commands are
+    // registered in initAutos())
     m_simplePathPlanner.setRotationTargetOverrideFunction(this::getOverrideAutoTargetRotation);
     m_simplePathPlanner.buildAutoChooserAndPutOnSmartDash();
   }

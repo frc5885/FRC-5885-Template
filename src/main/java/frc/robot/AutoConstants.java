@@ -3,7 +3,6 @@ package frc.robot;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
-
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -59,11 +58,20 @@ public class AutoConstants {
   }
 
   // Pathplanner
-  public static final HolonomicPathFollowerConfig pathFollowerConfig = new HolonomicPathFollowerConfig(
-      new PIDConstants(SwerveConstants.Module.kDriveFeedbackP, SwerveConstants.Module.kDriveFeedbackI, SwerveConstants.Module.kDriveFeedbackI), // Translation constants 
-      new PIDConstants(SwerveConstants.Module.kTurningFeedbackP, SwerveConstants.Module.kTurningFeedbackI, SwerveConstants.Module.kTurningFeedbackD), // Rotation constants 
-      SwerveConstants.kMaxSpeedMetersPerSecond, 
-      Math.hypot(SwerveConstants.kTrackWidthMeters/2, SwerveConstants.kWheelBaseWidthMeters/2), // Drive base radius (distance from center to furthest module) 
-      new ReplanningConfig()
-    );
+  public static final HolonomicPathFollowerConfig pathFollowerConfig =
+      new HolonomicPathFollowerConfig(
+          new PIDConstants(
+              SwerveConstants.Module.kDriveFeedbackP,
+              SwerveConstants.Module.kDriveFeedbackI,
+              SwerveConstants.Module.kDriveFeedbackI), // Translation constants
+          new PIDConstants(
+              SwerveConstants.Module.kTurningFeedbackP,
+              SwerveConstants.Module.kTurningFeedbackI,
+              SwerveConstants.Module.kTurningFeedbackD), // Rotation constants
+          SwerveConstants.kMaxSpeedMetersPerSecond,
+          Math.hypot(
+              SwerveConstants.kTrackWidthMeters / 2,
+              SwerveConstants.kWheelBaseWidthMeters
+                  / 2), // Drive base radius (distance from center to furthest module)
+          new ReplanningConfig());
 }

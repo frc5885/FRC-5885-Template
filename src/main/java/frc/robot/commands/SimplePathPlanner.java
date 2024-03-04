@@ -4,6 +4,9 @@
 
 package frc.robot.commands;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -13,13 +16,8 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.AutoConstants;
 import frc.robot.base.subsystems.PoseEstimator.SwervePoseEstimator;
 import frc.robot.base.subsystems.swerve.SwerveDriveSubsystem;
-
 import java.util.Optional;
 import java.util.function.Supplier;
-
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 public class SimplePathPlanner extends SequentialCommandGroup {
 
@@ -35,28 +33,29 @@ public class SimplePathPlanner extends SequentialCommandGroup {
 
     // Configure AutoBuilder
     AutoBuilder.configureHolonomic(
-      m_poseEstimator::getPose, 
-      m_poseEstimator::resetPose, 
-      m_robotDrive::getChassisSpeeds, 
-      m_robotDrive::setChassisSpeeds, 
-      AutoConstants.pathFollowerConfig,
-      () -> {
+        m_poseEstimator::getPose,
+        m_poseEstimator::resetPose,
+        m_robotDrive::getChassisSpeeds,
+        m_robotDrive::setChassisSpeeds,
+        AutoConstants.pathFollowerConfig,
+        () -> {
           // Boolean supplier that controls when the path will be mirrored for the red alliance
           // This will flip the path being followed to the red side of the field.
           // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
 
           var alliance = DriverStation.getAlliance();
           if (alliance.isPresent()) {
-              return alliance.get() == DriverStation.Alliance.Red;
+            return alliance.get() == DriverStation.Alliance.Red;
           }
           return false;
-      },
-      robotDrive
-    );
+        },
+        robotDrive);
   }
-  
-  public void setRotationTargetOverrideFunction(Supplier<Optional<Rotation2d>> targetRotationOverrideFunction) {
-    // this takes a function that returns an optional, if it is present, the target angle from the auto will be overridden (for better aiming)
+
+  public void setRotationTargetOverrideFunction(
+      Supplier<Optional<Rotation2d>> targetRotationOverrideFunction) {
+    // this takes a function that returns an optional, if it is present, the target angle from the
+    // auto will be overridden (for better aiming)
     PPHolonomicDriveController.setRotationTargetOverride(targetRotationOverrideFunction);
   }
 
@@ -72,5 +71,4 @@ public class SimplePathPlanner extends SequentialCommandGroup {
   public void registerNamedCommand(String name, Command command) {
     NamedCommands.registerCommand(name, command);
   }
-
 }

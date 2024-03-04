@@ -54,7 +54,7 @@ public class PhotonVisionSystem extends SubsystemBase {
             PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
             m_photonCamera,
             m_robotToCam);
-    
+
     // blue alliance speaker is 7, red alliance speaker is 4
     m_aimBotTargetID = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue ? 7 : 4;
   }
