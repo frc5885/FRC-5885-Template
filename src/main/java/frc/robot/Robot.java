@@ -1,8 +1,5 @@
 package frc.robot;
 
-import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.commands.PathPlannerAuto;
-
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.robot.base.WCRobot;
@@ -28,8 +25,6 @@ public class Robot extends WCRobot {
   ClimberSubsystem m_climberSubsystem;
   ShooterSubsystem m_shooterSubsystem;
 
-  PathPlannerAuto m_PathPlannerAutos[];
-
   @Override
   protected void initComponents() {
     m_beambreak = new Beambreak();
@@ -48,9 +43,11 @@ public class Robot extends WCRobot {
   @Override
   protected void initAutos() {
     // NAMED COMMANDS
+    pathPlannerRegisterNamedCommand("exampleCommand", new InstantCommand());
     // NamedCommands.registerCommand("exampleCommand", exampleSubsystem.exampleCommand());
 
     // AUTOS (these automatically get added to the smart dashboard chooser)
+    // not sure if you need to do this or not, they may just get added from the deploy directory
     // m_PathPlannerAutos = new PathPlannerAuto[1]; // number of autos
     // m_PathPlannerAutos[0] = new PathPlannerAuto("auto name");
   }

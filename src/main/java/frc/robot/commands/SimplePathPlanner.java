@@ -4,19 +4,30 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.AutoConstants;
 import frc.robot.base.subsystems.PoseEstimator.SwervePoseEstimator;
 import frc.robot.base.subsystems.swerve.SwerveDriveSubsystem;
+
+import java.util.Optional;
+import java.util.function.Supplier;
+
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 public class SimplePathPlanner extends SequentialCommandGroup {
 
   SwervePoseEstimator m_poseEstimator;
   SwerveDriveSubsystem m_robotDrive;
+  SendableChooser<Command> m_autoChooser;
 
-  /** Creates a new SimplePathPlanner. */
+  // creates a new pathplanner autobuilder
   public SimplePathPlanner(SwervePoseEstimator poseEstimator, SwerveDriveSubsystem robotDrive) {
 
     m_poseEstimator = poseEstimator;
@@ -43,4 +54,23 @@ public class SimplePathPlanner extends SequentialCommandGroup {
       robotDrive
     );
   }
+  
+  public void setRotationTargetOverrideFunction(Supplier<Optional<Rotation2d>> targetRotationOverrideFunction) {
+    // this takes a function that returns an optional, if it is present, the target angle from the auto will be overridden (for better aiming)
+    PPHolonomicDriveController.setRotationTargetOverride(targetRotationOverrideFunction);
+  }
+
+  public void buildAutoChooserAndPutOnSmartDash() {
+    m_autoChooser = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("Auto Select", m_autoChooser);
+  }
+
+  public Command getSelectedAuto() {
+    return m_autoChooser.getSelected();
+  }
+
+  public void registerNamedCommand(String name, Command command) {
+    NamedCommands.registerCommand(name, command);
+  }
+
 }

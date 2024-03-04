@@ -6,6 +6,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.AprilTagCameraConstants;
@@ -26,6 +28,8 @@ public class PhotonVisionSystem extends SubsystemBase {
   private Transform3d m_robotToCam;
 
   private PhotonPoseEstimator m_photonPoseEstimator;
+
+  private int m_aimBotTargetID;
 
   public PhotonVisionSystem() {
     try {
@@ -50,6 +54,9 @@ public class PhotonVisionSystem extends SubsystemBase {
             PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
             m_photonCamera,
             m_robotToCam);
+    
+    // blue alliance speaker is 7, red alliance speaker is 4
+    m_aimBotTargetID = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue ? 7 : 4;
   }
 
   public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose) {
@@ -58,9 +65,11 @@ public class PhotonVisionSystem extends SubsystemBase {
     return m_photonPoseEstimator.update();
   }
 
-  // can add other functions here later to check for specific april tags I think
+  public int getTargetID() {
+    // returns the April Tag ID of the speaker for either the blue or red alliance
+    return m_aimBotTargetID;
+  }
 
-  // this one might get the angle up to april tag ID 7 (middle of blue speaker) but idk
   public double getAngleToTarget(Pose2d robotPose, int targetID) {
     Pose2d aprilTagLocation = aprilTagFieldLayout.getTagPose(targetID).get().toPose2d();
     double targetX = aprilTagLocation.getTranslation().getX();
