@@ -67,7 +67,7 @@ public abstract class WCRobot {
             m_photonVision,
             () -> -m_driverController.getLeftY(),
             () -> -m_driverController.getLeftX(),
-            () -> -m_driverController.getRightX(),
+            () -> -getDriverRotationAxis(),
             () -> m_isFieldOriented,
             () -> m_isAimbotting));
   }
@@ -81,11 +81,20 @@ public abstract class WCRobot {
     m_isAimbotting = value;
   }
 
+  protected double getDriverRotationAxis() {
+    // if the driver is trying to rotate, turn off aimbotting
+    double position = m_driverController.getRightX();
+    if (Math.abs(position) > 0.1) {
+      setAimBotting(false);
+    }
+    return m_driverController.getRightX();
+  }
+
   // for pathplanner autos
   protected Optional<Rotation2d> getOverrideAutoTargetRotation() {
     // if aimbotting is on, return the angle to the target
     if (m_isAimbotting) {
-      double angleToTarget = m_photonVision.getAngleToTarget(m_swervePoseEstimator.getPose(), 7);
+      double angleToTarget = m_photonVision.getAngleToTarget(m_swervePoseEstimator.getPose(), m_photonVision.getTargetID());
       return Optional.of(Rotation2d.fromRadians(angleToTarget));
     }
     // otherwise, return empty and pathplanner will use the orientation from the path
