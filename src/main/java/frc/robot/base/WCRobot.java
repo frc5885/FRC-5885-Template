@@ -94,7 +94,9 @@ public abstract class WCRobot {
   protected Optional<Rotation2d> getOverrideAutoTargetRotation() {
     // if aimbotting is on, return the angle to the target
     if (m_isAimbotting) {
-      double angleToTarget = m_photonVision.getAngleToTarget(m_swervePoseEstimator.getPose(), m_photonVision.getTargetID());
+      double angleToTarget =
+          m_photonVision.getAngleToTarget(
+              m_swervePoseEstimator.getPose(), m_photonVision.getTargetID());
       return Optional.of(Rotation2d.fromRadians(angleToTarget));
     }
     // otherwise, return empty and pathplanner will use the orientation from the path
