@@ -4,87 +4,43 @@
 
 package frc.robot.commands;
 
-import com.choreo.lib.Choreo;
-import com.choreo.lib.ChoreoTrajectory;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.AutoConstants;
 import frc.robot.base.subsystems.PoseEstimator.SwervePoseEstimator;
 import frc.robot.base.subsystems.swerve.SwerveDriveSubsystem;
+import com.pathplanner.lib.auto.AutoBuilder;
 
-// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
-// information, see:
-// https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class SimplePathPlanner extends SequentialCommandGroup {
 
-  ChoreoTrajectory traj;
+  SwervePoseEstimator m_poseEstimator;
+  SwerveDriveSubsystem m_robotDrive;
 
   /** Creates a new SimplePathPlanner. */
-  public SimplePathPlanner(SwervePoseEstimator poseEstimator, SwerveDriveSubsystem m_robotDrive) {
-    // Add your commands in the addCommands() call, e.g.
-    // addCommands(new FooCommand(), new BarCommand());
+  public SimplePathPlanner(SwervePoseEstimator poseEstimator, SwerveDriveSubsystem robotDrive) {
 
-    traj = Choreo.getTrajectory("path close 1");
+    m_poseEstimator = poseEstimator;
+    m_robotDrive = robotDrive;
 
-    var thetaController = new PIDController(1, 0, 0);
-    thetaController.enableContinuousInput(-Math.PI, Math.PI);
+    // Configure AutoBuilder
+    AutoBuilder.configureHolonomic(
+      m_poseEstimator::getPose, 
+      m_poseEstimator::resetPose, 
+      m_robotDrive::getChassisSpeeds, 
+      m_robotDrive::setChassisSpeeds, 
+      AutoConstants.pathFollowerConfig,
+      () -> {
+          // Boolean supplier that controls when the path will be mirrored for the red alliance
+          // This will flip the path being followed to the red side of the field.
+          // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
 
-    addCommands(
-        new InstantCommand(
-            () -> {
-              poseEstimator.reset(traj.getInitialPose());
-            }),
-        Choreo.choreoSwerveCommand(
-            traj, // Choreo trajectory from above
-            poseEstimator
-                ::getPose, // A function that returns the current field-relative pose of the robot:
-            // your
-            // wheel or vision odometry
-            new PIDController(1, 0.0, 0.0), // PIDController for field-relative X
-            // translation (input: X error in meters,
-            // output: m/s).
-            new PIDController(1, 0.0, 0.0), // PIDController for field-relative Y
-            // translation (input: Y error in meters,
-            // output: m/s).
-            thetaController, // PID constants to correct for rotation
-            // error
-            m_robotDrive::setChassisSpeeds,
-            () ->
-                false, // Whether or not to mirror the path based on alliance (this assumes the path
-            // is
-            // created for the blue alliance)
-            m_robotDrive // The subsystem(s) to require, typically your drive subsystem only
-            ));
-    // addCommands(
-    // new InstantCommand(
-    // () -> {
-    // poseEstimator.reset(traj.getInitialPose());
-    // }),
-    // Choreo.choreoSwerveCommand(
-    // traj, // Choreo trajectory from above
-    // poseEstimator
-    // ::getPose, // A function that returns the current field-relative pose of the
-    // robot:
-    // // your
-    // // wheel or vision odometry
-    // new PIDController(1, 0.0, 0.0), // PIDController for field-relative X
-    // // translation (input: X error in meters,
-    // // output: m/s).
-    // new PIDController(1, 0.0, 0.0), // PIDController for field-relative Y
-    // // translation (input: Y error in meters,
-    // // output: m/s).
-    // thetaController, // PID constants to correct for rotation
-    // // error
-    // m_robotDrive::setChassisSpeeds,
-    // () -> {
-    // return DriverStation.getAlliance()
-    // .orElse(DriverStation.Alliance.Blue)
-    // .equals(DriverStation.Alliance.Red);
-    // }, // Whether or not to mirror the path based on alliance (this assumes the
-    // path is
-    // // created for the blue alliance)
-    // m_robotDrive // The subsystem(s) to require, typically your drive subsystem
-    // only
-    // ));
+          var alliance = DriverStation.getAlliance();
+          if (alliance.isPresent()) {
+              return alliance.get() == DriverStation.Alliance.Red;
+          }
+          return false;
+      },
+      robotDrive
+    );
   }
 }

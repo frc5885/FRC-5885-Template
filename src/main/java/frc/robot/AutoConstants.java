@@ -1,5 +1,9 @@
 package frc.robot;
 
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
+
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -10,6 +14,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import frc.robot.base.modules.swerve.SwerveConstants;
 
 public class AutoConstants {
 
@@ -52,4 +57,13 @@ public class AutoConstants {
     public static final Matrix<N3, N1> kVisionMeasurementStdDevs =
         VecBuilder.fill(0.15, 0.15, 0.15);
   }
+
+  // Pathplanner
+  public static final HolonomicPathFollowerConfig pathFollowerConfig = new HolonomicPathFollowerConfig(
+      new PIDConstants(5.0, 0, 0), // Translation constants 
+      new PIDConstants(5.0, 0, 0), // Rotation constants 
+      SwerveConstants.kMaxSpeedMetersPerSecond, 
+      Math.hypot(SwerveConstants.kTrackWidthMeters/2, SwerveConstants.kWheelBaseWidthMeters/2), // Drive base radius (distance from center to furthest module) 
+      new ReplanningConfig()
+    );
 }

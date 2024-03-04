@@ -88,13 +88,13 @@ public class SwervePoseEstimator extends SubsystemBase {
     return m_poseEstimator.getEstimatedPosition();
   }
 
-  public void reset(Pose2d newPose) {
+  public void resetPose(Pose2d newPose) {
     m_swerveDrive.resetGyro();
     m_poseEstimator.resetPosition(
         m_rotationSupplier.get(), m_swerveModulePositionSupplier.get(), newPose);
   }
 
   public void reset() {
-    reset(new Pose2d(0, 0, new Rotation2d()));
+    resetPose(new Pose2d(0, 0, new Rotation2d()));
   }
 }
