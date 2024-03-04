@@ -12,7 +12,6 @@ import frc.robot.base.io.OperatorController;
 import frc.robot.base.subsystems.PoseEstimator.PhotonVisionSystem;
 import frc.robot.base.subsystems.PoseEstimator.SwervePoseEstimator;
 import frc.robot.base.subsystems.swerve.SwerveDriveSubsystem;
-import frc.robot.commands.SimplePathPlanner;
 import frc.robot.commands.SwerveJoystickCmd;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -47,9 +46,10 @@ public abstract class WCRobot {
                   m_swervePoseEstimator.reset();
                 }),
             new InstantCommand(() -> m_isFieldOriented = !m_isFieldOriented));
-
+    
     initComponents();
     initSubsystems();
+    initAutos();
     initDriverControllerBindings(m_driverController);
     initOperatorControllerBindings(m_operatorController);
     initSwerveBindings();
@@ -84,6 +84,8 @@ public abstract class WCRobot {
   protected abstract void initComponents();
 
   protected abstract void initSubsystems();
+
+  protected abstract void initAutos();
 
   protected abstract void initDriverControllerBindings(DriverController m_driverController);
 

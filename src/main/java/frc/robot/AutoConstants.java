@@ -60,8 +60,8 @@ public class AutoConstants {
 
   // Pathplanner
   public static final HolonomicPathFollowerConfig pathFollowerConfig = new HolonomicPathFollowerConfig(
-      new PIDConstants(5.0, 0, 0), // Translation constants 
-      new PIDConstants(5.0, 0, 0), // Rotation constants 
+      new PIDConstants(SwerveConstants.Module.kDriveFeedbackP, SwerveConstants.Module.kDriveFeedbackI, SwerveConstants.Module.kDriveFeedbackI), // Translation constants 
+      new PIDConstants(SwerveConstants.Module.kTurningFeedbackP, SwerveConstants.Module.kTurningFeedbackI, SwerveConstants.Module.kTurningFeedbackD), // Rotation constants 
       SwerveConstants.kMaxSpeedMetersPerSecond, 
       Math.hypot(SwerveConstants.kTrackWidthMeters/2, SwerveConstants.kWheelBaseWidthMeters/2), // Drive base radius (distance from center to furthest module) 
       new ReplanningConfig()
