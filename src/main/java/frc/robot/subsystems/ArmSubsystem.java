@@ -31,7 +31,7 @@ public class ArmSubsystem extends WCStaticSubsystem {
 
   @Override
   protected Double getBaseSpeedDown() {
-      return 0.1;
+    return 0.1;
   }
 
   @Override
@@ -96,7 +96,7 @@ public class ArmSubsystem extends WCStaticSubsystem {
     subsystemAction = SubsystemAction.POS;
   }
 
-  public void resetEncoder(){
+  public void resetEncoder() {
     m_arm.setPosition(0.0);
   }
 }

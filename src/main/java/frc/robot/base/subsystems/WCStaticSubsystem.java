@@ -12,10 +12,10 @@ public abstract class WCStaticSubsystem extends SubsystemBase {
   private final List<MotorController> motors;
 
   protected abstract double getBaseSpeed();
-  protected Double getBaseSpeedDown(){
+
+  protected Double getBaseSpeedDown() {
     return null;
   }
-
 
   protected abstract List<MotorController> initMotors();
 

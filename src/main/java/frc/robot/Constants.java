@@ -1,7 +1,5 @@
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Rotation2d;
-
 public final class Constants {
   // Intake Motor IDs
   public static final int kIntakeLeft = 31;

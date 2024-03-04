@@ -2,14 +2,8 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.SparkAbsoluteEncoder;
-import com.revrobotics.SparkAbsoluteEncoder.Type;
 import com.revrobotics.SparkLimitSwitch;
-import com.revrobotics.SparkMaxAlternateEncoder;
-
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.DutyCycle;
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
@@ -57,7 +51,7 @@ public class WristSubsystem extends WCStaticSubsystem {
   // LOWER LIMIT ISNT ZERO IT WILL START IN AN IN BETWEEN
   @Override
   public void periodic() {
-  
+
     // SmartDashboard.putNumber("Wrist", m_wrist.getEncoder().getPosition());
     // SmartDashboard.putNumber("Wrist", m_wrist.getAbsoluteEncoder(Type.kDutyCycle).getPosition());
     SmartDashboard.putNumber("Wrist", m_wrist.getEncoder().getPosition());

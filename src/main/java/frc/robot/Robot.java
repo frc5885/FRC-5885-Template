@@ -1,7 +1,5 @@
 package frc.robot;
 
-import com.fasterxml.jackson.databind.deser.std.ContainerDeserializerBase;
-
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.robot.base.WCRobot;
@@ -50,7 +48,8 @@ public class Robot extends WCRobot {
     // m_driverController
     //     .getYButton()
     //     .whileTrue(
-    //         new StartEndCommand(() -> m_feederSubsystem.outtake(), () -> m_feederSubsystem.stop()));
+    //         new StartEndCommand(() -> m_feederSubsystem.outtake(), () ->
+    // m_feederSubsystem.stop()));
 
     m_driverController
         .getYButton()
@@ -87,7 +86,8 @@ public class Robot extends WCRobot {
     // m_driverController
     //     .getXButton()
     //     .whileTrue(
-    //         new StartEndCommand(() -> m_intakeSubsystem.outtake(), () -> m_intakeSubsystem.stop()));
+    //         new StartEndCommand(() -> m_intakeSubsystem.outtake(), () ->
+    // m_intakeSubsystem.stop()));
 
     // // Arm - Up
     // m_driverController
@@ -155,14 +155,12 @@ public class Robot extends WCRobot {
 
     m_operatorController
         .getLeftBumper()
-        .whileTrue(
-            new StartEndCommand(() -> m_armSubsystem.up(), () -> m_armSubsystem.stop()));
+        .whileTrue(new StartEndCommand(() -> m_armSubsystem.up(), () -> m_armSubsystem.stop()));
 
     // DOWN
     m_operatorController
         .getRightBumper()
-        .whileTrue(
-            new StartEndCommand(() -> m_armSubsystem.down(), () -> m_armSubsystem.stop()));
+        .whileTrue(new StartEndCommand(() -> m_armSubsystem.down(), () -> m_armSubsystem.stop()));
 
     // Arm Pos
     m_operatorController
