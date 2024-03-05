@@ -29,8 +29,6 @@ public class PhotonVisionSystem extends SubsystemBase {
 
   private PhotonPoseEstimator m_photonPoseEstimator;
 
-  private int m_aimBotTargetID;
-
   public PhotonVisionSystem() {
     try {
       m_photonCamera = new PhotonCamera(AprilTagCameraConstants.kCameraName);
@@ -54,9 +52,6 @@ public class PhotonVisionSystem extends SubsystemBase {
             PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
             m_photonCamera,
             m_robotToCam);
-
-    // blue alliance speaker is 7, red alliance speaker is 4
-    m_aimBotTargetID = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue ? 7 : 4;
   }
 
   public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose) {
@@ -67,7 +62,8 @@ public class PhotonVisionSystem extends SubsystemBase {
 
   public int getTargetID() {
     // returns the April Tag ID of the speaker for either the blue or red alliance
-    return m_aimBotTargetID;
+    // blue alliance speaker is 7, red alliance speaker is 4
+    return DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue ? 7 : 4;
   }
 
   public double getAngleToTarget(Pose2d robotPose, int targetID) {
