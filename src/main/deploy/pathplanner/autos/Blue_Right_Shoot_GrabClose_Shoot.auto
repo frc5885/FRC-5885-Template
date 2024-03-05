@@ -12,12 +12,6 @@
     "data": {
       "commands": [
         {
-          "type": "sequential",
-          "data": {
-            "commands": []
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "Right_Shoot_GrabClose_Shoot"

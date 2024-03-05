@@ -43,8 +43,7 @@ public class Robot extends WCRobot {
   @Override
   protected void initAutos() {
     // NAMED COMMANDS
-    pathPlannerRegisterNamedCommand("exampleCommand", new InstantCommand());
-    // NamedCommands.registerCommand("exampleCommand", exampleSubsystem.exampleCommand());
+    // pathPlannerRegisterNamedCommand("exampleCommand", new InstantCommand());
 
     // AUTOS (these automatically get added to the smart dashboard chooser)
     // not sure if you need to do this or not, they may just get added from the deploy directory
