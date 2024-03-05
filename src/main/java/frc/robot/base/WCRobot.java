@@ -5,6 +5,7 @@
 package frc.robot.base;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.base.io.DriverController;
@@ -119,6 +120,7 @@ public abstract class WCRobot {
 
   protected Command getAutonomousCommand() {
     // return new SimplePathPlanner(m_swervePoseEstimator, m_swerveDrive);
+    SmartDashboard.putString("test", "auto");
     return m_simplePathPlanner.getSelectedAuto();
   }
   ;

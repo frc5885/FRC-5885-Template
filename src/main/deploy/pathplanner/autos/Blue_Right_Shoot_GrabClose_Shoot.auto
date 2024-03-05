@@ -14,32 +14,13 @@
         {
           "type": "sequential",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Shoot"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "StartIntake"
-                }
-              }
-            ]
+            "commands": []
           }
         },
         {
           "type": "path",
           "data": {
             "pathName": "Right_Shoot_GrabClose_Shoot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
           }
         }
       ]
