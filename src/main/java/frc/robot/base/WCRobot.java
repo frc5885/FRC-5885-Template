@@ -5,15 +5,14 @@
 package frc.robot.base;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.base.io.DriverController;
 import frc.robot.base.io.OperatorController;
+import frc.robot.base.subsystems.WCPathPlanner;
 import frc.robot.base.subsystems.PoseEstimator.PhotonVisionSystem;
 import frc.robot.base.subsystems.PoseEstimator.SwervePoseEstimator;
 import frc.robot.base.subsystems.swerve.SwerveDriveSubsystem;
-import frc.robot.commands.SimplePathPlanner;
 import frc.robot.commands.SwerveJoystickCmd;
 import java.util.Optional;
 
@@ -26,7 +25,7 @@ public abstract class WCRobot {
   private final SwerveDriveSubsystem m_swerveDrive;
   private final SwervePoseEstimator m_swervePoseEstimator;
   private final PhotonVisionSystem m_photonVision;
-  private final SimplePathPlanner m_simplePathPlanner;
+  private final WCPathPlanner m_simplePathPlanner;
 
   boolean m_isFieldOriented = true;
 
@@ -36,7 +35,7 @@ public abstract class WCRobot {
     m_swerveDrive = new SwerveDriveSubsystem();
     m_photonVision = new PhotonVisionSystem();
     m_swervePoseEstimator = new SwervePoseEstimator(m_swerveDrive, m_photonVision);
-    m_simplePathPlanner = new SimplePathPlanner(m_swervePoseEstimator, m_swerveDrive);
+    m_simplePathPlanner = new WCPathPlanner(m_swervePoseEstimator, m_swerveDrive);
     m_operatorController = new OperatorController();
     m_driverController =
         new DriverController(
@@ -49,15 +48,15 @@ public abstract class WCRobot {
 
     initComponents();
     initSubsystems();
-    initAutos();
+    initAutoCommands();
     initDriverControllerBindings(m_driverController);
     initOperatorControllerBindings(m_operatorController);
     initSwerveBindings();
 
     // PATHPLANNER AUTO STUFF (building the auto chooser has to be done after named commands are
-    // registered in initAutos())
+    // registered in initAutoCommands())
     m_simplePathPlanner.setRotationTargetOverrideFunction(this::getOverrideAutoTargetRotation);
-    m_simplePathPlanner.buildAutoChooserAndPutOnSmartDash();
+    m_simplePathPlanner.buildAutoChooser();
   }
 
   private void initSwerveBindings() {
@@ -112,7 +111,7 @@ public abstract class WCRobot {
 
   protected abstract void initSubsystems();
 
-  protected abstract void initAutos();
+  protected abstract void initAutoCommands();
 
   protected abstract void initDriverControllerBindings(DriverController m_driverController);
 
@@ -120,7 +119,6 @@ public abstract class WCRobot {
 
   protected Command getAutonomousCommand() {
     // return new SimplePathPlanner(m_swervePoseEstimator, m_swerveDrive);
-    SmartDashboard.putString("test", "auto");
     return m_simplePathPlanner.getSelectedAuto();
   }
   ;

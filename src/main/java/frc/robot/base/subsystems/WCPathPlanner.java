@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.base.subsystems;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -18,14 +18,14 @@ import frc.robot.base.subsystems.swerve.SwerveDriveSubsystem;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-public class SimplePathPlanner {
+public class WCPathPlanner {
 
-  SwervePoseEstimator m_poseEstimator;
-  SwerveDriveSubsystem m_robotDrive;
-  SendableChooser<Command> m_autoChooser;
+  private final SwervePoseEstimator m_poseEstimator;
+  private final SwerveDriveSubsystem m_robotDrive;
+  private SendableChooser<Command> m_autoChooser;
 
   // creates a new pathplanner autobuilder
-  public SimplePathPlanner(SwervePoseEstimator poseEstimator, SwerveDriveSubsystem robotDrive) {
+  public WCPathPlanner(SwervePoseEstimator poseEstimator, SwerveDriveSubsystem robotDrive) {
 
     m_poseEstimator = poseEstimator;
     m_robotDrive = robotDrive;
@@ -48,7 +48,7 @@ public class SimplePathPlanner {
           }
           return false;
         },
-        robotDrive);
+        m_robotDrive);
   }
 
   public void setRotationTargetOverrideFunction(
@@ -58,7 +58,7 @@ public class SimplePathPlanner {
     PPHolonomicDriveController.setRotationTargetOverride(targetRotationOverrideFunction);
   }
 
-  public void buildAutoChooserAndPutOnSmartDash() {
+  public void buildAutoChooser() {
     m_autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Select", m_autoChooser);
   }

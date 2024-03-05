@@ -41,7 +41,7 @@ public class Robot extends WCRobot {
   }
 
   @Override
-  protected void initAutos() {
+  protected void initAutoCommands() {
     // NAMED COMMANDS
     // pathPlannerRegisterNamedCommand("exampleCommand", new InstantCommand());
 
@@ -170,14 +170,12 @@ public class Robot extends WCRobot {
 
     m_operatorController
         .getLeftBumper()
-        .whileTrue(
-            new StartEndCommand(() -> m_armSubsystem.up(), () -> m_armSubsystem.stop()));
+        .whileTrue(new StartEndCommand(() -> m_armSubsystem.up(), () -> m_armSubsystem.stop()));
 
     // DOWN
     m_operatorController
         .getRightBumper()
-        .whileTrue(
-            new StartEndCommand(() -> m_armSubsystem.down(), () -> m_armSubsystem.stop()));
+        .whileTrue(new StartEndCommand(() -> m_armSubsystem.down(), () -> m_armSubsystem.stop()));
 
     // Arm Pos
     m_operatorController
