@@ -10,7 +10,6 @@ import frc.robot.base.subsystems.SubsystemAction;
 import frc.robot.base.subsystems.WCStaticSubsystem;
 import java.util.List;
 import org.littletonrobotics.junction.Logger;
-import org.opencv.core.Mat;
 
 // NEXT STEPS
 // add encoder limits
@@ -27,7 +26,7 @@ public class ArmSubsystem extends WCStaticSubsystem {
 
   @Override
   protected double getBaseSpeed() {
-    return 0.4;
+    return 1.0;
   }
 
   @Override
@@ -38,7 +37,7 @@ public class ArmSubsystem extends WCStaticSubsystem {
   @Override
   protected List<MotorController> initMotors() {
     m_arm = new TalonFX(Constants.kArm);
-    m_PidController = new PIDController(0.5, 0.5, 0.00);
+    m_PidController = new PIDController(1.0, 5.0, 0.05);
     // m_arm.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 1, 0);
     // TalonFXConfiguration config = new TalonFXConfiguration();
     resetEncoder();
