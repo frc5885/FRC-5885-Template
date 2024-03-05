@@ -10,6 +10,7 @@ import frc.robot.base.subsystems.SubsystemAction;
 import frc.robot.base.subsystems.WCStaticSubsystem;
 import java.util.List;
 import org.littletonrobotics.junction.Logger;
+import org.opencv.core.Mat;
 
 // NEXT STEPS
 // add encoder limits
@@ -37,8 +38,7 @@ public class ArmSubsystem extends WCStaticSubsystem {
   @Override
   protected List<MotorController> initMotors() {
     m_arm = new TalonFX(Constants.kArm);
-    m_PidController = new PIDController(10.0, 0.0, 0.0);
-    m_PidController.enableContinuousInput(0, 2 * Math.PI);
+    m_PidController = new PIDController(0.5, 0.5, 0.00);
     // m_arm.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 1, 0);
     // TalonFXConfiguration config = new TalonFXConfiguration();
     resetEncoder();
@@ -57,9 +57,9 @@ public class ArmSubsystem extends WCStaticSubsystem {
     } else if (subsystemAction == SubsystemAction.POS) {
       double measurement =
           RobotSystem.isReal() ? m_arm.getPosition().getValueAsDouble() : positionSim;
-      double setpoint = m_setPoint;
-      m_arm.setVoltage(m_PidController.calculate(measurement, setpoint));
-      if (measurement == setpoint) {
+      m_arm.setVoltage(m_PidController.calculate(measurement, m_setPoint));
+      double buffer = 0.5;
+      if (measurement <= m_setPoint + buffer && measurement >= m_setPoint - buffer) {
         subsystemAction = null;
       }
     } else {

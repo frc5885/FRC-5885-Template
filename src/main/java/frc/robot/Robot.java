@@ -74,7 +74,12 @@ public class Robot extends WCRobot {
 
     m_driverController
         .getAButton()
-        .whileTrue(new InstantCommand(() -> m_armSubsystem.pos(Constants.kArmAmp)));
+        .onTrue(new InstantCommand(() -> m_armSubsystem.pos(Constants.kArmAmp)));
+
+    m_driverController
+        .getBButton()
+        .onTrue(new InstantCommand(() -> m_armSubsystem.pos(Constants.kArmStow)));
+
 
     // For testing
     // m_driverController
@@ -165,14 +170,16 @@ public class Robot extends WCRobot {
         .whileTrue(
             new StartEndCommand(() -> m_wristSubsystem.down(), () -> m_wristSubsystem.stop()));
 
-    m_operatorController
-        .getLeftBumper()
-        .whileTrue(new StartEndCommand(() -> m_armSubsystem.up(), () -> m_armSubsystem.stop()));
+    // m_operatorController
+    //     .getLeftBumper()
+    //     .whileTrue(
+    //         new StartEndCommand(() -> m_armSubsystem.up(), () -> m_armSubsystem.stop()));
 
     // DOWN
-    m_operatorController
-        .getRightBumper()
-        .whileTrue(new StartEndCommand(() -> m_armSubsystem.down(), () -> m_armSubsystem.stop()));
+    // m_operatorController
+    //     .getRightBumper()
+    //     .whileTrue(
+    //         new StartEndCommand(() -> m_armSubsystem.down(), () -> m_armSubsystem.stop()));
 
     // Arm Pos
     m_operatorController
