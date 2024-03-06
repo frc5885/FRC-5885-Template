@@ -82,6 +82,7 @@ public abstract class WCRobot {
 
   public void setAimBotting(Boolean value) {
     m_isAimbotting = value;
+    SmartDashboard.putBoolean("Aimbotting", m_isAimbotting);
   }
 
   protected double getDriverRotationAxis() {
@@ -124,5 +125,4 @@ public abstract class WCRobot {
     // return new SimplePathPlanner(m_swervePoseEstimator, m_swerveDrive);
     return m_simplePathPlanner.getSelectedAuto();
   }
-  ;
 }

@@ -3,9 +3,9 @@
   "startingPose": {
     "position": {
       "x": 1.0065279006958008,
-      "y": 4.035332679748535
+      "y": 3.535332679748535
     },
-    "rotation": 122.38069937914776
+    "rotation": 124.55401643062552
   },
   "command": {
     "type": "sequential",
@@ -14,7 +14,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Right_Shoot_GrabClose_Shoot"
+            "pathName": "Source_Shoot_GrabClose_Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shoot"
           }
         }
       ]

@@ -47,10 +47,6 @@ public class Robot extends WCRobot {
     // NAMED COMMANDS
     pathPlannerRegisterNamedCommand("shoot", new AutoShootCommand(this, m_feederSubsystem));
 
-    // AUTOS (these automatically get added to the smart dashboard chooser)
-    // not sure if you need to do this or not, they may just get added from the deploy directory
-    // m_PathPlannerAutos = new PathPlannerAuto[1]; // number of autos
-    // m_PathPlannerAutos[0] = new PathPlannerAuto("auto name");
   }
 
   @Override
@@ -193,4 +189,5 @@ public class Robot extends WCRobot {
     //     .getStartButton()
     //     .whileTrue(new InstantCommand(() -> m_wristSubsystem.pos(Constants.kWristSubwoofer)));
   }
+
 }
