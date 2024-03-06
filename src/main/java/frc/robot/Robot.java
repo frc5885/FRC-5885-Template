@@ -187,8 +187,8 @@ public class Robot extends WCRobot {
         .getYButton()
         .whileTrue(new InstantCommand(() -> m_wristSubsystem.pos(Constants.kWristAmp)));
 
-    m_operatorController
-        .getStartButton()
-        .whileTrue(new InstantCommand(() -> m_wristSubsystem.pos(Constants.kWristSubwoofer)));
+    // m_operatorController
+    //     .getStartButton()
+    //     .whileTrue(new InstantCommand(() -> m_wristSubsystem.pos(Constants.kWristSubwoofer)));
   }
 }

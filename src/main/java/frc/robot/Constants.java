@@ -24,12 +24,14 @@ public final class Constants {
   // Wrist Encoder Stuff
   // Angles with wrist relative to the arm at hardstop
   // Min to max 30 degrees
-  public static final double kWristEncoderMax = 0.0; // Max
-  public static final double kWristEncoderMin = -2.3; // Min
-  public static final double kWristStow = 0.0; // Stow
-  public static final double kWristAmp = -2.3; // Amp
+  // Max 0.315
+  // Min  0.625
+  public static final double kWristEncoderMax = 0.52; // Max
+  public static final double kWristEncoderMin = 0.325; // Min
+  public static final double kWristStow = 0.445; // Stow
+  public static final double kWristAmp = 0.325; // Amp
   // public static final double kWristSubwoofer = -0.5;
-  public static final double kWristSubwoofer = -1.2;
+  public static final double kWristSubwoofer = 0.0;
   public static final double kWrist15 = 0.0;
   public static final double kWrist30 = 0.0;
   public static final double kWrist45 = 0.0;

@@ -2,7 +2,10 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.SparkLimitSwitch;
+import com.revrobotics.SparkMaxAbsoluteEncoder;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -19,28 +22,28 @@ import org.littletonrobotics.junction.Logger;
 public class WristSubsystem extends WCStaticSubsystem {
 
   // Buffer is value slightly above 0 to ensure doesn't smack
-  private final double buffer = 0.0;
+  private final double buffer = 0.075;
 
   // private SparkAbsoluteEncoder m_absoluteEncoder;
   private CANSparkMax m_wrist;
-  private SparkLimitSwitch m_limitSwitchForward;
-  private SparkLimitSwitch m_limitSwitchReverse;
+  // private SparkLimitSwitch m_limitSwitchForward;
+  // private SparkLimitSwitch m_limitSwitchReverse;
   private PIDController m_PidController;
   private double m_setPoint;
 
   @Override
   protected double getBaseSpeed() {
-    return 0.25;
+    return 0.5;
   }
 
   @Override
   protected List<MotorController> initMotors() {
     // m_wrist = new CANSparkMax(Constants.kWrist, MotorType.kBrushless);
     m_wrist = new CANSparkMax(Constants.kWrist, MotorType.kBrushless);
-    m_limitSwitchForward = m_wrist.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
-    m_limitSwitchReverse = m_wrist.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
-    m_PidController = new PIDController(1.0, 0.25, 0.05);
-    m_PidController.enableContinuousInput(0, 2 * Math.PI);
+    // m_limitSwitchForward = m_wrist.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
+    // m_limitSwitchReverse = m_wrist.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
+    m_PidController = new PIDController(15.0, 2.5, 1.0);
+    // m_PidController.enableContinuousInput(0, 2 * Math.PI);
     // What resetEncoders() does has also been commented out
     // resetEncoders();
     // m_arm.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 1, 0);
@@ -54,9 +57,10 @@ public class WristSubsystem extends WCStaticSubsystem {
 
     // SmartDashboard.putNumber("Wrist", m_wrist.getEncoder().getPosition());
     // SmartDashboard.putNumber("Wrist", m_wrist.getAbsoluteEncoder(Type.kDutyCycle).getPosition());
-    SmartDashboard.putNumber("Wrist", m_wrist.getEncoder().getPosition());
-    SmartDashboard.putBoolean("Limit Forward", m_limitSwitchForward.isPressed());
-    SmartDashboard.putBoolean("Limit Reverse", m_limitSwitchReverse.isPressed());
+    SmartDashboard.putNumber("Wrist", m_wrist.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle).getPosition());
+    SmartDashboard.putNumber("WristVoltage", m_wrist.getAppliedOutput());
+    // SmartDashboard.putBoolean("Limit Forward", m_limitSwitchForward.isPressed());
+    // SmartDashboard.putBoolean("Limit Reverse", m_limitSwitchReverse.isPressed());
     SmartDashboard.putNumber("setPoint", m_setPoint);
     // System.out.println("Wrist Position" + m_wrist.getPosition().getValueAsDouble());
     if (subsystemAction == SubsystemAction.UP && isAtUpperLimit()) {
@@ -65,28 +69,28 @@ public class WristSubsystem extends WCStaticSubsystem {
         && isAtLowerLimit() /*&& m_limitSwitchForward.isPressed() */) {
       reverseMotors();
     } else if (subsystemAction == SubsystemAction.POS) {
-      double measurement = RobotSystem.isReal() ? m_wrist.getEncoder().getPosition() : positionSim;
+      double measurement = RobotSystem.isReal() ? m_wrist.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle).getPosition() : positionSim;
       double setpoint = m_setPoint;
       m_wrist.setVoltage(m_PidController.calculate(measurement, setpoint));
-      // if (measurement == setpoint) {
-      //   subsystemAction = null;
-      // }
+      if (measurement <= m_setPoint + buffer && measurement >= m_setPoint - buffer) {
+        subsystemAction = null;
+      }
     } else {
       stopMotors();
     }
     positionSim += m_wrist.getAppliedOutput() * 0.02;
     Logger.recordOutput("WristOutput", m_wrist.getAppliedOutput());
     Logger.recordOutput(
-        "wristPosition", RobotSystem.isReal() ? m_wrist.getEncoder().getPosition() : positionSim);
+        "wristPosition", RobotSystem.isReal() ? m_wrist.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle).getPosition() : positionSim);
   }
 
   private boolean isAtUpperLimit() {
-    double wristPosition = RobotSystem.isReal() ? m_wrist.getEncoder().getPosition() : positionSim;
+    double wristPosition = RobotSystem.isReal() ? m_wrist.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle).getPosition() : positionSim;
     return wristPosition < Constants.kWristEncoderMax + buffer;
   }
 
   private boolean isAtLowerLimit() {
-    double wristPosition = RobotSystem.isReal() ? m_wrist.getEncoder().getPosition() : positionSim;
+    double wristPosition = RobotSystem.isReal() ? m_wrist.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle).getPosition() : positionSim;
     return wristPosition > Constants.kWristEncoderMin - buffer;
   }
 
