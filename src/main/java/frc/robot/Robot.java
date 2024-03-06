@@ -1,11 +1,13 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.robot.base.WCRobot;
 import frc.robot.base.io.Beambreak;
 import frc.robot.base.io.DriverController;
 import frc.robot.base.io.OperatorController;
+import frc.robot.commands.AutoShootCommand;
 import frc.robot.commands.ClimberCommand;
 import frc.robot.commands.ShootCommand;
 import frc.robot.subsystems.ArmSubsystem;
@@ -43,7 +45,7 @@ public class Robot extends WCRobot {
   @Override
   protected void initAutoCommands() {
     // NAMED COMMANDS
-    // pathPlannerRegisterNamedCommand("exampleCommand", new InstantCommand());
+    pathPlannerRegisterNamedCommand("shoot", new AutoShootCommand(this, m_feederSubsystem));
 
     // AUTOS (these automatically get added to the smart dashboard chooser)
     // not sure if you need to do this or not, they may just get added from the deploy directory

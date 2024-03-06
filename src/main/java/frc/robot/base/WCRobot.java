@@ -80,7 +80,7 @@ public abstract class WCRobot {
     return m_isAimbotting;
   }
 
-  protected void setAimBotting(Boolean value) {
+  public void setAimBotting(Boolean value) {
     m_isAimbotting = value;
   }
 
