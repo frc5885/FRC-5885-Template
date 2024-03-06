@@ -57,6 +57,8 @@ public class AutoConstants {
         VecBuilder.fill(0.15, 0.15, 0.15);
   }
 
+  public static final double kAutoSpeedMultiplier = 0.25;
+
   // Pathplanner
   public static final HolonomicPathFollowerConfig pathFollowerConfig =
       new HolonomicPathFollowerConfig(
@@ -68,7 +70,7 @@ public class AutoConstants {
               SwerveConstants.Module.kTurningFeedbackP,
               SwerveConstants.Module.kTurningFeedbackI,
               SwerveConstants.Module.kTurningFeedbackD), // Rotation constants
-          SwerveConstants.kMaxSpeedMetersPerSecond,
+          SwerveConstants.kMaxSpeedMetersPerSecond * kAutoSpeedMultiplier,
           Math.hypot(
               SwerveConstants.kTrackWidthMeters / 2,
               SwerveConstants.kWheelBaseWidthMeters

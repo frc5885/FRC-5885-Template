@@ -44,6 +44,10 @@ public class WristSubsystem extends WCStaticSubsystem {
     // m_limitSwitchReverse = m_wrist.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
     m_absoluteEncoder = m_wrist.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
     m_PidController = new PIDController(15.0, 2.5, 1.0);
+    m_PidController.setTolerance(0.1);
+    SmartDashboard.putData("WristPID", m_PidController);
+
+    // addChild("PID", m_PidController);
     // m_PidController.enableContinuousInput(0, 2 * Math.PI);
     // What resetEncoders() does has also been commented out
     // resetEncoders();
@@ -63,7 +67,7 @@ public class WristSubsystem extends WCStaticSubsystem {
     SmartDashboard.putNumber("WristVoltage", m_wrist.getAppliedOutput());
     // SmartDashboard.putBoolean("Limit Forward", m_limitSwitchForward.isPressed());
     // SmartDashboard.putBoolean("Limit Reverse", m_limitSwitchReverse.isPressed());
-    SmartDashboard.putNumber("setPoint", m_setPoint);
+    SmartDashboard.putNumber("Wrist setPoint", m_setPoint);
     // System.out.println("Wrist Position" + m_wrist.getPosition().getValueAsDouble());
     if (subsystemAction == SubsystemAction.UP && isAtUpperLimit()) {
       forwardMotors();

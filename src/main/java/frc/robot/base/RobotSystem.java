@@ -53,6 +53,7 @@ public class RobotSystem extends LoggedRobot {
     }
 
     Logger.start();
+    enableLiveWindowInTest(true);
     m_robotContainer = new Robot();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
   }
