@@ -1,7 +1,6 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.robot.base.WCRobot;
 import frc.robot.base.io.Beambreak;
@@ -46,7 +45,6 @@ public class Robot extends WCRobot {
   protected void initAutoCommands() {
     // NAMED COMMANDS
     pathPlannerRegisterNamedCommand("shoot", new AutoShootCommand(this, m_feederSubsystem));
-
   }
 
   @Override
@@ -189,5 +187,4 @@ public class Robot extends WCRobot {
     //     .getStartButton()
     //     .whileTrue(new InstantCommand(() -> m_wristSubsystem.pos(Constants.kWristSubwoofer)));
   }
-
 }

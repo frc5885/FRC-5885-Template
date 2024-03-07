@@ -7,8 +7,8 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.Robot;
+import frc.robot.subsystems.FeederSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -24,13 +24,12 @@ public class AutoShootCommand extends SequentialCommandGroup {
     m_robot = robot;
 
     addCommands(
-      new InstantCommand(() -> m_robot.setAimBotting(true)),
-      new WaitCommand(2),
-      new InstantCommand(() -> m_feederSubsystem.intake()),
-      new WaitCommand(2),
-      new InstantCommand(() -> m_feederSubsystem.stop()),
-      new InstantCommand(() -> m_robot.setAimBotting(false))
-    );
+        new InstantCommand(() -> m_robot.setAimBotting(true)),
+        new WaitCommand(2),
+        // new InstantCommand(() -> m_feederSubsystem.intake()),
+        new WaitCommand(2),
+        // new InstantCommand(() -> m_feederSubsystem.stop()),
+        new InstantCommand(() -> m_robot.setAimBotting(false)));
     addRequirements(m_feederSubsystem);
   }
 }

@@ -114,15 +114,15 @@ public class SwerveJoystickCmd extends Command {
     double angularVelocity;
     if (m_aimBotFunction.get()) {
 
-      if (m_aimBotPID.atSetpoint()) {
-        angularVelocity = 0;
-      } else {
+      // if (m_aimBotPID.atSetpoint()) {
+      //   angularVelocity = 0;
+      // } else {
         Pose2d robotPose = m_poseEstimator.getPose();
         double angleToTarget =
             m_photonVision.getAngleToTarget(robotPose, m_photonVision.getTargetID());
         angularVelocity =
             m_aimBotPID.calculate(robotPose.getRotation().getRadians(), angleToTarget);
-      }
+      // }
     } else {
       angularVelocity =
           MathUtil.applyDeadband(

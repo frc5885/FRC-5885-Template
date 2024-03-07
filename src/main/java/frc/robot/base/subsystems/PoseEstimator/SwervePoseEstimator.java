@@ -62,12 +62,14 @@ public class SwervePoseEstimator extends SubsystemBase {
 
     // Update the WPI pose estimator with the latest vision measurements from photon vision if they
     // are present
-    Optional<EstimatedRobotPose> estimatedGlobalPosition =
-        m_photonVision.getEstimatedGlobalPose(estimatedPosition);
-    if (estimatedGlobalPosition.isPresent()) {
+    Optional<EstimatedRobotPose> estimatedGlobalPositionShooter =
+        m_photonVision.getEstimatedGlobalPoseShooter(estimatedPosition);
+    // Optional<EstimatedRobotPose> estimatedGlobalPositionIntake =
+    //     m_photonVision.getEstimatedGlobalPoseIntake(estimatedPosition);
+    if (estimatedGlobalPositionShooter.isPresent()) {
 
       // have to call .get() to get the value from the optional
-      EstimatedRobotPose estimatedVisionPose = estimatedGlobalPosition.get();
+      EstimatedRobotPose estimatedVisionPose = estimatedGlobalPositionShooter.get();
 
       // actually add the vision measurement
       m_poseEstimator.addVisionMeasurement(
@@ -77,7 +79,20 @@ public class SwervePoseEstimator extends SubsystemBase {
           "SwervePoseEstimator/visionEstimatedPose", estimatedVisionPose.estimatedPose.toPose2d());
       Logger.recordOutput(
           "SwervePoseEstimator/visionEstimatedPose3D", estimatedVisionPose.estimatedPose);
-    }
+    } //else if (estimatedGlobalPositionIntake.isPresent()) {
+
+    //   // have to call .get() to get the value from the optional
+    //   EstimatedRobotPose estimatedVisionPose = estimatedGlobalPositionIntake.get();
+
+    //   // actually add the vision measurement
+    //   m_poseEstimator.addVisionMeasurement(
+    //       estimatedVisionPose.estimatedPose.toPose2d(), estimatedVisionPose.timestampSeconds);
+
+    //   Logger.recordOutput(
+    //       "SwervePoseEstimator/visionEstimatedPose", estimatedVisionPose.estimatedPose.toPose2d());
+    //   Logger.recordOutput(
+    //       "SwervePoseEstimator/visionEstimatedPose3D", estimatedVisionPose.estimatedPose);
+    // }
   }
 
   public void addVisionPose(Pose2d pose, double timestamp) {
