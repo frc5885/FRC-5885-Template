@@ -67,9 +67,9 @@ public class AutoConstants {
               SwerveConstants.Module.kDriveFeedbackI,
               SwerveConstants.Module.kDriveFeedbackI), // Translation constants
           new PIDConstants(
-              SwerveConstants.Module.kTurningFeedbackP,
-              SwerveConstants.Module.kTurningFeedbackI,
-              SwerveConstants.Module.kTurningFeedbackD), // Rotation constants
+              SwerveConstants.AimBotConstants.kAimbotP,
+              SwerveConstants.AimBotConstants.kAimbotI,
+              SwerveConstants.AimBotConstants.kAimbotD), // Rotation constants
           SwerveConstants.kMaxSpeedMetersPerSecond * kAutoSpeedMultiplier,
           Math.hypot(
               SwerveConstants.kTrackWidthMeters / 2,

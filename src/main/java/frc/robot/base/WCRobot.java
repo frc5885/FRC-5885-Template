@@ -23,10 +23,10 @@ public abstract class WCRobot {
   final DriverController m_driverController;
   final OperatorController m_operatorController;
 
-  private final SwerveDriveSubsystem m_swerveDrive;
-  private final SwervePoseEstimator m_swervePoseEstimator;
-  private final PhotonVisionSystem m_photonVision;
-  private final WCPathPlanner m_simplePathPlanner;
+  public final SwerveDriveSubsystem m_swerveDrive;
+  public final SwervePoseEstimator m_swervePoseEstimator;
+  public final PhotonVisionSystem m_photonVision;
+  public final WCPathPlanner m_simplePathPlanner;
 
   boolean m_isFieldOriented = true;
 
@@ -88,7 +88,7 @@ public abstract class WCRobot {
   protected double getDriverRotationAxis() {
     // if the driver is trying to rotate, turn off aimbotting
     double position = m_driverController.getRightX();
-    if (Math.abs(position) > 0.1) {
+    if (Math.abs(position) > 0.3) {
       setAimBotting(false);
     }
     return m_driverController.getRightX();

@@ -72,9 +72,9 @@ public class SwerveJoystickCmd extends Command {
     m_aimBotFunction = aimBotFunction;
 
     // F = 1.54hz
-    m_aimBotPID = new PIDController(2.5, 0.25, 0.08);
+    m_aimBotPID = new PIDController(SwerveConstants.AimBotConstants.kAimbotP, SwerveConstants.AimBotConstants.kAimbotI , SwerveConstants.AimBotConstants.kAimbotD);
     m_aimBotPID.enableContinuousInput(-Math.PI, Math.PI);
-    m_aimBotPID.setTolerance(SwerveConstants.Module.kAimbotTolerance);
+    m_aimBotPID.setTolerance(SwerveConstants.AimBotConstants.kAimbotTolerance);
 
     addRequirements(m_swerveSubsystem);
   }
@@ -114,7 +114,7 @@ public class SwerveJoystickCmd extends Command {
     double angularVelocity;
     double rightJoystickX = m_turnDrivePercentFunction.get();
     if (m_aimBotFunction.get()) {
-      
+
       Pose2d robotPose = m_poseEstimator.getPose();
       double angleToTarget =
       m_photonVision.getAngleToTarget(robotPose, m_photonVision.getTargetID());

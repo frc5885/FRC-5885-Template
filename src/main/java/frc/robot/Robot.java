@@ -44,7 +44,7 @@ public class Robot extends WCRobot {
   @Override
   protected void initAutoCommands() {
     // NAMED COMMANDS
-    pathPlannerRegisterNamedCommand("shoot", new AutoShootCommand(this, m_feederSubsystem));
+    pathPlannerRegisterNamedCommand("shoot", new AutoShootCommand(this, m_feederSubsystem, m_wristSubsystem, m_swerveDrive, m_swervePoseEstimator, m_photonVision));
   }
 
   @Override

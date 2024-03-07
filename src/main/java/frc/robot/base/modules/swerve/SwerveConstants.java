@@ -52,6 +52,16 @@ public final class SwerveConstants {
           new Translation2d(-kWheelBaseWidthMeters / 2.0, kTrackWidthMeters / 2.0),
           new Translation2d(-kWheelBaseWidthMeters / 2.0, -kTrackWidthMeters / 2.0));
 
+  ////////////////////////
+  // Aimbot PID Constants
+  public static final class AimBotConstants {
+    public static final double kAimbotP = 2.5;
+    public static final double kAimbotI = 0.25;
+    public static final double kAimbotD = 0.08;
+    public static final double kAimbotTolerance = Units.degreesToRadians(1.5);
+  }
+  
+
   ///////////////////
   // Module constants
   public static final class Module {
@@ -123,7 +133,6 @@ public final class SwerveConstants {
     public static final double kTurningFeedbackI = 0.0;
     public static final double kTurningFeedbackD = 0.0;
     public static final double kTurningFeedbackTolerance = Units.degreesToRadians(0.65);
-    public static final double kAimbotTolerance = Units.degreesToRadians(1.5);
 
     //////////////////////////////////////
     // Motor Encoder Counts Per Revolution
