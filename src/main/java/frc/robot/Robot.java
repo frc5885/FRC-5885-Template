@@ -81,7 +81,6 @@ public class Robot extends WCRobot {
     //     .whileTrue(
     //         new StartEndCommand(() -> m_intakeSubsystem.outtake(), () ->
     // m_intakeSubsystem.stop()));
-    // new StartEndCommand(() -> m_isAimbotting = true, () -> m_isAimbotting = false));
 
     // m_driverController
     //     .getYButton()

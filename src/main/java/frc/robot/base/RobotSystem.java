@@ -84,7 +84,9 @@ public class RobotSystem extends LoggedRobot {
   public void autonomousPeriodic() {}
 
   @Override
-  public void autonomousExit() {}
+  public void autonomousExit() {
+    m_robotContainer.setAimBotting(false);
+  }
 
   @Override
   public void teleopInit() {
@@ -97,7 +99,9 @@ public class RobotSystem extends LoggedRobot {
   public void teleopPeriodic() {}
 
   @Override
-  public void teleopExit() {}
+  public void teleopExit() {
+    m_robotContainer.setAimBotting(false);
+  }
 
   @Override
   public void testInit() {

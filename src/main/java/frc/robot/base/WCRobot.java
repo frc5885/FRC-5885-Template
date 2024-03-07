@@ -28,9 +28,9 @@ public abstract class WCRobot {
   public final PhotonVisionSystem m_photonVision;
   public final WCPathPlanner m_simplePathPlanner;
 
-  boolean m_isFieldOriented = true;
+  protected boolean m_isFieldOriented = true;
 
-  boolean m_isAimbotting = false;
+  protected boolean m_isAimbotting = false;
 
   public WCRobot() {
     m_swerveDrive = new SwerveDriveSubsystem();
@@ -72,7 +72,7 @@ public abstract class WCRobot {
             () -> -m_driverController.getLeftX(),
             () -> -getDriverRotationAxis(),
             () -> m_isFieldOriented,
-            () -> m_isAimbotting));
+            () -> isAimBotting()));
   }
 
   // so that aimBotting can be set and accessed by other stuff in Robot.java
