@@ -58,6 +58,11 @@ public class WristSubsystem extends WCStaticSubsystem {
   @Override
   public void periodic() {
 
+    // update PID values from smart dashboard
+    m_PidController.setP(SmartDashboard.getNumber("Wrist/p", 15.0));
+    m_PidController.setI(SmartDashboard.getNumber("Wrist/i", 2.5));
+    m_PidController.setD(SmartDashboard.getNumber("Wrist/d", 1.0));
+
     // SmartDashboard.putNumber("Wrist", m_wrist.getEncoder().getPosition());
     // SmartDashboard.putNumber("Wrist", m_wrist.getAbsoluteEncoder(Type.kDutyCycle).getPosition());
     SmartDashboard.putNumber("Wrist", m_absoluteEncoder.getPosition());
