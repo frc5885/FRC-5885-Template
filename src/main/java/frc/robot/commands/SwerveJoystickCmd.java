@@ -156,7 +156,8 @@ public class SwerveJoystickCmd extends Command {
                           Units.degreesToRadians(alliance == Alliance.Blue ? 0.0 : 180.0))));
 
     } else {
-      chassisSpeeds = new ChassisSpeeds(translation.getX(), translation.getY(), angularVelocity);
+      double flipped = -1.0; // so that intake is forward in driver oriented mode
+      chassisSpeeds = new ChassisSpeeds(translation.getX()*flipped, translation.getY()*flipped, angularVelocity);
     }
 
     // chassisSpeeds = ChassisSpeeds.discretize(chassisSpeeds, 0.02);
