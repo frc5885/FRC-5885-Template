@@ -112,21 +112,22 @@ public class SwerveJoystickCmd extends Command {
     Alliance alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
     // Rotation speed stuff
     double angularVelocity;
+    double rightJoystickX = m_turnDrivePercentFunction.get();
     if (m_aimBotFunction.get()) {
+      
+      Pose2d robotPose = m_poseEstimator.getPose();
+      double angleToTarget =
+      m_photonVision.getAngleToTarget(robotPose, m_photonVision.getTargetID());
+      angularVelocity =
+      m_aimBotPID.calculate(robotPose.getRotation().getRadians(), angleToTarget);
 
-      // if (m_aimBotPID.atSetpoint()) {
-      //   angularVelocity = 0;
-      // } else {
-        Pose2d robotPose = m_poseEstimator.getPose();
-        double angleToTarget =
-            m_photonVision.getAngleToTarget(robotPose, m_photonVision.getTargetID());
-        angularVelocity =
-            m_aimBotPID.calculate(robotPose.getRotation().getRadians(), angleToTarget);
-      // }
+      if (m_aimBotPID.atSetpoint()) {
+        angularVelocity = 0;
+      }
     } else {
       angularVelocity =
           MathUtil.applyDeadband(
-              m_turnDrivePercentFunction.get(), SwerveConstants.kSwerveDriveDeadband);
+              rightJoystickX, SwerveConstants.kSwerveDriveDeadband);
     }
     angularVelocity *=
         SwerveConstants.kMaxSpeedAngularRadiansPerSecond * m_angularSpeedLimitChooser.get();
