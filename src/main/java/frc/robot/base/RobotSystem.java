@@ -17,8 +17,12 @@ public class RobotSystem extends LoggedRobot {
   private Command m_autonomousCommand;
   private WCRobot m_robotContainer;
 
+  // private LEDSubsystem m_ledSubsystem;
+
   @Override
   public void robotInit() {
+    // m_ledSubsystem = new LEDSubsystem();
+    // m_LedSubsystem.setLedRainbow();
 
     // Copied from advtangekit examples
     // Record metadata
@@ -28,7 +32,7 @@ public class RobotSystem extends LoggedRobot {
     // Logger.recordMetadata("GitDate", BuildConstants.GIT_DATE);
     // Logger.recordMetadata("GitBranch", BuildConstants.GIT_BRANCH);
     // switch (BuildConstants.DIRTY) {
-    //   case 0:
+    //   case ;:
     //     Logger.recordMetadata("GitDirty", "All changes committed");
     //     break;
     //   case 1:

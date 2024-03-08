@@ -13,6 +13,7 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.WristSubsystem;
 
@@ -25,6 +26,7 @@ public class Robot extends WCRobot {
   IntakeSubsystem m_intakeSubsystem;
   ClimberSubsystem m_climberSubsystem;
   ShooterSubsystem m_shooterSubsystem;
+//   LEDSubsystem m_ledSubsystem;
 
   @Override
   protected void initComponents() {
@@ -39,12 +41,21 @@ public class Robot extends WCRobot {
     m_feederSubsystem = new FeederSubsystem(m_beambreak);
     m_climberSubsystem = new ClimberSubsystem();
     m_shooterSubsystem = new ShooterSubsystem(m_beambreak);
+    // m_ledSubsystem = new LEDSubsystem();
   }
 
   @Override
   protected void initAutoCommands() {
     // NAMED COMMANDS
-    pathPlannerRegisterNamedCommand("shoot", new AutoShootCommand(this, m_feederSubsystem, m_wristSubsystem, m_swerveDrive, m_swervePoseEstimator, m_photonVision));
+    pathPlannerRegisterNamedCommand(
+        "shoot",
+        new AutoShootCommand(
+            this,
+            m_feederSubsystem,
+            m_wristSubsystem,
+            m_swerveDrive,
+            m_swervePoseEstimator,
+            m_photonVision));
   }
 
   @Override
@@ -63,17 +74,28 @@ public class Robot extends WCRobot {
         .whileTrue(new InstantCommand(() -> m_wristSubsystem.pos(Constants.kWristEject)));
 
     // aimbot mode (toggle on/off)
-    m_driverController
-        .getLeftBumper()
-        .whileTrue(new InstantCommand(() -> setAimBotting(!isAimBotting())));
+    // m_driverController
+    //     .getLeftBumper()
+    //     .whileTrue(new InstantCommand(() -> setAimBotting(!isAimBotting())));
 
-    m_driverController
-        .getAButton()
-        .onTrue(new InstantCommand(() -> m_armSubsystem.pos(Constants.kArmAmp)));
+    // m_driverController
+    //     .getAButton()
+    //     .onTrue(new InstantCommand(() -> m_armSubsystem.pos(Constants.kArmAmp)));
 
-    m_driverController
-        .getBButton()
-        .onTrue(new InstantCommand(() -> m_armSubsystem.pos(Constants.kArmStow)));
+    // m_driverController
+    //     .getBButton()
+    //     .onTrue(new InstantCommand(() -> m_armSubsystem.pos(Constants.kArmStow)));
+    
+    // LED TEST
+    // m_driverController
+    //     .getStartButton()
+    //     .whileTrue(new InstantCommand(() -> m_ledSubsystem.setSolid(255, 0, 255)));
+    // m_driverController
+    //     .getBackButton()
+    //     .whileTrue(new InstantCommand(() -> m_ledSubsystem.setOff()));
+    // m_driverController
+    //     .getRightBumper()
+    //     .toggleOnTrue(new InstantCommand(() -> m_ledSubsystem.setRainbow()));
 
     // For testing
     // m_driverController
@@ -100,15 +122,15 @@ public class Robot extends WCRobot {
     // m_intakeSubsystem.stop()));
 
     // // Arm - Up
-    // m_driverController
-    //     .getRightBumper()
-    //     .whileTrue(new StartEndCommand(() -> m_armSubsystem.up(), () -> m_armSubsystem.stop()));
+    m_driverController
+        .getRightBumper()
+        .whileTrue(new StartEndCommand(() -> m_armSubsystem.up(), () -> m_armSubsystem.stop()));
 
-    // // Arm - Down
-    // m_driverController
-    //     .getLeftBumper()
-    //     .whileTrue(new StartEndCommand(() -> m_armSubsystem.down(), () ->
-    // m_armSubsystem.stop()));
+    // Arm - Down
+    m_driverController
+        .getLeftBumper()
+        .whileTrue(new StartEndCommand(() -> m_armSubsystem.down(), () ->
+    m_armSubsystem.stop()));
 
     // // Wrist - Forward
     // m_driverController

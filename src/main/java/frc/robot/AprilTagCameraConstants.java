@@ -17,8 +17,8 @@ public class AprilTagCameraConstants {
   public class Shooter {
     public static final String kCameraName = "Arducam_OV2311_USB_Camera";
     public static final double kCameraPositionX = 0.0;
-    public static final double kCameraPositonY = Units.inchesToMeters(11.75);
-    public static final double kCameraPositionZ = Units.inchesToMeters(16);
+    public static final double kCameraPositonY = Units.inchesToMeters(11.56 + 0.39);
+    public static final double kCameraPositionZ = Units.inchesToMeters(13.876 + 1.8);
     public static final double kCameraRoll = 0.0;
     public static final double kCameraPitch = Units.degreesToRadians(15);
     public static final double kCameraYaw = 0.0;

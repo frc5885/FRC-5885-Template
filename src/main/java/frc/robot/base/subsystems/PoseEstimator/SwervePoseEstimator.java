@@ -62,7 +62,8 @@ public class SwervePoseEstimator extends SubsystemBase {
 
     // Update the WPI pose estimator with the latest vision measurements from photon vision if they
     // are present
-    Optional<EstimatedRobotPose> estimatedGlobalPosition = m_photonVision.getEstimatedGlobalPoseShooter(estimatedPosition);
+    Optional<EstimatedRobotPose> estimatedGlobalPosition =
+        m_photonVision.getEstimatedGlobalPoseShooter(estimatedPosition);
     if (estimatedGlobalPosition.isPresent()) {
 
       // have to call .get() to get the value from the optional
@@ -76,8 +77,7 @@ public class SwervePoseEstimator extends SubsystemBase {
           "SwervePoseEstimator/visionEstimatedPose", estimatedVisionPose.estimatedPose.toPose2d());
       Logger.recordOutput(
           "SwervePoseEstimator/visionEstimatedPose3D", estimatedVisionPose.estimatedPose);
-    } 
-
+    }
   }
 
   public Pose2d getPose() {

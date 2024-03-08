@@ -60,7 +60,6 @@ public final class SwerveConstants {
     public static final double kAimbotD = 0.08;
     public static final double kAimbotTolerance = Units.degreesToRadians(1.5);
   }
-  
 
   ///////////////////
   // Module constants

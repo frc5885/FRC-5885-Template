@@ -64,16 +64,20 @@ public class ClimberSubsystem extends WCDualSubsystem {
     // else{
     //   speed1 = 0;
     // }
-    // if (leftPosition < 0 && leftEncoderValue <= Constants.kLeftClimberMax) {
-    //   speed1 = leftPosition;
-    // }
-    // // // trying to move down and encoder is above min
-    // else if (leftPosition > 0 && leftEncoderValue >= Constants.kLeftClimberMin) {
-    //   speed1 = leftPosition;
-    // } else {
-    //   speed1 = 0;
-    // }
-    speed1 = leftPosition;
+    boolean limitsEnabled = false;
+    if (limitsEnabled) {
+      if (leftPosition < 0 && leftEncoderValue <= Constants.kLeftClimberMax) {
+        speed1 = leftPosition;
+      }
+      // // trying to move down and encoder is above min
+      else if (leftPosition > 0 && leftEncoderValue >= Constants.kLeftClimberMin) {
+        speed1 = leftPosition;
+      } else {
+        speed1 = 0;
+      }
+    } else {
+      speed1 = leftPosition;
+    }
   }
 
   public void rightStickPosition(double rightPosition) {
@@ -88,16 +92,20 @@ public class ClimberSubsystem extends WCDualSubsystem {
     // up is negative encoder value
 
     // trying to move up and encoder is below max
-    // if (rightPosition < 0 && rightEncoderValue <= Constants.kRightClimberMax) {
-    //   speed2 = rightPosition;
-    // }
-    // // // trying to move down and encoder is above min
-    // else if (rightPosition > 0 && rightEncoderValue >= Constants.kRightClimberMin) {
-    //   speed2 = rightPosition;
-    // } else {
-    //   speed2 = 0;
-    // }
-    speed2 = rightPosition;
+    boolean limitsEnabled = false;
+    if (limitsEnabled) {
+      if (rightPosition < 0 && rightEncoderValue <= Constants.kRightClimberMax) {
+        speed2 = rightPosition;
+      }
+      // // trying to move down and encoder is above min
+      else if (rightPosition > 0 && rightEncoderValue >= Constants.kRightClimberMin) {
+        speed2 = rightPosition;
+      } else {
+        speed2 = 0;
+      }
+    } else {
+      speed2 = rightPosition;
+    }
   }
 
   @Override

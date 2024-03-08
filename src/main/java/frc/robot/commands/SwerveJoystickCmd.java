@@ -72,7 +72,11 @@ public class SwerveJoystickCmd extends Command {
     m_aimBotFunction = aimBotFunction;
 
     // F = 1.54hz
-    m_aimBotPID = new PIDController(SwerveConstants.AimBotConstants.kAimbotP, SwerveConstants.AimBotConstants.kAimbotI , SwerveConstants.AimBotConstants.kAimbotD);
+    m_aimBotPID =
+        new PIDController(
+            SwerveConstants.AimBotConstants.kAimbotP,
+            SwerveConstants.AimBotConstants.kAimbotI,
+            SwerveConstants.AimBotConstants.kAimbotD);
     m_aimBotPID.enableContinuousInput(-Math.PI, Math.PI);
     m_aimBotPID.setTolerance(SwerveConstants.AimBotConstants.kAimbotTolerance);
 
@@ -117,17 +121,15 @@ public class SwerveJoystickCmd extends Command {
 
       Pose2d robotPose = m_poseEstimator.getPose();
       double angleToTarget =
-      m_photonVision.getAngleToTarget(robotPose, m_photonVision.getTargetID());
-      angularVelocity =
-      m_aimBotPID.calculate(robotPose.getRotation().getRadians(), angleToTarget);
+          m_photonVision.getAngleToTarget(robotPose, m_photonVision.getTargetID());
+      angularVelocity = m_aimBotPID.calculate(robotPose.getRotation().getRadians(), angleToTarget);
 
       if (m_aimBotPID.atSetpoint()) {
         angularVelocity = 0;
       }
     } else {
       angularVelocity =
-          MathUtil.applyDeadband(
-              rightJoystickX, SwerveConstants.kSwerveDriveDeadband);
+          MathUtil.applyDeadband(rightJoystickX, SwerveConstants.kSwerveDriveDeadband);
     }
     angularVelocity *=
         SwerveConstants.kMaxSpeedAngularRadiansPerSecond * m_angularSpeedLimitChooser.get();
@@ -157,7 +159,9 @@ public class SwerveJoystickCmd extends Command {
 
     } else {
       double flipped = -1.0; // so that intake is forward in driver oriented mode
-      chassisSpeeds = new ChassisSpeeds(translation.getX()*flipped, translation.getY()*flipped, angularVelocity);
+      chassisSpeeds =
+          new ChassisSpeeds(
+              translation.getX() * flipped, translation.getY() * flipped, angularVelocity);
     }
 
     // chassisSpeeds = ChassisSpeeds.discretize(chassisSpeeds, 0.02);
