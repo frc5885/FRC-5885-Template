@@ -35,7 +35,8 @@ public class AutoShootCommand extends ParallelDeadlineGroup {
       PhotonVisionSystem photonVision) {
 
     // the group will stop running when the super command finishes
-    // wait 2 seconds (to aim) then run feeder for 2 seconds, shooter should already be spinning
+    // wait 2 seconds (to aim) then run feeder for 2 seconds, shooter should already
+    // be spinning
     super(
         new SequentialCommandGroup(
             new InstantCommand(() -> robot.setAimBotting(true)),
@@ -53,10 +54,12 @@ public class AutoShootCommand extends ParallelDeadlineGroup {
 
     // these will stay running as long as the super command is running
     addCommands(
-        new AimSwerveToTargetCommand(m_swerveDriveSubsystem, m_poseEstimator, m_photonVision)
+        new AimSwerveToTargetCommand(m_swerveDriveSubsystem, m_poseEstimator, m_photonVision),
+        new MoveWristCommand(m_wristSubsystem, m_poseEstimator, m_photonVision)
         // wrist aimer will go here
         );
-    // swerve drive and wrist are required by their respective commands, don't include them here
+    // swerve drive and wrist are required by their respective commands, don't
+    // include them here
     addRequirements(m_feederSubsystem);
   }
 }

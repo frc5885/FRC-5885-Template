@@ -19,7 +19,7 @@ import org.littletonrobotics.junction.Logger;
 public class WristSubsystem extends WCStaticSubsystem {
 
   // Buffer is value slightly above 0 to ensure doesn't smack
-  private final double buffer = 0.075;
+  private final double buffer = 0.005;
 
   private SparkAbsoluteEncoder m_absoluteEncoder;
   private CANSparkMax m_wrist;
@@ -37,11 +37,12 @@ public class WristSubsystem extends WCStaticSubsystem {
   protected List<MotorController> initMotors() {
     // m_wrist = new CANSparkMax(Constants.kWrist, MotorType.kBrushless);
     m_wrist = new CANSparkMax(Constants.kWrist, MotorType.kBrushless);
-    // m_limitSwitchForward = m_wrist.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
-    // m_limitSwitchReverse = m_wrist.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
+    // m_limitSwitchForward =
+    // m_wrist.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
+    // m_limitSwitchReverse =
+    // m_wrist.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
     m_absoluteEncoder = m_wrist.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
-    m_PidController = new PIDController(15.0, 2.5, 1.0);
-    m_PidController.setTolerance(0.1);
+    m_PidController = new PIDController(0.5, 0.0, 0.05);
     SmartDashboard.putData("WristPID", m_PidController);
 
     // addChild("PID", m_PidController);
@@ -50,7 +51,8 @@ public class WristSubsystem extends WCStaticSubsystem {
     // resetEncoders();
     // m_arm.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 1, 0);
     // TalonFXConfiguration config = new TalonFXConfiguration();
-    startPID(); // this will start a PID with setpoint at current position when robot starts up
+    // startPID(); // this will start a PID with setpoint at current position when
+    // robot starts up
     return List.of(m_wrist);
   }
 
@@ -59,30 +61,36 @@ public class WristSubsystem extends WCStaticSubsystem {
   public void periodic() {
 
     // update PID values from smart dashboard
-    m_PidController.setP(SmartDashboard.getNumber("Wrist/p", 15.0));
-    m_PidController.setI(SmartDashboard.getNumber("Wrist/i", 2.5));
-    m_PidController.setD(SmartDashboard.getNumber("Wrist/d", 1.0));
 
     // SmartDashboard.putNumber("Wrist", m_wrist.getEncoder().getPosition());
-    // SmartDashboard.putNumber("Wrist", m_wrist.getAbsoluteEncoder(Type.kDutyCycle).getPosition());
+    // SmartDashboard.putNumber("Wrist",
+    // m_wrist.getAbsoluteEncoder(Type.kDutyCycle).getPosition());
     SmartDashboard.putNumber("Wrist", m_absoluteEncoder.getPosition());
     SmartDashboard.putNumber("WristVoltage", m_wrist.getAppliedOutput());
+    SmartDashboard.putString(
+        "WristAction",
+        (subsystemAction != null) ? subsystemAction.toString() : "null");
     // SmartDashboard.putBoolean("Limit Forward", m_limitSwitchForward.isPressed());
     // SmartDashboard.putBoolean("Limit Reverse", m_limitSwitchReverse.isPressed());
     SmartDashboard.putNumber("Wrist setPoint", m_setPoint);
-    // System.out.println("Wrist Position" + m_wrist.getPosition().getValueAsDouble());
+    // System.out.println("Wrist Position" +
+    // m_wrist.getPosition().getValueAsDouble());
     if (subsystemAction == SubsystemAction.UP && isAtUpperLimit()) {
       forwardMotors();
     } else if (subsystemAction == SubsystemAction.DOWN
-        && isAtLowerLimit() /*&& m_limitSwitchForward.isPressed() */) {
+        && isAtLowerLimit() /* && m_limitSwitchForward.isPressed() */) {
       reverseMotors();
     } else if (subsystemAction == SubsystemAction.POS) {
       double measurement = RobotSystem.isReal() ? m_absoluteEncoder.getPosition() : positionSim;
       double setpoint = m_setPoint;
-      m_wrist.setVoltage(m_PidController.calculate(measurement, setpoint));
-      // if (measurement <= m_setPoint + buffer && measurement >= m_setPoint - buffer) {
-      //   subsystemAction = null;
-      // }
+      double calc = m_PidController.calculate(measurement, setpoint);
+      SmartDashboard.putNumber("Wrist Calc", calc);
+      SmartDashboard.putNumber("Wrist Calc 2", calc * 2);
+      SmartDashboard.putNumber("Wrist Calc 3", m_wrist.getOutputCurrent());
+      m_wrist.setVoltage(calc * 2);
+      if (measurement <= m_setPoint + buffer && measurement >= m_setPoint - buffer) {
+        subsystemAction = null;
+      }
     } else {
       stopMotors();
     }
@@ -116,11 +124,11 @@ public class WristSubsystem extends WCStaticSubsystem {
   }
 
   // public void forward() {
-  //   subsystemAction = SubsystemAction.FORWARD;
+  // subsystemAction = SubsystemAction.FORWARD;
   // }
 
   // public void reverse() {
-  //   subsystemAction = SubsystemAction.REVERSE;
+  // subsystemAction = SubsystemAction.REVERSE;
   // }
 
   public void up() {

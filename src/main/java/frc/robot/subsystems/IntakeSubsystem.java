@@ -5,6 +5,7 @@ import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
+import frc.robot.base.RobotSystem;
 import frc.robot.base.io.Beambreak;
 import frc.robot.base.subsystems.SubsystemAction;
 import frc.robot.base.subsystems.WCStaticSubsystem;
@@ -35,8 +36,9 @@ public class IntakeSubsystem extends WCStaticSubsystem {
 
   @Override
   protected List<MotorController> initMotors() {
+    MotorType motorType = RobotSystem.isReal() ? MotorType.kBrushed : MotorType.kBrushless;
     // m_left = new CANSparkMax(Constants.kIntakeLeft, MotorType.kBrushless);
-    m_right = new CANSparkMax(Constants.kIntakeRight, MotorType.kBrushed);
+    m_right = new CANSparkMax(Constants.kIntakeRight, motorType);
     // return List.of(m_left, m_right);
     return List.of(m_right);
   }

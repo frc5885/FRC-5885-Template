@@ -2,7 +2,6 @@ package frc.robot.base.io;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.Constants;
-import frc.robot.subsystems.LEDSubsystem;
 
 public class Beambreak extends DigitalInput {
 

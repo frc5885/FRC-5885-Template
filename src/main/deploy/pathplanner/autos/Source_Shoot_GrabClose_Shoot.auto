@@ -2,15 +2,21 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.0065279006958008,
-      "y": 3.535332679748535
+      "x": 0.5286828875541687,
+      "y": 7.099283695220947
     },
-    "rotation": 124.55401643062552
+    "rotation": 0.0
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Amp_Wing1MoreCenterline_5n (2).1"
+          }
+        },
         {
           "type": "named",
           "data": {
@@ -20,13 +26,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Source_Shoot_GrabClose_Shoot"
+            "pathName": "Amp_Wing1MoreCenterline_5n (2).2"
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "shoot"
+            "pathName": "Amp_Wing1MoreCenterline_5n (2).3"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Amp_Wing1MoreCenterline_5n (2).4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Amp_Wing1MoreCenterline_5n (2).5"
           }
         }
       ]

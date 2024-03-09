@@ -13,7 +13,6 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.WristSubsystem;
 
@@ -26,7 +25,8 @@ public class Robot extends WCRobot {
   IntakeSubsystem m_intakeSubsystem;
   ClimberSubsystem m_climberSubsystem;
   ShooterSubsystem m_shooterSubsystem;
-//   LEDSubsystem m_ledSubsystem;
+
+  //   LEDSubsystem m_ledSubsystem;
 
   @Override
   protected void initComponents() {
@@ -78,14 +78,19 @@ public class Robot extends WCRobot {
     //     .getLeftBumper()
     //     .whileTrue(new InstantCommand(() -> setAimBotting(!isAimBotting())));
 
-    // m_driverController
-    //     .getAButton()
-    //     .onTrue(new InstantCommand(() -> m_armSubsystem.pos(Constants.kArmAmp)));
+    m_driverController
+        .getAButton()
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  m_armSubsystem.pos(Constants.kArmAmp);
+                  // m_wristSubsystem.pos(Constants.kWristAmp);
+                }));
 
-    // m_driverController
-    //     .getBButton()
-    //     .onTrue(new InstantCommand(() -> m_armSubsystem.pos(Constants.kArmStow)));
-    
+    m_driverController
+        .getBButton()
+        .onTrue(new InstantCommand(() -> m_armSubsystem.pos(Constants.kArmStow)));
+
     // LED TEST
     // m_driverController
     //     .getStartButton()
@@ -129,8 +134,7 @@ public class Robot extends WCRobot {
     // Arm - Down
     m_driverController
         .getLeftBumper()
-        .whileTrue(new StartEndCommand(() -> m_armSubsystem.down(), () ->
-    m_armSubsystem.stop()));
+        .whileTrue(new StartEndCommand(() -> m_armSubsystem.down(), () -> m_armSubsystem.stop()));
 
     // // Wrist - Forward
     // m_driverController
@@ -174,27 +178,28 @@ public class Robot extends WCRobot {
     // new JoystickButton(m_operatorController.getHID(), 3)
     // .whileTrue(new InstantCommand(() -> m_armSubsystem.pos()));
 
-    // Arm Up
+    // Wrist Up
     m_operatorController
         .getAButton()
         .whileTrue(new StartEndCommand(() -> m_wristSubsystem.up(), () -> m_wristSubsystem.stop()));
 
-    // Arm down
+    // Wrsit down
     m_operatorController
         .getBButton()
         .whileTrue(
             new StartEndCommand(() -> m_wristSubsystem.down(), () -> m_wristSubsystem.stop()));
 
+    // Arm Up
     m_operatorController
         .getLeftBumper()
         .whileTrue(new StartEndCommand(() -> m_armSubsystem.up(), () -> m_armSubsystem.stop()));
 
-    // DOWN
+    // Arm Down
     m_operatorController
         .getRightBumper()
         .whileTrue(new StartEndCommand(() -> m_armSubsystem.down(), () -> m_armSubsystem.stop()));
 
-    // Arm Pos
+    // Wrist Pos
     m_operatorController
         .getXButton()
         .whileTrue(new InstantCommand(() -> m_wristSubsystem.pos(Constants.kWristStow)));

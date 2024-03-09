@@ -54,13 +54,15 @@ public class SwervePoseEstimator extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
 
-    // Update the WPI pose estimator with the latest rotation and position measurements from swerve
+    // Update the WPI pose estimator with the latest rotation and position
+    // measurements from swerve
     // system
     m_poseEstimator.update(m_rotationSupplier.get(), m_swerveModulePositionSupplier.get());
     Pose2d estimatedPosition = getPose();
     Logger.recordOutput("SwervePoseEstimator/estimatedPose", estimatedPosition);
 
-    // Update the WPI pose estimator with the latest vision measurements from photon vision if they
+    // Update the WPI pose estimator with the latest vision measurements from photon
+    // vision if they
     // are present
     Optional<EstimatedRobotPose> estimatedGlobalPosition =
         m_photonVision.getEstimatedGlobalPoseShooter(estimatedPosition);
