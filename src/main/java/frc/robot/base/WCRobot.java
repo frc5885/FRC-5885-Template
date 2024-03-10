@@ -125,4 +125,6 @@ public abstract class WCRobot {
     // return new SimplePathPlanner(m_swervePoseEstimator, m_swerveDrive);
     return m_simplePathPlanner.getSelectedAuto();
   }
+
+  protected abstract void setLEDsTeleop();
 }

@@ -97,6 +97,7 @@ public class RobotSystem extends LoggedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    m_robotContainer.setLEDsTeleop();
   }
 
   @Override

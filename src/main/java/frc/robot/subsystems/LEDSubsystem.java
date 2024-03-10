@@ -4,13 +4,17 @@ import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.base.io.Beambreak;
+import java.util.function.Supplier;
 
 public class LEDSubsystem extends SubsystemBase {
 
   public enum LEDMode {
     OFF,
     RAINBOW,
-    SOLID
+    SOLID,
+    TELEOP,
+    AUTO
   }
 
   private AddressableLED m_led;
@@ -21,7 +25,10 @@ public class LEDSubsystem extends SubsystemBase {
   private int m_g;
   private int m_b;
 
-  public LEDSubsystem() {
+  Beambreak m_beambreak;
+  Supplier<Boolean> m_isAimbottingFunction;
+
+  public LEDSubsystem(Beambreak beambreak, Supplier<Boolean> isAimbottingFunction) {
     m_led = new AddressableLED(Constants.kLED);
     m_ledBuffer = new AddressableLEDBuffer(60);
     m_led.setLength(m_ledBuffer.getLength());
@@ -29,6 +36,9 @@ public class LEDSubsystem extends SubsystemBase {
     m_mode = LEDMode.OFF;
     m_led.start();
     m_rainbowFirstPixelHue = 0;
+
+    m_beambreak = beambreak;
+    m_isAimbottingFunction = isAimbottingFunction;
   }
 
   @Override
@@ -42,6 +52,21 @@ public class LEDSubsystem extends SubsystemBase {
         break;
       case SOLID:
         setLedColor(m_r, m_g, m_b);
+        break;
+      case TELEOP:
+        if (m_beambreak.isBroken()) {
+          if (m_isAimbottingFunction.get()) {
+            setLedColor(0, 255, 0);
+          } else {
+            setLedColor(255, 255, 255);
+          }
+        } else {
+          setLedColor(0, 0, 0);
+        }
+        break;
+      case AUTO:
+        // TODO AUTO LED CODE
+        updateLedRainbow();
         break;
     }
   }
@@ -78,5 +103,13 @@ public class LEDSubsystem extends SubsystemBase {
 
   public void setOff() {
     m_mode = LEDMode.OFF;
+  }
+
+  public void setTeleop() {
+    m_mode = LEDMode.TELEOP;
+  }
+
+  public void setAuto() {
+    m_mode = LEDMode.AUTO;
   }
 }
