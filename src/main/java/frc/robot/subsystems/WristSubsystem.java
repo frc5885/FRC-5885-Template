@@ -5,6 +5,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkAbsoluteEncoder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.base.RobotSystem;
@@ -26,11 +27,11 @@ public class WristSubsystem extends WCStaticSubsystem {
   // private SparkLimitSwitch m_limitSwitchForward;
   // private SparkLimitSwitch m_limitSwitchReverse;
   private PIDController m_PidController;
-  private double m_setPoint;
+  private double m_setPoint = Constants.kWristStow;
 
   @Override
   protected double getBaseSpeed() {
-    return 0.5;
+    return 1.0;
   }
 
   @Override
@@ -42,7 +43,7 @@ public class WristSubsystem extends WCStaticSubsystem {
     // m_limitSwitchReverse =
     // m_wrist.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
     m_absoluteEncoder = m_wrist.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
-    m_PidController = new PIDController(0.5, 0.0, 0.05);
+    m_PidController = new PIDController(35, 10, 0.5);
     SmartDashboard.putData("WristPID", m_PidController);
 
     // addChild("PID", m_PidController);
@@ -71,8 +72,12 @@ public class WristSubsystem extends WCStaticSubsystem {
         "WristAction",
         (subsystemAction != null) ? subsystemAction.toString() : "null");
     // SmartDashboard.putBoolean("Limit Forward", m_limitSwitchForward.isPressed());
-    // SmartDashboard.putBoolean("Limit Reverse", m_limitSwitchReverse.isPressed());
+    // SmartDashboard.putBo[]\olean("Limit Reverse", m_limitSwitchReverse.isPressed());
     SmartDashboard.putNumber("Wrist setPoint", m_setPoint);
+    m_setPoint = SmartDashboard.getNumber("Wrist shoot point", m_setPoint);
+    if (m_setPoint < Constants.kWristEncoderMin || m_setPoint > Constants.kWristStow) {
+      return;
+    }
     // System.out.println("Wrist Position" +
     // m_wrist.getPosition().getValueAsDouble());
     if (subsystemAction == SubsystemAction.UP && isAtUpperLimit()) {
@@ -82,15 +87,14 @@ public class WristSubsystem extends WCStaticSubsystem {
       reverseMotors();
     } else if (subsystemAction == SubsystemAction.POS) {
       double measurement = RobotSystem.isReal() ? m_absoluteEncoder.getPosition() : positionSim;
-      double setpoint = m_setPoint;
-      double calc = m_PidController.calculate(measurement, setpoint);
+      double calc = m_PidController.calculate(measurement, m_setPoint);
       SmartDashboard.putNumber("Wrist Calc", calc);
       SmartDashboard.putNumber("Wrist Calc 2", calc * 2);
       SmartDashboard.putNumber("Wrist Calc 3", m_wrist.getOutputCurrent());
-      m_wrist.setVoltage(calc * 2);
-      if (measurement <= m_setPoint + buffer && measurement >= m_setPoint - buffer) {
-        subsystemAction = null;
-      }
+      m_wrist.setVoltage(calc);
+      // if (measurement <= m_setPoint + buffer && measurement >= m_setPoint - buffer) {
+      //   subsystemAction = null;
+      // }
     } else {
       stopMotors();
     }
@@ -110,12 +114,12 @@ public class WristSubsystem extends WCStaticSubsystem {
     return wristPosition > Constants.kWristEncoderMin - buffer;
   }
 
-  @Override
-  public void stop() {
-    // lock PID to current position
-    subsystemAction = SubsystemAction.POS;
-    m_setPoint = m_absoluteEncoder.getPosition();
-  }
+  // @Override
+  // public void stop() {
+  //   // lock PID to current position
+  //   subsystemAction = SubsystemAction.POS;
+  //   m_setPoint = m_absoluteEncoder.getPosition();
+  // }
 
   public void startPID() {
     // start PID to current position when robot turns on

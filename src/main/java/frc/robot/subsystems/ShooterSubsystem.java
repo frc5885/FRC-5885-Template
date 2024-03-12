@@ -2,6 +2,8 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import frc.robot.Constants;
 import frc.robot.base.io.Beambreak;
@@ -14,6 +16,11 @@ public class ShooterSubsystem extends WCStaticSubsystem {
   private CANSparkMax m_bottom;
   // private double m_speed = 0.25;
   private Beambreak m_beambreak;
+  private ArmSubsystem m_armSubsystem;
+
+  private RelativeEncoder m_topEncoder;
+  private RelativeEncoder m_bottomEncoder;
+  
 
   @Override
   protected double getBaseSpeed() {
@@ -21,11 +28,14 @@ public class ShooterSubsystem extends WCStaticSubsystem {
   }
 
   /** Creates a new Shooter. */
-  public ShooterSubsystem(Beambreak m_beambreak) {
+  public ShooterSubsystem(Beambreak m_beambreak, ArmSubsystem armSubsystem) {
     super();
+    m_armSubsystem = armSubsystem;
     // m_top = new CANSparkMax(Constants.kShooterTop, MotorType.kBrushless);
     // m_bottom = new CANSparkMax(Constants.kShooterBottom, MotorType.kBrushless);
     this.m_beambreak = m_beambreak;
+    m_topEncoder = m_top.getEncoder();
+    m_bottomEncoder = m_bottom.getEncoder();
   }
 
   @Override
@@ -37,9 +47,13 @@ public class ShooterSubsystem extends WCStaticSubsystem {
 
   @Override
   public void periodic() {
-
     if (m_beambreak.isBroken()) {
-      forwardMotors();
+      if (m_armSubsystem.isArmUp()) {
+        m_top.setVoltage(-12 * 0.2);
+        m_bottom.setVoltage(-12 * 0.2);
+      } else {
+        forwardMotors();
+      }
     } else {
       stopMotors();
     }
