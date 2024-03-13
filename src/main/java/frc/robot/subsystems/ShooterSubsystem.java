@@ -7,6 +7,7 @@ import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import frc.robot.Constants;
 import frc.robot.base.io.Beambreak;
+import frc.robot.base.subsystems.SubsystemAction;
 import frc.robot.base.subsystems.WCStaticSubsystem;
 import java.util.List;
 
@@ -20,7 +21,6 @@ public class ShooterSubsystem extends WCStaticSubsystem {
 
   private RelativeEncoder m_topEncoder;
   private RelativeEncoder m_bottomEncoder;
-  
 
   @Override
   protected double getBaseSpeed() {
@@ -47,15 +47,21 @@ public class ShooterSubsystem extends WCStaticSubsystem {
 
   @Override
   public void periodic() {
-    if (m_beambreak.isBroken()) {
-      if (m_armSubsystem.isArmUp()) {
-        m_top.setVoltage(-12 * 0.2);
-        m_bottom.setVoltage(-12 * 0.2);
-      } else {
-        forwardMotors();
-      }
+    if (subsystemAction == SubsystemAction.SHOOT) {
+      forwardMotors();
+    } else if (subsystemAction == SubsystemAction.OUTTAKE) {
+      m_top.setVoltage(-12 * 0.2);
+      m_bottom.setVoltage(-12 * 0.2);
     } else {
       stopMotors();
     }
+  }
+
+  public void spinFast() {
+    subsystemAction = SubsystemAction.SHOOT;
+  }
+
+  public void spinSlow() {
+    subsystemAction = SubsystemAction.OUTTAKE;
   }
 }

@@ -48,7 +48,7 @@ public class IntakeSubsystem extends WCStaticSubsystem {
     SmartDashboard.putNumber("Intake", m_right.getAppliedOutput());
     if (subsystemAction == SubsystemAction.OUTTAKE) {
       reverseMotors();
-    } else if (subsystemAction == SubsystemAction.INTAKE || m_beambreak.isOpen()) {
+    } else if (subsystemAction == SubsystemAction.INTAKE) {
       forwardMotors();
     } else {
       stopMotors();

@@ -9,7 +9,9 @@ import frc.robot.base.io.DriverController;
 import frc.robot.base.io.OperatorController;
 import frc.robot.commands.AutoShootCommand;
 import frc.robot.commands.ClimberCommand;
+import frc.robot.commands.IntakeCMD;
 import frc.robot.commands.ShootCommand;
+import frc.robot.commands.SpinShooterCMD;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.FeederSubsystem;
@@ -62,163 +64,40 @@ public class Robot extends WCRobot {
   }
 
   @Override
-  protected void initDriverControllerBindings(DriverController m_driverController) {
+  protected void initDriverControllerBindings(DriverController m_driverController, OperatorController operatorController) {
 
-    m_feederSubsystem.setDefaultCommand(new ShootCommand(m_feederSubsystem, m_driverController));
-
-    // m_driverController
-    // .getYButton()
-    // .whileTrue(
-    // new StartEndCommand(() -> m_feederSubsystem.outtake(), () ->
-    // m_feederSubsystem.stop()));
-
-    m_driverController
-        .getYButton()
-        .whileTrue(new InstantCommand(() -> m_wristSubsystem.pos(Constants.kWristEject)));
-
-    // aimbot mode (toggle on/off)
-    // m_driverController
-    // .getLeftBumper()
-    // .whileTrue(new InstantCommand(() -> setAimBotting(!isAimBotting())));
-
+    m_feederSubsystem.setDefaultCommand(new ShootCommand(m_feederSubsystem, operatorController, m_driverController));
+    m_intakeSubsystem.setDefaultCommand(new IntakeCMD(m_beambreak, m_intakeSubsystem, m_feederSubsystem, m_driverController, operatorController));
     m_driverController
         .getAButton()
         .onTrue(new InstantCommand(
             () -> {
-              // m_armSubsystem.pos(Constants.kArmAmp);
+              m_armSubsystem.pos(Constants.kArmAmp);
               m_wristSubsystem.pos(Constants.kWristAmp);
             }));
 
     m_driverController
         .getBButton()
         .onTrue(new InstantCommand(() -> {
-          // m_armSubsystem.pos(Constants.kArmStow);
+          m_armSubsystem.pos(Constants.kArmStow);
           m_wristSubsystem.pos(Constants.kWristStow);
         }));
 
-    // LED TEST
-    // m_driverController
-    // .getStartButton()
-    // .whileTrue(new InstantCommand(() -> m_ledSubsystem.setSolid(255, 0, 255)));
-    // m_driverController
-    // .getBackButton()
-    // .whileTrue(new InstantCommand(() -> m_ledSubsystem.setOff()));
-    // m_driverController
-    // .getRightBumper()
-    // .toggleOnTrue(new InstantCommand(() -> m_ledSubsystem.setRainbow()));
-
-    // For testing
-    // m_driverController
-    // .getRightBumper()
-    // .whileTrue(
-    // new StartEndCommand(() -> m_intakeSubsystem.outtake(), () ->
-    // m_intakeSubsystem.stop()));
-
-    // m_driverController
-    // .getYButton()
-    // .whileTrue();
-
-    // new SequentialCommandGroup(
-    // new InstantCommand(() -> m_wristSubsystem.pos(Constants.kWristEject)),
-    // new
-    // new InstantCommand()
-    // );
-
-    // Intake
-    // m_driverController
-    // .getXButton()
-    // .whileTrue(
-    // new StartEndCommand(() -> m_intakeSubsystem.outtake(), () ->
-    // m_intakeSubsystem.stop()));
-
-    // // Wrist - Up
     m_driverController
-        .getRightBumper()
-        .whileTrue(new StartEndCommand(() -> m_wristSubsystem.up(), () -> m_wristSubsystem.stop()));
-
-    // Wrist - Down
-    m_driverController
-        .getLeftBumper()
-        .whileTrue(new StartEndCommand(() -> m_wristSubsystem.down(), () -> m_wristSubsystem.stop()));
-
-    // // Wrist - Forward
-    // m_driverController
-    // .getStartButton()
-    // .whileTrue(new StartEndCommand(() -> m_wristSubsystem.up(), () ->
-    // m_wristSubsystem.stop()));
-
-    // // Wrist - Reverse
-    // m_driverController
-    // .getBackButton()
-    // .whileTrue(
-    // new StartEndCommand(() -> m_wristSubsystem.down(), () ->
-    // m_wristSubsystem.stop()));
+        .getRightTriggerAxis();
   }
 
   @Override
-  protected void initOperatorControllerBindings(OperatorController m_operatorController) {
+  protected void initOperatorControllerBindings(DriverController driverController, OperatorController m_operatorController) {
+
 
     m_climberSubsystem.setDefaultCommand(
         new ClimberCommand(m_climberSubsystem, m_operatorController));
 
-    m_feederSubsystem.setDefaultCommand(new ShootCommand(m_feederSubsystem, m_operatorController));
+    m_feederSubsystem.setDefaultCommand(new ShootCommand(m_feederSubsystem, m_operatorController, driverController));
 
-    // Arm ToPos
-    // m_operatorController
-    // .getYButton()
-    // .whileTrue(new InstantCommand(
-    // () -> m_armSubsystem.toPos(Rotation2d.fromRadians(Math.PI / 2))));
-
-    // Menglins code for keyboard simulation
-    // // Arm Up
-    // new JoystickButton(m_operatorController.getHID(), 1)
-    // .whileTrue(new StartEndCommand(() -> m_armSubsystem.up(), () ->
-    // m_armSubsystem.stop()));
-
-    // // Arm Down
-    // new JoystickButton(m_operatorController.getHID(), 2)
-    // .whileTrue(new StartEndCommand(() -> m_armSubsystem.down(), () ->
-    // m_armSubsystem.stop()));
-
-    // // Arm Pos
-    // new JoystickButton(m_operatorController.getHID(), 3)
-    // .whileTrue(new InstantCommand(() -> m_armSubsystem.pos()));
-
-    // Wrist Up
-    m_operatorController
-        .getAButton()
-        .whileTrue(new StartEndCommand(() -> m_wristSubsystem.up(), () -> m_wristSubsystem.stop()));
-
-    // Wrsit down
-    m_operatorController
-        .getBButton()
-        .whileTrue(
-            new StartEndCommand(() -> m_wristSubsystem.down(), () -> m_wristSubsystem.stop()));
-
-    // Arm Up
-    m_operatorController
-        .getLeftBumper()
-        .whileTrue(new StartEndCommand(() -> m_armSubsystem.up(), () -> m_armSubsystem.stop()));
-
-    // Arm Down
-    m_operatorController
-        .getRightBumper()
-        .whileTrue(new StartEndCommand(() -> m_armSubsystem.down(), () -> m_armSubsystem.stop()));
-
-    // Wrist Pos
-    m_operatorController
-        .getXButton()
-        .whileTrue(new InstantCommand(() -> m_wristSubsystem.pos(Constants.kWristStow)));
-
-    // Wrist Pos Amp
-    m_operatorController
-        .getYButton()
-        .whileTrue(new InstantCommand(() -> m_wristSubsystem.pos(Constants.kWristAmp)));
-
-    // m_operatorController
-    // .getStartButton()
-    // .whileTrue(new InstantCommand(() ->
-    // m_wristSubsystem.pos(Constants.kWristSubwoofer)));
+    m_shooterSubsystem.setDefaultCommand(new SpinShooterCMD(m_operatorController, m_shooterSubsystem, m_armSubsystem));
+  
   }
 
   @Override

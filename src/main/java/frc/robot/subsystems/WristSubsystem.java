@@ -92,9 +92,9 @@ public class WristSubsystem extends WCStaticSubsystem {
       SmartDashboard.putNumber("Wrist Calc 2", calc * 2);
       SmartDashboard.putNumber("Wrist Calc 3", m_wrist.getOutputCurrent());
       m_wrist.setVoltage(calc);
-      // if (measurement <= m_setPoint + buffer && measurement >= m_setPoint - buffer) {
-      //   subsystemAction = null;
-      // }
+      if (m_setPoint == Constants.kWristStow && measurement <= m_setPoint + buffer && measurement >= m_setPoint - buffer) {
+        subsystemAction = null;
+      }
     } else {
       stopMotors();
     }

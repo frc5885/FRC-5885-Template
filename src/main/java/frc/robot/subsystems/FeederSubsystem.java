@@ -35,7 +35,7 @@ public class FeederSubsystem extends WCStaticSubsystem {
 
   @Override
   public void periodic() {
-    if (subsystemAction == SubsystemAction.INTAKE || m_beambreak.isOpen()) {
+    if (subsystemAction == SubsystemAction.INTAKE) {
       forwardMotors();
     } else if (subsystemAction == SubsystemAction.OUTTAKE) {
       reverseMotors();
