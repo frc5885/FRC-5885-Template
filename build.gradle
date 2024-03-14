@@ -10,6 +10,16 @@ java {
     targetCompatibility = JavaVersion.VERSION_17
 }
 
+project.compileJava.dependsOn(createVersionFile)
+gversion {
+    srcDir       = "src/main/java/"
+    classPackage = "frc.robot.kernal"
+    className    = "BuildConstants"
+    dateFormat   = "yyyy-MM-dd HH:mm:ss z"
+    timeZone     = "America/New_York" // Use preferred time zone
+    indent       = "  "
+}
+
 def ROBOT_MAIN_CLASS = "frc.robot.kernal.Main"
 
 // Define my targets (RoboRIO) and artifacts (deployable files)
