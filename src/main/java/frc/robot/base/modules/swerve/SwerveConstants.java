@@ -18,7 +18,7 @@ public final class SwerveConstants {
   //
   // This value is used to offset some countersteering when turning
   // and driving at the same time. It is a guessed value but 0.075 works well.
-  public static final double kDriftFactor = 0.075;
+  public static final double kDriftFactor = 0.6;
 
   ////////////////////////
   // Use External Encoders

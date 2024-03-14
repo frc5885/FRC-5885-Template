@@ -17,15 +17,13 @@ public class IntakeCMD extends Command {
   IntakeSubsystem m_intakeSubsystem;
   FeederSubsystem m_feederSubsystem;
   DriverController m_driverController;
-  OperatorController m_operatorController;
 
   public IntakeCMD(Beambreak beambreak, IntakeSubsystem intakeSubsystem, FeederSubsystem feederSubsystem,
-      DriverController driverController, OperatorController operatorController) {
+      DriverController driverController) {
     m_beambreak = beambreak;
     m_intakeSubsystem = intakeSubsystem;
     m_feederSubsystem = feederSubsystem;
     m_driverController = driverController;
-    m_operatorController = operatorController;
 
     addRequirements(m_intakeSubsystem);
   }
@@ -38,13 +36,13 @@ public class IntakeCMD extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double trigerAxis = m_driverController.getRightTriggerAxis();
-    if (trigerAxis > 0.1 && m_beambreak.isOpen()) {
+    boolean rightBumperPressed = m_driverController.getRightBumper().getAsBoolean();
+    if (rightBumperPressed && m_beambreak.isOpen()) {
       m_intakeSubsystem.intake();
       m_feederSubsystem.intake();
     } else {
       m_intakeSubsystem.stop();
-      if (m_operatorController.getRightTriggerAxis() < 0.1) {
+      if (m_driverController.getRightTriggerAxis() < 0.1) {
         m_feederSubsystem.stop();
       }
     }

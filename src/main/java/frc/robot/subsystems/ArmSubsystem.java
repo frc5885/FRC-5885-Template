@@ -50,6 +50,7 @@ public class ArmSubsystem extends WCStaticSubsystem {
   public void periodic() {
     SmartDashboard.putNumber("ArmVoltage", m_arm.getMotorVoltage().getValueAsDouble());
     SmartDashboard.putNumber("ArmPosition", m_encoder.getAbsolutePosition());
+    SmartDashboard.putNumber("ArmCurrent", m_arm.getSupplyCurrent().getValueAsDouble());
     if (subsystemAction == SubsystemAction.UP /* && withinLowerLimit() */) {
       reverseMotors();
     } else if (subsystemAction == SubsystemAction.DOWN /* && withinUpperLimit() */) {
@@ -91,6 +92,6 @@ public class ArmSubsystem extends WCStaticSubsystem {
   }
 
   public boolean isArmUp() {
-    return m_encoder.getAbsolutePosition() > Constants.kArmAmp - 0.01;
+    return m_setPoint == Constants.kArmAmp;
   }
 }

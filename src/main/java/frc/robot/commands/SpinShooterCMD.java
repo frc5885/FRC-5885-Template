@@ -4,6 +4,8 @@
 
 package frc.robot.commands;
 
+import java.sql.Driver;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.base.io.DriverController;
 import frc.robot.base.io.OperatorController;
@@ -12,14 +14,14 @@ import frc.robot.subsystems.ShooterSubsystem;
 
 public class SpinShooterCMD extends Command {
 
-  OperatorController m_OperatorController;
+  DriverController m_driverController;
   ShooterSubsystem m_shooterSubsystem;
   ArmSubsystem m_armSubsystem;
 
   /** Creates a new SpinShooterCMD. */
-  public SpinShooterCMD(OperatorController OperatorController, ShooterSubsystem shooterSubsystem,
+  public SpinShooterCMD(DriverController driverController, ShooterSubsystem shooterSubsystem,
       ArmSubsystem armSubsystem) {
-    m_OperatorController = OperatorController;
+    m_driverController = driverController;
     m_shooterSubsystem = shooterSubsystem;
     m_armSubsystem = armSubsystem;
 
@@ -34,7 +36,7 @@ public class SpinShooterCMD extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (m_OperatorController.getLeftTriggerAxis() > 0.1) {
+    if (m_driverController.getLeftTriggerAxis() > 0.1) {
       m_shooterSubsystem.spinFast();
     } else if (m_armSubsystem.isArmUp()) {
       m_shooterSubsystem.spinSlow();

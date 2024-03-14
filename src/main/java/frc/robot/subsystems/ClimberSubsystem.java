@@ -12,10 +12,10 @@ import frc.robot.base.subsystems.WCDualSubsystem;
 
 public class ClimberSubsystem extends WCDualSubsystem {
 
-  //   enum ClimberAction {
-  //     ON,
-  //     OFF;
-  //   }
+  // enum ClimberAction {
+  // ON,
+  // OFF;
+  // }
 
   // TODO ADD NAVX INTEGRATION WHERE IT AUTO BALANCES
   // RN MAKE SECOND CONTROLLER JOYSTICK Y AXIS
@@ -32,6 +32,8 @@ public class ClimberSubsystem extends WCDualSubsystem {
     // m_left = new CANSparkMax(Constants.kClimberLeft, MotorType.kBrushless);
     // m_right = new CANSparkMax(Constants.kClimberRight, MotorType.kBrushless);
     super();
+    SmartDashboard.putBoolean("resetArmEncoders", false);
+    SmartDashboard.putBoolean("armLimits", true);
   }
 
   @Override
@@ -54,17 +56,18 @@ public class ClimberSubsystem extends WCDualSubsystem {
     double leftEncoderValue = m_leftRelativeEncoder.getPosition() * -1;
     SmartDashboard.putNumber("ClimberLeft", leftEncoderValue);
     leftPosition = MathUtil.applyDeadband(leftPosition, Constants.kOperatorLeftDeadzone);
-    // if (leftPosition < 0 && m_leftRelativeEncoder.getPosition() > Constants.kLeftClimberMin){
-    //   speed1 = leftPosition;
+    // if (leftPosition < 0 && m_leftRelativeEncoder.getPosition() >
+    // Constants.kLeftClimberMin){
+    // speed1 = leftPosition;
     // }
     // else if (leftPosition > 0 && m_leftRelativeEncoder.getPosition() <
     // Constants.kLeftClimberMax){
-    //   speed1 = leftPosition;
+    // speed1 = leftPosition;
     // }
     // else{
-    //   speed1 = 0;
+    // speed1 = 0;
     // }
-    boolean limitsEnabled = false;
+    boolean limitsEnabled = SmartDashboard.getBoolean("armLimits", true);
     if (limitsEnabled) {
       if (leftPosition < 0 && leftEncoderValue <= Constants.kLeftClimberMax) {
         speed1 = leftPosition;
@@ -87,12 +90,12 @@ public class ClimberSubsystem extends WCDualSubsystem {
     rightPosition = MathUtil.applyDeadband(rightPosition, Constants.kOperatorRightDeadzone);
     // speed2 = rightPosition;
 
-    //  right position is joystick value
+    // right position is joystick value
     // getposition starts at 0
     // up is negative encoder value
 
     // trying to move up and encoder is below max
-    boolean limitsEnabled = false;
+    boolean limitsEnabled = SmartDashboard.getBoolean("armLimits", true);
     if (limitsEnabled) {
       if (rightPosition < 0 && rightEncoderValue <= Constants.kRightClimberMax) {
         speed2 = rightPosition;
@@ -111,5 +114,15 @@ public class ClimberSubsystem extends WCDualSubsystem {
   @Override
   protected double getBaseSpeed() {
     return 1.0;
+  }
+
+  @Override
+  public void periodic() {
+    super.periodic();
+    boolean encoderReset = SmartDashboard.getBoolean("resetArmEncoders", false);
+    if (encoderReset) {
+      resetEncoders();
+      SmartDashboard.putBoolean("resetArmEncoders", false);
+    }
   }
 }

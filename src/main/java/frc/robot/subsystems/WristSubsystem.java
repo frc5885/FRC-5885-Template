@@ -74,7 +74,7 @@ public class WristSubsystem extends WCStaticSubsystem {
     // SmartDashboard.putBoolean("Limit Forward", m_limitSwitchForward.isPressed());
     // SmartDashboard.putBo[]\olean("Limit Reverse", m_limitSwitchReverse.isPressed());
     SmartDashboard.putNumber("Wrist setPoint", m_setPoint);
-    m_setPoint = SmartDashboard.getNumber("Wrist shoot point", m_setPoint);
+    // m_setPoint = SmartDashboard.getNumber("Wrist shoot point", m_setPoint);
     if (m_setPoint < Constants.kWristEncoderMin || m_setPoint > Constants.kWristStow) {
       return;
     }
@@ -92,9 +92,9 @@ public class WristSubsystem extends WCStaticSubsystem {
       SmartDashboard.putNumber("Wrist Calc 2", calc * 2);
       SmartDashboard.putNumber("Wrist Calc 3", m_wrist.getOutputCurrent());
       m_wrist.setVoltage(calc);
-      if (m_setPoint == Constants.kWristStow && measurement <= m_setPoint + buffer && measurement >= m_setPoint - buffer) {
-        subsystemAction = null;
-      }
+      // if (m_setPoint == Constants.kWristStow && measurement <= m_setPoint + buffer && measurement >= m_setPoint - buffer) {
+      //   subsystemAction = null;
+      // }
     } else {
       stopMotors();
     }

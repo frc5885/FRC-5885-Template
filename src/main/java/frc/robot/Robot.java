@@ -64,10 +64,13 @@ public class Robot extends WCRobot {
   }
 
   @Override
-  protected void initDriverControllerBindings(DriverController m_driverController, OperatorController operatorController) {
+  protected void initDriverControllerBindings(DriverController m_driverController,
+      OperatorController operatorController) {
 
-    m_feederSubsystem.setDefaultCommand(new ShootCommand(m_feederSubsystem, operatorController, m_driverController));
-    m_intakeSubsystem.setDefaultCommand(new IntakeCMD(m_beambreak, m_intakeSubsystem, m_feederSubsystem, m_driverController, operatorController));
+    m_intakeSubsystem.setDefaultCommand(
+        new IntakeCMD(m_beambreak, m_intakeSubsystem, m_feederSubsystem,
+            m_driverController));
+
     m_driverController
         .getAButton()
         .onTrue(new InstantCommand(
@@ -83,21 +86,20 @@ public class Robot extends WCRobot {
           m_wristSubsystem.pos(Constants.kWristStow);
         }));
 
-    m_driverController
-        .getRightTriggerAxis();
+    m_shooterSubsystem.setDefaultCommand(new SpinShooterCMD(m_driverController,
+    m_shooterSubsystem, m_armSubsystem));
+    m_feederSubsystem.setDefaultCommand(new ShootCommand(m_feederSubsystem,
+    m_driverController));
+
   }
 
   @Override
-  protected void initOperatorControllerBindings(DriverController driverController, OperatorController m_operatorController) {
-
+  protected void initOperatorControllerBindings(DriverController driverController,
+      OperatorController m_operatorController) {
 
     m_climberSubsystem.setDefaultCommand(
         new ClimberCommand(m_climberSubsystem, m_operatorController));
 
-    m_feederSubsystem.setDefaultCommand(new ShootCommand(m_feederSubsystem, m_operatorController, driverController));
-
-    m_shooterSubsystem.setDefaultCommand(new SpinShooterCMD(m_operatorController, m_shooterSubsystem, m_armSubsystem));
-  
   }
 
   @Override
