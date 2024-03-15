@@ -5,7 +5,6 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkAbsoluteEncoder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.base.RobotSystem;
@@ -69,8 +68,7 @@ public class WristSubsystem extends WCStaticSubsystem {
     SmartDashboard.putNumber("Wrist", m_absoluteEncoder.getPosition());
     SmartDashboard.putNumber("WristVoltage", m_wrist.getAppliedOutput());
     SmartDashboard.putString(
-        "WristAction",
-        (subsystemAction != null) ? subsystemAction.toString() : "null");
+        "WristAction", (subsystemAction != null) ? subsystemAction.toString() : "null");
     // SmartDashboard.putBoolean("Limit Forward", m_limitSwitchForward.isPressed());
     // SmartDashboard.putBo[]\olean("Limit Reverse", m_limitSwitchReverse.isPressed());
     SmartDashboard.putNumber("Wrist setPoint", m_setPoint);
@@ -92,7 +90,8 @@ public class WristSubsystem extends WCStaticSubsystem {
       SmartDashboard.putNumber("Wrist Calc 2", calc * 2);
       SmartDashboard.putNumber("Wrist Calc 3", m_wrist.getOutputCurrent());
       m_wrist.setVoltage(calc);
-      // if (m_setPoint == Constants.kWristStow && measurement <= m_setPoint + buffer && measurement >= m_setPoint - buffer) {
+      // if (m_setPoint == Constants.kWristStow && measurement <= m_setPoint + buffer && measurement
+      // >= m_setPoint - buffer) {
       //   subsystemAction = null;
       // }
     } else {

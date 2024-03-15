@@ -14,12 +14,12 @@ public final class Constants {
   public static final int kClimberRight = 56;
 
   // Arm Encoder Stuff
-  public static final double kArmEncoderMax = 0.984;
-  public static final double kArmEncoderMin = 0.77;
+  public static final double kArmEncoderMax = 0.303;
+  public static final double kArmEncoderMin = 0.096;
   // The rotation 2d will have to be changed to doubles when we know our setpoint
-  public static final double kArmAmp = 0.984;
+  public static final double kArmAmp = 0.303;
   // public static final double kSetPoint = -0.1;
-  public static final double kArmStow = 0.77;
+  public static final double kArmStow = 0.096;
 
   // Wrist Encoder Stuff
   // Angles with wrist relative to the arm at hardstop

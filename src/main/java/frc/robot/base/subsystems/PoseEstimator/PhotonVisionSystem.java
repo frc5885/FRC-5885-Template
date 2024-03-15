@@ -3,7 +3,6 @@ package frc.robot.base.subsystems.PoseEstimator;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -25,7 +24,8 @@ public class PhotonVisionSystem extends SubsystemBase {
   private PhotonCamera m_photonCameraIntake;
   private PhotonCamera m_photonCameraShooter;
 
-  private AprilTagFieldLayout aprilTagFieldLayout = AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
+  private AprilTagFieldLayout aprilTagFieldLayout =
+      AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
 
   private Transform3d m_robotToCamIntake;
   private Transform3d m_robotToCamShooter;
@@ -47,34 +47,38 @@ public class PhotonVisionSystem extends SubsystemBase {
       System.out.println("Photon camera not found: " + e.getMessage());
       return; // Exit the constructor if the camera isn't found
     }
-    m_robotToCamIntake = new Transform3d(
-        new Translation3d(
-            AprilTagCameraConstants.Intake.kCameraPositionX,
-            AprilTagCameraConstants.Intake.kCameraPositonY,
-            AprilTagCameraConstants.Intake.kCameraPositionZ),
-        new Rotation3d(
-            AprilTagCameraConstants.Intake.kCameraRoll,
-            AprilTagCameraConstants.Intake.kCameraPitch,
-            AprilTagCameraConstants.Intake.kCameraYaw));
-    m_robotToCamShooter = new Transform3d(
-        new Translation3d(
-            AprilTagCameraConstants.Shooter.kCameraPositionX,
-            AprilTagCameraConstants.Shooter.kCameraPositonY,
-            AprilTagCameraConstants.Shooter.kCameraPositionZ),
-        new Rotation3d(
-            AprilTagCameraConstants.Shooter.kCameraRoll,
-            AprilTagCameraConstants.Shooter.kCameraPitch,
-            AprilTagCameraConstants.Shooter.kCameraYaw));
-    m_photonPoseEstimatorIntake = new PhotonPoseEstimator(
-        aprilTagFieldLayout,
-        PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
-        m_photonCameraIntake,
-        m_robotToCamIntake);
-    m_photonPoseEstimatorShooter = new PhotonPoseEstimator(
-        aprilTagFieldLayout,
-        PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
-        m_photonCameraShooter,
-        m_robotToCamShooter);
+    m_robotToCamIntake =
+        new Transform3d(
+            new Translation3d(
+                AprilTagCameraConstants.Intake.kCameraPositionX,
+                AprilTagCameraConstants.Intake.kCameraPositonY,
+                AprilTagCameraConstants.Intake.kCameraPositionZ),
+            new Rotation3d(
+                AprilTagCameraConstants.Intake.kCameraRoll,
+                AprilTagCameraConstants.Intake.kCameraPitch,
+                AprilTagCameraConstants.Intake.kCameraYaw));
+    m_robotToCamShooter =
+        new Transform3d(
+            new Translation3d(
+                AprilTagCameraConstants.Shooter.kCameraPositionX,
+                AprilTagCameraConstants.Shooter.kCameraPositonY,
+                AprilTagCameraConstants.Shooter.kCameraPositionZ),
+            new Rotation3d(
+                AprilTagCameraConstants.Shooter.kCameraRoll,
+                AprilTagCameraConstants.Shooter.kCameraPitch,
+                AprilTagCameraConstants.Shooter.kCameraYaw));
+    m_photonPoseEstimatorIntake =
+        new PhotonPoseEstimator(
+            aprilTagFieldLayout,
+            PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
+            m_photonCameraIntake,
+            m_robotToCamIntake);
+    m_photonPoseEstimatorShooter =
+        new PhotonPoseEstimator(
+            aprilTagFieldLayout,
+            PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR,
+            m_photonCameraShooter,
+            m_robotToCamShooter);
   }
 
   public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose) {
@@ -169,19 +173,14 @@ public class PhotonVisionSystem extends SubsystemBase {
     return angleToTarget;
   }
 
-  public double getShootingAngle(Pose2d robotPose, int targetID) {
-    double distance = distanceToTarget(robotPose, targetID);
-    double targetHeight = aprilTagFieldLayout.getTagPose(targetID).get().getZ();
-    return Math.atan2(targetHeight, distance);
-  }
-
   public double distanceToTarget(Pose2d robotPose, int targetID) {
     Pose2d aprilTagLocation = aprilTagFieldLayout.getTagPose(targetID).get().toPose2d();
     double targetX = aprilTagLocation.getTranslation().getX();
     double targetY = aprilTagLocation.getTranslation().getY();
     double robotX = robotPose.getTranslation().getX();
     double robotY = robotPose.getTranslation().getY();
-    double distanceToTarget = Math.sqrt(Math.pow(targetX - robotX, 2) + Math.pow(targetY - robotY, 2));
+    double distanceToTarget =
+        Math.sqrt(Math.pow(targetX - robotX, 2) + Math.pow(targetY - robotY, 2));
     SmartDashboard.putNumber("DistanceToTarget", distanceToTarget);
     return distanceToTarget;
   }

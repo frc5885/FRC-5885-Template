@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.base.modules.swerve.SwerveConstants;
 import frc.robot.base.subsystems.PoseEstimator.PhotonVisionSystem;
 import frc.robot.base.subsystems.PoseEstimator.SwervePoseEstimator;
+import frc.robot.base.subsystems.swerve.SwerveAction;
 import frc.robot.base.subsystems.swerve.SwerveDriveSubsystem;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
@@ -32,7 +33,8 @@ public class SwerveJoystickCmd extends Command {
       m_yDrivePercentFunction,
       m_turnDrivePercentFunction;
   private final Supplier<Boolean> m_fieldOrientedFunction;
-  private final Supplier<Boolean> m_aimBotFunction;
+  // private final Supplier<Boolean> m_aimBotFunction;
+  private final Supplier<SwerveAction> m_swerveActionFuntion;
 
   private PIDController m_aimBotPID;
 
@@ -61,7 +63,8 @@ public class SwerveJoystickCmd extends Command {
       Supplier<Double> yDrivePercentFunction,
       Supplier<Double> turnDrivePercentFunction,
       Supplier<Boolean> fieldOrientedFunction,
-      Supplier<Boolean> aimBotFunction) {
+      // Supplier<Boolean> aimBotFunction,
+      Supplier<SwerveAction> swerveActionFunction) {
     m_swerveSubsystem = swerveSubsystem;
     m_poseEstimator = poseEstimator;
     m_photonVision = photonVision;
@@ -69,7 +72,8 @@ public class SwerveJoystickCmd extends Command {
     m_yDrivePercentFunction = yDrivePercentFunction;
     m_turnDrivePercentFunction = turnDrivePercentFunction;
     m_fieldOrientedFunction = fieldOrientedFunction;
-    m_aimBotFunction = aimBotFunction;
+    // m_aimBotFunction = aimBotFunction;
+    m_swerveActionFuntion = swerveActionFunction;
 
     // F = 1.54hz
     m_aimBotPID =
@@ -117,20 +121,53 @@ public class SwerveJoystickCmd extends Command {
     // Rotation speed stuff
     double angularVelocity;
     double rightJoystickX = m_turnDrivePercentFunction.get();
-    if (m_aimBotFunction.get()) {
+    Pose2d robotPose = m_poseEstimator.getPose();
 
-      Pose2d robotPose = m_poseEstimator.getPose();
-      double angleToTarget =
-          m_photonVision.getAngleToTarget(robotPose, m_photonVision.getTargetID());
-      angularVelocity = m_aimBotPID.calculate(robotPose.getRotation().getRadians(), angleToTarget);
-
-      if (m_aimBotPID.atSetpoint()) {
-        angularVelocity = 0;
-      }
-    } else {
-      angularVelocity =
-          MathUtil.applyDeadband(rightJoystickX, SwerveConstants.kSwerveDriveDeadband);
+    switch (m_swerveActionFuntion.get()) {
+      case DEFAULT:
+        angularVelocity =
+            MathUtil.applyDeadband(rightJoystickX, SwerveConstants.kSwerveDriveDeadband);
+        break;
+      case AIMBOTTING:
+        double angleToTarget =
+            m_photonVision.getAngleToTarget(robotPose, m_photonVision.getTargetID());
+        angularVelocity =
+            m_aimBotPID.calculate(robotPose.getRotation().getRadians(), angleToTarget);
+        if (m_aimBotPID.atSetpoint()) {
+          angularVelocity = 0;
+        }
+        break;
+      case FACEFORWARD:
+        angularVelocity = m_aimBotPID.calculate(robotPose.getRotation().getRadians(), 0);
+        if (m_aimBotPID.atSetpoint()) {
+          angularVelocity = 0;
+        }
+        break;
+      case FACEBACKWARD:
+        angularVelocity = m_aimBotPID.calculate(robotPose.getRotation().getRadians(), Math.PI);
+        if (m_aimBotPID.atSetpoint()) {
+          angularVelocity = 0;
+        }
+        break;
+      default:
+        angularVelocity =
+            MathUtil.applyDeadband(rightJoystickX, SwerveConstants.kSwerveDriveDeadband);
+        break;
     }
+
+    // if (m_aimBotFunction.get()) {
+    // double angleToTarget = m_photonVision.getAngleToTarget(robotPose,
+    // m_photonVision.getTargetID());
+    // angularVelocity = m_aimBotPID.calculate(robotPose.getRotation().getRadians(),
+    // angleToTarget);
+    // if (m_aimBotPID.atSetpoint()) {
+    // angularVelocity = 0;
+    // }
+    // } else {
+    // angularVelocity = MathUtil.applyDeadband(rightJoystickX,
+    // SwerveConstants.kSwerveDriveDeadband);
+    // }
+
     angularVelocity *=
         SwerveConstants.kMaxSpeedAngularRadiansPerSecond * m_angularSpeedLimitChooser.get();
 
@@ -140,7 +177,6 @@ public class SwerveJoystickCmd extends Command {
 
     // Use field oriented drive
     if (m_fieldOrientedFunction.get()) {
-
       chassisSpeeds =
           ChassisSpeeds.fromFieldRelativeSpeeds(
               translation.getX(),

@@ -6,9 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.base.io.DriverController;
-import frc.robot.base.io.OperatorController;
 import frc.robot.subsystems.FeederSubsystem;
 
 public class ShootCommand extends Command {
@@ -17,7 +15,7 @@ public class ShootCommand extends Command {
   private DriverController m_driverController;
 
   /** Creates a new Shoot. */
-  public ShootCommand(FeederSubsystem feederSubsystem,  DriverController driverController) {
+  public ShootCommand(FeederSubsystem feederSubsystem, DriverController driverController) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_feederSubsystem = feederSubsystem;
     m_driverController = driverController;

@@ -5,9 +5,11 @@
 package frc.robot.base;
 
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Robot;
+import frc.robot.base.subsystems.swerve.SwerveAction;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
@@ -21,6 +23,7 @@ public class RobotSystem extends LoggedRobot {
 
   @Override
   public void robotInit() {
+
     // m_ledSubsystem = new LEDSubsystem();
     // m_LedSubsystem.setLedRainbow();
 
@@ -32,15 +35,15 @@ public class RobotSystem extends LoggedRobot {
     // Logger.recordMetadata("GitDate", BuildConstants.GIT_DATE);
     // Logger.recordMetadata("GitBranch", BuildConstants.GIT_BRANCH);
     // switch (BuildConstants.DIRTY) {
-    //   case ;:
-    //     Logger.recordMetadata("GitDirty", "All changes committed");
-    //     break;
-    //   case 1:
-    //     Logger.recordMetadata("GitDirty", "Uncomitted changes");
-    //     break;
-    //   default:
-    //     Logger.recordMetadata("GitDirty", "Unknown");
-    //     break;
+    // case ;:
+    // Logger.recordMetadata("GitDirty", "All changes committed");
+    // break;
+    // case 1:
+    // Logger.recordMetadata("GitDirty", "Uncomitted changes");
+    // break;
+    // default:
+    // Logger.recordMetadata("GitDirty", "Unknown");
+    // break;
     // }
 
     // Copied from advtangekit examples
@@ -89,7 +92,8 @@ public class RobotSystem extends LoggedRobot {
 
   @Override
   public void autonomousExit() {
-    m_robotContainer.setAimBotting(false);
+    // m_robotContainer.setAimBotting(false);
+    m_robotContainer.setSwerveAction(SwerveAction.DEFAULT);
   }
 
   @Override
@@ -105,7 +109,8 @@ public class RobotSystem extends LoggedRobot {
 
   @Override
   public void teleopExit() {
-    m_robotContainer.setAimBotting(false);
+    // m_robotContainer.setAimBotting(false);
+    m_robotContainer.setSwerveAction(SwerveAction.DEFAULT);
   }
 
   @Override

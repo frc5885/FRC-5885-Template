@@ -39,7 +39,7 @@ public class ArmSubsystem extends WCStaticSubsystem {
   protected List<MotorController> initMotors() {
     m_arm = new TalonFX(Constants.kArm);
     m_encoder = new DutyCycleEncoder(1);
-    m_PidController = new PIDController(75, 5, 1);
+    m_PidController = new PIDController(250, 0, 0);
     SmartDashboard.putData("ArmPID", m_PidController);
     // m_arm.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 1, 0);
     // TalonFXConfiguration config = new TalonFXConfiguration();

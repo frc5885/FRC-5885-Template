@@ -7,18 +7,21 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.base.io.Beambreak;
 import frc.robot.base.io.DriverController;
-import frc.robot.base.io.OperatorController;
 import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 
 public class IntakeCMD extends Command {
   /** Creates a new IntakeCMD. */
   Beambreak m_beambreak;
+
   IntakeSubsystem m_intakeSubsystem;
   FeederSubsystem m_feederSubsystem;
   DriverController m_driverController;
 
-  public IntakeCMD(Beambreak beambreak, IntakeSubsystem intakeSubsystem, FeederSubsystem feederSubsystem,
+  public IntakeCMD(
+      Beambreak beambreak,
+      IntakeSubsystem intakeSubsystem,
+      FeederSubsystem feederSubsystem,
       DriverController driverController) {
     m_beambreak = beambreak;
     m_intakeSubsystem = intakeSubsystem;
@@ -30,8 +33,7 @@ public class IntakeCMD extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -50,8 +52,7 @@ public class IntakeCMD extends Command {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override

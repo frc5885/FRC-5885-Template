@@ -13,6 +13,7 @@ import frc.robot.base.io.OperatorController;
 import frc.robot.base.subsystems.PoseEstimator.PhotonVisionSystem;
 import frc.robot.base.subsystems.PoseEstimator.SwervePoseEstimator;
 import frc.robot.base.subsystems.WCPathPlanner;
+import frc.robot.base.subsystems.swerve.SwerveAction;
 import frc.robot.base.subsystems.swerve.SwerveDriveSubsystem;
 import frc.robot.commands.SwerveJoystickCmd;
 import java.util.Optional;
@@ -30,7 +31,9 @@ public abstract class WCRobot {
 
   protected boolean m_isFieldOriented = true;
 
-  protected boolean m_isAimbotting = false;
+  protected SwerveAction m_SwerveAction = SwerveAction.DEFAULT;
+
+  // protected boolean m_isAimbotting = false;
 
   public WCRobot() {
     m_swerveDrive = new SwerveDriveSubsystem();
@@ -45,7 +48,11 @@ public abstract class WCRobot {
                   m_swerveDrive.resetGyro();
                   m_swervePoseEstimator.reset();
                 }),
-            new InstantCommand(() -> m_isFieldOriented = !m_isFieldOriented));
+            new InstantCommand(
+                () -> {
+                  m_isFieldOriented = !m_isFieldOriented;
+                  SmartDashboard.putBoolean("isFieldOriented", m_isFieldOriented);
+                }));
 
     initComponents();
     initSubsystems();
@@ -54,12 +61,13 @@ public abstract class WCRobot {
     initOperatorControllerBindings(m_driverController, m_operatorController);
     initSwerveBindings();
 
-    // PATHPLANNER AUTO STUFF (building the auto chooser has to be done after named commands are
+    // PATHPLANNER AUTO STUFF (building the auto chooser has to be done after named
+    // commands are
     // registered in initAutoCommands())
     m_simplePathPlanner.setRotationTargetOverrideFunction(this::getOverrideAutoTargetRotation);
     m_simplePathPlanner.buildAutoChooser();
 
-    SmartDashboard.putBoolean("Aimbotting", m_isAimbotting);
+    // SmartDashboard.putBoolean("Aimbotting", m_isAimbotting);
   }
 
   private void initSwerveBindings() {
@@ -72,24 +80,40 @@ public abstract class WCRobot {
             () -> -m_driverController.getLeftX(),
             () -> -getDriverRotationAxis(),
             () -> m_isFieldOriented,
-            () -> isAimBotting()));
+            // () -> isAimBotting(),
+            () -> getSwerveAction()));
   }
 
   // so that aimBotting can be set and accessed by other stuff in Robot.java
-  protected Boolean isAimBotting() {
-    return m_isAimbotting;
+  // protected Boolean isAimBotting() {
+  // return m_isAimbotting;
+  // }
+
+  protected SwerveAction getSwerveAction() {
+    return m_SwerveAction;
   }
 
-  public void setAimBotting(Boolean value) {
-    m_isAimbotting = value;
-    SmartDashboard.putBoolean("Aimbotting", m_isAimbotting);
+  // public void setAimBotting(Boolean value) {
+  // m_isAimbotting = value;
+  // SmartDashboard.putBoolean("Aimbotting", m_isAimbotting);
+  // }
+
+  public void setSwerveAction(SwerveAction desiredAction) {
+    m_SwerveAction = desiredAction;
+    SmartDashboard.putString(
+        "SwerveAction", m_SwerveAction != null ? m_SwerveAction.toString() : "null");
   }
 
   protected double getDriverRotationAxis() {
     // if the driver is trying to rotate, turn off aimbotting
-    double position = m_driverController.getRightX();
-    if (Math.abs(position) > 0.3) {
-      setAimBotting(false);
+    double rightPosition = m_driverController.getRightX();
+    double leftXPosition = m_driverController.getLeftX();
+    double leftYPosition = m_driverController.getLeftY();
+    if (Math.abs(rightPosition) > 0.3
+        || Math.abs(leftXPosition) > 0.3
+        || Math.abs(leftYPosition) > 0.3) {
+      // setAimBotting(false);
+      setSwerveAction(SwerveAction.DEFAULT);
     }
     return m_driverController.getRightX();
   }
@@ -97,13 +121,14 @@ public abstract class WCRobot {
   // for pathplanner autos
   protected Optional<Rotation2d> getOverrideAutoTargetRotation() {
     // if aimbotting is on, return the angle to the target
-    if (m_isAimbotting) {
+    if (m_SwerveAction == SwerveAction.AIMBOTTING) {
       double angleToTarget =
           m_photonVision.getAngleToTarget(
               m_swervePoseEstimator.getPose(), m_photonVision.getTargetID());
       return Optional.of(Rotation2d.fromRadians(angleToTarget));
     }
-    // otherwise, return empty and pathplanner will use the orientation from the path
+    // otherwise, return empty and pathplanner will use the orientation from the
+    // path
     return Optional.empty();
   }
 
@@ -117,9 +142,11 @@ public abstract class WCRobot {
 
   protected abstract void initAutoCommands();
 
-  protected abstract void initDriverControllerBindings(DriverController m_driverController, OperatorController m_operatorController);
+  protected abstract void initDriverControllerBindings(
+      DriverController m_driverController, OperatorController m_operatorController);
 
-  protected abstract void initOperatorControllerBindings(DriverController m_driverController, OperatorController m_operatorController);
+  protected abstract void initOperatorControllerBindings(
+      DriverController m_driverController, OperatorController m_operatorController);
 
   protected Command getAutonomousCommand() {
     // return new SimplePathPlanner(m_swervePoseEstimator, m_swerveDrive);

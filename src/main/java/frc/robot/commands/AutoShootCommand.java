@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Robot;
 import frc.robot.base.subsystems.PoseEstimator.PhotonVisionSystem;
 import frc.robot.base.subsystems.PoseEstimator.SwervePoseEstimator;
+import frc.robot.base.subsystems.swerve.SwerveAction;
 import frc.robot.base.subsystems.swerve.SwerveDriveSubsystem;
 import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.WristSubsystem;
@@ -39,12 +40,12 @@ public class AutoShootCommand extends ParallelDeadlineGroup {
     // be spinning
     super(
         new SequentialCommandGroup(
-            new InstantCommand(() -> robot.setAimBotting(true)),
+            new InstantCommand(() -> robot.setSwerveAction(SwerveAction.AIMBOTTING)),
             new WaitCommand(2),
             new InstantCommand(() -> feederSubsystem.intake()),
             new WaitCommand(2),
             new InstantCommand(() -> feederSubsystem.stop()),
-            new InstantCommand(() -> robot.setAimBotting(false))));
+            new InstantCommand(() -> robot.setSwerveAction(SwerveAction.DEFAULT))));
 
     m_feederSubsystem = feederSubsystem;
     m_wristSubsystem = wristSubsystem;

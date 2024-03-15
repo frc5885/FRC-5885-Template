@@ -36,7 +36,7 @@ public class IntakeSubsystem extends WCStaticSubsystem {
 
   @Override
   protected List<MotorController> initMotors() {
-    MotorType motorType = RobotSystem.isReal() ? MotorType.kBrushed : MotorType.kBrushless;
+    MotorType motorType = RobotSystem.isReal() ? MotorType.kBrushless : MotorType.kBrushless;
     // m_left = new CANSparkMax(Constants.kIntakeLeft, MotorType.kBrushless);
     m_right = new CANSparkMax(Constants.kIntakeRight, motorType);
     // return List.of(m_left, m_right);
