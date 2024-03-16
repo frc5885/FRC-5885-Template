@@ -103,10 +103,10 @@ public final class SwerveConstants {
     // Module Offsets
     //
     // Use SwerveGetModuleOffsets to find these values.
-    public static final Rotation2d kLeftFrontModuleOffset = Rotation2d.fromDegrees(143.239);
-    public static final Rotation2d kRightFrontModuleOffset = Rotation2d.fromDegrees(-15.183382);
-    public static final Rotation2d kLeftRearModuleOffset = Rotation2d.fromDegrees(-141.377336);
-    public static final Rotation2d kRightRearModuleOffset = Rotation2d.fromDegrees(-70.18733);
+    public static final Rotation2d kLeftFrontModuleOffset = Rotation2d.fromDegrees(144.945);
+    public static final Rotation2d kRightFrontModuleOffset = Rotation2d.fromDegrees(-193.245);
+    public static final Rotation2d kLeftRearModuleOffset = Rotation2d.fromDegrees(-142.5);
+    public static final Rotation2d kRightRearModuleOffset = Rotation2d.fromDegrees(-254.72);
 
     //////////////////////
     // Drive PID Constants
