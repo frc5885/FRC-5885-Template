@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.5286828875541687,
-      "y": 7.099283695220947
+      "x": 0.5912923812866211,
+      "y": 2.130509376525879
     },
     "rotation": 0.0
   },
@@ -14,7 +14,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Amp_Wing1MoreCenterline_5n (2).1"
+            "pathName": "SourceSide_Wing1MoreCenterline_5n.1"
           }
         },
         {
@@ -26,25 +26,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Amp_Wing1MoreCenterline_5n (2).2"
+            "pathName": "SourceSide_Wing1MoreCenterline_5n.2"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Amp_Wing1MoreCenterline_5n (2).3"
+            "pathName": "AmpSide_Wing1MoreCenterline_5n (2).3"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Amp_Wing1MoreCenterline_5n (2).4"
+            "pathName": "AmpSide_Wing1MoreCenterline_5n (2).4"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Amp_Wing1MoreCenterline_5n (2).5"
+            "pathName": "AmpSide_Wing1MoreCenterline_5n (2).5"
           }
         }
       ]

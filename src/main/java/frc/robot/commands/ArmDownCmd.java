@@ -5,26 +5,20 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.base.io.DriverController;
+import frc.robot.Constants;
 import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.WristSubsystem;
 
-public class SpinShooterCMD extends Command {
-
-  DriverController m_driverController;
-  ShooterSubsystem m_shooterSubsystem;
+public class ArmDownCmd extends Command {
   ArmSubsystem m_armSubsystem;
+  WristSubsystem m_wristSubsystem;
 
-  /** Creates a new SpinShooterCMD. */
-  public SpinShooterCMD(
-      DriverController driverController,
-      ShooterSubsystem shooterSubsystem,
-      ArmSubsystem armSubsystem) {
-    m_driverController = driverController;
-    m_shooterSubsystem = shooterSubsystem;
+  /** Creates a new ArmDownCmd. */
+  public ArmDownCmd(ArmSubsystem armSubsystem, WristSubsystem wristSubsystem) {
     m_armSubsystem = armSubsystem;
-
-    addRequirements(m_shooterSubsystem);
+    m_wristSubsystem = wristSubsystem;
+    addRequirements(m_armSubsystem);
+    addRequirements(m_wristSubsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -35,12 +29,11 @@ public class SpinShooterCMD extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (m_driverController.getLeftTriggerAxis() > 0.1) {
-      m_shooterSubsystem.spinFast();
-    } else if (m_armSubsystem.isArmUp()) {
-      m_shooterSubsystem.spinSlow();
-    } else {
-      m_shooterSubsystem.stop();
+    if (m_armSubsystem.isArmUp()) {
+      m_armSubsystem.pos(Constants.kArmStow);
+    }
+    if (m_armSubsystem.isArmDown() && m_wristSubsystem.getSetPoint() != Constants.kWristStow) {
+      m_wristSubsystem.pos(Constants.kWristStow);
     }
   }
 
@@ -52,6 +45,6 @@ public class SpinShooterCMD extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return m_wristSubsystem.getSubsystemAction() == null;
   }
 }

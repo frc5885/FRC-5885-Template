@@ -65,7 +65,7 @@ public class AutoConstants {
           new PIDConstants(
               SwerveConstants.Module.kDriveFeedbackP,
               SwerveConstants.Module.kDriveFeedbackI,
-              SwerveConstants.Module.kDriveFeedbackI), // Translation constants
+              SwerveConstants.Module.kDriveFeedbackD), // Translation constants
           new PIDConstants(
               SwerveConstants.AimBotConstants.kAimbotP,
               SwerveConstants.AimBotConstants.kAimbotI,

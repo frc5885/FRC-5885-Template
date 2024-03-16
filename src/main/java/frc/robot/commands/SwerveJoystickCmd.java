@@ -84,7 +84,7 @@ public class SwerveJoystickCmd extends Command {
         SwerveConstants.AimBotConstants.kAimbotD);
     m_aimBotPID.enableContinuousInput(-Math.PI, Math.PI);
     m_aimBotPID.setTolerance(SwerveConstants.AimBotConstants.kAimbotTolerance);
-    m_facingPID = new PIDController(1.0, 0.3, 0.1);
+    m_facingPID = new PIDController(1.4, 0.0, 0.105);
     m_facingPID.enableContinuousInput(-Math.PI, Math.PI);
     m_facingPID.setTolerance(Units.degreesToRadians(1.5));
     SmartDashboard.putData("FacingPID", m_facingPID);
@@ -132,7 +132,6 @@ public class SwerveJoystickCmd extends Command {
       case DEFAULT:
         angularVelocity = MathUtil.applyDeadband(rightJoystickX, SwerveConstants.kSwerveDriveDeadband);
         break;
-
       case AIMBOTTING:
         double angleToTarget = m_photonVision.getAngleToTarget(robotPose, m_photonVision.getTargetID());
         angularVelocity = m_aimBotPID.calculate(robotPose.getRotation().getRadians(), angleToTarget);
@@ -141,15 +140,23 @@ public class SwerveJoystickCmd extends Command {
         }
         break;
       case FACEFORWARD:
-        angularVelocity = m_facingPID.calculate(robotPose.getRotation().getRadians()
-        , 0);
-        if (m_aimBotPID.atSetpoint()) {
+        angularVelocity = m_facingPID.calculate(robotPose.getRotation().getRadians(), 
+        alliance == Alliance.Blue ? 0 : Math.PI);
+        if (m_facingPID.atSetpoint()) {
           angularVelocity = 0;
         }
         break;
       case FACEBACKWARD:
-        angularVelocity = m_facingPID.calculate(robotPose.getRotation().getRadians(), Math.PI);
-        if (m_aimBotPID.atSetpoint()) {
+        angularVelocity = m_facingPID.calculate(robotPose.getRotation().getRadians(), 
+        alliance == Alliance.Blue ? Math.PI : 0);
+        if (m_facingPID.atSetpoint()) {
+          angularVelocity = 0;
+        }
+        break;
+      case FACEAMP:
+        angularVelocity = m_facingPID.calculate(robotPose.getRotation().getRadians(),
+          alliance == Alliance.Blue ? Math.PI / 2 : Math.PI / 2);
+        if (m_facingPID.atSetpoint()) {
           angularVelocity = 0;
         }
         break;

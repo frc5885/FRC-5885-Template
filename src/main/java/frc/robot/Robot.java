@@ -7,6 +7,7 @@ import frc.robot.base.io.Beambreak;
 import frc.robot.base.io.DriverController;
 import frc.robot.base.io.OperatorController;
 import frc.robot.base.subsystems.swerve.SwerveAction;
+import frc.robot.commands.ArmDownCmd;
 import frc.robot.commands.AutoShootCommand;
 import frc.robot.commands.ClimberCommand;
 import frc.robot.commands.IntakeCMD;
@@ -46,8 +47,7 @@ public class Robot extends WCRobot {
     m_feederSubsystem = new FeederSubsystem(m_beambreak);
     m_climberSubsystem = new ClimberSubsystem();
     m_shooterSubsystem = new ShooterSubsystem(m_beambreak, m_armSubsystem);
-    m_ledSubsystem =
-        new LEDSubsystem(m_beambreak, () -> getSwerveAction() == SwerveAction.AIMBOTTING);
+    m_ledSubsystem = new LEDSubsystem(m_beambreak, () -> getSwerveAction() == SwerveAction.AIMBOTTING);
   }
 
   @Override
@@ -58,6 +58,7 @@ public class Robot extends WCRobot {
         new AutoShootCommand(
             this,
             m_feederSubsystem,
+            m_intakeSubsystem,
             m_wristSubsystem,
             m_swerveDrive,
             m_swervePoseEstimator,
@@ -83,11 +84,7 @@ public class Robot extends WCRobot {
     m_driverController
         .getBButton()
         .onTrue(
-            new InstantCommand(
-                () -> {
-                  m_armSubsystem.pos(Constants.kArmStow);
-                  m_wristSubsystem.pos(Constants.kWristStow);
-                }));
+            new ArmDownCmd(m_armSubsystem, m_wristSubsystem));
 
     // Face forward
     m_driverController
@@ -98,6 +95,11 @@ public class Robot extends WCRobot {
     m_driverController
         .getXButton()
         .onTrue(new InstantCommand(() -> setSwerveAction(SwerveAction.FACEBACKWARD)));
+
+    // Face amp
+    m_driverController
+        .start()
+        .onTrue(new InstantCommand(() -> setSwerveAction(SwerveAction.FACEAMP)));
 
     m_shooterSubsystem.setDefaultCommand(
         new SpinShooterCMD(m_driverController, m_shooterSubsystem, m_armSubsystem));

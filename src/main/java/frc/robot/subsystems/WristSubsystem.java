@@ -19,7 +19,7 @@ import org.littletonrobotics.junction.Logger;
 public class WristSubsystem extends WCStaticSubsystem {
 
   // Buffer is value slightly above 0 to ensure doesn't smack
-  private final double buffer = 0.005;
+  private final double buffer = 0.0;
 
   private SparkAbsoluteEncoder m_absoluteEncoder;
   private CANSparkMax m_wrist;
@@ -70,9 +70,10 @@ public class WristSubsystem extends WCStaticSubsystem {
     SmartDashboard.putString(
         "WristAction", (subsystemAction != null) ? subsystemAction.toString() : "null");
     // SmartDashboard.putBoolean("Limit Forward", m_limitSwitchForward.isPressed());
-    // SmartDashboard.putBo[]\olean("Limit Reverse", m_limitSwitchReverse.isPressed());
+    // SmartDashboard.putBo[]\olean("Limit Reverse",
+    // m_limitSwitchReverse.isPressed());
     SmartDashboard.putNumber("Wrist setPoint", m_setPoint);
-    m_setPoint = SmartDashboard.getNumber("Wrist shoot point", m_setPoint);
+    // m_setPoint = SmartDashboard.getNumber("Wrist shoot point", m_setPoint);
     if (m_setPoint < Constants.kWristEncoderMin || m_setPoint > Constants.kWristEncoderMax) {
       return;
     }
@@ -90,10 +91,9 @@ public class WristSubsystem extends WCStaticSubsystem {
       SmartDashboard.putNumber("Wrist Calc 2", calc * 2);
       SmartDashboard.putNumber("Wrist Calc 3", m_wrist.getOutputCurrent());
       m_wrist.setVoltage(calc);
-      // if (m_setPoint == Constants.kWristStow && measurement <= m_setPoint + buffer && measurement
-      // >= m_setPoint - buffer) {
-      //   subsystemAction = null;
-      // }
+      if (m_setPoint == Constants.kWristStow && measurement >= m_setPoint - buffer) {
+        subsystemAction = null;
+      }
     } else {
       stopMotors();
     }
@@ -115,9 +115,9 @@ public class WristSubsystem extends WCStaticSubsystem {
 
   // @Override
   // public void stop() {
-  //   // lock PID to current position
-  //   subsystemAction = SubsystemAction.POS;
-  //   m_setPoint = m_absoluteEncoder.getPosition();
+  // // lock PID to current position
+  // subsystemAction = SubsystemAction.POS;
+  // m_setPoint = m_absoluteEncoder.getPosition();
   // }
 
   public void startPID() {
@@ -145,6 +145,14 @@ public class WristSubsystem extends WCStaticSubsystem {
   public void pos(double setpoint) {
     m_setPoint = setpoint;
     subsystemAction = SubsystemAction.POS;
+  }
+
+  public SubsystemAction getSubsystemAction() {
+    return subsystemAction;
+  }
+
+  public double getSetPoint(){
+    return m_setPoint;
   }
 
   public void resetEncoders() {

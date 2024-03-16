@@ -8,6 +8,8 @@ import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.AutoConstants.PoseEstimatorConstants;
 import frc.robot.base.modules.swerve.SwerveConstants;
@@ -34,14 +36,13 @@ public class SwervePoseEstimator extends SubsystemBase {
     m_rotationSupplier = swerveDrive::getRotation2d;
     m_swerveModulePositionSupplier = swerveDrive::getModulePositions;
 
-    m_poseEstimator =
-        new SwerveDrivePoseEstimator(
-            SwerveConstants.kDriveKinematics,
-            m_rotationSupplier.get(),
-            m_swerveModulePositionSupplier.get(),
-            new Pose2d(),
-            PoseEstimatorConstants.kEncoderMeasurementStdDevs,
-            PoseEstimatorConstants.kVisionMeasurementStdDevs);
+    m_poseEstimator = new SwerveDrivePoseEstimator(
+        SwerveConstants.kDriveKinematics,
+        m_rotationSupplier.get(),
+        m_swerveModulePositionSupplier.get(),
+        new Pose2d(),
+        PoseEstimatorConstants.kEncoderMeasurementStdDevs,
+        PoseEstimatorConstants.kVisionMeasurementStdDevs);
 
     m_swerveDrive = swerveDrive;
 
@@ -64,8 +65,8 @@ public class SwervePoseEstimator extends SubsystemBase {
     // Update the WPI pose estimator with the latest vision measurements from photon
     // vision if they
     // are present
-    Optional<EstimatedRobotPose> estimatedGlobalPosition =
-        m_photonVision.getEstimatedGlobalPoseShooter(estimatedPosition);
+    Optional<EstimatedRobotPose> estimatedGlobalPosition = m_photonVision
+        .getEstimatedGlobalPoseShooter(estimatedPosition);
     if (estimatedGlobalPosition.isPresent()) {
 
       // have to call .get() to get the value from the optional
@@ -93,6 +94,8 @@ public class SwervePoseEstimator extends SubsystemBase {
   }
 
   public void reset() {
-    resetPose(new Pose2d(0, 0, new Rotation2d()));
+    Alliance alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
+    resetPose(new Pose2d(alliance == Alliance.Blue ? 0 : 17, 0,
+        alliance == Alliance.Blue ? new Rotation2d() : new Rotation2d(Math.PI)));
   }
 }

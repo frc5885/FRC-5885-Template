@@ -28,7 +28,7 @@ public final class Constants {
   // Min  0.625
   public static final double kWristEncoderMax = 0.577; // Max
   public static final double kWristEncoderMin = 0.325; // Min
-  public static final double kWristStow = 0.442; // Stow
+  public static final double kWristStow = 0.441; // Stow
   public static final double kWristAmp = 0.38; // Amp
   // public static final double kWristSubwoofer = -0.5;
   public static final double kWristSubwoofer = 0.0;

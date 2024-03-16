@@ -18,7 +18,7 @@ import java.util.List;
 public class ArmSubsystem extends WCStaticSubsystem {
 
   // Buffer is value slightly above 0 to ensure doesn't smack
-  private final double buffer = 0.0;
+  private final double buffer = 0.008;
 
   private TalonFX m_arm;
   private DutyCycleEncoder m_encoder;
@@ -91,7 +91,15 @@ public class ArmSubsystem extends WCStaticSubsystem {
     subsystemAction = SubsystemAction.POS;
   }
 
+  public boolean isArmDown() {
+    return m_encoder.getAbsolutePosition() <= Constants.kArmStow + buffer;
+  }
+
   public boolean isArmUp() {
+    return m_encoder.getAbsolutePosition() >= Constants.kArmAmp - buffer;
+  }
+
+  public boolean isArmSetUp() {
     return m_setPoint == Constants.kArmAmp;
   }
 }

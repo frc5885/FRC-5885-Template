@@ -53,6 +53,7 @@ public class IntakeSubsystem extends WCStaticSubsystem {
     } else {
       stopMotors();
     }
+    SmartDashboard.putNumber("IntakeVoltage", m_right.getAppliedOutput());
   }
 
   public void intake() {
