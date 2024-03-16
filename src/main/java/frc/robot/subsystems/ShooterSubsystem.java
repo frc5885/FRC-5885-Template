@@ -3,7 +3,11 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.base.io.Beambreak;
 import frc.robot.base.subsystems.SubsystemAction;
@@ -21,6 +25,8 @@ public class ShooterSubsystem extends WCStaticSubsystem {
   private RelativeEncoder m_topEncoder;
   private RelativeEncoder m_bottomEncoder;
 
+  private PIDController m_topController;
+
   @Override
   protected double getBaseSpeed() {
     return -0.5;
@@ -35,10 +41,13 @@ public class ShooterSubsystem extends WCStaticSubsystem {
     this.m_beambreak = m_beambreak;
     m_topEncoder = m_top.getEncoder();
     m_bottomEncoder = m_bottom.getEncoder();
+    // m_topController = new PIDController(0.1, 0, 0);
+    // SmartDashboard.putData("ShooterPID", m_topController);
   }
 
   @Override
   protected List<MotorController> initMotors() {
+    // needs fix
     m_top = new CANSparkMax(Constants.kShooterTop, MotorType.kBrushless);
     m_bottom = new CANSparkMax(Constants.kShooterBottom, MotorType.kBrushless);
     return List.of(m_top, m_bottom);
@@ -47,13 +56,17 @@ public class ShooterSubsystem extends WCStaticSubsystem {
   @Override
   public void periodic() {
     if (subsystemAction == SubsystemAction.SHOOT) {
-      forwardMotors();
+      // forwardMotors();
+      m_top.setVoltage((getBaseSpeed() - 0.015) * 12);
+      m_bottom.setVoltage(getBaseSpeed() * 12);
     } else if (subsystemAction == SubsystemAction.OUTTAKE) {
       m_top.setVoltage(-12 * 0.2);
       m_bottom.setVoltage(-12 * 0.2);
     } else {
       stopMotors();
     }
+    SmartDashboard.putNumber("ShooterVel", m_topEncoder.getVelocity());
+    SmartDashboard.putNumber("ShooterVel2", m_bottomEncoder.getVelocity());
   }
 
   public void spinFast() {

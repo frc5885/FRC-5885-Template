@@ -72,8 +72,8 @@ public class WristSubsystem extends WCStaticSubsystem {
     // SmartDashboard.putBoolean("Limit Forward", m_limitSwitchForward.isPressed());
     // SmartDashboard.putBo[]\olean("Limit Reverse", m_limitSwitchReverse.isPressed());
     SmartDashboard.putNumber("Wrist setPoint", m_setPoint);
-    // m_setPoint = SmartDashboard.getNumber("Wrist shoot point", m_setPoint);
-    if (m_setPoint < Constants.kWristEncoderMin || m_setPoint > Constants.kWristStow) {
+    m_setPoint = SmartDashboard.getNumber("Wrist shoot point", m_setPoint);
+    if (m_setPoint < Constants.kWristEncoderMin || m_setPoint > Constants.kWristEncoderMax) {
       return;
     }
     // System.out.println("Wrist Position" +

@@ -26,7 +26,7 @@ public final class Constants {
   // Min to max 30 degrees
   // Max 0.315
   // Min  0.625
-  public static final double kWristEncoderMax = 0.52; // Max
+  public static final double kWristEncoderMax = 0.577; // Max
   public static final double kWristEncoderMin = 0.325; // Min
   public static final double kWristStow = 0.442; // Stow
   public static final double kWristAmp = 0.38; // Amp

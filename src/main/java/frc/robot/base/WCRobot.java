@@ -4,6 +4,7 @@
 
 package frc.robot.base;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -41,18 +42,17 @@ public abstract class WCRobot {
     m_swervePoseEstimator = new SwervePoseEstimator(m_swerveDrive, m_photonVision);
     m_simplePathPlanner = new WCPathPlanner(m_swervePoseEstimator, m_swerveDrive);
     m_operatorController = new OperatorController();
-    m_driverController =
-        new DriverController(
-            new InstantCommand(
-                () -> {
-                  m_swerveDrive.resetGyro();
-                  m_swervePoseEstimator.reset();
-                }),
-            new InstantCommand(
-                () -> {
-                  m_isFieldOriented = !m_isFieldOriented;
-                  SmartDashboard.putBoolean("isFieldOriented", m_isFieldOriented);
-                }));
+    m_driverController = new DriverController(
+        new InstantCommand(
+            () -> {
+              m_swerveDrive.resetGyro();
+              m_swervePoseEstimator.reset();
+            }),
+        new InstantCommand(
+            () -> {
+              m_isFieldOriented = !m_isFieldOriented;
+              SmartDashboard.putBoolean("isFieldOriented", m_isFieldOriented);
+            }));
 
     initComponents();
     initSubsystems();
@@ -107,11 +107,10 @@ public abstract class WCRobot {
   protected double getDriverRotationAxis() {
     // if the driver is trying to rotate, turn off aimbotting
     double rightPosition = m_driverController.getRightX();
-    double leftXPosition = m_driverController.getLeftX();
-    double leftYPosition = m_driverController.getLeftY();
+    double robotHeadingDeg = m_swervePoseEstimator.getPose().getRotation().getDegrees();
     if (Math.abs(rightPosition) > 0.3
-        || Math.abs(leftXPosition) > 0.3
-        || Math.abs(leftYPosition) > 0.3) {
+        || (m_SwerveAction == SwerveAction.FACEFORWARD && MathUtil.isNear(0, robotHeadingDeg, 2.5))
+        || (m_SwerveAction == SwerveAction.FACEBACKWARD && MathUtil.isNear(180, robotHeadingDeg, 2.5))) {
       // setAimBotting(false);
       setSwerveAction(SwerveAction.DEFAULT);
     }
@@ -122,9 +121,8 @@ public abstract class WCRobot {
   protected Optional<Rotation2d> getOverrideAutoTargetRotation() {
     // if aimbotting is on, return the angle to the target
     if (m_SwerveAction == SwerveAction.AIMBOTTING) {
-      double angleToTarget =
-          m_photonVision.getAngleToTarget(
-              m_swervePoseEstimator.getPose(), m_photonVision.getTargetID());
+      double angleToTarget = m_photonVision.getAngleToTarget(
+          m_swervePoseEstimator.getPose(), m_photonVision.getTargetID());
       return Optional.of(Rotation2d.fromRadians(angleToTarget));
     }
     // otherwise, return empty and pathplanner will use the orientation from the
