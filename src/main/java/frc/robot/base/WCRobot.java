@@ -6,9 +6,11 @@ package frc.robot.base;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.base.io.DriverController;
 import frc.robot.base.io.OperatorController;
 import frc.robot.base.subsystems.PoseEstimator.PhotonVisionSystem;
@@ -18,6 +20,7 @@ import frc.robot.base.subsystems.swerve.SwerveAction;
 import frc.robot.base.subsystems.swerve.SwerveDriveSubsystem;
 import frc.robot.commands.SwerveJoystickCmd;
 import java.util.Optional;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public abstract class WCRobot {
 
@@ -34,6 +37,8 @@ public abstract class WCRobot {
 
   protected SwerveAction m_SwerveAction = SwerveAction.DEFAULT;
 
+  private final SendableChooser<Command> m_chooser = new SendableChooser<>();
+
   // protected boolean m_isAimbotting = false;
 
   public WCRobot() {
@@ -42,17 +47,18 @@ public abstract class WCRobot {
     m_swervePoseEstimator = new SwervePoseEstimator(m_swerveDrive, m_photonVision);
     m_simplePathPlanner = new WCPathPlanner(m_swervePoseEstimator, m_swerveDrive);
     m_operatorController = new OperatorController();
-    m_driverController = new DriverController(
-        new InstantCommand(
-            () -> {
-              m_swerveDrive.resetGyro();
-              m_swervePoseEstimator.reset();
-            }),
-        new InstantCommand(
-            () -> {
-              m_isFieldOriented = !m_isFieldOriented;
-              SmartDashboard.putBoolean("isFieldOriented", m_isFieldOriented);
-            }));
+    m_driverController =
+        new DriverController(
+            new InstantCommand(
+                () -> {
+                  m_swerveDrive.resetGyro();
+                  m_swervePoseEstimator.reset();
+                }),
+            new InstantCommand(
+                () -> {
+                  m_isFieldOriented = !m_isFieldOriented;
+                  SmartDashboard.putBoolean("isFieldOriented", m_isFieldOriented);
+                }));
 
     initComponents();
     initSubsystems();
@@ -110,7 +116,8 @@ public abstract class WCRobot {
     double robotHeadingDeg = m_swervePoseEstimator.getPose().getRotation().getDegrees();
     if (Math.abs(rightPosition) > 0.3
         || (m_SwerveAction == SwerveAction.FACEFORWARD && MathUtil.isNear(0, robotHeadingDeg, 2.5))
-        || (m_SwerveAction == SwerveAction.FACEBACKWARD && MathUtil.isNear(180, robotHeadingDeg, 2.5))) {
+        || (m_SwerveAction == SwerveAction.FACEBACKWARD
+            && MathUtil.isNear(180, robotHeadingDeg, 2.5))) {
       // setAimBotting(false);
       setSwerveAction(SwerveAction.DEFAULT);
     }
@@ -121,8 +128,9 @@ public abstract class WCRobot {
   protected Optional<Rotation2d> getOverrideAutoTargetRotation() {
     // if aimbotting is on, return the angle to the target
     if (m_SwerveAction == SwerveAction.AIMBOTTING) {
-      double angleToTarget = m_photonVision.getAngleToTarget(
-          m_swervePoseEstimator.getPose(), m_photonVision.getTargetID());
+      double angleToTarget =
+          m_photonVision.getAngleToTarget(
+              m_swervePoseEstimator.getPose(), m_photonVision.getTargetID());
       return Optional.of(Rotation2d.fromRadians(angleToTarget));
     }
     // otherwise, return empty and pathplanner will use the orientation from the
@@ -138,7 +146,22 @@ public abstract class WCRobot {
 
   protected abstract void initSubsystems();
 
-  protected abstract void initAutoCommands();
+  protected void initAutoCommands() {
+    m_chooser.setDefaultOption("Do Nothing", new InstantCommand());
+    m_chooser.addOption(
+        "[TUNING] SysID Quasistatic Forward",
+        m_swerveDrive.getSysIdQuasistatic(Direction.kForward));
+    m_chooser.addOption(
+        "[TUNING] SysID Quasistatic Backwards",
+        m_swerveDrive.getSysIdQuasistatic(Direction.kReverse));
+    m_chooser.addOption(
+        "[TUNING] SysID Dynamic Forward", m_swerveDrive.getSysIdDynamic(Direction.kForward));
+    m_chooser.addOption(
+        "[TUNING] SysID Dynamic Backwards", m_swerveDrive.getSysIdDynamic(Direction.kReverse));
+
+    SmartDashboard.putData("Auto Choices", m_chooser);
+  }
+  ;
 
   protected abstract void initDriverControllerBindings(
       DriverController m_driverController, OperatorController m_operatorController);
@@ -148,7 +171,8 @@ public abstract class WCRobot {
 
   protected Command getAutonomousCommand() {
     // return new SimplePathPlanner(m_swervePoseEstimator, m_swerveDrive);
-    return m_simplePathPlanner.getSelectedAuto();
+    // return m_simplePathPlanner.getSelectedAuto();
+    return m_chooser.getSelected();
   }
 
   protected abstract void setLEDsTeleop();
