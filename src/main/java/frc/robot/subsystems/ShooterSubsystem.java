@@ -18,14 +18,8 @@ public class ShooterSubsystem extends WCStaticSubsystem {
 
   private CANSparkMax m_top;
   private CANSparkMax m_bottom;
-  // private double m_speed = 0.25;
-  private Beambreak m_beambreak;
-  private ArmSubsystem m_armSubsystem;
-
   private RelativeEncoder m_topEncoder;
   private RelativeEncoder m_bottomEncoder;
-
-  private PIDController m_topController;
 
   @Override
   protected double getBaseSpeed() {
@@ -33,21 +27,14 @@ public class ShooterSubsystem extends WCStaticSubsystem {
   }
 
   /** Creates a new Shooter. */
-  public ShooterSubsystem(Beambreak m_beambreak, ArmSubsystem armSubsystem) {
+  public ShooterSubsystem() {
     super();
-    m_armSubsystem = armSubsystem;
-    // m_top = new CANSparkMax(Constants.kShooterTop, MotorType.kBrushless);
-    // m_bottom = new CANSparkMax(Constants.kShooterBottom, MotorType.kBrushless);
-    this.m_beambreak = m_beambreak;
     m_topEncoder = m_top.getEncoder();
     m_bottomEncoder = m_bottom.getEncoder();
-    // m_topController = new PIDController(0.1, 0, 0);
-    // SmartDashboard.putData("ShooterPID", m_topController);
   }
 
   @Override
   protected List<MotorController> initMotors() {
-    // needs fix
     m_top = new CANSparkMax(Constants.kShooterTop, MotorType.kBrushless);
     m_bottom = new CANSparkMax(Constants.kShooterBottom, MotorType.kBrushless);
     return List.of(m_top, m_bottom);
@@ -55,8 +42,8 @@ public class ShooterSubsystem extends WCStaticSubsystem {
 
   @Override
   public void periodic() {
+    super.periodic();
     if (subsystemAction == SubsystemAction.SHOOT) {
-      // forwardMotors();
       m_top.setVoltage((getBaseSpeed() - 0.015) * 12);
       m_bottom.setVoltage(getBaseSpeed() * 12);
     } else if (subsystemAction == SubsystemAction.OUTTAKE) {
@@ -65,8 +52,19 @@ public class ShooterSubsystem extends WCStaticSubsystem {
     } else {
       stopMotors();
     }
-    SmartDashboard.putNumber("ShooterVel", m_topEncoder.getVelocity());
-    SmartDashboard.putNumber("ShooterVel2", m_bottomEncoder.getVelocity());
+  }
+
+  @Override
+  protected void putDebugDataPeriodic(boolean isRealRobot) {
+    SmartDashboard.putNumber("Shooter1Voltage", m_top.getAppliedOutput());
+    SmartDashboard.putNumber("Shooter1Current", m_top.getOutputCurrent());
+    SmartDashboard.putNumber("Shooter1Velocity", m_topEncoder.getVelocity());
+
+    SmartDashboard.putNumber("Shooter2Voltage", m_bottom.getAppliedOutput());
+    SmartDashboard.putNumber("Shooter2Current", m_bottom.getOutputCurrent());
+    SmartDashboard.putNumber("Shooter2Velocity", m_bottomEncoder.getVelocity());
+
+    SmartDashboard.putString("ShooterAction", getActionName());
   }
 
   public void spinFast() {
@@ -75,5 +73,10 @@ public class ShooterSubsystem extends WCStaticSubsystem {
 
   public void spinSlow() {
     subsystemAction = SubsystemAction.OUTTAKE;
+  }
+
+  public boolean isVelocityTerminal() {
+    return m_topEncoder.getVelocity() >= 2600 &&
+        m_bottomEncoder.getVelocity() >= 2600;
   }
 }

@@ -84,12 +84,13 @@ public abstract class WCRobot {
             m_swerveDrive,
             m_swervePoseEstimator,
             m_photonVision,
-            () -> -m_driverController.getLeftY(),
+            m_driverController::getLeftY,
             () -> -m_driverController.getLeftX(),
             () -> -getDriverRotationAxis(),
             () -> m_isFieldOriented,
             // () -> isAimBotting(),
-            () -> getSwerveAction()));
+            this::getSwerveAction)
+    );
   }
 
   // so that aimBotting can be set and accessed by other stuff in Robot.java

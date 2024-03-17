@@ -7,12 +7,7 @@ import frc.robot.base.io.Beambreak;
 import frc.robot.base.io.DriverController;
 import frc.robot.base.io.OperatorController;
 import frc.robot.base.subsystems.swerve.SwerveAction;
-import frc.robot.commands.ArmDownCmd;
-import frc.robot.commands.AutoShootCommand;
-import frc.robot.commands.ClimberCommand;
-import frc.robot.commands.IntakeCMD;
-import frc.robot.commands.ShootCommand;
-import frc.robot.commands.SpinShooterCMD;
+import frc.robot.commands.*;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.FeederSubsystem;
@@ -41,12 +36,12 @@ public class Robot extends WCRobot {
   @Override
   protected void initSubsystems() {
     SmartDashboard.putNumber("Wrist shoot point", Constants.kWristStow);
-    m_intakeSubsystem = new IntakeSubsystem(m_beambreak);
+    m_intakeSubsystem = new IntakeSubsystem();
     m_armSubsystem = new ArmSubsystem();
     m_wristSubsystem = new WristSubsystem();
-    m_feederSubsystem = new FeederSubsystem(m_beambreak);
+    m_feederSubsystem = new FeederSubsystem();
     m_climberSubsystem = new ClimberSubsystem();
-    m_shooterSubsystem = new ShooterSubsystem(m_beambreak, m_armSubsystem);
+    m_shooterSubsystem = new ShooterSubsystem();
     m_ledSubsystem = new LEDSubsystem(m_beambreak, () -> getSwerveAction() == SwerveAction.AIMBOTTING);
   }
 
@@ -69,22 +64,30 @@ public class Robot extends WCRobot {
   protected void initDriverControllerBindings(
       DriverController m_driverController, OperatorController operatorController) {
 
-    m_intakeSubsystem.setDefaultCommand(
-        new IntakeCMD(m_beambreak, m_intakeSubsystem, m_feederSubsystem, m_driverController));
+    // Intake
+    m_driverController
+        .getRightBumper()
+            .whileTrue(new IntakeCMD(m_beambreak, m_intakeSubsystem, m_feederSubsystem));
 
+    // Arm Up
     m_driverController
         .getAButton()
-        .onTrue(
-            new InstantCommand(
-                () -> {
-                  m_armSubsystem.pos(Constants.kArmAmp);
-                  m_wristSubsystem.pos(Constants.kWristAmp);
-                }));
+        .onTrue(new ArmUpCmd(m_armSubsystem, m_wristSubsystem, m_shooterSubsystem));
 
+    // Arm Down
     m_driverController
         .getBButton()
-        .onTrue(
-            new ArmDownCmd(m_armSubsystem, m_wristSubsystem));
+        .onTrue(new ArmDownCmd(m_armSubsystem, m_wristSubsystem));
+
+    // Spin & Aim Shooter
+    m_driverController.scheduleOnLeftTrigger(
+        new AimShooterCommand(m_driverController, m_shooterSubsystem)
+    );
+
+    // Shoot
+    m_driverController.scheduleOnRightTrigger(
+        new ShootCommand(m_feederSubsystem)
+    );
 
     // Face forward
     m_driverController
@@ -100,18 +103,14 @@ public class Robot extends WCRobot {
     m_driverController
         .start()
         .onTrue(new InstantCommand(() -> setSwerveAction(SwerveAction.FACEAMP)));
-
-    m_shooterSubsystem.setDefaultCommand(
-        new SpinShooterCMD(m_driverController, m_shooterSubsystem, m_armSubsystem));
-    m_feederSubsystem.setDefaultCommand(new ShootCommand(m_feederSubsystem, m_driverController));
   }
 
   @Override
   protected void initOperatorControllerBindings(
       DriverController driverController, OperatorController m_operatorController) {
-
-    m_climberSubsystem.setDefaultCommand(
-        new ClimberCommand(m_climberSubsystem, m_operatorController));
+      m_climberSubsystem.setDefaultCommand(
+        new ClimberCommand(m_climberSubsystem, m_operatorController)
+      );
   }
 
   @Override

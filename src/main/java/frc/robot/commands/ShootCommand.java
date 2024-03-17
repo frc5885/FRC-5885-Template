@@ -12,13 +12,11 @@ import frc.robot.subsystems.FeederSubsystem;
 public class ShootCommand extends Command {
 
   private FeederSubsystem m_feederSubsystem;
-  private DriverController m_driverController;
 
   /** Creates a new Shoot. */
-  public ShootCommand(FeederSubsystem feederSubsystem, DriverController driverController) {
+  public ShootCommand(FeederSubsystem feederSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_feederSubsystem = feederSubsystem;
-    m_driverController = driverController;
 
     addRequirements(m_feederSubsystem);
   }
@@ -30,18 +28,14 @@ public class ShootCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double position = m_driverController.getRightTriggerAxis();
-    SmartDashboard.putNumber("RightTrigeerPosition", position);
-    if (position > 0.1) {
-      m_feederSubsystem.intake();
-    } else if (!m_driverController.getRightBumper().getAsBoolean()) {
-      m_feederSubsystem.stop();
-    }
+    m_feederSubsystem.intake();
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    m_feederSubsystem.stop();
+  }
 
   // Returns true when the command should end.
   @Override

@@ -31,59 +31,43 @@ public class ArmSubsystem extends WCStaticSubsystem {
   }
 
   @Override
-  protected Double getBaseSpeedDown() {
-    return 0.1;
-  }
-
-  @Override
   protected List<MotorController> initMotors() {
     m_arm = new TalonFX(Constants.kArm);
     m_encoder = new DutyCycleEncoder(1);
     m_PidController = new PIDController(250, 0, 0);
     SmartDashboard.putData("ArmPID", m_PidController);
-    // m_arm.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 1, 0);
-    // TalonFXConfiguration config = new TalonFXConfiguration();
     return List.of(m_arm);
   }
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("ArmVoltage", m_arm.getMotorVoltage().getValueAsDouble());
-    SmartDashboard.putNumber("ArmPosition", m_encoder.getAbsolutePosition());
-    SmartDashboard.putNumber("ArmCurrent", m_arm.getSupplyCurrent().getValueAsDouble());
-    if (subsystemAction == SubsystemAction.UP /* && withinLowerLimit() */) {
-      reverseMotors();
-    } else if (subsystemAction == SubsystemAction.DOWN /* && withinUpperLimit() */) {
-      forwardMotors();
-    } else if (subsystemAction == SubsystemAction.POS) {
-      double measurement = RobotSystem.isReal() ? m_encoder.getAbsolutePosition() : positionSim;
+    super.periodic();
+    if (subsystemAction == SubsystemAction.POS) {
+      double measurement = getArmPosition();
       m_arm.setVoltage(-m_PidController.calculate(measurement, m_setPoint));
-      double buffer = 0.005;
-      if (measurement <= m_setPoint + buffer && measurement >= m_setPoint - buffer) {
-        subsystemAction = null;
-      }
     } else {
       stopMotors();
     }
-    positionSim += m_arm.getMotorVoltage().getValueAsDouble() * 0.02;
+    positionSim -= m_arm.getMotorVoltage().getValueAsDouble() * 0.001;
+  }
+
+
+  @Override
+  protected void putDebugDataPeriodic(boolean isRealRobot) {
+    SmartDashboard.putNumber("ArmVoltage", m_arm.getMotorVoltage().getValueAsDouble());
+    SmartDashboard.putNumber("ArmPosition", getArmPosition());
+    SmartDashboard.putNumber("ArmCurrent", m_arm.getSupplyCurrent().getValueAsDouble());
+    SmartDashboard.putString("ArmAction", getActionName());
   }
 
   private boolean withinUpperLimit() {
-    double armPosition = RobotSystem.isReal() ? m_encoder.getAbsolutePosition() : positionSim;
+    double armPosition = getArmPosition();
     return armPosition < Constants.kArmEncoderMax + buffer;
   }
 
   private boolean withinLowerLimit() {
-    double armPosition = RobotSystem.isReal() ? m_encoder.getAbsolutePosition() : positionSim;
+    double armPosition = getArmPosition();
     return armPosition > Constants.kArmEncoderMin - buffer;
-  }
-
-  public void up() {
-    subsystemAction = SubsystemAction.UP;
-  }
-
-  public void down() {
-    subsystemAction = SubsystemAction.DOWN;
   }
 
   public void pos(double setpoint) {
@@ -91,15 +75,15 @@ public class ArmSubsystem extends WCStaticSubsystem {
     subsystemAction = SubsystemAction.POS;
   }
 
+  private double getArmPosition() {
+    return RobotSystem.isReal() ? m_encoder.getAbsolutePosition() : positionSim;
+  }
+
   public boolean isArmDown() {
-    return m_encoder.getAbsolutePosition() <= Constants.kArmStow + buffer;
+    return getArmPosition() <= Constants.kArmStow + buffer;
   }
 
   public boolean isArmUp() {
-    return m_encoder.getAbsolutePosition() >= Constants.kArmAmp - buffer;
-  }
-
-  public boolean isArmSetUp() {
-    return m_setPoint == Constants.kArmAmp;
+    return getArmPosition() >= Constants.kArmAmp - buffer;
   }
 }

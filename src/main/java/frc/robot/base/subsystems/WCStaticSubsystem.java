@@ -1,7 +1,10 @@
 package frc.robot.base.subsystems;
 
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.base.RobotSystem;
+
 import java.util.List;
 
 public abstract class WCStaticSubsystem extends SubsystemBase {
@@ -13,10 +16,6 @@ public abstract class WCStaticSubsystem extends SubsystemBase {
 
   protected abstract double getBaseSpeed();
 
-  protected Double getBaseSpeedDown() {
-    return null;
-  }
-
   protected abstract List<MotorController> initMotors();
 
   protected WCStaticSubsystem() {
@@ -26,6 +25,14 @@ public abstract class WCStaticSubsystem extends SubsystemBase {
   public void stop() {
     subsystemAction = null;
   }
+
+  @Override
+  public void periodic() {
+    super.periodic();
+    putDebugDataPeriodic(RobotSystem.isReal());
+  }
+
+  protected void putDebugDataPeriodic(boolean isRealRobot) { }
 
   protected final void forwardMotors() {
     for (MotorController motor : motors) {
@@ -43,5 +50,9 @@ public abstract class WCStaticSubsystem extends SubsystemBase {
     for (MotorController motor : motors) {
       motor.setVoltage(0);
     }
+  }
+
+  protected String getActionName() {
+    return (subsystemAction != null) ? subsystemAction.toString() : "null";
   }
 }

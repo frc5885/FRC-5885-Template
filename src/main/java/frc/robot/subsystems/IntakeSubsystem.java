@@ -13,39 +13,29 @@ import java.util.List;
 
 public class IntakeSubsystem extends WCStaticSubsystem {
 
-  private CANSparkMax m_left;
-  private CANSparkMax m_right;
-  private Beambreak m_beambreak;
-
-  /** Creates a new Shooter. */
-  // public IntakeSubsystem(Beambreak m_beambreak) {
-  // m_left = new CANSparkMax(Constants.kIntakeLeft, MotorType.kBrushless);
-  // m_right = new CANSparkMax(Constants.kIntakeRight, MotorType.kBrushless);
-  // this.m_beambreak = m_beambreak;
-  // }
+  private CANSparkMax m_intakeMotor;
 
   @Override
   protected double getBaseSpeed() {
     return 1.0;
   }
 
-  public IntakeSubsystem(Beambreak m_beambreak) {
-    super();
-    this.m_beambreak = m_beambreak;
+  @Override
+  protected List<MotorController> initMotors() {
+    m_intakeMotor = new CANSparkMax(Constants.kIntakeRight, MotorType.kBrushless);
+    return List.of(m_intakeMotor);
   }
 
   @Override
-  protected List<MotorController> initMotors() {
-    MotorType motorType = RobotSystem.isReal() ? MotorType.kBrushless : MotorType.kBrushless;
-    // m_left = new CANSparkMax(Constants.kIntakeLeft, MotorType.kBrushless);
-    m_right = new CANSparkMax(Constants.kIntakeRight, motorType);
-    // return List.of(m_left, m_right);
-    return List.of(m_right);
+  protected void putDebugDataPeriodic(boolean isRealRobot) {
+    SmartDashboard.putNumber("IntakeVoltage", m_intakeMotor.getAppliedOutput());
+    SmartDashboard.putNumber("IntakeCurrent", m_intakeMotor.getOutputCurrent());
+    SmartDashboard.putString("IntakeAction", getActionName());
   }
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Intake", m_right.getAppliedOutput());
+    super.periodic();
     if (subsystemAction == SubsystemAction.OUTTAKE) {
       reverseMotors();
     } else if (subsystemAction == SubsystemAction.INTAKE) {
@@ -53,7 +43,6 @@ public class IntakeSubsystem extends WCStaticSubsystem {
     } else {
       stopMotors();
     }
-    SmartDashboard.putNumber("IntakeVoltage", m_right.getAppliedOutput());
   }
 
   public void intake() {

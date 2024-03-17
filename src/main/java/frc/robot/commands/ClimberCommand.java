@@ -6,19 +6,20 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.base.io.OperatorController;
 import frc.robot.subsystems.*;
 
 public class ClimberCommand extends Command {
   /** Creates a new ClimberCommand. */
   private final ClimberSubsystem m_climberSubsystem;
 
-  private final CommandXboxController m_xboxController;
+  private final OperatorController m_operatorController;
 
-  public ClimberCommand(ClimberSubsystem climberSubsystem, CommandXboxController xboxController) {
+  public ClimberCommand(ClimberSubsystem climberSubsystem, OperatorController operatorController) {
     // Use addRequirements() here to declare subsystem dependencies.
 
     m_climberSubsystem = climberSubsystem;
-    m_xboxController = xboxController;
+    m_operatorController = operatorController;
 
     addRequirements(m_climberSubsystem);
   }
@@ -30,10 +31,10 @@ public class ClimberCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double leftPosition = m_xboxController.getLeftY();
-    double rightPosition = m_xboxController.getRightY();
+    double leftPosition = m_operatorController.getLeftYWithDeadband();
+    double rightPosition = m_operatorController.getRightYWithDeadband();
     m_climberSubsystem.rightStickPosition(rightPosition);
-    m_climberSubsystem.leftStickPosition(leftPosition);
+    m_climberSubsystem.setLeftClimberSpeed(leftPosition);
   }
 
   // Called once the command ends or is interrupted.

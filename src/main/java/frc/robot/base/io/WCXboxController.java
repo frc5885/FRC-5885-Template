@@ -1,8 +1,13 @@
 package frc.robot.base.io;
 
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.event.EventLoop;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+
+import java.util.function.BooleanSupplier;
 
 public class WCXboxController extends CommandXboxController {
 
@@ -69,5 +74,54 @@ public class WCXboxController extends CommandXboxController {
 
   public JoystickButton getStartButton() {
     return startButton;
+  }
+
+  @Override
+  public double getLeftY() {
+    return -super.getLeftY();
+  }
+
+  @Override
+  public double getRightY() {
+    return -super.getRightY();
+  }
+
+  public void scheduleOnRightTrigger(Command command) {
+    scheduleOnRightTrigger(command, 0.1);
+  }
+
+  public void scheduleOnRightTrigger(Command command, double minimumInput) {
+    scheduleOnInput(
+        command,
+        () -> getRightTriggerAxis() > minimumInput
+    );
+  }
+
+  public void scheduleOnLeftTrigger(Command command) {
+    scheduleOnLeftTrigger(command, 0.1);
+  }
+
+  public void scheduleOnLeftTrigger(Command command, double minimumInput) {
+    scheduleOnInput(
+        command,
+        () -> getLeftTriggerAxis() > minimumInput
+    );
+  }
+
+  private void scheduleOnInput(Command command, BooleanSupplier condition) {
+    EventLoop looper = CommandScheduler.getInstance().getDefaultButtonLoop();
+    looper.bind(new Runnable() {
+      private boolean wasTriggered = condition.getAsBoolean();
+      @Override
+      public void run() {
+        boolean isTriggered = condition.getAsBoolean();
+        if (!wasTriggered && isTriggered) {
+          command.schedule();
+        } else if (wasTriggered && !isTriggered) {
+          command.cancel();
+        }
+        wasTriggered = isTriggered;
+      }
+    });
   }
 }

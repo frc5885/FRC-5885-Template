@@ -7,17 +7,23 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.WristSubsystem;
 
-public class ArmDownCmd extends Command {
+public class ArmUpCmd extends Command {
   ArmSubsystem m_armSubsystem;
   WristSubsystem m_wristSubsystem;
+  ShooterSubsystem m_shooterSubsystem;
 
-  /** Creates a new ArmDownCmd. */
-  public ArmDownCmd(ArmSubsystem armSubsystem, WristSubsystem wristSubsystem) {
+  public ArmUpCmd(
+      ArmSubsystem armSubsystem,
+      WristSubsystem wristSubsystem,
+      ShooterSubsystem shooterSubsystem
+  ) {
     m_armSubsystem = armSubsystem;
     m_wristSubsystem = wristSubsystem;
-    addRequirements(m_armSubsystem, m_wristSubsystem);
+    m_shooterSubsystem = shooterSubsystem;
+    addRequirements(m_armSubsystem, m_wristSubsystem, m_shooterSubsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -28,28 +34,19 @@ public class ArmDownCmd extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (!m_armSubsystem.isArmDown()) {
-      m_armSubsystem.pos(Constants.kArmStow);
-    } else {
-      m_armSubsystem.stop();
-    }
-    if (m_armSubsystem.isArmDown() && !m_wristSubsystem.isStowed()) {
-      m_wristSubsystem.pos(Constants.kWristStow);
-    } else {
-      m_wristSubsystem.stop();
-    }
+    m_armSubsystem.pos(Constants.kArmAmp);
+    m_wristSubsystem.pos(Constants.kWristAmp);
+    m_shooterSubsystem.spinSlow();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_wristSubsystem.stop();
-    m_armSubsystem.stop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_armSubsystem.isArmDown() && m_wristSubsystem.isStowed();
+    return true;
   }
 }
