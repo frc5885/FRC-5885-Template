@@ -120,9 +120,9 @@ public final class SwerveConstants {
     // Drive Feed Forward Constants
     //
     // These values are found by using the SwerveSolveFeedForward command.
-    public static final double kDriveFeedForwardKs = 0.09214084677588957;
-    public static final double kDriveFeedForwardKv = 2.6828478208373143;
-    public static final double kDriveFeedForwardKa = 0.0;
+    public static final double kDriveFeedForwardKs = 0.09963;
+    public static final double kDriveFeedForwardKv = 2.7194;
+    public static final double kDriveFeedForwardKa = 0.65679;
 
     //////////////////////
     // Drive PID Constants
