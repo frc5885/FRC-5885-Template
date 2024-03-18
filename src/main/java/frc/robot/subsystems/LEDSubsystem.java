@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.base.io.Beambreak;
@@ -24,11 +25,19 @@ public class LEDSubsystem extends SubsystemBase {
   private int m_r;
   private int m_g;
   private int m_b;
+  long m_lastFlash = 0;
+  int m_flashRate = 175;
+  int m_currentColor = 0;
 
   Beambreak m_beambreak;
+  ShooterSubsystem m_shooterSubsystem;
   Supplier<Boolean> m_isAimbottingFunction;
 
-  public LEDSubsystem(Beambreak beambreak, Supplier<Boolean> isAimbottingFunction) {
+  public LEDSubsystem(
+      Beambreak beambreak,
+      ShooterSubsystem shooterSubsystem,
+      Supplier<Boolean> isAimbottingFunction
+  ) {
     m_led = new AddressableLED(Constants.kLED);
     m_ledBuffer = new AddressableLEDBuffer(60);
     m_led.setLength(m_ledBuffer.getLength());
@@ -39,6 +48,7 @@ public class LEDSubsystem extends SubsystemBase {
 
     m_beambreak = beambreak;
     m_isAimbottingFunction = isAimbottingFunction;
+    m_shooterSubsystem = shooterSubsystem;
   }
 
   @Override
@@ -56,12 +66,20 @@ public class LEDSubsystem extends SubsystemBase {
       case TELEOP:
         if (m_beambreak.isBroken()) {
           if (m_isAimbottingFunction.get()) {
-            setLedColor(0, 255, 0);
+            if (m_shooterSubsystem.isVelocityTerminal()) {
+              // Flash green when aimbotting and shooter is at terminal velocity
+              flash(0, 255, 0);
+            } else {
+              // Flash orange when aimbotting and shooter is not at terminal velocity
+              flash(255, 170, 0);
+            }
           } else {
-            setLedColor(255, 255, 255);
+            // Flash blue when note present & not aimbotting
+            flash(0, 0, 255);
           }
         } else {
-          setLedColor(0, 0, 0);
+          // Solid red when no note present
+          setLedColor(255, 0, 0);
         }
         break;
       case AUTO:
@@ -71,11 +89,25 @@ public class LEDSubsystem extends SubsystemBase {
     }
   }
 
+  private void flash(int r, int g, int b) {
+    long now = System.currentTimeMillis();
+    if (now - m_lastFlash > m_flashRate) {
+      if (m_currentColor == 0) {
+        setLedColor(r, g, b);
+      } else {
+        setLedColor(0, 0, 0);
+      }
+      m_lastFlash = now;
+    }
+  }
+
   public void setLedColor(int r, int g, int b) {
     for (var i = 0; i < m_ledBuffer.getLength(); i++) {
       m_ledBuffer.setRGB(i, r, g, b);
     }
     m_led.setData(m_ledBuffer);
+    m_currentColor = r + g + b;
+    SmartDashboard.putString("LEDColor", r + ", " + b + ", " + g);
   }
 
   // (0°, 100%, 100%)

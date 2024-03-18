@@ -4,12 +4,10 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
-import frc.robot.base.io.Beambreak;
+import frc.robot.base.RobotSystem;
 import frc.robot.base.subsystems.SubsystemAction;
 import frc.robot.base.subsystems.WCStaticSubsystem;
 import java.util.List;
@@ -20,6 +18,8 @@ public class ShooterSubsystem extends WCStaticSubsystem {
   private CANSparkMax m_bottom;
   private RelativeEncoder m_topEncoder;
   private RelativeEncoder m_bottomEncoder;
+  double topVelocitySim = 0.0;
+  double bottomVelocitySim = 0.0;
 
   @Override
   protected double getBaseSpeed() {
@@ -51,18 +51,22 @@ public class ShooterSubsystem extends WCStaticSubsystem {
       m_bottom.setVoltage(-12 * 0.2);
     } else {
       stopMotors();
+      topVelocitySim = 0;
+      bottomVelocitySim = 0;
     }
+    topVelocitySim -= m_top.getAppliedOutput() * 3;
+    bottomVelocitySim -= m_top.getAppliedOutput() * 3;
   }
 
   @Override
   protected void putDebugDataPeriodic(boolean isRealRobot) {
     SmartDashboard.putNumber("Shooter1Voltage", m_top.getAppliedOutput());
     SmartDashboard.putNumber("Shooter1Current", m_top.getOutputCurrent());
-    SmartDashboard.putNumber("Shooter1Velocity", m_topEncoder.getVelocity());
+    SmartDashboard.putNumber("Shooter1Velocity", getTopVelocity());
 
     SmartDashboard.putNumber("Shooter2Voltage", m_bottom.getAppliedOutput());
     SmartDashboard.putNumber("Shooter2Current", m_bottom.getOutputCurrent());
-    SmartDashboard.putNumber("Shooter2Velocity", m_bottomEncoder.getVelocity());
+    SmartDashboard.putNumber("Shooter2Velocity", getBottomVelocity());
 
     SmartDashboard.putString("ShooterAction", getActionName());
   }
@@ -76,7 +80,15 @@ public class ShooterSubsystem extends WCStaticSubsystem {
   }
 
   public boolean isVelocityTerminal() {
-    return m_topEncoder.getVelocity() >= 2600 &&
-        m_bottomEncoder.getVelocity() >= 2600;
+    return getTopVelocity() >= 2600 &&
+        getBottomVelocity() >= 2600;
+  }
+
+  private double getTopVelocity() {
+    return RobotSystem.isReal() ? m_topEncoder.getVelocity() : topVelocitySim;
+  }
+
+  private double getBottomVelocity() {
+    return RobotSystem.isReal() ? m_bottomEncoder.getVelocity() : bottomVelocitySim;
   }
 }

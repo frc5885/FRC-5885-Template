@@ -65,8 +65,8 @@ public abstract class WCRobot {
     initComponents();
     initSubsystems();
     initAutoCommands();
-    initDriverControllerBindings(m_driverController, m_operatorController);
-    initOperatorControllerBindings(m_driverController, m_operatorController);
+    initDriverControllerBindings(m_driverController);
+    initOperatorControllerBindings(m_operatorController);
     initSwerveBindings();
 
     // PATHPLANNER AUTO STUFF (building the auto chooser has to be done after named
@@ -169,17 +169,13 @@ public abstract class WCRobot {
   }
   ;
 
-  protected abstract void initDriverControllerBindings(
-      DriverController m_driverController, OperatorController m_operatorController);
+  protected abstract void initDriverControllerBindings(DriverController m_driverController);
 
-  protected abstract void initOperatorControllerBindings(
-      DriverController m_driverController, OperatorController m_operatorController);
+  protected abstract void initOperatorControllerBindings(OperatorController m_operatorController);
 
   protected Command getAutonomousCommand() {
     // return new SimplePathPlanner(m_swervePoseEstimator, m_swerveDrive);
     // return m_simplePathPlanner.getSelectedAuto();
     return m_chooser.getSelected();
   }
-
-  protected abstract void setLEDsTeleop();
 }

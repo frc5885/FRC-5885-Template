@@ -1,6 +1,5 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.base.WCRobot;
 import frc.robot.base.io.Beambreak;
@@ -8,13 +7,7 @@ import frc.robot.base.io.DriverController;
 import frc.robot.base.io.OperatorController;
 import frc.robot.base.subsystems.swerve.SwerveAction;
 import frc.robot.commands.*;
-import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.ClimberSubsystem;
-import frc.robot.subsystems.FeederSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.LEDSubsystem;
-import frc.robot.subsystems.ShooterSubsystem;
-import frc.robot.subsystems.WristSubsystem;
+import frc.robot.subsystems.*;
 
 public class Robot extends WCRobot {
 
@@ -35,14 +28,13 @@ public class Robot extends WCRobot {
 
   @Override
   protected void initSubsystems() {
-    SmartDashboard.putNumber("Wrist shoot point", Constants.kWristStow);
     m_intakeSubsystem = new IntakeSubsystem();
     m_armSubsystem = new ArmSubsystem();
     m_wristSubsystem = new WristSubsystem();
     m_feederSubsystem = new FeederSubsystem();
     m_climberSubsystem = new ClimberSubsystem();
     m_shooterSubsystem = new ShooterSubsystem();
-    m_ledSubsystem = new LEDSubsystem(m_beambreak, () -> getSwerveAction() == SwerveAction.AIMBOTTING);
+    m_ledSubsystem = new LEDSubsystem(m_beambreak, m_shooterSubsystem, () -> getSwerveAction() == SwerveAction.AIMBOTTING);
   }
 
   @Override
@@ -61,8 +53,7 @@ public class Robot extends WCRobot {
   }
 
   @Override
-  protected void initDriverControllerBindings(
-      DriverController m_driverController, OperatorController operatorController) {
+  protected void initDriverControllerBindings(DriverController m_driverController) {
 
     // Intake
     m_driverController
@@ -81,7 +72,7 @@ public class Robot extends WCRobot {
 
     // Spin & Aim Shooter
     m_driverController.scheduleOnLeftTrigger(
-        new AimShooterCommand(m_driverController, m_shooterSubsystem)
+        new AimShooterCommand(m_driverController, m_shooterSubsystem, this)
     );
 
     // Shoot
@@ -106,14 +97,12 @@ public class Robot extends WCRobot {
   }
 
   @Override
-  protected void initOperatorControllerBindings(
-      DriverController driverController, OperatorController m_operatorController) {
+  protected void initOperatorControllerBindings(OperatorController m_operatorController) {
       m_climberSubsystem.setDefaultCommand(
         new ClimberCommand(m_climberSubsystem, m_operatorController)
       );
   }
 
-  @Override
   public void setLEDsTeleop() {
     m_ledSubsystem.setTeleop();
   }

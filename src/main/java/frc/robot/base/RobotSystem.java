@@ -17,7 +17,7 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 public class RobotSystem extends LoggedRobot {
   private Command m_autonomousCommand;
-  private WCRobot m_robotContainer;
+  private Robot m_robotContainer;
 
   // private LEDSubsystem m_ledSubsystem;
 
