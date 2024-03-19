@@ -10,12 +10,12 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.WristSubsystem;
 
-public class ArmUpCmd extends Command {
+public class ArmUpCommand extends Command {
   ArmSubsystem m_armSubsystem;
   WristSubsystem m_wristSubsystem;
   ShooterSubsystem m_shooterSubsystem;
 
-  public ArmUpCmd(
+  public ArmUpCommand(
       ArmSubsystem armSubsystem, WristSubsystem wristSubsystem, ShooterSubsystem shooterSubsystem) {
     m_armSubsystem = armSubsystem;
     m_wristSubsystem = wristSubsystem;

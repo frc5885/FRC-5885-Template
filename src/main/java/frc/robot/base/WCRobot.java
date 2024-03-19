@@ -20,7 +20,7 @@ import frc.robot.base.subsystems.PoseEstimator.SwervePoseEstimator;
 import frc.robot.base.subsystems.WCPathPlanner;
 import frc.robot.base.subsystems.swerve.SwerveAction;
 import frc.robot.base.subsystems.swerve.SwerveDriveSubsystem;
-import frc.robot.commands.SwerveJoystickCmd;
+import frc.robot.commands.SwerveJoystickCommand;
 import java.util.Optional;
 
 public abstract class WCRobot {
@@ -79,7 +79,7 @@ public abstract class WCRobot {
 
   private void initSwerveBindings() {
     m_swerveDrive.setDefaultCommand(
-        new SwerveJoystickCmd(
+        new SwerveJoystickCommand(
             m_swerveDrive,
             m_swervePoseEstimator,
             m_photonVision,

@@ -9,12 +9,12 @@ import frc.robot.Constants;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.WristSubsystem;
 
-public class ArmDownCmd extends Command {
+public class ArmDownCommand extends Command {
   ArmSubsystem m_armSubsystem;
   WristSubsystem m_wristSubsystem;
 
   /** Creates a new ArmDownCmd. */
-  public ArmDownCmd(ArmSubsystem armSubsystem, WristSubsystem wristSubsystem) {
+  public ArmDownCommand(ArmSubsystem armSubsystem, WristSubsystem wristSubsystem) {
     m_armSubsystem = armSubsystem;
     m_wristSubsystem = wristSubsystem;
     addRequirements(m_armSubsystem, m_wristSubsystem);

@@ -25,7 +25,7 @@ import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
-public class SwerveJoystickCmd extends Command {
+public class SwerveJoystickCommand extends Command {
 
   private final SwerveDriveSubsystem m_swerveSubsystem;
   private final SwervePoseEstimator m_poseEstimator;
@@ -57,7 +57,7 @@ public class SwerveJoystickCmd extends Command {
   }
 
   /** Creates a new SwerveJoystickCmd. */
-  public SwerveJoystickCmd(
+  public SwerveJoystickCommand(
       SwerveDriveSubsystem swerveSubsystem,
       SwervePoseEstimator poseEstimator,
       PhotonVisionSystem photonVision,

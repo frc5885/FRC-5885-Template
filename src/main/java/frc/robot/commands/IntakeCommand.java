@@ -6,17 +6,19 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.base.io.Beambreak;
+import frc.robot.base.subsystems.SubsystemAction;
 import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 
-public class IntakeCMD extends Command {
+
+public class IntakeCommand extends Command {
   /** Creates a new IntakeCMD. */
   Beambreak m_beambreak;
 
   IntakeSubsystem m_intakeSubsystem;
   FeederSubsystem m_feederSubsystem;
 
-  public IntakeCMD(
+  public IntakeCommand(
       Beambreak beambreak, IntakeSubsystem intakeSubsystem, FeederSubsystem feederSubsystem) {
     m_beambreak = beambreak;
     m_intakeSubsystem = intakeSubsystem;
@@ -32,8 +34,10 @@ public class IntakeCMD extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_intakeSubsystem.intake();
-    m_feederSubsystem.intake();
+    if (m_intakeSubsystem.getSubsystemAction() != SubsystemAction.OUTTAKE){
+      m_intakeSubsystem.intake();
+      m_feederSubsystem.intake();
+    }
   }
 
   // Called once the command ends or is interrupted.

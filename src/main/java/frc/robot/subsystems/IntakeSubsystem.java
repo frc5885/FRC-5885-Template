@@ -50,4 +50,8 @@ public class IntakeSubsystem extends WCStaticSubsystem {
   public void outtake() {
     subsystemAction = SubsystemAction.OUTTAKE;
   }
+
+  public SubsystemAction getSubsystemAction() {
+    return subsystemAction;
+  }
 }
