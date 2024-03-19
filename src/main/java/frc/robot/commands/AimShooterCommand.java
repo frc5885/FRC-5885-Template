@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Robot;
+import frc.robot.base.io.Beambreak;
 import frc.robot.base.io.DriverController;
 import frc.robot.base.subsystems.PoseEstimator.PhotonVisionSystem;
 import frc.robot.base.subsystems.PoseEstimator.SwervePoseEstimator;
@@ -23,6 +24,7 @@ public class AimShooterCommand extends Command {
   Robot m_robot;
   PhotonVisionSystem m_photonVision;
   SwervePoseEstimator m_swervePoseEstimator;
+  Beambreak m_beambreak;
 
   /** Creates a new SpinShooterCMD. */
   public AimShooterCommand(
@@ -31,13 +33,15 @@ public class AimShooterCommand extends Command {
       Robot robot,
       WristSubsystem wristSubsystem,
       PhotonVisionSystem photonVision,
-      SwervePoseEstimator swervePoseEstimator) {
+      SwervePoseEstimator swervePoseEstimator,
+      Beambreak beambreak) {
     m_shooterSubsystem = shooterSubsystem;
     m_driverController = driverController;
     m_robot = robot;
     m_photonVision = photonVision;
     m_swervePoseEstimator = swervePoseEstimator;
     m_WristSubsystem = wristSubsystem;
+    m_beambreak = beambreak;
     addRequirements(m_shooterSubsystem);
   }
 
@@ -51,13 +55,14 @@ public class AimShooterCommand extends Command {
     m_robot.setSwerveAction(SwerveAction.AIMBOTTING);
     m_shooterSubsystem.spinFast();
     // m_WristSubsystem.pos(SmartDashboard.getNumber("SHOOTPOINT", Constants.kWristAmp));
-
-    double distanceToTarget =
-        m_photonVision.getDistanceToTarget(
-            m_swervePoseEstimator.getPose(), m_photonVision.getTargetID());
-    double wristAngle = 0.1249 * Math.atan(81 / distanceToTarget) + 0.271; // Jack Frias special
-    if (wristAngle > Constants.kWristEncoderMin && wristAngle < Constants.kWristEncoderMax) {
-      m_WristSubsystem.pos(wristAngle);
+    if (m_beambreak.isBroken()) {
+      double distanceToTarget =
+          m_photonVision.getDistanceToTarget(
+              m_swervePoseEstimator.getPose(), m_photonVision.getTargetID());
+      double wristAngle = 0.1249 * Math.atan(81 / distanceToTarget) + 0.271; // Jack Frias special
+      if (wristAngle > Constants.kWristEncoderMin && wristAngle < Constants.kWristEncoderMax) {
+        m_WristSubsystem.pos(wristAngle);
+      }
     }
 
     if (m_shooterSubsystem.isVelocityTerminal()) {

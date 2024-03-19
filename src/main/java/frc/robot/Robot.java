@@ -80,7 +80,8 @@ public class Robot extends WCRobot {
             this,
             m_wristSubsystem,
             m_photonVision,
-            m_swervePoseEstimator));
+            m_swervePoseEstimator,
+            m_beambreak));
 
     // Shoot
     m_driverController.scheduleOnRightTrigger(
