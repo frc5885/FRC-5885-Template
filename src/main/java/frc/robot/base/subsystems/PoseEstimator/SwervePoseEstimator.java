@@ -68,7 +68,8 @@ public class SwervePoseEstimator extends SubsystemBase {
     // are present
     Optional<EstimatedRobotPose> estimatedGlobalPosition =
         m_photonVision.getEstimatedGlobalPoseShooter(estimatedPosition);
-    Logger.recordOutput("SwervePoseEstimator", estimatedGlobalPosition.isPresent() ? "PRESENET" : "NULL!");
+    Logger.recordOutput(
+        "SwervePoseEstimator", estimatedGlobalPosition.isPresent() ? "PRESENET" : "NULL!");
     if (estimatedGlobalPosition.isPresent()) {
 
       // have to call .get() to get the value from the optional

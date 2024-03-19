@@ -7,15 +7,18 @@ import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.WristSubsystem;
 
-public class ShootCommandGroup extends SequentialCommandGroup{
-    
-    // TODO turn off aimbot after shot
+public class ShootCommandGroup extends SequentialCommandGroup {
 
-    public ShootCommandGroup(FeederSubsystem feederSubsystem, ShooterSubsystem shooterSubsystem, WristSubsystem wristSubsystem, ArmSubsystem armSubsystem, Beambreak beambreak){
-        addCommands(
-            new ShootCommand(feederSubsystem, shooterSubsystem, beambreak),
-            new ArmDownCommand(armSubsystem, wristSubsystem)
-        );
-    }
+  // TODO turn off aimbot after shot
 
+  public ShootCommandGroup(
+      FeederSubsystem feederSubsystem,
+      ShooterSubsystem shooterSubsystem,
+      WristSubsystem wristSubsystem,
+      ArmSubsystem armSubsystem,
+      Beambreak beambreak) {
+    addCommands(
+        new ShootCommand(feederSubsystem, shooterSubsystem, beambreak),
+        new ArmDownCommand(armSubsystem, wristSubsystem));
+  }
 }

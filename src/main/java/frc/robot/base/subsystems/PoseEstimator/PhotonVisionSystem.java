@@ -8,7 +8,6 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.AprilTagCameraConstants;
@@ -81,74 +80,75 @@ public class PhotonVisionSystem extends SubsystemBase {
             m_robotToCamShooter);
   }
 
-  public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose) {
-    // this function will continue to return a pose from one of the cameras and only
-    // switch to the
-    // other if
-    // a cooldown has passed without a pose being found from the first camera
-    double currentTime = Timer.getFPGATimestamp(); // Current time
+  // super experimental
+  // public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose) {
+  //   // this function will continue to return a pose from one of the cameras and only
+  //   // switch to the
+  //   // other if
+  //   // a cooldown has passed without a pose being found from the first camera
+  //   double currentTime = Timer.getFPGATimestamp(); // Current time
 
-    // if shooter checked most recently, check it first and only check intake if
-    // it's been long
-    // enough
-    if (m_shooterCheckedMostRecently) {
-      m_photonPoseEstimatorShooter.setReferencePose(prevEstimatedRobotPose);
-      Optional<EstimatedRobotPose> shooterPose = m_photonPoseEstimatorShooter.update();
-      // if shooter pose is still present, reset its update timestamp and return it
-      if (shooterPose.isPresent()) {
-        m_shooterCamPoseUpdateTimestamp = currentTime;
-        return shooterPose;
-      }
-      // if no shooter pose, start checking intake only after cooldown
-      else if (currentTime - m_intakeCamPoseUpdateTimestamp > m_cameraPoseUpdateCooldown) {
-        m_photonPoseEstimatorIntake.setReferencePose(prevEstimatedRobotPose);
-        Optional<EstimatedRobotPose> intakePose = m_photonPoseEstimatorIntake.update();
-        // if intake pose is present, reset its update timestamp and return it
-        if (intakePose.isPresent()) {
-          m_intakeCamPoseUpdateTimestamp = currentTime;
-          m_shooterCheckedMostRecently = false; // now intake was checked most recently
-          return intakePose;
-        }
-      }
-      // if neither pose is present (or shooter isn't present and it hasn't been long
-      // enough to
-      // switch to intake), return empty
-      else {
-        return Optional.empty();
-      }
-    }
-    // if intake checked most recently, check it first and only check shooter if
-    // it's been long
-    // enough
-    else {
-      m_photonPoseEstimatorIntake.setReferencePose(prevEstimatedRobotPose);
-      Optional<EstimatedRobotPose> intakePose = m_photonPoseEstimatorIntake.update();
-      // if intake pose is still present, reset its update timestamp and return it
-      if (intakePose.isPresent()) {
-        m_intakeCamPoseUpdateTimestamp = currentTime;
-        return intakePose;
-      }
-      // if no intake pose, start checking shooter only after cooldown
-      else if (currentTime - m_shooterCamPoseUpdateTimestamp > m_cameraPoseUpdateCooldown) {
-        m_photonPoseEstimatorShooter.setReferencePose(prevEstimatedRobotPose);
-        Optional<EstimatedRobotPose> shooterPose = m_photonPoseEstimatorShooter.update();
-        // if shooter pose is present, reset its update timestamp and return it
-        if (shooterPose.isPresent()) {
-          m_shooterCamPoseUpdateTimestamp = currentTime;
-          m_shooterCheckedMostRecently = true; // now shooter was checked most recently
-          return shooterPose;
-        }
-      }
-      // if neither pose is present (or intake isn't present and it hasn't been long
-      // enough to
-      // switch to shooter), return empty
-      else {
-        return Optional.empty();
-      }
-    }
-    // it should never reach here but vs code gets mad without this
-    return Optional.empty();
-  }
+  //   // if shooter checked most recently, check it first and only check intake if
+  //   // it's been long
+  //   // enough
+  //   if (m_shooterCheckedMostRecently) {
+  //     m_photonPoseEstimatorShooter.setReferencePose(prevEstimatedRobotPose);
+  //     Optional<EstimatedRobotPose> shooterPose = m_photonPoseEstimatorShooter.update();
+  //     // if shooter pose is still present, reset its update timestamp and return it
+  //     if (shooterPose.isPresent()) {
+  //       m_shooterCamPoseUpdateTimestamp = currentTime;
+  //       return shooterPose;
+  //     }
+  //     // if no shooter pose, start checking intake only after cooldown
+  //     else if (currentTime - m_intakeCamPoseUpdateTimestamp > m_cameraPoseUpdateCooldown) {
+  //       m_photonPoseEstimatorIntake.setReferencePose(prevEstimatedRobotPose);
+  //       Optional<EstimatedRobotPose> intakePose = m_photonPoseEstimatorIntake.update();
+  //       // if intake pose is present, reset its update timestamp and return it
+  //       if (intakePose.isPresent()) {
+  //         m_intakeCamPoseUpdateTimestamp = currentTime;
+  //         m_shooterCheckedMostRecently = false; // now intake was checked most recently
+  //         return intakePose;
+  //       }
+  //     }
+  //     // if neither pose is present (or shooter isn't present and it hasn't been long
+  //     // enough to
+  //     // switch to intake), return empty
+  //     else {
+  //       return Optional.empty();
+  //     }
+  //   }
+  //   // if intake checked most recently, check it first and only check shooter if
+  //   // it's been long
+  //   // enough
+  //   else {
+  //     m_photonPoseEstimatorIntake.setReferencePose(prevEstimatedRobotPose);
+  //     Optional<EstimatedRobotPose> intakePose = m_photonPoseEstimatorIntake.update();
+  //     // if intake pose is still present, reset its update timestamp and return it
+  //     if (intakePose.isPresent()) {
+  //       m_intakeCamPoseUpdateTimestamp = currentTime;
+  //       return intakePose;
+  //     }
+  //     // if no intake pose, start checking shooter only after cooldown
+  //     else if (currentTime - m_shooterCamPoseUpdateTimestamp > m_cameraPoseUpdateCooldown) {
+  //       m_photonPoseEstimatorShooter.setReferencePose(prevEstimatedRobotPose);
+  //       Optional<EstimatedRobotPose> shooterPose = m_photonPoseEstimatorShooter.update();
+  //       // if shooter pose is present, reset its update timestamp and return it
+  //       if (shooterPose.isPresent()) {
+  //         m_shooterCamPoseUpdateTimestamp = currentTime;
+  //         m_shooterCheckedMostRecently = true; // now shooter was checked most recently
+  //         return shooterPose;
+  //       }
+  //     }
+  //     // if neither pose is present (or intake isn't present and it hasn't been long
+  //     // enough to
+  //     // switch to shooter), return empty
+  //     else {
+  //       return Optional.empty();
+  //     }
+  //   }
+  //   // it should never reach here but vs code gets mad without this
+  //   return Optional.empty();
+  // }
 
   public Optional<EstimatedRobotPose> getEstimatedGlobalPoseShooter(Pose2d prevEstimatedRobotPose) {
     // System.out.println("UpdatedCameraPose");
@@ -173,7 +173,7 @@ public class PhotonVisionSystem extends SubsystemBase {
     return angleToTarget;
   }
 
-  public double distanceToTarget(Pose2d robotPose, int targetID) {
+  public double getDistanceToTarget(Pose2d robotPose, int targetID) {
     Pose2d aprilTagLocation = aprilTagFieldLayout.getTagPose(targetID).get().toPose2d();
     double targetX = aprilTagLocation.getTranslation().getX();
     double targetY = aprilTagLocation.getTranslation().getY();

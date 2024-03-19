@@ -10,7 +10,6 @@ import frc.robot.base.subsystems.SubsystemAction;
 import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 
-
 public class IntakeCommand extends Command {
   /** Creates a new IntakeCMD. */
   Beambreak m_beambreak;
@@ -34,7 +33,7 @@ public class IntakeCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (m_intakeSubsystem.getSubsystemAction() != SubsystemAction.OUTTAKE){
+    if (m_intakeSubsystem.getSubsystemAction() != SubsystemAction.OUTTAKE) {
       m_intakeSubsystem.intake();
       m_feederSubsystem.intake();
     }

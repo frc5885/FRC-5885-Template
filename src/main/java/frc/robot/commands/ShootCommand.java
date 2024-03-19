@@ -14,9 +14,10 @@ public class ShootCommand extends Command {
   private FeederSubsystem m_feederSubsystem;
   private ShooterSubsystem m_shooterSubsystem;
   private Beambreak m_beambreak;
-  
+
   /** Creates a new Shoot. */
-  public ShootCommand(FeederSubsystem feederSubsystem, ShooterSubsystem shooterSubsystem, Beambreak beambreak ) {
+  public ShootCommand(
+      FeederSubsystem feederSubsystem, ShooterSubsystem shooterSubsystem, Beambreak beambreak) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_feederSubsystem = feederSubsystem;
     m_shooterSubsystem = shooterSubsystem;
@@ -50,8 +51,7 @@ public class ShootCommand extends Command {
   public boolean isFinished() {
     if (m_beambreak.isOpen()) {
       return true;
-    }
-    else{
+    } else {
       return false;
     }
   }

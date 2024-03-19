@@ -26,7 +26,6 @@ public class Robot extends WCRobot {
   protected void initComponents() {
     m_beambreak = new Beambreak();
     SmartDashboard.putNumber("SHOOTPOINT", Constants.kWristAmp);
-
   }
 
   @Override
@@ -75,12 +74,18 @@ public class Robot extends WCRobot {
 
     // Spin & Aim Shooter
     m_driverController.scheduleOnLeftTrigger(
-        new AimShooterCommand(m_driverController, m_shooterSubsystem, this, m_wristSubsystem));
+        new AimShooterCommand(
+            m_driverController,
+            m_shooterSubsystem,
+            this,
+            m_wristSubsystem,
+            m_photonVision,
+            m_swervePoseEstimator));
 
     // Shoot
     m_driverController.scheduleOnRightTrigger(
-      new ShootCommandGroup(m_feederSubsystem, m_shooterSubsystem, m_wristSubsystem, m_armSubsystem, m_beambreak)
-    );
+        new ShootCommandGroup(
+            m_feederSubsystem, m_shooterSubsystem, m_wristSubsystem, m_armSubsystem, m_beambreak));
 
     // Face forward
     m_driverController
@@ -102,7 +107,7 @@ public class Robot extends WCRobot {
   protected void initOperatorControllerBindings(OperatorController m_operatorController) {
     m_climberSubsystem.setDefaultCommand(
         new ClimberCommand(m_climberSubsystem, m_operatorController));
-    
+
     // Outtake
     m_operatorController
         .getRightBumper()

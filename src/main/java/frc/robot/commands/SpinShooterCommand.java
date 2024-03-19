@@ -31,7 +31,7 @@ public class SpinShooterCommand extends Command {
     //    m_driverController.getHID().setRumble(GenericHID.RumbleType.kLeftRumble, 0.5);
     //
     //    if (m_driverController.getLeftTriggerAxis() > 0.1) {
-    // 
+    //
     //    } else if (m_armSubsystem.isArmUp()) {
     //      m_shooterSubsystem.spinSlow();
     //    } else {
