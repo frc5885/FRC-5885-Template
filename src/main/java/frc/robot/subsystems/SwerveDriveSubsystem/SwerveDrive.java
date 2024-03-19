@@ -177,29 +177,23 @@ public class SwerveDrive extends SubsystemBase {
         desiredStates, SwerveConstants.kAttainableMaxSpeedMetersPerSecond);
 
     for (int i = 0; i != 4; i++) {
-      if (Math.abs(desiredStates[i].speedMetersPerSecond) < 0.001) {
-        m_modules[i].setDriveVoltage(0.0);
-        m_modules[i].setTurnVoltage(0.0);
-        continue;
-      }
+      desiredStates[i] =
+          SwerveModuleState.optimize(
+              desiredStates[i], new Rotation2d(m_modulesInput[i].turnPositionRad));
+
+      m_modules[i].setTurnVoltage(
+          (m_turnController[i].calculate(
+              m_modulesInput[i].turnPositionRad, desiredStates[i].angle.getRadians())));
 
       // In case of a sharp wheel turn, this helps prevent the
       // innertia of the robot from sliding too much.
       desiredStates[i].speedMetersPerSecond *= Math.cos(m_turnController[i].getPositionError());
-
-      desiredStates[i] =
-          SwerveModuleState.optimize(
-              desiredStates[i], new Rotation2d(m_modulesInput[i].turnPositionRad));
 
       m_modules[i].setDriveVoltage(
           m_driveFeedforward[i].calculate(desiredStates[i].speedMetersPerSecond)
               + m_driveController[i].calculate(
                   m_modulesInput[i].driveVelocityMetersPerSec,
                   desiredStates[i].speedMetersPerSecond));
-
-      m_modules[i].setTurnVoltage(
-          (m_turnController[i].calculate(
-              m_modulesInput[i].turnPositionRad, desiredStates[i].angle.getRadians())));
     }
   }
 

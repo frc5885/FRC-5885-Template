@@ -126,7 +126,7 @@ public final class Constants {
       // Drive PID Constants
       //
       // These are gussed values, changing this too much causes a lot of overshoot.
-      public static final double kDriveFeedbackP = 0.1;
+      public static final double kDriveFeedbackP = 1.0;
       public static final double kDriveFeedbackI = 0.0;
       public static final double kDriveFeedbackD = 0.0;
 

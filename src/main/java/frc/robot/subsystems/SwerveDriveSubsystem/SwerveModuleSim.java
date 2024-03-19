@@ -26,6 +26,8 @@ public class SwerveModuleSim implements SwerveModuleIO {
 
   private boolean m_absoluteEncoderReversed;
 
+  private double m_randomVoltageDrop;
+
   public SwerveModuleSim(boolean isReversed) {
 
     m_driveDistance = 0.0;
@@ -38,6 +40,8 @@ public class SwerveModuleSim implements SwerveModuleIO {
     m_turnVoltage = 0.0;
 
     m_absoluteEncoderReversed = isReversed;
+
+    m_randomVoltageDrop = Math.random() * 0.3 - 0.15;
   }
 
   public void updateInputs(SwerveModuleIOInputs inputs) {
@@ -70,7 +74,7 @@ public class SwerveModuleSim implements SwerveModuleIO {
     // Fake "static" friction
     voltage = MathUtil.applyDeadband(voltage / 12.0, 0.15 / 12.0) * 12.0;
 
-    m_driveVoltage = MathUtil.clamp(voltage, -12.0, 12.0);
+    m_driveVoltage = MathUtil.clamp(voltage + m_randomVoltageDrop, -12.0, 12.0);
     m_driveMotor.setInputVoltage(m_driveVoltage);
   }
 
