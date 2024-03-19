@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.base.io.Beambreak;
 import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
@@ -12,12 +13,14 @@ public class ShootCommand extends Command {
 
   private FeederSubsystem m_feederSubsystem;
   private ShooterSubsystem m_shooterSubsystem;
+  private Beambreak m_beambreak;
   
   /** Creates a new Shoot. */
-  public ShootCommand(FeederSubsystem feederSubsystem, ShooterSubsystem shooterSubsystem) {
+  public ShootCommand(FeederSubsystem feederSubsystem, ShooterSubsystem shooterSubsystem, Beambreak beambreak ) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_feederSubsystem = feederSubsystem;
     m_shooterSubsystem = shooterSubsystem;
+    m_beambreak = beambreak;
 
     addRequirements(m_feederSubsystem, m_shooterSubsystem);
   }
@@ -45,6 +48,11 @@ public class ShootCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    if (m_beambreak.isOpen()) {
+      return true;
+    }
+    else{
+      return false;
+    }
   }
 }

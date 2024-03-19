@@ -79,7 +79,7 @@ public class Robot extends WCRobot {
 
     // Shoot
     m_driverController.scheduleOnRightTrigger(
-      new ShootCommandGroup(m_feederSubsystem, m_shooterSubsystem, m_wristSubsystem, m_armSubsystem)
+      new ShootCommandGroup(m_feederSubsystem, m_shooterSubsystem, m_wristSubsystem, m_armSubsystem, m_beambreak)
     );
 
     // Face forward
