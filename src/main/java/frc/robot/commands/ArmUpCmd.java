@@ -16,10 +16,7 @@ public class ArmUpCmd extends Command {
   ShooterSubsystem m_shooterSubsystem;
 
   public ArmUpCmd(
-      ArmSubsystem armSubsystem,
-      WristSubsystem wristSubsystem,
-      ShooterSubsystem shooterSubsystem
-  ) {
+      ArmSubsystem armSubsystem, WristSubsystem wristSubsystem, ShooterSubsystem shooterSubsystem) {
     m_armSubsystem = armSubsystem;
     m_wristSubsystem = wristSubsystem;
     m_shooterSubsystem = shooterSubsystem;
@@ -28,8 +25,7 @@ public class ArmUpCmd extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -42,11 +38,12 @@ public class ArmUpCmd extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    m_shooterSubsystem.stop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return false;
   }
 }

@@ -6,7 +6,6 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.base.io.Beambreak;
-import frc.robot.base.io.DriverController;
 import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 
@@ -18,9 +17,7 @@ public class IntakeCMD extends Command {
   FeederSubsystem m_feederSubsystem;
 
   public IntakeCMD(
-      Beambreak beambreak,
-      IntakeSubsystem intakeSubsystem,
-      FeederSubsystem feederSubsystem) {
+      Beambreak beambreak, IntakeSubsystem intakeSubsystem, FeederSubsystem feederSubsystem) {
     m_beambreak = beambreak;
     m_intakeSubsystem = intakeSubsystem;
     m_feederSubsystem = feederSubsystem;

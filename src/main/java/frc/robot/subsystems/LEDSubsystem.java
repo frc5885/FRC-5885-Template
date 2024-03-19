@@ -36,8 +36,7 @@ public class LEDSubsystem extends SubsystemBase {
   public LEDSubsystem(
       Beambreak beambreak,
       ShooterSubsystem shooterSubsystem,
-      Supplier<Boolean> isAimbottingFunction
-  ) {
+      Supplier<Boolean> isAimbottingFunction) {
     m_led = new AddressableLED(Constants.kLED);
     m_ledBuffer = new AddressableLEDBuffer(60);
     m_led.setLength(m_ledBuffer.getLength());

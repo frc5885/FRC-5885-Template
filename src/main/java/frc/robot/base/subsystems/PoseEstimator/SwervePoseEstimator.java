@@ -36,13 +36,14 @@ public class SwervePoseEstimator extends SubsystemBase {
     m_rotationSupplier = swerveDrive::getRotation2d;
     m_swerveModulePositionSupplier = swerveDrive::getModulePositions;
 
-    m_poseEstimator = new SwerveDrivePoseEstimator(
-        SwerveConstants.kDriveKinematics,
-        m_rotationSupplier.get(),
-        m_swerveModulePositionSupplier.get(),
-        new Pose2d(),
-        PoseEstimatorConstants.kEncoderMeasurementStdDevs,
-        PoseEstimatorConstants.kVisionMeasurementStdDevs);
+    m_poseEstimator =
+        new SwerveDrivePoseEstimator(
+            SwerveConstants.kDriveKinematics,
+            m_rotationSupplier.get(),
+            m_swerveModulePositionSupplier.get(),
+            new Pose2d(),
+            PoseEstimatorConstants.kEncoderMeasurementStdDevs,
+            PoseEstimatorConstants.kVisionMeasurementStdDevs);
 
     m_swerveDrive = swerveDrive;
 
@@ -65,8 +66,9 @@ public class SwervePoseEstimator extends SubsystemBase {
     // Update the WPI pose estimator with the latest vision measurements from photon
     // vision if they
     // are present
-    Optional<EstimatedRobotPose> estimatedGlobalPosition = m_photonVision
-        .getEstimatedGlobalPoseShooter(estimatedPosition);
+    Optional<EstimatedRobotPose> estimatedGlobalPosition =
+        m_photonVision.getEstimatedGlobalPoseShooter(estimatedPosition);
+    Logger.recordOutput("SwervePoseEstimator", estimatedGlobalPosition.isPresent() ? "PRESENET" : "NULL!");
     if (estimatedGlobalPosition.isPresent()) {
 
       // have to call .get() to get the value from the optional
@@ -95,7 +97,10 @@ public class SwervePoseEstimator extends SubsystemBase {
 
   public void reset() {
     Alliance alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
-    resetPose(new Pose2d(alliance == Alliance.Blue ? 0 : 17, 0,
-        alliance == Alliance.Blue ? new Rotation2d() : new Rotation2d(Math.PI)));
+    resetPose(
+        new Pose2d(
+            alliance == Alliance.Blue ? 0 : 17,
+            0,
+            alliance == Alliance.Blue ? new Rotation2d() : new Rotation2d(Math.PI)));
   }
 }

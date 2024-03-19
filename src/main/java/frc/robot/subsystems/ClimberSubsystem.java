@@ -58,8 +58,7 @@ public class ClimberSubsystem extends WCDualSubsystem {
     SmartDashboard.putNumber("ClimberLeftStickPosition", leftPosition);
     if (leftPosition > 0 && leftEncoderValue <= Constants.kLeftClimberMax) {
       speed1 = leftPosition;
-    }
-    else if (leftPosition < 0 && leftEncoderValue >= Constants.kLeftClimberMin + buffer) {
+    } else if (leftPosition < 0 && leftEncoderValue >= Constants.kLeftClimberMin + buffer) {
       speed1 = leftPosition;
     } else {
       speed1 = 0;
@@ -75,8 +74,7 @@ public class ClimberSubsystem extends WCDualSubsystem {
     SmartDashboard.putNumber("ClimberRightStickPosition", rightPosition);
     if (rightPosition > 0 && rightEncoderValue <= Constants.kRightClimberMax) {
       speed2 = rightPosition;
-    }
-    else if (rightPosition < 0 && rightEncoderValue >= Constants.kRightClimberMin + buffer) {
+    } else if (rightPosition < 0 && rightEncoderValue >= Constants.kRightClimberMin + buffer) {
       speed2 = rightPosition;
     } else {
       speed2 = 0;

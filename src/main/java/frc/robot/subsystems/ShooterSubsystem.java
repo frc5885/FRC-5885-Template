@@ -3,7 +3,6 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
@@ -80,8 +79,7 @@ public class ShooterSubsystem extends WCStaticSubsystem {
   }
 
   public boolean isVelocityTerminal() {
-    return getTopVelocity() >= 2600 &&
-        getBottomVelocity() >= 2600;
+    return getTopVelocity() <= -2600 && getBottomVelocity() <= -2600;
   }
 
   private double getTopVelocity() {

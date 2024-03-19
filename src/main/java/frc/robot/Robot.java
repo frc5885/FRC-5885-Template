@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.base.WCRobot;
 import frc.robot.base.io.Beambreak;
@@ -24,6 +25,8 @@ public class Robot extends WCRobot {
   @Override
   protected void initComponents() {
     m_beambreak = new Beambreak();
+    SmartDashboard.putNumber("SHOOTPOINT", Constants.kWristAmp);
+
   }
 
   @Override
@@ -34,7 +37,9 @@ public class Robot extends WCRobot {
     m_feederSubsystem = new FeederSubsystem();
     m_climberSubsystem = new ClimberSubsystem();
     m_shooterSubsystem = new ShooterSubsystem();
-    m_ledSubsystem = new LEDSubsystem(m_beambreak, m_shooterSubsystem, () -> getSwerveAction() == SwerveAction.AIMBOTTING);
+    m_ledSubsystem =
+        new LEDSubsystem(
+            m_beambreak, m_shooterSubsystem, () -> getSwerveAction() == SwerveAction.AIMBOTTING);
   }
 
   @Override
@@ -58,7 +63,7 @@ public class Robot extends WCRobot {
     // Intake
     m_driverController
         .getRightBumper()
-            .whileTrue(new IntakeCMD(m_beambreak, m_intakeSubsystem, m_feederSubsystem));
+        .whileTrue(new IntakeCMD(m_beambreak, m_intakeSubsystem, m_feederSubsystem));
 
     // Arm Up
     m_driverController
@@ -66,18 +71,15 @@ public class Robot extends WCRobot {
         .onTrue(new ArmUpCmd(m_armSubsystem, m_wristSubsystem, m_shooterSubsystem));
 
     // Arm Down
-    m_driverController
-        .getBButton()
-        .onTrue(new ArmDownCmd(m_armSubsystem, m_wristSubsystem));
+    m_driverController.getBButton().onTrue(new ArmDownCmd(m_armSubsystem, m_wristSubsystem));
 
     // Spin & Aim Shooter
     m_driverController.scheduleOnLeftTrigger(
-        new AimShooterCommand(m_driverController, m_shooterSubsystem, this)
-    );
+        new AimShooterCommand(m_driverController, m_shooterSubsystem, this, m_wristSubsystem));
 
     // Shoot
     m_driverController.scheduleOnRightTrigger(
-        new ShootCommand(m_feederSubsystem)
+      new ShootCommand(m_feederSubsystem, m_shooterSubsystem)
     );
 
     // Face forward
@@ -98,9 +100,8 @@ public class Robot extends WCRobot {
 
   @Override
   protected void initOperatorControllerBindings(OperatorController m_operatorController) {
-      m_climberSubsystem.setDefaultCommand(
-        new ClimberCommand(m_climberSubsystem, m_operatorController)
-      );
+    m_climberSubsystem.setDefaultCommand(
+        new ClimberCommand(m_climberSubsystem, m_operatorController));
   }
 
   public void setLEDsTeleop() {

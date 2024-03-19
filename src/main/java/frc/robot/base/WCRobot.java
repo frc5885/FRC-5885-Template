@@ -6,9 +6,9 @@ package frc.robot.base;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -22,7 +22,6 @@ import frc.robot.base.subsystems.swerve.SwerveAction;
 import frc.robot.base.subsystems.swerve.SwerveDriveSubsystem;
 import frc.robot.commands.SwerveJoystickCmd;
 import java.util.Optional;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public abstract class WCRobot {
 
@@ -89,8 +88,7 @@ public abstract class WCRobot {
             () -> -getDriverRotationAxis(),
             () -> m_isFieldOriented,
             // () -> isAimBotting(),
-            this::getSwerveAction)
-    );
+            this::getSwerveAction));
   }
 
   // so that aimBotting can be set and accessed by other stuff in Robot.java
@@ -120,8 +118,10 @@ public abstract class WCRobot {
     double rightPosition = m_driverController.getRightX();
     double robotHeadingDeg = m_swervePoseEstimator.getPose().getRotation().getDegrees();
     if (Math.abs(rightPosition) > 0.3
-        || (m_SwerveAction == SwerveAction.FACEFORWARD && MathUtil.isNear(alliance == Alliance.Blue ? 0 : 180, robotHeadingDeg, 2.5))
-        || (m_SwerveAction == SwerveAction.FACEBACKWARD && MathUtil.isNear(alliance == Alliance.Blue ? 180 : 0, robotHeadingDeg, 2.5))
+        || (m_SwerveAction == SwerveAction.FACEFORWARD
+            && MathUtil.isNear(alliance == Alliance.Blue ? 0 : 180, robotHeadingDeg, 2.5))
+        || (m_SwerveAction == SwerveAction.FACEBACKWARD
+            && MathUtil.isNear(alliance == Alliance.Blue ? 180 : 0, robotHeadingDeg, 2.5))
         || (m_SwerveAction == SwerveAction.FACEAMP
             && MathUtil.isNear(alliance == Alliance.Blue ? 90 : 90, robotHeadingDeg, 2.5))) {
       // setAimBotting(false);

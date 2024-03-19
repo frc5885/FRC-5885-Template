@@ -45,17 +45,19 @@ public class AutoShootCommand extends ParallelDeadlineGroup {
     // be spinning
     super(
         new SequentialCommandGroup(
-            new InstantCommand(() -> {
-              feederSubsystem.intake();
-              intakeSubsystem.intake();
-            }),
+            new InstantCommand(
+                () -> {
+                  feederSubsystem.intake();
+                  intakeSubsystem.intake();
+                }),
             new WaitCommand(2),
             new InstantCommand(() -> robot.setSwerveAction(SwerveAction.AIMBOTTING)),
             new WaitCommand(2),
-            new InstantCommand(() -> {
-              feederSubsystem.stop();
-              intakeSubsystem.stop();
-            }),
+            new InstantCommand(
+                () -> {
+                  feederSubsystem.stop();
+                  intakeSubsystem.stop();
+                }),
             new InstantCommand(() -> robot.setSwerveAction(SwerveAction.DEFAULT))));
 
     m_robot = robot;
@@ -68,10 +70,11 @@ public class AutoShootCommand extends ParallelDeadlineGroup {
 
     // these will stay running as long as the super command is running
     addCommands(
-        new AimSwerveToTargetCommand(m_robot, m_swerveDriveSubsystem, m_poseEstimator, m_photonVision),
+        new AimSwerveToTargetCommand(
+            m_robot, m_swerveDriveSubsystem, m_poseEstimator, m_photonVision),
         new MoveWristCommand(m_wristSubsystem, m_poseEstimator, m_photonVision)
-    // wrist aimer will go here
-    );
+        // wrist aimer will go here
+        );
     // swerve drive and wrist are required by their respective commands, don't
     // include them here
     addRequirements(m_feederSubsystem);

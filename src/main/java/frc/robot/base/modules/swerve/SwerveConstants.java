@@ -55,9 +55,9 @@ public final class SwerveConstants {
   ////////////////////////
   // Aimbot PID Constants
   public static final class AimBotConstants {
-    public static final double kAimbotP = 2.5;
-    public static final double kAimbotI = 0.25;
-    public static final double kAimbotD = 0.08;
+    public static final double kAimbotP = 1.4;
+    public static final double kAimbotI = 0.0;
+    public static final double kAimbotD = 0.105;
     public static final double kAimbotTolerance = Units.degreesToRadians(1.5);
   }
 

@@ -51,7 +51,6 @@ public class ArmSubsystem extends WCStaticSubsystem {
     positionSim -= m_arm.getMotorVoltage().getValueAsDouble() * 0.001;
   }
 
-
   @Override
   protected void putDebugDataPeriodic(boolean isRealRobot) {
     SmartDashboard.putNumber("ArmVoltage", m_arm.getMotorVoltage().getValueAsDouble());

@@ -30,5 +30,5 @@ public abstract class WCDualSubsystem extends SubsystemBase {
     putDebugDataPeriodic(RobotSystem.isReal());
   }
 
-  protected void putDebugDataPeriodic(boolean isRealRobot) { }
+  protected void putDebugDataPeriodic(boolean isRealRobot) {}
 }

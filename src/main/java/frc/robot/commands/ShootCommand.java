@@ -4,21 +4,22 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.base.io.DriverController;
 import frc.robot.subsystems.FeederSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 
 public class ShootCommand extends Command {
 
   private FeederSubsystem m_feederSubsystem;
-
+  private ShooterSubsystem m_shooterSubsystem;
+  
   /** Creates a new Shoot. */
-  public ShootCommand(FeederSubsystem feederSubsystem) {
+  public ShootCommand(FeederSubsystem feederSubsystem, ShooterSubsystem shooterSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_feederSubsystem = feederSubsystem;
+    m_shooterSubsystem = shooterSubsystem;
 
-    addRequirements(m_feederSubsystem);
+    addRequirements(m_feederSubsystem, m_shooterSubsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -28,7 +29,11 @@ public class ShootCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_feederSubsystem.intake();
+    if (m_shooterSubsystem.isVelocityTerminal()) {
+      m_feederSubsystem.intake();
+    } else {
+      m_feederSubsystem.stop();
+    }
   }
 
   // Called once the command ends or is interrupted.

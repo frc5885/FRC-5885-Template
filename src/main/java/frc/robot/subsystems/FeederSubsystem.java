@@ -4,7 +4,6 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
-import frc.robot.base.io.Beambreak;
 import frc.robot.base.subsystems.SubsystemAction;
 import frc.robot.base.subsystems.WCStaticSubsystem;
 import java.util.List;
@@ -17,7 +16,6 @@ public class FeederSubsystem extends WCStaticSubsystem {
   protected double getBaseSpeed() {
     return -0.3;
   }
-
 
   @Override
   protected List<MotorController> initMotors() {

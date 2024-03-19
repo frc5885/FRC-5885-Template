@@ -1,10 +1,8 @@
 package frc.robot.base.subsystems;
 
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.base.RobotSystem;
-
 import java.util.List;
 
 public abstract class WCStaticSubsystem extends SubsystemBase {
@@ -32,7 +30,7 @@ public abstract class WCStaticSubsystem extends SubsystemBase {
     putDebugDataPeriodic(RobotSystem.isReal());
   }
 
-  protected void putDebugDataPeriodic(boolean isRealRobot) { }
+  protected void putDebugDataPeriodic(boolean isRealRobot) {}
 
   protected final void forwardMotors() {
     for (MotorController motor : motors) {
