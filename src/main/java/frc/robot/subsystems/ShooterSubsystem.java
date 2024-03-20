@@ -59,8 +59,10 @@ public class ShooterSubsystem extends WCStaticSubsystem {
       topVelocitySim = 0;
       bottomVelocitySim = 0;
     }
-    topVelocitySim -= m_top.getAppliedOutput() * 3;
-    bottomVelocitySim -= m_top.getAppliedOutput() * 3;
+    if (!isVelocityTerminal()) {
+      topVelocitySim += m_top.getAppliedOutput() * 3;
+      bottomVelocitySim += m_top.getAppliedOutput() * 3;
+    }
   }
 
   @Override

@@ -69,18 +69,28 @@ public class Robot extends WCRobot {
 
     // Spin & Aim Shooter
     m_driverController.scheduleOnLeftTrigger(
-        new AimShooterCommand(
+        new ShootCommand(
+            this,
             m_driverController,
             m_shooterSubsystem,
-            this,
             m_wristSubsystem,
+            m_armSubsystem,
             m_photonVision,
             m_swervePoseEstimator,
-            m_beambreak));
+            m_beambreak
+        )
+  );
 
     // Shoot
     m_driverController.scheduleOnRightTrigger(
-        new ShootCommand(m_feederSubsystem, m_shooterSubsystem, m_beambreak));
+        new FeedCommand(
+            m_feederSubsystem,
+            m_shooterSubsystem,
+            m_armSubsystem,
+            m_wristSubsystem,
+            m_beambreak
+        )
+    );
 
     // Face forward
     m_driverController
@@ -96,9 +106,6 @@ public class Robot extends WCRobot {
     m_driverController
         .start()
         .onTrue(new InstantCommand(() -> setSwerveAction(SwerveAction.FACEAMP)));
-
-    // Auto
-    // m_driverController.back().onTrue(getAutonomousCommand());
   }
 
   @Override

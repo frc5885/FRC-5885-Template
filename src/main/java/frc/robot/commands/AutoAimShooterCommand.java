@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Robot;
+import frc.robot.WristAngleUtil;
 import frc.robot.base.io.Beambreak;
 import frc.robot.base.io.DriverController;
 import frc.robot.base.modules.swerve.SwerveConstants;
@@ -90,8 +91,7 @@ public class AutoAimShooterCommand extends Command {
     double distanceToTarget = m_photonVision.getDistanceToTarget(
         m_swervePoseEstimator.getPose(), m_photonVision.getTargetID());
     double correctionFactor = 1.0;
-    double wristAngle = (0.07356 * Math.atan(2.00 / distanceToTarget) + 0.2927)
-        * correctionFactor; // Jack Frias special
+    double wristAngle = WristAngleUtil.getAngle(distanceToTarget); // Jack Frias special
     // double wristAngle = SmartDashboard.getNumber("SHOOTPOINT",
     // Constants.kWristAmp);
     SmartDashboard.putNumber("DISTANCE", distanceToTarget);
