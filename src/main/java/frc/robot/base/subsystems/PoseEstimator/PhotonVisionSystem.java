@@ -2,6 +2,7 @@ package frc.robot.base.subsystems.PoseEstimator;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -38,6 +39,10 @@ public class PhotonVisionSystem extends SubsystemBase {
 
   private double m_cameraPoseUpdateCooldown = 3.0; // 3 seconds
   private boolean m_shooterCheckedMostRecently = true;
+
+  // don't change the 0.02, its the robot update period
+  private LinearFilter m_angleFilter = LinearFilter.singlePoleIIR(0.1, 0.02); 
+  private LinearFilter m_distanceFilter = LinearFilter.singlePoleIIR(0.1, 0.02);
 
   public PhotonVisionSystem() {
     try {
@@ -172,7 +177,8 @@ public class PhotonVisionSystem extends SubsystemBase {
     double angleToTarget = Math.atan2(targetY - robotY, targetX - robotX);
     SmartDashboard.putNumber("AngleToTarget", angleToTarget);
     double offset = Units.degreesToRadians(-10);
-    return angleToTarget + offset;
+    // return angleToTarget + offset;
+    return m_angleFilter.calculate(angleToTarget + offset);
   }
 
   public double getDistanceToTarget(Pose2d robotPose, int targetID) {
@@ -184,6 +190,7 @@ public class PhotonVisionSystem extends SubsystemBase {
     double distanceToTarget =
         Math.sqrt(Math.pow(targetX - robotX, 2) + Math.pow(targetY - robotY, 2));
     SmartDashboard.putNumber("DistanceToTarget", distanceToTarget);
-    return distanceToTarget;
+    // return distanceToTarget;
+    return m_distanceFilter.calculate(distanceToTarget);
   }
 }
