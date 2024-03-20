@@ -90,7 +90,6 @@ public class AutoAimShooterCommand extends Command {
 
     double distanceToTarget = m_photonVision.getDistanceToTarget(
         m_swervePoseEstimator.getPose(), m_photonVision.getTargetID());
-    double correctionFactor = 1.0;
     double wristAngle = WristAngleUtil.getAngle(distanceToTarget); // Jack Frias special
     // double wristAngle = SmartDashboard.getNumber("SHOOTPOINT",
     // Constants.kWristAmp);
