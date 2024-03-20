@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -170,7 +171,8 @@ public class PhotonVisionSystem extends SubsystemBase {
     double robotY = robotPose.getTranslation().getY();
     double angleToTarget = Math.atan2(targetY - robotY, targetX - robotX);
     SmartDashboard.putNumber("AngleToTarget", angleToTarget);
-    return angleToTarget;
+    double offset = Units.degreesToRadians(-10);
+    return angleToTarget + offset;
   }
 
   public double getDistanceToTarget(Pose2d robotPose, int targetID) {

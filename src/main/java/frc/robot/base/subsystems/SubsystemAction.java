@@ -14,5 +14,7 @@ public enum SubsystemAction {
   INTAKE,
   OUTTAKE,
 
-  SHOOT
+  SHOOT,
+  SHOOT_FAR,
+  SHOOT_CLOSE
 }

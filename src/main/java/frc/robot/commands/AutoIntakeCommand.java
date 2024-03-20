@@ -7,48 +7,43 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.base.io.Beambreak;
 import frc.robot.subsystems.FeederSubsystem;
-import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 
-public class ShootCommand extends Command {
-
+public class AutoIntakeCommand extends Command {
   private FeederSubsystem m_feederSubsystem;
-  private ShooterSubsystem m_shooterSubsystem;
+  private IntakeSubsystem m_intakeSubsystem;
   private Beambreak m_beambreak;
 
-  /** Creates a new Shoot. */
-  public ShootCommand(
-      FeederSubsystem feederSubsystem, ShooterSubsystem shooterSubsystem, Beambreak beambreak) {
-    // Use addRequirements() here to declare subsystem dependencies.
+  /** Creates a new AutoIntakeCommand. */
+  public AutoIntakeCommand(IntakeSubsystem intakeSubsystem, FeederSubsystem feederSubsystem, Beambreak beambreak) {
+    m_intakeSubsystem = intakeSubsystem;
     m_feederSubsystem = feederSubsystem;
-    m_shooterSubsystem = shooterSubsystem;
     m_beambreak = beambreak;
-
-    addRequirements(m_feederSubsystem, m_shooterSubsystem);
+    addRequirements(m_intakeSubsystem, feederSubsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (m_shooterSubsystem.isVelocityTerminal()) {
-      m_feederSubsystem.intake();
-    } else {
-      m_feederSubsystem.stop();
-    }
+    m_intakeSubsystem.intake();
+    m_feederSubsystem.intake();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    m_intakeSubsystem.stop();
     m_feederSubsystem.stop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return m_beambreak.isBroken();
   }
 }

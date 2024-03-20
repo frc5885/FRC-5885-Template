@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -52,21 +53,35 @@ public class AimShooterCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_robot.setSwerveAction(SwerveAction.AIMBOTTING);
-    m_shooterSubsystem.spinFast();
-    // m_WristSubsystem.pos(SmartDashboard.getNumber("SHOOTPOINT", Constants.kWristAmp));
     if (m_beambreak.isBroken()) {
+      m_robot.setSwerveAction(SwerveAction.AIMBOTTING);
       double distanceToTarget =
           m_photonVision.getDistanceToTarget(
               m_swervePoseEstimator.getPose(), m_photonVision.getTargetID());
-      double wristAngle = 0.1249 * Math.atan(81 / distanceToTarget) + 0.271; // Jack Frias special
-      if (wristAngle > Constants.kWristEncoderMin && wristAngle < Constants.kWristEncoderMax) {
-        m_WristSubsystem.pos(wristAngle);
-      }
-    }
+      double correctionFactor = 1.0;
+      double wristAngle =
+          (0.07356 * Math.atan(2.00 / distanceToTarget) + 0.2927)
+              * correctionFactor; // Jack Frias special
+      // double wristAngle = SmartDashboard.getNumber("SHOOTPOINT", Constants.kWristAmp);
+      SmartDashboard.putNumber("DISTANCE", distanceToTarget);
 
-    if (m_shooterSubsystem.isVelocityTerminal()) {
-      m_driverController.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 1.0);
+      // if (distanceToTarget >= 2.0) {
+      //   m_shooterSubsystem.spinFastFar();
+      // } else {
+      //   m_shooterSubsystem.spinFastClose();
+      // }
+      m_shooterSubsystem.spinFast();
+
+      if (wristAngle >= Constants.kWristEncoderMin && wristAngle <= Constants.kWristStow) {
+        m_WristSubsystem.pos(wristAngle);
+      } else {
+        m_WristSubsystem.pos(Constants.kWristStow);
+      }
+      if (m_shooterSubsystem.isVelocityTerminal()) {
+        m_driverController.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 1.0);
+      } else {
+        m_driverController.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0.0);
+      }
     }
   }
 

@@ -22,7 +22,7 @@ public class ShooterSubsystem extends WCStaticSubsystem {
 
   @Override
   protected double getBaseSpeed() {
-    return -0.5;
+    return -0.7;
   }
 
   /** Creates a new Shooter. */
@@ -43,8 +43,14 @@ public class ShooterSubsystem extends WCStaticSubsystem {
   public void periodic() {
     super.periodic();
     if (subsystemAction == SubsystemAction.SHOOT) {
-      m_top.setVoltage((getBaseSpeed() - 0.015) * 12);
-      m_bottom.setVoltage(getBaseSpeed() * 12);
+      m_top.setVoltage((-0.7 - 0.015) * 12);
+      m_bottom.setVoltage(-0.7 * 12);
+    } else if (subsystemAction == SubsystemAction.SHOOT_FAR) {
+      m_top.setVoltage((-0.7 - 0.015) * 12);
+      m_bottom.setVoltage(-0.7 * 12);
+    } else if (subsystemAction == SubsystemAction.SHOOT_CLOSE) {
+      m_top.setVoltage((-0.5 - 0.015) * 12);
+      m_bottom.setVoltage(-0.5 * 12);
     } else if (subsystemAction == SubsystemAction.OUTTAKE) {
       m_top.setVoltage(-12 * 0.2);
       m_bottom.setVoltage(-12 * 0.2);
@@ -70,16 +76,30 @@ public class ShooterSubsystem extends WCStaticSubsystem {
     SmartDashboard.putString("ShooterAction", getActionName());
   }
 
-  public void spinFast() {
-    subsystemAction = SubsystemAction.SHOOT;
+  public void spinFastFar() {
+    subsystemAction = SubsystemAction.SHOOT_FAR;
+  }
+
+  public void spinFastClose() {
+    subsystemAction = SubsystemAction.SHOOT_CLOSE;
   }
 
   public void spinSlow() {
     subsystemAction = SubsystemAction.OUTTAKE;
   }
 
+  public void spinFast() {
+    subsystemAction = SubsystemAction.SHOOT;
+  }
+
   public boolean isVelocityTerminal() {
-    return getTopVelocity() <= -2600 && getBottomVelocity() <= -2600;
+    double velocity;
+    if (subsystemAction == SubsystemAction.SHOOT_CLOSE) {
+      velocity = -2600;
+    } else {
+      velocity = -3700;
+    }
+    return getTopVelocity() <= velocity && getBottomVelocity() <= velocity;
   }
 
   private double getTopVelocity() {

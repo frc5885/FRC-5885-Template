@@ -45,12 +45,6 @@ public class AutoShootCommand extends ParallelDeadlineGroup {
     // be spinning
     super(
         new SequentialCommandGroup(
-            new InstantCommand(
-                () -> {
-                  feederSubsystem.intake();
-                  intakeSubsystem.intake();
-                }),
-            new WaitCommand(2),
             new InstantCommand(() -> robot.setSwerveAction(SwerveAction.AIMBOTTING)),
             new WaitCommand(2),
             new InstantCommand(

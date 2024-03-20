@@ -10,8 +10,8 @@ public final class Constants {
   public static final int kShooterBottom = 51;
   public static final int kArm = 60;
   public static final int kWrist = 61;
-  public static final int kClimberLeft = 55;
-  public static final int kClimberRight = 56;
+  public static final int kClimberLeft = 56;
+  public static final int kClimberRight = 55;
 
   // Arm Encoder Stuff
   public static final double kArmEncoderMax = 0.303;

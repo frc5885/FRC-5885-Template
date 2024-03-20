@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.base.io.DriverController;
 import frc.robot.base.io.OperatorController;
 import frc.robot.base.subsystems.PoseEstimator.PhotonVisionSystem;
@@ -152,22 +151,24 @@ public abstract class WCRobot {
 
   protected abstract void initSubsystems();
 
-  protected void initAutoCommands() {
-    m_chooser.setDefaultOption("Do Nothing", new InstantCommand());
-    m_chooser.addOption(
-        "[TUNING] SysID Quasistatic Forward",
-        m_swerveDrive.getSysIdQuasistatic(Direction.kForward));
-    m_chooser.addOption(
-        "[TUNING] SysID Quasistatic Backwards",
-        m_swerveDrive.getSysIdQuasistatic(Direction.kReverse));
-    m_chooser.addOption(
-        "[TUNING] SysID Dynamic Forward", m_swerveDrive.getSysIdDynamic(Direction.kForward));
-    m_chooser.addOption(
-        "[TUNING] SysID Dynamic Backwards", m_swerveDrive.getSysIdDynamic(Direction.kReverse));
+  protected abstract void initAutoCommands()
+      // {
+      //   m_chooser.setDefaultOption("Do Nothing", new InstantCommand());
+      //   m_chooser.addOption(
+      //       "[TUNING] SysID Quasistatic Forward",
+      //       m_swerveDrive.getSysIdQuasistatic(Direction.kForward));
+      //   m_chooser.addOption(
+      //       "[TUNING] SysID Quasistatic Backwards",
+      //       m_swerveDrive.getSysIdQuasistatic(Direction.kReverse));
+      //   m_chooser.addOption(
+      //       "[TUNING] SysID Dynamic Forward", m_swerveDrive.getSysIdDynamic(Direction.kForward));
+      //   m_chooser.addOption(
+      //       "[TUNING] SysID Dynamic Backwards",
+      // m_swerveDrive.getSysIdDynamic(Direction.kReverse));
 
-    SmartDashboard.putData("Auto Choices", m_chooser);
-  }
-  ;
+      //   SmartDashboard.putData("Auto Choices", m_chooser);
+      // }
+      ;
 
   protected abstract void initDriverControllerBindings(DriverController m_driverController);
 
@@ -175,7 +176,7 @@ public abstract class WCRobot {
 
   protected Command getAutonomousCommand() {
     // return new SimplePathPlanner(m_swervePoseEstimator, m_swerveDrive);
-    // return m_simplePathPlanner.getSelectedAuto();
-    return m_chooser.getSelected();
+    return m_simplePathPlanner.getSelectedAuto();
+    // return m_chooser.getSelected();
   }
 }
