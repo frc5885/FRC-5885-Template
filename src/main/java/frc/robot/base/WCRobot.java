@@ -51,13 +51,13 @@ public abstract class WCRobot {
         new DriverController(
             new InstantCommand(
                 () -> {
-                  m_swerveDrive.resetGyro();
-                  m_swervePoseEstimator.reset();
+                  // m_swerveDrive.resetGyro();
+                  // m_swervePoseEstimator.reset();
                 }),
             new InstantCommand(
                 () -> {
-                  m_isFieldOriented = !m_isFieldOriented;
-                  SmartDashboard.putBoolean("isFieldOriented", m_isFieldOriented);
+                  // m_isFieldOriented = !m_isFieldOriented;
+                  // SmartDashboard.putBoolean("isFieldOriented", m_isFieldOriented);
                 }));
 
     initComponents();

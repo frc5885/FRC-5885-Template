@@ -20,12 +20,6 @@
                 "data": {
                   "pathName": "test_right_diagonal.1"
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "shoot"
-                }
               }
             ]
           }
@@ -39,12 +33,6 @@
                 "data": {
                   "pathName": "test_right_diagonal.2"
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "intake"
-                }
               }
             ]
           }
@@ -53,12 +41,6 @@
           "type": "path",
           "data": {
             "pathName": "test_right_diagonal.3"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "shoot"
           }
         }
       ]

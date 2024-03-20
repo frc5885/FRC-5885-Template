@@ -45,7 +45,8 @@ public class Robot extends WCRobot {
     // NAMED COMMANDS
     pathPlannerRegisterNamedCommand(
         "shoot",
-        new AutoAimShooterCommand(m_shooterSubsystem, m_feederSubsystem, m_wristSubsystem, m_photonVision,
+        new AutoAimShooterCommand(this, m_swerveDrive, m_shooterSubsystem, m_feederSubsystem, m_wristSubsystem,
+            m_photonVision,
             m_swervePoseEstimator, m_beambreak));
     pathPlannerRegisterNamedCommand("intake", new AutoIntakeCommand(m_intakeSubsystem, m_feederSubsystem, m_beambreak));
   }
