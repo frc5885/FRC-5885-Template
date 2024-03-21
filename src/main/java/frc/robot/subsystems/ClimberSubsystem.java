@@ -15,7 +15,7 @@ public class ClimberSubsystem extends WCDualSubsystem {
   // TODO ADD NAVX INTEGRATION WHERE IT AUTO BALANCES
   // RN MAKE SECOND CONTROLLER JOYSTICK Y AXIS
 
-  double buffer = 2.0;
+  double buffer = 10.0;
 
   private CANSparkMax m_leftMotor;
   private CANSparkMax m_rightMotor;

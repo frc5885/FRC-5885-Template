@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.WristAngleUtil;
+import frc.robot.base.RobotSystem;
 import frc.robot.base.io.Beambreak;
 import frc.robot.base.io.DriverController;
 import frc.robot.base.modules.swerve.SwerveConstants;
@@ -71,7 +72,7 @@ public class AutoAimShooterCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_robot.setSwerveAction(SwerveAction.AIMBOTTING);
+    // m_robot.setSwerveAction(SwerveAction.AIMBOTTING);
 
     Pose2d robotPose = m_swervePoseEstimator.getPose();
     double angleToTarget = m_photonVision.getAngleToTarget(robotPose, m_photonVision.getTargetID());
@@ -114,7 +115,7 @@ public class AutoAimShooterCommand extends Command {
     m_wristSubsystem.pos(Constants.kWristStow);
     m_shooterSubsystem.stop();
     m_feederSubsystem.stop();
-    m_robot.setSwerveAction(SwerveAction.DEFAULT);
+    // m_robot.setSwerveAction(SwerveAction.DEFAULT);
     // stop the robot
     ChassisSpeeds chassisSpeeds = new ChassisSpeeds(0, 0, 0);
     SwerveModuleState[] moduleStates =
@@ -125,6 +126,6 @@ public class AutoAimShooterCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_beambreak.isOpen();
+    return RobotSystem.isReal() ? m_beambreak.isOpen() : m_shooterSubsystem.isVelocityTerminal();
   }
 }

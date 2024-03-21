@@ -15,7 +15,8 @@ public class AutoIntakeCommand extends Command {
   private Beambreak m_beambreak;
 
   /** Creates a new AutoIntakeCommand. */
-  public AutoIntakeCommand(IntakeSubsystem intakeSubsystem, FeederSubsystem feederSubsystem, Beambreak beambreak) {
+  public AutoIntakeCommand(
+      IntakeSubsystem intakeSubsystem, FeederSubsystem feederSubsystem, Beambreak beambreak) {
     m_intakeSubsystem = intakeSubsystem;
     m_feederSubsystem = feederSubsystem;
     m_beambreak = beambreak;
@@ -24,8 +25,7 @@ public class AutoIntakeCommand extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override

@@ -2,7 +2,7 @@ package frc.robot;
 
 public class WristAngleUtil {
   public static double getAngle(double distance) {
-    if (distance >= 2.0) {
+    if (distance >= 3.1) {
       return getAngleFar(distance);
     } else {
       return getAngleClose(distance);
@@ -11,11 +11,11 @@ public class WristAngleUtil {
 
   private static double getAngleClose(double distance) {
     double correctionFactor = 1.0;
-    return (0.07356 * Math.atan(2.00 / distance) + 0.2927) * correctionFactor;
+    return (0.140315 * Math.atan(1.2595 / distance) + 0.279903) * correctionFactor;
   }
 
   private static double getAngleFar(double distance) {
     double correctionFactor = 1.0;
-    return (0.07356 * Math.atan(2.00 / distance) + 0.2927) * correctionFactor;
+    return (0.206139 * Math.atan(0.644976 / distance) + 0.29333) * correctionFactor;
   }
 }

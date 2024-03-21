@@ -23,13 +23,15 @@ public class ShooterSubsystem extends WCStaticSubsystem {
   double topVelocitySim = 0.0;
   double bottomVelocitySim = 0.0;
 
-  double shootCloseVelocity = -2600;
+  double shootCloseVelocity = -2800;
   double shootFarVelocity = -3700;
 
+  // Bad one
   PIDController m_topPIDController = new PIDController(0.007, 0.0, 0.0);
   SimpleMotorFeedforward m_topFeedforward = new SimpleMotorFeedforward(0.0, 0.002377, 0.0);
 
-  PIDController m_bottomPIDController = new PIDController(0.007, 0.0, 0.0);
+  // Good one
+  PIDController m_bottomPIDController = new PIDController(0.01, 0.0, 0.0);
   SimpleMotorFeedforward m_bottomFeedforward = new SimpleMotorFeedforward(0.0, 0.002311, 0.0);
 
   @Override
@@ -60,38 +62,39 @@ public class ShooterSubsystem extends WCStaticSubsystem {
       m_top.setVoltage((-0.7 - 0.015) * 12);
       m_bottom.setVoltage(-0.7 * 12);
     } else if (subsystemAction == SubsystemAction.SHOOT_FAR) {
-      // TODO: This will likely require different PID controllers
-//      m_top.setVoltage(
-//          MathUtil.clamp(
-//              m_topFeedforward.calculate(-2600),
-//              -12,
-//              0
-//          )
-//      );
-//      m_bottom.setVoltage(
-//          MathUtil.clamp(
-//              m_bottomPIDController.calculate(getBottomVelocity(), -2600) + m_bottomFeedforward.calculate(-2600),
-//              -12,
-//              0
-//          )
-//      );
+      double setVoltage =
+          MathUtil.clamp(
+              m_topPIDController.calculate(getTopVelocity(), getBottomVelocity())
+                  + m_topFeedforward.calculate(shootFarVelocity),
+              -12,
+              0);
+      double setVoltage2 =
+          MathUtil.clamp(
+              m_bottomPIDController.calculate(getBottomVelocity(), shootFarVelocity)
+                  + m_bottomFeedforward.calculate(shootFarVelocity),
+              -12,
+              0);
+      SmartDashboard.putNumber("THINGY", setVoltage);
+      SmartDashboard.putNumber("THINGY2", setVoltage2);
+      m_top.setVoltage(setVoltage);
+      m_bottom.setVoltage(setVoltage2);
     } else if (subsystemAction == SubsystemAction.SHOOT_CLOSE) {
-      m_top.setVoltage(
+      double setVoltage =
           MathUtil.clamp(
-              m_topPIDController.calculate(getTopVelocity(), getBottomVelocity()) +
-                  m_topFeedforward.calculate(shootCloseVelocity),
+              m_topPIDController.calculate(getTopVelocity(), getBottomVelocity())
+                  + m_topFeedforward.calculate(shootCloseVelocity),
               -12,
-              0
-          )
-      );
-      m_bottom.setVoltage(
+              0);
+      double setVoltage2 =
           MathUtil.clamp(
-              m_bottomPIDController.calculate(getBottomVelocity(), shootCloseVelocity) +
-                  m_bottomFeedforward.calculate(shootCloseVelocity),
+              m_bottomPIDController.calculate(getBottomVelocity(), shootCloseVelocity)
+                  + m_bottomFeedforward.calculate(shootCloseVelocity),
               -12,
-              0
-          )
-      );
+              0);
+      SmartDashboard.putNumber("THINGY", setVoltage);
+      SmartDashboard.putNumber("THINGY2", setVoltage2);
+      m_top.setVoltage(setVoltage);
+      m_bottom.setVoltage(setVoltage2);
     } else if (subsystemAction == SubsystemAction.OUTTAKE) {
       m_top.setVoltage(-12 * 0.2);
       m_bottom.setVoltage(-12 * 0.2);
@@ -120,8 +123,7 @@ public class ShooterSubsystem extends WCStaticSubsystem {
   }
 
   public void spinFastFar() {
-//    subsystemAction = SubsystemAction.SHOOT_FAR;
-    subsystemAction = SubsystemAction.SHOOT_CLOSE;
+    subsystemAction = SubsystemAction.SHOOT_FAR;
   }
 
   public void spinFastClose() {

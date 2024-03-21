@@ -25,8 +25,7 @@ public class FeedCommand extends Command {
       ShooterSubsystem shooterSubsystem,
       ArmSubsystem armSubsystem,
       WristSubsystem wristSubsystem,
-      Beambreak beambreak
-  ) {
+      Beambreak beambreak) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_feederSubsystem = feederSubsystem;
     m_shooterSubsystem = shooterSubsystem;
@@ -56,10 +55,7 @@ public class FeedCommand extends Command {
   public void end(boolean interrupted) {
     m_feederSubsystem.stop();
     if (m_armSubsystem.isArmUp() && !interrupted) {
-      new ArmDownCommand(
-          m_armSubsystem,
-          m_wristSubsystem
-      ).schedule();
+      new ArmDownCommand(m_armSubsystem, m_wristSubsystem).schedule();
     }
   }
 

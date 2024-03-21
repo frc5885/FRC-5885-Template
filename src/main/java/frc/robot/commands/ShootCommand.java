@@ -7,7 +7,6 @@ import frc.robot.base.io.DriverController;
 import frc.robot.base.subsystems.PoseEstimator.PhotonVisionSystem;
 import frc.robot.base.subsystems.PoseEstimator.SwervePoseEstimator;
 import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.WristSubsystem;
 
@@ -23,8 +22,7 @@ public class ShootCommand extends SequentialCommandGroup {
       ArmSubsystem armSubsystem,
       PhotonVisionSystem photonVision,
       SwervePoseEstimator swervePoseEstimator,
-      Beambreak beambreak
-  ) {
+      Beambreak beambreak) {
     addCommands(
         new AimShooterCommand(
             driverController,
@@ -34,12 +32,7 @@ public class ShootCommand extends SequentialCommandGroup {
             armSubsystem,
             photonVision,
             swervePoseEstimator,
-            beambreak
-        ),
-        new StowWristCommand(
-            armSubsystem,
-            wristSubsystem
-        )
-    );
+            beambreak),
+        new StowWristCommand(armSubsystem, wristSubsystem));
   }
 }

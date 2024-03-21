@@ -41,7 +41,7 @@ public class PhotonVisionSystem extends SubsystemBase {
   private boolean m_shooterCheckedMostRecently = true;
 
   // don't change the 0.02, its the robot update period
-  private LinearFilter m_angleFilter = LinearFilter.singlePoleIIR(0.1, 0.02); 
+  private LinearFilter m_angleFilter = LinearFilter.singlePoleIIR(0.1, 0.02);
   private LinearFilter m_distanceFilter = LinearFilter.singlePoleIIR(0.1, 0.02);
 
   public PhotonVisionSystem() {
@@ -176,9 +176,9 @@ public class PhotonVisionSystem extends SubsystemBase {
     double robotY = robotPose.getTranslation().getY();
     double angleToTarget = Math.atan2(targetY - robotY, targetX - robotX);
     SmartDashboard.putNumber("AngleToTarget", angleToTarget);
-    double offset = Units.degreesToRadians(-10);
-    // return angleToTarget + offset;
-    return m_angleFilter.calculate(angleToTarget + offset);
+    double offset = Units.degreesToRadians(0);
+    return angleToTarget + offset;
+    // return m_angleFilter.calculate(angleToTarget + offset);
   }
 
   public double getDistanceToTarget(Pose2d robotPose, int targetID) {

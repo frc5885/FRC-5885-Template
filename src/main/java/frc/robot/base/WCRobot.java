@@ -56,8 +56,8 @@ public abstract class WCRobot {
                 }),
             new InstantCommand(
                 () -> {
-                  // m_isFieldOriented = !m_isFieldOriented;
-                  // SmartDashboard.putBoolean("isFieldOriented", m_isFieldOriented);
+                  m_isFieldOriented = !m_isFieldOriented;
+                  SmartDashboard.putBoolean("isFieldOriented", m_isFieldOriented);
                 }));
 
     initComponents();

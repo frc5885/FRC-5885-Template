@@ -59,7 +59,7 @@ public class AimShooterCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (m_beambreak.isBroken()) {
+    if (m_beambreak.isBroken() && m_armSubsystem.isArmDown()) {
       m_robot.setSwerveAction(SwerveAction.AIMBOTTING);
       double distanceToTarget =
           m_photonVision.getDistanceToTarget(
@@ -67,7 +67,7 @@ public class AimShooterCommand extends Command {
       double wristAngle = WristAngleUtil.getAngle(distanceToTarget);
       // double wristAngle = SmartDashboard.getNumber("SHOOTPOINT", Constants.kWristAmp);
       SmartDashboard.putNumber("DISTANCE", distanceToTarget);
-      if (distanceToTarget >= 2.0) {
+      if (distanceToTarget >= 3.1) {
         m_shooterSubsystem.spinFastFar();
       } else {
         m_shooterSubsystem.spinFastClose();
@@ -97,10 +97,7 @@ public class AimShooterCommand extends Command {
     m_WristSubsystem.stop();
     m_driverController.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0);
     if (interrupted) {
-      new StowWristCommand(
-          m_armSubsystem,
-          m_WristSubsystem
-      ).schedule();
+      new StowWristCommand(m_armSubsystem, m_WristSubsystem).schedule();
     }
   }
 

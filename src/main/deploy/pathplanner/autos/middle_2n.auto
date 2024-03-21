@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3624573945999146,
-      "y": 5.626643180847168
+      "x": 1.3615734577178955,
+      "y": 5.555154800415039
     },
     "rotation": 179.90874767107852
   },
@@ -18,7 +18,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "test_right_diagonal.1"
+                  "pathName": "Middle_middle_2n.1"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "shoot"
                 }
               }
             ]
@@ -31,22 +37,22 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "test_right_diagonal.2"
+                  "pathName": "Middle_middle_2n.2"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "intake"
                 }
               }
             ]
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": "test_right_diagonal.3"
-          }
-        },
-        {
           "type": "named",
           "data": {
-            "name": "aim"
+            "name": "shoot"
           }
         }
       ]

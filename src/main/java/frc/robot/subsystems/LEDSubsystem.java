@@ -102,7 +102,7 @@ public class LEDSubsystem extends SubsystemBase {
 
   public void setLedColor(int r, int g, int b) {
     for (var i = 0; i < m_ledBuffer.getLength(); i++) {
-      m_ledBuffer.setRGB(i, r, g, b);
+      m_ledBuffer.setRGB(i, r, b, g);
     }
     m_led.setData(m_ledBuffer);
     m_currentColor = r + g + b;

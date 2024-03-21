@@ -36,8 +36,9 @@ public class Robot extends WCRobot {
     m_feederSubsystem = new FeederSubsystem();
     m_climberSubsystem = new ClimberSubsystem();
     m_shooterSubsystem = new ShooterSubsystem();
-    m_ledSubsystem = new LEDSubsystem(
-        m_beambreak, m_shooterSubsystem, () -> getSwerveAction() == SwerveAction.AIMBOTTING);
+    m_ledSubsystem =
+        new LEDSubsystem(
+            m_beambreak, m_shooterSubsystem, () -> getSwerveAction() == SwerveAction.AIMBOTTING);
   }
 
   @Override
@@ -45,10 +46,17 @@ public class Robot extends WCRobot {
     // NAMED COMMANDS
     pathPlannerRegisterNamedCommand(
         "shoot",
-        new AutoAimShooterCommand(this, m_swerveDrive, m_shooterSubsystem, m_feederSubsystem, m_wristSubsystem,
+        new AutoAimShooterCommand(
+            this,
+            m_swerveDrive,
+            m_shooterSubsystem,
+            m_feederSubsystem,
+            m_wristSubsystem,
             m_photonVision,
-            m_swervePoseEstimator, m_beambreak));
-    pathPlannerRegisterNamedCommand("intake", new AutoIntakeCommand(m_intakeSubsystem, m_feederSubsystem, m_beambreak));
+            m_swervePoseEstimator,
+            m_beambreak));
+    pathPlannerRegisterNamedCommand(
+        "intake", new AutoIntakeCommand(m_intakeSubsystem, m_feederSubsystem, m_beambreak));
   }
 
   @Override
@@ -77,20 +85,12 @@ public class Robot extends WCRobot {
             m_armSubsystem,
             m_photonVision,
             m_swervePoseEstimator,
-            m_beambreak
-        )
-  );
+            m_beambreak));
 
     // Shoot
     m_driverController.scheduleOnRightTrigger(
         new FeedCommand(
-            m_feederSubsystem,
-            m_shooterSubsystem,
-            m_armSubsystem,
-            m_wristSubsystem,
-            m_beambreak
-        )
-    );
+            m_feederSubsystem, m_shooterSubsystem, m_armSubsystem, m_wristSubsystem, m_beambreak));
 
     // Face forward
     m_driverController
