@@ -35,12 +35,14 @@ public class StowWristCommand extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_wristSubsystem.stop();
+    if (m_armSubsystem.isArmDown()) {
+      m_wristSubsystem.stop();
+    }
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_wristSubsystem.isStowed();
+    return m_wristSubsystem.isStowed() || !m_armSubsystem.isArmDown();
   }
 }

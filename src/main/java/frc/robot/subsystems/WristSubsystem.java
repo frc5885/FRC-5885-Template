@@ -66,11 +66,17 @@ public class WristSubsystem extends WCStaticSubsystem {
     subsystemAction = SubsystemAction.POS;
   }
 
-  private double getWristPosition() {
+  public double getWristPosition() {
     return RobotSystem.isReal() ? m_absoluteEncoder.getPosition() : positionSim;
   }
 
   public boolean isStowed() {
     return getWristPosition() >= Constants.kWristStow;
+  }
+
+  @Override
+  public void stop() {
+    super.stop();
+    double d = 0;
   }
 }

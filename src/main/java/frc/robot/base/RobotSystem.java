@@ -114,12 +114,23 @@ public class RobotSystem extends LoggedRobot {
   }
 
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    m_robotContainer.m_shooterSubsystem.spinFastClose();
+    if (m_robotContainer.m_beambreak.isOpen()) {
+      m_robotContainer.m_intakeSubsystem.intake();
+      m_robotContainer.m_feederSubsystem.intake();
+    } else {
+      m_robotContainer.m_intakeSubsystem.stop();
+      m_robotContainer.m_feederSubsystem.stop();
+    }
+  }
 
   @Override
   public void autonomousExit() {
     // m_robotContainer.setAimBotting(false);
     m_robotContainer.setSwerveAction(SwerveAction.DEFAULT);
+    m_robotContainer.m_shooterSubsystem.stop();
+    m_robotContainer.m_intakeSubsystem.stop();
   }
 
   @Override

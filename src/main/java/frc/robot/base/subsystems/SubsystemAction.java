@@ -13,6 +13,7 @@ public enum SubsystemAction {
 
   INTAKE,
   OUTTAKE,
+  EJECT,
 
   SHOOT,
   SHOOT_FAR,

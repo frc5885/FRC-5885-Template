@@ -12,13 +12,13 @@ import frc.robot.subsystems.*;
 
 public class Robot extends WCRobot {
 
-  Beambreak m_beambreak;
+  public Beambreak m_beambreak;
   ArmSubsystem m_armSubsystem;
   WristSubsystem m_wristSubsystem;
-  FeederSubsystem m_feederSubsystem;
-  IntakeSubsystem m_intakeSubsystem;
+  public FeederSubsystem m_feederSubsystem;
+  public IntakeSubsystem m_intakeSubsystem;
   ClimberSubsystem m_climberSubsystem;
-  ShooterSubsystem m_shooterSubsystem;
+  public ShooterSubsystem m_shooterSubsystem;
 
   LEDSubsystem m_ledSubsystem;
 
@@ -54,9 +54,8 @@ public class Robot extends WCRobot {
             m_wristSubsystem,
             m_photonVision,
             m_swervePoseEstimator,
-            m_beambreak));
-    pathPlannerRegisterNamedCommand(
-        "intake", new AutoIntakeCommand(m_intakeSubsystem, m_feederSubsystem, m_beambreak));
+            m_beambreak)
+    );
   }
 
   @Override
@@ -65,15 +64,36 @@ public class Robot extends WCRobot {
     // Intake
     m_driverController
         .getRightBumper()
-        .whileTrue(new IntakeCommand(m_beambreak, m_intakeSubsystem, m_feederSubsystem));
+        .whileTrue(
+            new IntakeCommand(
+              m_beambreak,
+              m_intakeSubsystem,
+              m_feederSubsystem,
+              m_wristSubsystem,
+              m_armSubsystem
+          )
+        );
 
     // Arm Up
     m_driverController
         .getAButton()
-        .onTrue(new ArmUpCommand(m_armSubsystem, m_wristSubsystem, m_shooterSubsystem));
+        .onTrue(
+            new ArmUpCommand(
+                m_armSubsystem,
+                m_wristSubsystem,
+                m_shooterSubsystem,
+                m_feederSubsystem,
+                m_beambreak
+            )
+        );
 
     // Arm Down
-    m_driverController.getBButton().onTrue(new ArmDownCommand(m_armSubsystem, m_wristSubsystem));
+    m_driverController.getBButton().onTrue(
+        new ArmDownCommand(
+            m_armSubsystem,
+            m_wristSubsystem
+        )
+    );
 
     // Spin & Aim Shooter
     m_driverController.scheduleOnLeftTrigger(
@@ -85,12 +105,19 @@ public class Robot extends WCRobot {
             m_armSubsystem,
             m_photonVision,
             m_swervePoseEstimator,
-            m_beambreak));
+            m_beambreak)
+    );
 
     // Shoot
     m_driverController.scheduleOnRightTrigger(
         new FeedCommand(
-            m_feederSubsystem, m_shooterSubsystem, m_armSubsystem, m_wristSubsystem, m_beambreak));
+            m_feederSubsystem,
+            m_shooterSubsystem,
+            m_armSubsystem,
+            m_wristSubsystem,
+            m_beambreak
+        )
+    );
 
     // Face forward
     m_driverController
@@ -111,12 +138,34 @@ public class Robot extends WCRobot {
   @Override
   protected void initOperatorControllerBindings(OperatorController m_operatorController) {
     m_climberSubsystem.setDefaultCommand(
-        new ClimberCommand(m_climberSubsystem, m_operatorController));
+        new ClimberCommand(
+            m_climberSubsystem,
+            m_operatorController
+        )
+    );
 
     // Outtake
     m_operatorController
         .getRightBumper()
-        .whileTrue(new OuttakeCommand(m_beambreak, m_intakeSubsystem, m_feederSubsystem));
+        .whileTrue(
+            new OuttakeCommand(
+                m_beambreak,
+                m_intakeSubsystem,
+                m_feederSubsystem
+            )
+        );
+
+    // Eject Feeder
+    m_operatorController
+        .getAButton()
+        .onTrue(
+            new EjectFeederCommand(
+                m_wristSubsystem,
+                m_feederSubsystem,
+                m_armSubsystem
+            )
+        );
+
   }
 
   public void setLEDsTeleop() {

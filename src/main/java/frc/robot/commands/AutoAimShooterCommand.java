@@ -96,15 +96,15 @@ public class AutoAimShooterCommand extends Command {
     // Constants.kWristAmp);
     SmartDashboard.putNumber("DISTANCE", distanceToTarget);
 
-    m_shooterSubsystem.spinFastClose();
-
     if (wristAngle >= Constants.kWristEncoderMin && wristAngle <= Constants.kWristStow) {
       m_wristSubsystem.pos(wristAngle);
     } else {
       m_wristSubsystem.pos(Constants.kWristStow);
     }
 
-    if (m_shooterSubsystem.isVelocityTerminal()) {
+    double wristPos = m_wristSubsystem.getWristPosition();
+    double buffer = 0.005;
+    if (m_shooterSubsystem.isVelocityTerminal() && wristPos >= wristAngle - buffer && wristPos <= wristAngle + buffer ) {
       m_feederSubsystem.intake();
     }
   }
@@ -113,7 +113,6 @@ public class AutoAimShooterCommand extends Command {
   @Override
   public void end(boolean interrupted) {
     m_wristSubsystem.pos(Constants.kWristStow);
-    m_shooterSubsystem.stop();
     m_feederSubsystem.stop();
     // m_robot.setSwerveAction(SwerveAction.DEFAULT);
     // stop the robot

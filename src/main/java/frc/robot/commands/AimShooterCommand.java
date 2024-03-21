@@ -67,19 +67,19 @@ public class AimShooterCommand extends Command {
       double wristAngle = WristAngleUtil.getAngle(distanceToTarget);
       // double wristAngle = SmartDashboard.getNumber("SHOOTPOINT", Constants.kWristAmp);
       SmartDashboard.putNumber("DISTANCE", distanceToTarget);
+
       if (distanceToTarget >= 3.1) {
         m_shooterSubsystem.spinFastFar();
       } else {
         m_shooterSubsystem.spinFastClose();
       }
 
-      if (wristAngle >= Constants.kWristEncoderMin && wristAngle <= Constants.kWristStow) {
+      if (distanceToTarget >= 5.0) {
+        m_WristSubsystem.pos(Constants.kWristPass);
+      } else if (wristAngle >= Constants.kWristEncoderMin && wristAngle <= Constants.kWristStow) {
         m_WristSubsystem.pos(wristAngle);
       } else {
-        m_WristSubsystem.pos(Constants.kWristStow);
-      }
-      if (RobotSystem.isSimulation()) {
-        m_WristSubsystem.pos(.38);
+        m_WristSubsystem.pos(Constants.kWristPass);
       }
       if (m_shooterSubsystem.isVelocityTerminal()) {
         m_driverController.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 1.0);
@@ -93,17 +93,19 @@ public class AimShooterCommand extends Command {
   @Override
   public void end(boolean interrupted) {
     m_robot.setSwerveAction(SwerveAction.DEFAULT);
-    m_shooterSubsystem.stop();
-    m_WristSubsystem.stop();
     m_driverController.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0);
-    if (interrupted) {
-      new StowWristCommand(m_armSubsystem, m_WristSubsystem).schedule();
-    }
+    if (m_armSubsystem.isArmDown()) {
+     m_shooterSubsystem.stop();
+     m_WristSubsystem.stop();
+     if (interrupted) {
+       new StowWristCommand(m_armSubsystem, m_WristSubsystem).schedule();
+     }
+   }
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_beambreak.isOpen();
+    return m_beambreak.isOpen() || !m_armSubsystem.isArmDown();
   }
 }
