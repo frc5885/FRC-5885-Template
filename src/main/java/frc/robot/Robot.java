@@ -13,7 +13,7 @@ import frc.robot.subsystems.*;
 public class Robot extends WCRobot {
 
   public Beambreak m_beambreak;
-  ArmSubsystem m_armSubsystem;
+  public ArmSubsystem m_armSubsystem;
   public WristSubsystem m_wristSubsystem;
   public FeederSubsystem m_feederSubsystem;
   public IntakeSubsystem m_intakeSubsystem;
@@ -69,21 +69,28 @@ public class Robot extends WCRobot {
                 m_intakeSubsystem,
                 m_feederSubsystem,
                 m_wristSubsystem,
-                m_armSubsystem));
+                m_armSubsystem)
+        );
 
-    // Arm Up
+    // Arm Up, snap to amp
     m_driverController
-        .getAButton()
-        .onTrue(
-            new ArmUpCommand(
-                m_armSubsystem,
-                m_wristSubsystem,
-                m_shooterSubsystem,
-                m_feederSubsystem,
-                m_beambreak));
-
-    // Arm Down
-    m_driverController.getBButton().onTrue(new ArmDownCommand(m_armSubsystem, m_wristSubsystem));
+      .getAButton()
+      .whileTrue(
+        new ArmUpSnapCommand(
+          m_armSubsystem,
+          m_wristSubsystem,
+          m_shooterSubsystem,
+          m_feederSubsystem,
+          m_beambreak,
+          this
+        )
+      )
+      .onFalse(
+        new ArmDownCommand(
+          m_armSubsystem,
+          m_wristSubsystem
+        )
+      );
 
     // Spin & Aim Shooter
     m_driverController.scheduleOnLeftTrigger(
@@ -111,11 +118,6 @@ public class Robot extends WCRobot {
     m_driverController
         .getXButton()
         .onTrue(new InstantCommand(() -> setSwerveAction(SwerveAction.FACEBACKWARD)));
-
-    // Face amp
-    m_driverController
-        .start()
-        .onTrue(new InstantCommand(() -> setSwerveAction(SwerveAction.FACEAMP)));
   }
 
   @Override
@@ -132,6 +134,23 @@ public class Robot extends WCRobot {
     m_operatorController
         .getAButton()
         .onTrue(new EjectFeederCommand(m_wristSubsystem, m_feederSubsystem, m_armSubsystem));
+
+    // Arm up
+    m_operatorController
+      .getAButton()
+      .onTrue(
+        new ArmUpCommand(
+          m_armSubsystem,
+          m_wristSubsystem,
+          m_shooterSubsystem,
+          m_feederSubsystem,
+          m_beambreak)
+      );
+
+    // Arm down
+    m_operatorController.getBButton().onTrue(
+      new ArmDownCommand(m_armSubsystem, m_wristSubsystem)
+    );
   }
 
   public void setLEDsTeleop() {

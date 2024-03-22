@@ -21,7 +21,8 @@ public class ArmUpCommand extends Command {
       WristSubsystem wristSubsystem,
       ShooterSubsystem shooterSubsystem,
       FeederSubsystem feederSubsystem,
-      Beambreak beambreak) {
+      Beambreak beambreak
+  ) {
     m_armSubsystem = armSubsystem;
     m_wristSubsystem = wristSubsystem;
     m_shooterSubsystem = shooterSubsystem;
