@@ -62,8 +62,8 @@ public class IntakeCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_beambreak.isBroken() ||
-      m_wristSubsystem.getWristPosition() <= Constants.kWristStow - 0.04 ||
-      !m_armSubsystem.isArmDown();
+    return m_beambreak.isBroken()
+        || m_wristSubsystem.getWristPosition() <= Constants.kWristStow - 0.04
+        || !m_armSubsystem.isArmDown();
   }
 }

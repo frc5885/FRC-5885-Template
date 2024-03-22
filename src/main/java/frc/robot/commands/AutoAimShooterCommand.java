@@ -75,52 +75,51 @@ public class AutoAimShooterCommand extends Command {
     if (m_beambreak.isBroken()) {
       hadNote = true;
 
-    Pose2d robotPose = m_swervePoseEstimator.getPose();
-    double angleToTarget = m_photonVision.getAngleToTarget(robotPose, m_photonVision.getTargetID());
-    double angularVelocity =
-        m_aimBotPID.calculate(robotPose.getRotation().getRadians(), angleToTarget);
+      Pose2d robotPose = m_swervePoseEstimator.getPose();
+      double angleToTarget =
+          m_photonVision.getAngleToTarget(robotPose, m_photonVision.getTargetID());
+      double angularVelocity =
+          m_aimBotPID.calculate(robotPose.getRotation().getRadians(), angleToTarget);
 
-    if (m_aimBotPID.atSetpoint()) {
-      angularVelocity = 0;
-    }
+      if (m_aimBotPID.atSetpoint()) {
+        angularVelocity = 0;
+      }
 
-    // apply the angular velocity to the swerve drive (it should never translate the
-    // robot, only
-    // rotate it)
-    ChassisSpeeds chassisSpeeds = new ChassisSpeeds(0, 0, angularVelocity);
-    SwerveModuleState[] moduleStates =
-        SwerveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
-    m_SwerveDriveSubsystem.setModuleStates(moduleStates);
+      // apply the angular velocity to the swerve drive (it should never translate the
+      // robot, only
+      // rotate it)
+      ChassisSpeeds chassisSpeeds = new ChassisSpeeds(0, 0, angularVelocity);
+      SwerveModuleState[] moduleStates =
+          SwerveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
+      m_SwerveDriveSubsystem.setModuleStates(moduleStates);
 
-    double distanceToTarget =
-        m_photonVision.getDistanceToTarget(
-            m_swervePoseEstimator.getPose(), m_photonVision.getTargetID());
-    double wristAngle = WristAngleUtil.getAngle(distanceToTarget); // Jack Frias special
-    // double wristAngle = SmartDashboard.getNumber("SHOOTPOINT",
-    // Constants.kWristAmp);
-    SmartDashboard.putNumber("DISTANCE", distanceToTarget);
-        SmartDashboard.putNumber("WRISTANGLEE", wristAngle);
+      double distanceToTarget =
+          m_photonVision.getDistanceToTarget(
+              m_swervePoseEstimator.getPose(), m_photonVision.getTargetID());
+      double wristAngle = WristAngleUtil.getAngle(distanceToTarget); // Jack Frias special
+      // double wristAngle = SmartDashboard.getNumber("SHOOTPOINT",
+      // Constants.kWristAmp);
+      SmartDashboard.putNumber("DISTANCE", distanceToTarget);
+      SmartDashboard.putNumber("WRISTANGLEE", wristAngle);
 
+      if (wristAngle >= Constants.kWristEncoderMin && wristAngle <= Constants.kWristStow) {
+        m_wristSubsystem.pos(wristAngle);
+      } else {
+        m_wristSubsystem.pos(Constants.kWristStow);
+      }
 
-    if (wristAngle >= Constants.kWristEncoderMin && wristAngle <= Constants.kWristStow) {
-      m_wristSubsystem.pos(wristAngle);
-    } else {
-      m_wristSubsystem.pos(Constants.kWristStow);
-    }
-
-    double wristPos = m_wristSubsystem.getWristPosition();
-    double buffer = 0.01;
-    if (m_shooterSubsystem.isVelocityTerminal()
-        && wristPos >= wristAngle - buffer
-        && wristPos <= wristAngle + buffer
-    ) {
-      if (dwellStart == 0) {
-        dwellStart = System.currentTimeMillis();
-      } else if (System.currentTimeMillis() - dwellStart >= 250) {
-        m_feederSubsystem.intake();
+      double wristPos = m_wristSubsystem.getWristPosition();
+      double buffer = 0.01;
+      if (m_shooterSubsystem.isVelocityTerminal()
+          && wristPos >= wristAngle - buffer
+          && wristPos <= wristAngle + buffer) {
+        if (dwellStart == 0) {
+          dwellStart = System.currentTimeMillis();
+        } else if (System.currentTimeMillis() - dwellStart >= 250) {
+          m_feederSubsystem.intake();
+        }
       }
     }
-  }
   }
 
   // Called once the command ends or is interrupted.
@@ -141,6 +140,8 @@ public class AutoAimShooterCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return RobotSystem.isReal() ? (m_beambreak.isOpen() && hadNote) : m_shooterSubsystem.isVelocityTerminal();
+    return RobotSystem.isReal()
+        ? (m_beambreak.isOpen() && hadNote)
+        : m_shooterSubsystem.isVelocityTerminal();
   }
 }

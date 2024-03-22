@@ -9,9 +9,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Robot;
 import frc.robot.base.subsystems.swerve.SwerveAction;
-import java.io.File;
-
 import frc.robot.commands.StowWristCommand;
+import java.io.File;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
@@ -149,10 +148,8 @@ public class RobotSystem extends LoggedRobot {
     m_robotContainer.m_intakeSubsystem.stop();
     m_robotContainer.m_shooterSubsystem.stop();
     m_robotContainer.setSwerveAction(SwerveAction.DEFAULT);
-    new StowWristCommand(
-      m_robotContainer.m_armSubsystem,
-      m_robotContainer.m_wristSubsystem
-    ).schedule();
+    new StowWristCommand(m_robotContainer.m_armSubsystem, m_robotContainer.m_wristSubsystem)
+        .schedule();
     m_robotContainer.setLEDsTeleop();
   }
 

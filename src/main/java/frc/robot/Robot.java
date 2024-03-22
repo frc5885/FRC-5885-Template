@@ -69,28 +69,20 @@ public class Robot extends WCRobot {
                 m_intakeSubsystem,
                 m_feederSubsystem,
                 m_wristSubsystem,
-                m_armSubsystem)
-        );
+                m_armSubsystem));
 
     // Arm Up, snap to amp
     m_driverController
-      .getAButton()
-      .whileTrue(
-        new ArmUpSnapCommand(
-          m_armSubsystem,
-          m_wristSubsystem,
-          m_shooterSubsystem,
-          m_feederSubsystem,
-          m_beambreak,
-          this
-        )
-      )
-      .onFalse(
-        new ArmDownCommand(
-          m_armSubsystem,
-          m_wristSubsystem
-        )
-      );
+        .getAButton()
+        .whileTrue(
+            new ArmUpSnapCommand(
+                m_armSubsystem,
+                m_wristSubsystem,
+                m_shooterSubsystem,
+                m_feederSubsystem,
+                m_beambreak,
+                this))
+        .onFalse(new ArmDownCommand(m_armSubsystem, m_wristSubsystem));
 
     // Spin & Aim Shooter
     m_driverController.scheduleOnLeftTrigger(
@@ -132,24 +124,36 @@ public class Robot extends WCRobot {
 
     // Eject Feeder
     m_operatorController
-        .getAButton()
-        .onTrue(new EjectFeederCommand(m_wristSubsystem, m_feederSubsystem, m_armSubsystem));
+        .getLeftBumper()
+        .onTrue(
+            new EjectFeederCommand(
+                m_wristSubsystem,
+                 m_feederSubsystem,
+                  m_armSubsystem
+            )
+        );
 
     // Arm up
     m_operatorController
-      .getAButton()
-      .onTrue(
-        new ArmUpCommand(
-          m_armSubsystem,
-          m_wristSubsystem,
-          m_shooterSubsystem,
-          m_feederSubsystem,
-          m_beambreak)
-      );
+        .getAButton()
+        .onTrue(
+            new ArmUpCommand(
+                m_armSubsystem,
+                m_wristSubsystem,
+                m_shooterSubsystem,
+                m_feederSubsystem,
+                m_beambreak
+            )
+        );
 
     // Arm down
-    m_operatorController.getBButton().onTrue(
-      new ArmDownCommand(m_armSubsystem, m_wristSubsystem)
+    m_operatorController
+    .getBButton()
+    .onTrue(
+        new ArmDownCommand(
+            m_armSubsystem,
+            m_wristSubsystem
+        )
     );
   }
 
