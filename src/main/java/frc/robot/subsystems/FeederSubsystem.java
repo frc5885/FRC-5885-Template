@@ -51,6 +51,7 @@ public class FeederSubsystem extends WCStaticSubsystem {
   public void outtake() {
     subsystemAction = SubsystemAction.OUTTAKE;
   }
+
   public void eject() {
     subsystemAction = SubsystemAction.EJECT;
   }

@@ -27,11 +27,11 @@ public class ShooterSubsystem extends WCStaticSubsystem {
   double shootFarVelocity = -3700;
 
   // Bad one
-  PIDController m_topPIDController = new PIDController(0.007, 0.0, 0.0);
+  PIDController m_topPIDController = new PIDController(0.005, 0.0, 0.0);
   SimpleMotorFeedforward m_topFeedforward = new SimpleMotorFeedforward(0.0, 0.002377, 0.0);
 
   // Good one
-  PIDController m_bottomPIDController = new PIDController(0.01, 0.0, 0.0);
+  PIDController m_bottomPIDController = new PIDController(0.003, 0.0, 0.0);
   SimpleMotorFeedforward m_bottomFeedforward = new SimpleMotorFeedforward(0.0, 0.002311, 0.0);
 
   @Override
@@ -141,9 +141,9 @@ public class ShooterSubsystem extends WCStaticSubsystem {
   public boolean isVelocityTerminal() {
     double velocity;
     if (subsystemAction == SubsystemAction.SHOOT_CLOSE) {
-      velocity = shootCloseVelocity;
+      velocity = shootCloseVelocity + 200;
     } else {
-      velocity = shootFarVelocity;
+      velocity = shootFarVelocity + 200;
     }
     return getTopVelocity() <= velocity && getBottomVelocity() <= velocity;
   }

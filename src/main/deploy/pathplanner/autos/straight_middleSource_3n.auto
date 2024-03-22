@@ -2,23 +2,23 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3408008813858032,
-      "y": 5.583330154418945
+      "x": 1.3794728517532349,
+      "y": 5.555154800415039
     },
-    "rotation": -2.554109376942594e-26
+    "rotation": 179.90874767107852
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "parallel",
+          "type": "sequential",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
-                  "pathName": "test_shoot_diagonal.1"
+                  "pathName": "middle_middleSource_3n.1"
                 }
               },
               {
@@ -31,19 +31,13 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "sequential",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
-                  "pathName": "test_shoot_diagonal.2"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "intake"
+                  "pathName": "middle_middleSource_3n.2"
                 }
               }
             ]
@@ -58,63 +52,39 @@
         {
           "type": "path",
           "data": {
-            "pathName": "test_shoot_diagonal.3"
+            "pathName": "middle_middleSource_3n.3"
           }
         },
         {
-          "type": "parallel",
+          "type": "sequential",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
-                  "pathName": "test_shoot_diagonal.4"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "intake"
+                  "pathName": "middle_middleSource_3n.4"
                 }
               }
             ]
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "shoot"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "test_shoot_diagonal.5"
-          }
-        },
-        {
-          "type": "parallel",
+          "type": "sequential",
           "data": {
             "commands": [
               {
                 "type": "path",
                 "data": {
-                  "pathName": "test_shoot_diagonal.6"
+                  "pathName": "middle_middleSource_3n.5"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "intake"
+                  "name": "shoot"
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "shoot"
           }
         }
       ]

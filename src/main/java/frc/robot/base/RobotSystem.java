@@ -121,7 +121,9 @@ public class RobotSystem extends LoggedRobot {
       m_robotContainer.m_feederSubsystem.intake();
     } else {
       m_robotContainer.m_intakeSubsystem.stop();
-      m_robotContainer.m_feederSubsystem.stop();
+      if (m_robotContainer.m_wristSubsystem.isStowed()) {
+        m_robotContainer.m_feederSubsystem.stop();
+      }
     }
   }
 

@@ -8,7 +8,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
@@ -16,11 +15,9 @@ import frc.robot.Robot;
 import frc.robot.WristAngleUtil;
 import frc.robot.base.RobotSystem;
 import frc.robot.base.io.Beambreak;
-import frc.robot.base.io.DriverController;
 import frc.robot.base.modules.swerve.SwerveConstants;
 import frc.robot.base.subsystems.PoseEstimator.PhotonVisionSystem;
 import frc.robot.base.subsystems.PoseEstimator.SwervePoseEstimator;
-import frc.robot.base.subsystems.swerve.SwerveAction;
 import frc.robot.base.subsystems.swerve.SwerveDriveSubsystem;
 import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -36,6 +33,8 @@ public class AutoAimShooterCommand extends Command {
   Robot m_robot;
   SwerveDriveSubsystem m_SwerveDriveSubsystem;
   private final PIDController m_aimBotPID;
+  private boolean hadNote = false;
+  long dwellStart = 0;
 
   /** Creates a new AutoAimShooterCommand. */
   public AutoAimShooterCommand(
@@ -55,10 +54,11 @@ public class AutoAimShooterCommand extends Command {
     m_beambreak = beambreak;
     m_robot = robot;
     m_SwerveDriveSubsystem = swerveDriveSubsystem;
-    m_aimBotPID = new PIDController(
-        SwerveConstants.AimBotConstants.kAimbotP,
-        SwerveConstants.AimBotConstants.kAimbotI,
-        SwerveConstants.AimBotConstants.kAimbotD);
+    m_aimBotPID =
+        new PIDController(
+            SwerveConstants.AimBotConstants.kAimbotP,
+            SwerveConstants.AimBotConstants.kAimbotI,
+            SwerveConstants.AimBotConstants.kAimbotD);
     m_aimBotPID.enableContinuousInput(-Math.PI, Math.PI);
     m_aimBotPID.setTolerance(SwerveConstants.AimBotConstants.kAimbotTolerance);
     // addRequirements(m_SwerveDriveSubsystem);
@@ -66,17 +66,19 @@ public class AutoAimShooterCommand extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     // m_robot.setSwerveAction(SwerveAction.AIMBOTTING);
+    if (m_beambreak.isBroken()) {
+      hadNote = true;
 
     Pose2d robotPose = m_swervePoseEstimator.getPose();
     double angleToTarget = m_photonVision.getAngleToTarget(robotPose, m_photonVision.getTargetID());
-    double angularVelocity = m_aimBotPID.calculate(robotPose.getRotation().getRadians(), angleToTarget);
+    double angularVelocity =
+        m_aimBotPID.calculate(robotPose.getRotation().getRadians(), angleToTarget);
 
     if (m_aimBotPID.atSetpoint()) {
       angularVelocity = 0;
@@ -86,15 +88,19 @@ public class AutoAimShooterCommand extends Command {
     // robot, only
     // rotate it)
     ChassisSpeeds chassisSpeeds = new ChassisSpeeds(0, 0, angularVelocity);
-    SwerveModuleState[] moduleStates = SwerveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
+    SwerveModuleState[] moduleStates =
+        SwerveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
     m_SwerveDriveSubsystem.setModuleStates(moduleStates);
 
-    double distanceToTarget = m_photonVision.getDistanceToTarget(
-        m_swervePoseEstimator.getPose(), m_photonVision.getTargetID());
+    double distanceToTarget =
+        m_photonVision.getDistanceToTarget(
+            m_swervePoseEstimator.getPose(), m_photonVision.getTargetID());
     double wristAngle = WristAngleUtil.getAngle(distanceToTarget); // Jack Frias special
     // double wristAngle = SmartDashboard.getNumber("SHOOTPOINT",
     // Constants.kWristAmp);
     SmartDashboard.putNumber("DISTANCE", distanceToTarget);
+        SmartDashboard.putNumber("WRISTANGLEE", wristAngle);
+
 
     if (wristAngle >= Constants.kWristEncoderMin && wristAngle <= Constants.kWristStow) {
       m_wristSubsystem.pos(wristAngle);
@@ -103,10 +109,18 @@ public class AutoAimShooterCommand extends Command {
     }
 
     double wristPos = m_wristSubsystem.getWristPosition();
-    double buffer = 0.005;
-    if (m_shooterSubsystem.isVelocityTerminal() && wristPos >= wristAngle - buffer && wristPos <= wristAngle + buffer ) {
-      m_feederSubsystem.intake();
+    double buffer = 0.01;
+    if (m_shooterSubsystem.isVelocityTerminal()
+        && wristPos >= wristAngle - buffer
+        && wristPos <= wristAngle + buffer
+    ) {
+      if (dwellStart == 0) {
+        dwellStart = System.currentTimeMillis();
+      } else if (System.currentTimeMillis() - dwellStart >= 250) {
+        m_feederSubsystem.intake();
+      }
     }
+  }
   }
 
   // Called once the command ends or is interrupted.
@@ -120,11 +134,13 @@ public class AutoAimShooterCommand extends Command {
     SwerveModuleState[] moduleStates =
         SwerveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
     m_SwerveDriveSubsystem.setModuleStates(moduleStates);
+    hadNote = false;
+    dwellStart = 0;
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return RobotSystem.isReal() ? m_beambreak.isOpen() : m_shooterSubsystem.isVelocityTerminal();
+    return RobotSystem.isReal() ? (m_beambreak.isOpen() && hadNote) : m_shooterSubsystem.isVelocityTerminal();
   }
 }

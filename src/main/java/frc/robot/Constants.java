@@ -14,7 +14,7 @@ public final class Constants {
   public static final int kClimberRight = 55;
 
   // Arm Encoder Stuff
-  public static final double kArmEncoderMax = 0.303;
+  public static final double kArmEncoderMax = 0.300;
   public static final double kArmEncoderMin = 0.096;
   // The rotation 2d will have to be changed to doubles when we know our setpoint
   public static final double kArmAmp = 0.303;

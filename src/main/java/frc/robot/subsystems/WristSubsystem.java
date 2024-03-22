@@ -71,7 +71,7 @@ public class WristSubsystem extends WCStaticSubsystem {
   }
 
   public boolean isStowed() {
-    return getWristPosition() >= Constants.kWristStow;
+    return getWristPosition() >= Constants.kWristStow - 0.003;
   }
 
   @Override

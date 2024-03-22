@@ -4,7 +4,6 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.base.io.Beambreak;
@@ -22,8 +21,7 @@ public class ArmUpCommand extends Command {
       WristSubsystem wristSubsystem,
       ShooterSubsystem shooterSubsystem,
       FeederSubsystem feederSubsystem,
-      Beambreak beambreak
-  ) {
+      Beambreak beambreak) {
     m_armSubsystem = armSubsystem;
     m_wristSubsystem = wristSubsystem;
     m_shooterSubsystem = shooterSubsystem;

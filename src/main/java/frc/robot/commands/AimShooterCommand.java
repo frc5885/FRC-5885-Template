@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.WristAngleUtil;
-import frc.robot.base.RobotSystem;
 import frc.robot.base.io.Beambreak;
 import frc.robot.base.io.DriverController;
 import frc.robot.base.subsystems.PoseEstimator.PhotonVisionSystem;
@@ -95,12 +94,12 @@ public class AimShooterCommand extends Command {
     m_robot.setSwerveAction(SwerveAction.DEFAULT);
     m_driverController.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0);
     if (m_armSubsystem.isArmDown()) {
-     m_shooterSubsystem.stop();
-     m_WristSubsystem.stop();
-     if (interrupted) {
-       new StowWristCommand(m_armSubsystem, m_WristSubsystem).schedule();
-     }
-   }
+      m_shooterSubsystem.stop();
+      m_WristSubsystem.stop();
+      if (interrupted) {
+        new StowWristCommand(m_armSubsystem, m_WristSubsystem).schedule();
+      }
+    }
   }
 
   // Returns true when the command should end.
