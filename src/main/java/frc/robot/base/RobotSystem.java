@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Robot;
 import frc.robot.base.subsystems.swerve.SwerveAction;
 import frc.robot.commands.StowWristCommand;
+import frc.robot.subsystems.ShooterSubsystem.RobotMode;
 import java.io.File;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -108,6 +109,7 @@ public class RobotSystem extends LoggedRobot {
 
   @Override
   public void autonomousInit() {
+    m_robotContainer.m_shooterSubsystem.robotMode = RobotMode.AUTO;
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
@@ -143,6 +145,7 @@ public class RobotSystem extends LoggedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    m_robotContainer.m_shooterSubsystem.robotMode = RobotMode.TELEOP;
     m_robotContainer.m_wristSubsystem.stop();
     m_robotContainer.m_feederSubsystem.stop();
     m_robotContainer.m_intakeSubsystem.stop();

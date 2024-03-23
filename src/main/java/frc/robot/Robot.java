@@ -35,7 +35,7 @@ public class Robot extends WCRobot {
     m_wristSubsystem = new WristSubsystem();
     m_feederSubsystem = new FeederSubsystem();
     m_climberSubsystem = new ClimberSubsystem();
-    m_shooterSubsystem = new ShooterSubsystem();
+    m_shooterSubsystem = new ShooterSubsystem(m_beambreak);
     m_ledSubsystem =
         new LEDSubsystem(
             m_beambreak, m_shooterSubsystem, () -> getSwerveAction() == SwerveAction.AIMBOTTING);
@@ -125,13 +125,7 @@ public class Robot extends WCRobot {
     // Eject Feeder
     m_operatorController
         .getLeftBumper()
-        .onTrue(
-            new EjectFeederCommand(
-                m_wristSubsystem,
-                 m_feederSubsystem,
-                  m_armSubsystem
-            )
-        );
+        .onTrue(new EjectFeederCommand(m_wristSubsystem, m_feederSubsystem, m_armSubsystem));
 
     // Arm up
     m_operatorController
@@ -142,19 +136,10 @@ public class Robot extends WCRobot {
                 m_wristSubsystem,
                 m_shooterSubsystem,
                 m_feederSubsystem,
-                m_beambreak
-            )
-        );
+                m_beambreak));
 
     // Arm down
-    m_operatorController
-    .getBButton()
-    .onTrue(
-        new ArmDownCommand(
-            m_armSubsystem,
-            m_wristSubsystem
-        )
-    );
+    m_operatorController.getBButton().onTrue(new ArmDownCommand(m_armSubsystem, m_wristSubsystem));
   }
 
   public void setLEDsTeleop() {

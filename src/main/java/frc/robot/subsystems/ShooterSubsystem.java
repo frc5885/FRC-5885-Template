@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.base.RobotSystem;
+import frc.robot.base.io.Beambreak;
 import frc.robot.base.subsystems.SubsystemAction;
 import frc.robot.base.subsystems.WCStaticSubsystem;
 import java.util.List;
@@ -20,11 +21,19 @@ public class ShooterSubsystem extends WCStaticSubsystem {
   private CANSparkMax m_bottom;
   private RelativeEncoder m_topEncoder;
   private RelativeEncoder m_bottomEncoder;
+  Beambreak m_beambreak;
   double topVelocitySim = 0.0;
   double bottomVelocitySim = 0.0;
 
+  double idleVelocity = -1000;
   double shootCloseVelocity = -2800;
   double shootFarVelocity = -3700;
+  public RobotMode robotMode = RobotMode.AUTO;
+
+  public enum RobotMode {
+    TELEOP,
+    AUTO
+  }
 
   // Bad one
   PIDController m_topPIDController = new PIDController(0.005, 0.0, 0.0);
@@ -40,12 +49,13 @@ public class ShooterSubsystem extends WCStaticSubsystem {
   }
 
   /** Creates a new Shooter. */
-  public ShooterSubsystem() {
+  public ShooterSubsystem(Beambreak beambreak) {
     super();
     m_topEncoder = m_top.getEncoder();
     m_bottomEncoder = m_bottom.getEncoder();
     SmartDashboard.putData("TOP SHOOTER PID", m_topPIDController);
     SmartDashboard.putData("BOTTOM SHOOTER PID", m_bottomPIDController);
+    m_beambreak = beambreak;
   }
 
   @Override
@@ -74,8 +84,6 @@ public class ShooterSubsystem extends WCStaticSubsystem {
                   + m_bottomFeedforward.calculate(shootFarVelocity),
               -12,
               0);
-      SmartDashboard.putNumber("THINGY", setVoltage);
-      SmartDashboard.putNumber("THINGY2", setVoltage2);
       m_top.setVoltage(setVoltage);
       m_bottom.setVoltage(setVoltage2);
     } else if (subsystemAction == SubsystemAction.SHOOT_CLOSE) {
@@ -91,13 +99,26 @@ public class ShooterSubsystem extends WCStaticSubsystem {
                   + m_bottomFeedforward.calculate(shootCloseVelocity),
               -12,
               0);
-      SmartDashboard.putNumber("THINGY", setVoltage);
-      SmartDashboard.putNumber("THINGY2", setVoltage2);
       m_top.setVoltage(setVoltage);
       m_bottom.setVoltage(setVoltage2);
     } else if (subsystemAction == SubsystemAction.OUTTAKE) {
       m_top.setVoltage(-12 * 0.2);
       m_bottom.setVoltage(-12 * 0.2);
+    } else if (robotMode == RobotMode.TELEOP && m_beambreak.isBroken()) {
+      double setVoltage =
+          MathUtil.clamp(
+              m_topPIDController.calculate(getTopVelocity(), getBottomVelocity())
+                  + m_topFeedforward.calculate(idleVelocity),
+              -12,
+              0);
+      double setVoltage2 =
+          MathUtil.clamp(
+              m_bottomPIDController.calculate(getBottomVelocity(), shootCloseVelocity)
+                  + m_bottomFeedforward.calculate(idleVelocity),
+              -12,
+              0);
+      m_top.setVoltage(setVoltage);
+      m_bottom.setVoltage(setVoltage2);
     } else {
       stopMotors();
       topVelocitySim = 0;
