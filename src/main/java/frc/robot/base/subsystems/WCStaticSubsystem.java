@@ -2,6 +2,7 @@ package frc.robot.base.subsystems;
 
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Logger;
 import frc.robot.base.RobotSystem;
 import java.util.List;
 
@@ -27,7 +28,9 @@ public abstract class WCStaticSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     super.periodic();
-    putDebugDataPeriodic(RobotSystem.isReal());
+    if (Logger.isDebugMode) {
+      putDebugDataPeriodic(RobotSystem.isReal());
+    }
   }
 
   protected void putDebugDataPeriodic(boolean isRealRobot) {}

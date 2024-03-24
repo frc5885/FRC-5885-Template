@@ -2,7 +2,6 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.base.io.Beambreak;
@@ -106,7 +105,6 @@ public class LEDSubsystem extends SubsystemBase {
     }
     m_led.setData(m_ledBuffer);
     m_currentColor = r + g + b;
-    SmartDashboard.putString("LEDColor", r + ", " + b + ", " + g);
   }
 
   // (0°, 100%, 100%)

@@ -4,18 +4,20 @@
 
 package frc.robot.base;
 
-import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.AprilTagCameraConstants;
 import frc.robot.Robot;
 import frc.robot.base.subsystems.swerve.SwerveAction;
 import frc.robot.commands.StowWristCommand;
 import frc.robot.subsystems.ShooterSubsystem.RobotMode;
-import java.io.File;
 import org.littletonrobotics.junction.LoggedRobot;
-import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.NT4Publisher;
-import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 public class RobotSystem extends LoggedRobot {
   private Command m_autonomousCommand;
@@ -50,45 +52,46 @@ public class RobotSystem extends LoggedRobot {
 
     // Copied from advtangekit examples
     // Set up data receivers & replay source
-    if (RobotBase.isReal()) {
-      // Running on a real robot, log to a USB stick
+    // if (RobotBase.isReal()) {
+    //   // Running on a real robot, log to a USB stick
 
-      boolean found_thumbdrive = false;
-      File directory = new File("/media/");
-      if (directory.isDirectory()) {
-        File[] subdirectories = directory.listFiles(File::isDirectory);
-        if (subdirectories != null) {
-          for (File subdirectory : subdirectories) {
-            File[] files = subdirectory.listFiles();
-            if (files != null) {
-              for (File file : files) {
-                if (file.getName().equals("start_logging")) {
-                  // Do something when the file is found
-                  Logger.addDataReceiver(new WPILOGWriter(file.getParent()));
-                  System.out.println("Writting to USB! @" + file.getParent());
-                  found_thumbdrive = true;
-                  break;
-                }
-              }
-            }
-          }
-        }
-      }
-      Logger.addDataReceiver(new NT4Publisher());
+    //   boolean found_thumbdrive = false;
+    //   File directory = new File("/media/");
+    //   if (directory.isDirectory()) {
+    //     File[] subdirectories = directory.listFiles(File::isDirectory);
+    //     if (subdirectories != null) {
+    //       for (File subdirectory : subdirectories) {
+    //         File[] files = subdirectory.listFiles();
+    //         if (files != null) {
+    //           for (File file : files) {
+    //             if (file.getName().equals("start_logging")) {
+    //               // Do something when the file is found
+    //               Logger.addDataReceiver(new WPILOGWriter(file.getParent()));
+    //               System.out.println("Writting to USB! @" + file.getParent());
+    //               found_thumbdrive = true;
+    //               break;
+    //             }
+    //           }
+    //         }
+    //       }
+    //     }
+    //   }
+    //   Logger.addDataReceiver(new NT4Publisher());
 
-      if (!found_thumbdrive) {
-        System.out.println("Not logging to usb!");
-      }
+    //   if (!found_thumbdrive) {
+    //     System.out.println("Not logging to usb!");
+    //   }
 
-      Logger.addDataReceiver(new NT4Publisher());
-    } else {
-      // Running a physics simulator, log to local folder
-      Logger.addDataReceiver(new WPILOGWriter("logs/"));
-      Logger.addDataReceiver(new NT4Publisher());
-    }
+    //   Logger.addDataReceiver(new NT4Publisher());
+    // } else {
+    //   // Running a physics simulator, log to local folder
+    //   Logger.addDataReceiver(new WPILOGWriter("logs/"));
+    //   Logger.addDataReceiver(new NT4Publisher());
+    // }
 
-    Logger.start();
-    enableLiveWindowInTest(true);
+    // Logger.start();
+    // enableLiveWindowInTest(true);
+    SmartDashboard.putBoolean("ARMLIMITTOGGLE", true);
     m_robotContainer = new Robot();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
   }
@@ -109,6 +112,7 @@ public class RobotSystem extends LoggedRobot {
 
   @Override
   public void autonomousInit() {
+    setCameraOffset();
     m_robotContainer.m_shooterSubsystem.robotMode = RobotMode.AUTO;
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     if (m_autonomousCommand != null) {
@@ -142,6 +146,7 @@ public class RobotSystem extends LoggedRobot {
 
   @Override
   public void teleopInit() {
+    setCameraOffset();
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
@@ -157,7 +162,13 @@ public class RobotSystem extends LoggedRobot {
   }
 
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    // SmartDashboard.putNumber("RAM USAGE MAX", Runtime.getRuntime().maxMemory());
+    // SmartDashboard.putNumber("RAM USAGE FREE", Runtime.getRuntime().freeMemory());
+    // SmartDashboard.putNumber("RAM USAGE TOTAL", Runtime.getRuntime().totalMemory());
+    // SmartDashboard.putNumber("RAM USAGE TOTAL - FREE", Runtime.getRuntime().totalMemory() -
+    // Runtime.getRuntime().freeMemory());
+  }
 
   @Override
   public void teleopExit() {
@@ -181,4 +192,31 @@ public class RobotSystem extends LoggedRobot {
 
   @Override
   public void simulationPeriodic() {}
+
+  private void setCameraOffset() {
+    Alliance alliance = DriverStation.getAlliance().get();
+    if (alliance == Alliance.Blue) {
+      m_robotContainer.m_photonVision.setRobotToCameraTransform(
+          new Transform3d(
+              new Translation3d(
+                  AprilTagCameraConstants.ShooterBlue.kCameraPositionX,
+                  AprilTagCameraConstants.ShooterBlue.kCameraPositonY,
+                  AprilTagCameraConstants.ShooterBlue.kCameraPositionZ),
+              new Rotation3d(
+                  AprilTagCameraConstants.ShooterBlue.kCameraRoll,
+                  AprilTagCameraConstants.ShooterBlue.kCameraPitch,
+                  AprilTagCameraConstants.ShooterBlue.kCameraYaw)));
+    } else if (alliance == Alliance.Red) {
+      m_robotContainer.m_photonVision.setRobotToCameraTransform(
+          new Transform3d(
+              new Translation3d(
+                  AprilTagCameraConstants.ShooterRed.kCameraPositionX,
+                  AprilTagCameraConstants.ShooterRed.kCameraPositonY,
+                  AprilTagCameraConstants.ShooterRed.kCameraPositionZ),
+              new Rotation3d(
+                  AprilTagCameraConstants.ShooterRed.kCameraRoll,
+                  AprilTagCameraConstants.ShooterRed.kCameraPitch,
+                  AprilTagCameraConstants.ShooterRed.kCameraYaw)));
+    }
+  }
 }

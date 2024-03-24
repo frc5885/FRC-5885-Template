@@ -7,8 +7,8 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
+import frc.robot.Logger;
 import frc.robot.base.RobotSystem;
 import frc.robot.base.io.Beambreak;
 import frc.robot.base.subsystems.SubsystemAction;
@@ -25,7 +25,7 @@ public class ShooterSubsystem extends WCStaticSubsystem {
   double topVelocitySim = 0.0;
   double bottomVelocitySim = 0.0;
 
-  double idleVelocity = -1000;
+  double idleVelocity = -50;
   double shootCloseVelocity = -2800;
   double shootFarVelocity = -3700;
   public RobotMode robotMode = RobotMode.AUTO;
@@ -53,8 +53,8 @@ public class ShooterSubsystem extends WCStaticSubsystem {
     super();
     m_topEncoder = m_top.getEncoder();
     m_bottomEncoder = m_bottom.getEncoder();
-    SmartDashboard.putData("TOP SHOOTER PID", m_topPIDController);
-    SmartDashboard.putData("BOTTOM SHOOTER PID", m_bottomPIDController);
+    Logger.SmartDashboard.putData("TOP SHOOTER PID", m_topPIDController);
+    Logger.SmartDashboard.putData("BOTTOM SHOOTER PID", m_bottomPIDController);
     m_beambreak = beambreak;
   }
 
@@ -132,15 +132,15 @@ public class ShooterSubsystem extends WCStaticSubsystem {
 
   @Override
   protected void putDebugDataPeriodic(boolean isRealRobot) {
-    SmartDashboard.putNumber("ShooterTopVoltage", m_top.getAppliedOutput());
-    SmartDashboard.putNumber("ShooterTopCurrent", m_top.getOutputCurrent());
-    SmartDashboard.putNumber("ShooterTopVelocity", getTopVelocity());
+    Logger.SmartDashboard.putNumber("ShooterTopVoltage", m_top.getAppliedOutput());
+    Logger.SmartDashboard.putNumber("ShooterTopCurrent", m_top.getOutputCurrent());
+    Logger.SmartDashboard.putNumber("ShooterTopVelocity", getTopVelocity());
 
-    SmartDashboard.putNumber("ShooterBottomVoltage", m_bottom.getAppliedOutput());
-    SmartDashboard.putNumber("ShooterBottomCurrent", m_bottom.getOutputCurrent());
-    SmartDashboard.putNumber("ShooterBottomVelocity", getBottomVelocity());
+    Logger.SmartDashboard.putNumber("ShooterBottomVoltage", m_bottom.getAppliedOutput());
+    Logger.SmartDashboard.putNumber("ShooterBottomCurrent", m_bottom.getOutputCurrent());
+    Logger.SmartDashboard.putNumber("ShooterBottomVelocity", getBottomVelocity());
 
-    SmartDashboard.putString("ShooterAction", getActionName());
+    Logger.SmartDashboard.putString("ShooterAction", getActionName());
   }
 
   public void spinFastFar() {

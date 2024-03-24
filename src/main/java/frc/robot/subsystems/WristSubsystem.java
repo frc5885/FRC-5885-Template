@@ -7,6 +7,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
+import frc.robot.Logger;
 import frc.robot.base.RobotSystem;
 import frc.robot.base.subsystems.SubsystemAction;
 import frc.robot.base.subsystems.WCStaticSubsystem;
@@ -31,7 +32,7 @@ public class WristSubsystem extends WCStaticSubsystem {
     m_wrist = new CANSparkMax(Constants.kWrist, MotorType.kBrushless);
     m_absoluteEncoder = m_wrist.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
     m_PidController = new PIDController(35, 10, 0.5);
-    SmartDashboard.putData("WristPID", m_PidController);
+    Logger.SmartDashboard.putData("WristPID", m_PidController);
     return List.of(m_wrist);
   }
 
@@ -50,15 +51,16 @@ public class WristSubsystem extends WCStaticSubsystem {
       stopMotors();
     }
     positionSim += m_wrist.getAppliedOutput() * 0.005;
+    SmartDashboard.putNumber("WristPosition", getWristPosition());
   }
 
   @Override
   protected void putDebugDataPeriodic(boolean isRealRobot) {
-    SmartDashboard.putNumber("WristVoltage", m_wrist.getAppliedOutput());
-    SmartDashboard.putNumber("WristPosition", getWristPosition());
-    SmartDashboard.putNumber("WristCurrent", m_wrist.getOutputCurrent());
-    SmartDashboard.putString("WristAction", getActionName());
-    SmartDashboard.putNumber("WristSetPoint", m_setPoint);
+    Logger.SmartDashboard.putNumber("WristVoltage", m_wrist.getAppliedOutput());
+    Logger.SmartDashboard.putNumber("WristPosition", getWristPosition());
+    Logger.SmartDashboard.putNumber("WristCurrent", m_wrist.getOutputCurrent());
+    Logger.SmartDashboard.putString("WristAction", getActionName());
+    Logger.SmartDashboard.putNumber("WristSetPoint", m_setPoint);
   }
 
   public void pos(double setpoint) {

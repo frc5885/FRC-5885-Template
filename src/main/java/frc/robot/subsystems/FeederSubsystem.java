@@ -2,8 +2,8 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
+import frc.robot.Logger;
 import frc.robot.base.subsystems.SubsystemAction;
 import frc.robot.base.subsystems.WCStaticSubsystem;
 import java.util.List;
@@ -39,9 +39,9 @@ public class FeederSubsystem extends WCStaticSubsystem {
 
   @Override
   protected void putDebugDataPeriodic(boolean isRealRobot) {
-    SmartDashboard.putNumber("FeederVoltage", m_feeder.getMotorOutputVoltage());
-    SmartDashboard.putNumber("FeederCurrent", m_feeder.getStatorCurrent());
-    SmartDashboard.putString("FeederAction", getActionName());
+    Logger.SmartDashboard.putNumber("FeederVoltage", m_feeder.getMotorOutputVoltage());
+    Logger.SmartDashboard.putNumber("FeederCurrent", m_feeder.getStatorCurrent());
+    Logger.SmartDashboard.putString("FeederAction", getActionName());
   }
 
   public void intake() {

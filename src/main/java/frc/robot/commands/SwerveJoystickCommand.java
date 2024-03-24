@@ -14,7 +14,6 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.base.modules.swerve.SwerveConstants;
 import frc.robot.base.subsystems.PoseEstimator.PhotonVisionSystem;
@@ -22,7 +21,6 @@ import frc.robot.base.subsystems.PoseEstimator.SwervePoseEstimator;
 import frc.robot.base.subsystems.swerve.SwerveAction;
 import frc.robot.base.subsystems.swerve.SwerveDriveSubsystem;
 import java.util.function.Supplier;
-import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class SwerveJoystickCommand extends Command {
@@ -88,7 +86,7 @@ public class SwerveJoystickCommand extends Command {
     m_facingPID = new PIDController(1.4, 0.0, 0.105);
     m_facingPID.enableContinuousInput(-Math.PI, Math.PI);
     m_facingPID.setTolerance(Units.degreesToRadians(1.5));
-    SmartDashboard.putData("FacingPID", m_facingPID);
+    frc.robot.Logger.SmartDashboard.putData("FacingPID", m_facingPID);
 
     addRequirements(m_swerveSubsystem);
   }
@@ -120,7 +118,9 @@ public class SwerveJoystickCommand extends Command {
     double magnitudeSqrd = Math.pow(magnitude, 2);
 
     double linearVelocity =
-        magnitudeSqrd * SwerveConstants.kMaxSpeedMetersPerSecond * m_linearSpeedLimitChooser.get();
+        magnitudeSqrd
+            * SwerveConstants.kMaxSpeedMetersPerSecond
+            * 1.0; // m_linearSpeedLimitChooser.get();
     Rotation2d linearDirection = new Rotation2d(xDir, yDir);
 
     Alliance alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
@@ -188,7 +188,7 @@ public class SwerveJoystickCommand extends Command {
     // }
 
     angularVelocity *=
-        SwerveConstants.kMaxSpeedAngularRadiansPerSecond * m_angularSpeedLimitChooser.get();
+        SwerveConstants.kMaxSpeedAngularRadiansPerSecond * 1.0; // m_angularSpeedLimitChooser.get();
 
     // This does the trig for us and lets us get the x/y velocity
     Translation2d translation = new Translation2d(linearVelocity, linearDirection);
@@ -224,9 +224,9 @@ public class SwerveJoystickCommand extends Command {
     SwerveModuleState[] moduleStates =
         SwerveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
 
-    Logger.recordOutput("SwerveJoystickCmd/expectedModuleStates", moduleStates);
-    Logger.recordOutput("SwerveJoystickCmd/expectedVelocity", linearVelocity);
-    Logger.recordOutput("SwerveJoystickCmd/expectedAngularVelocity", angularVelocity);
+    // Logger.recordOutput("SwerveJoystickCmd/expectedModuleStates", moduleStates);
+    // Logger.recordOutput("SwerveJoystickCmd/expectedVelocity", linearVelocity);
+    // Logger.recordOutput("SwerveJoystickCmd/expectedAngularVelocity", angularVelocity);
     m_swerveSubsystem.setModuleStates(moduleStates);
   }
 

@@ -16,7 +16,6 @@ import frc.robot.base.modules.swerve.SwerveConstants;
 import frc.robot.base.subsystems.swerve.SwerveDriveSubsystem;
 import java.util.Optional;
 import java.util.function.Supplier;
-import org.littletonrobotics.junction.Logger;
 import org.photonvision.EstimatedRobotPose;
 
 // This object is created in the WCRobot class
@@ -29,6 +28,9 @@ public class SwervePoseEstimator extends SubsystemBase {
   private final SwerveDriveSubsystem m_swerveDrive;
 
   private final PhotonVisionSystem m_photonVision;
+
+  long lastRan = 0;
+  int delay = 100;
 
   /** Creates a new TankDrivePoseEstimator. */
   public SwervePoseEstimator(SwerveDriveSubsystem swerveDrive, PhotonVisionSystem photonVision) {
@@ -54,6 +56,9 @@ public class SwervePoseEstimator extends SubsystemBase {
 
   @Override
   public void periodic() {
+    // long now = System.currentTimeMillis();
+    // if (now - lastRan > delay) {
+    //   lastRan = now;
     // This method will be called once per scheduler run
 
     // Update the WPI pose estimator with the latest rotation and position
@@ -61,15 +66,16 @@ public class SwervePoseEstimator extends SubsystemBase {
     // system
     m_poseEstimator.update(m_rotationSupplier.get(), m_swerveModulePositionSupplier.get());
     Pose2d estimatedPosition = getPose();
-    Logger.recordOutput("SwervePoseEstimator/estimatedPose", estimatedPosition);
+    // Logger.recordOutput("SwervePoseEstimator/estimatedPose", estimatedPosition);
 
     // Update the WPI pose estimator with the latest vision measurements from photon
     // vision if they
     // are present
     Optional<EstimatedRobotPose> estimatedGlobalPosition =
         m_photonVision.getEstimatedGlobalPoseShooter(estimatedPosition);
-    Logger.recordOutput(
-        "SwervePoseEstimator", estimatedGlobalPosition.isPresent() ? "PRESENET" : "NULL!");
+    // Logger.recordOutput(
+    // "SwervePoseEstimator", estimatedGlobalPosition.isPresent() ? "PRESENET" :
+    // "NULL!");
     if (estimatedGlobalPosition.isPresent()) {
 
       // have to call .get() to get the value from the optional
@@ -79,11 +85,14 @@ public class SwervePoseEstimator extends SubsystemBase {
       m_poseEstimator.addVisionMeasurement(
           estimatedVisionPose.estimatedPose.toPose2d(), estimatedVisionPose.timestampSeconds);
 
-      Logger.recordOutput(
-          "SwervePoseEstimator/visionEstimatedPose", estimatedVisionPose.estimatedPose.toPose2d());
-      Logger.recordOutput(
-          "SwervePoseEstimator/visionEstimatedPose3D", estimatedVisionPose.estimatedPose);
+      // Logger.recordOutput(
+      // "SwervePoseEstimator/visionEstimatedPose",
+      // estimatedVisionPose.estimatedPose.toPose2d());
+      // Logger.recordOutput(
+      // "SwervePoseEstimator/visionEstimatedPose3D",
+      // estimatedVisionPose.estimatedPose);
     }
+    // }
   }
 
   public Pose2d getPose() {

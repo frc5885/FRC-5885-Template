@@ -1,6 +1,5 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.base.WCRobot;
 import frc.robot.base.io.Beambreak;
@@ -25,7 +24,7 @@ public class Robot extends WCRobot {
   @Override
   protected void initComponents() {
     m_beambreak = new Beambreak();
-    SmartDashboard.putNumber("SHOOTPOINT", Constants.kWristAmp);
+    Logger.SmartDashboard.putNumber("SHOOTPOINT", Constants.kWristAmp);
   }
 
   @Override
@@ -100,6 +99,11 @@ public class Robot extends WCRobot {
     m_driverController.scheduleOnRightTrigger(
         new FeedCommand(
             m_feederSubsystem, m_shooterSubsystem, m_armSubsystem, m_wristSubsystem, m_beambreak));
+
+    // snap to amp
+    m_driverController
+        .getStartButton()
+        .whileTrue(new SetSwerveActionCommand(this, SwerveAction.FACEAMP));
 
     // Face forward
     m_driverController

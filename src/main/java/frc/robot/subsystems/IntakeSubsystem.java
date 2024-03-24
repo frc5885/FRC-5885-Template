@@ -3,8 +3,8 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
+import frc.robot.Logger;
 import frc.robot.base.subsystems.SubsystemAction;
 import frc.robot.base.subsystems.WCStaticSubsystem;
 import java.util.List;
@@ -26,9 +26,9 @@ public class IntakeSubsystem extends WCStaticSubsystem {
 
   @Override
   protected void putDebugDataPeriodic(boolean isRealRobot) {
-    SmartDashboard.putNumber("IntakeVoltage", m_intakeMotor.getAppliedOutput());
-    SmartDashboard.putNumber("IntakeCurrent", m_intakeMotor.getOutputCurrent());
-    SmartDashboard.putString("IntakeAction", getActionName());
+    Logger.SmartDashboard.putNumber("IntakeVoltage", m_intakeMotor.getAppliedOutput());
+    Logger.SmartDashboard.putNumber("IntakeCurrent", m_intakeMotor.getOutputCurrent());
+    Logger.SmartDashboard.putString("IntakeAction", getActionName());
   }
 
   @Override
