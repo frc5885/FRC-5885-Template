@@ -8,7 +8,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import frc.robot.Constants;
-import frc.robot.Logger;
+import frc.robot.WCLogger;
 import frc.robot.base.RobotSystem;
 import frc.robot.base.io.Beambreak;
 import frc.robot.base.subsystems.SubsystemAction;
@@ -53,8 +53,8 @@ public class ShooterSubsystem extends WCStaticSubsystem {
     super();
     m_topEncoder = m_top.getEncoder();
     m_bottomEncoder = m_bottom.getEncoder();
-    Logger.SmartDashboard.putData("TOP SHOOTER PID", m_topPIDController);
-    Logger.SmartDashboard.putData("BOTTOM SHOOTER PID", m_bottomPIDController);
+    WCLogger.putData(this, "Top/PID", m_topPIDController);
+    WCLogger.putData(this, "Bottom/PID", m_bottomPIDController);
     m_beambreak = beambreak;
   }
 
@@ -132,15 +132,15 @@ public class ShooterSubsystem extends WCStaticSubsystem {
 
   @Override
   protected void putDebugDataPeriodic(boolean isRealRobot) {
-    Logger.SmartDashboard.putNumber("ShooterTopVoltage", m_top.getAppliedOutput());
-    Logger.SmartDashboard.putNumber("ShooterTopCurrent", m_top.getOutputCurrent());
-    Logger.SmartDashboard.putNumber("ShooterTopVelocity", getTopVelocity());
+    WCLogger.putNumber(this, "Top/Voltage", m_top.getAppliedOutput());
+    WCLogger.putNumber(this, "Top/Current", m_top.getOutputCurrent());
+    WCLogger.putNumber(this, "Top/Velocity", getTopVelocity());
 
-    Logger.SmartDashboard.putNumber("ShooterBottomVoltage", m_bottom.getAppliedOutput());
-    Logger.SmartDashboard.putNumber("ShooterBottomCurrent", m_bottom.getOutputCurrent());
-    Logger.SmartDashboard.putNumber("ShooterBottomVelocity", getBottomVelocity());
+    WCLogger.putNumber(this, "Bottom/Voltage", m_bottom.getAppliedOutput());
+    WCLogger.putNumber(this, "Bottom/Current", m_bottom.getOutputCurrent());
+    WCLogger.putNumber(this, "Bottom/Velocity", getBottomVelocity());
 
-    Logger.SmartDashboard.putString("ShooterAction", getActionName());
+    WCLogger.putAction(this, "Action", subsystemAction);
   }
 
   public void spinFastFar() {

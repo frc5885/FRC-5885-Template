@@ -7,7 +7,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
-import frc.robot.Logger;
+import frc.robot.WCLogger;
 import frc.robot.Robot;
 import frc.robot.WristAngleUtil;
 import frc.robot.base.io.Beambreak;
@@ -65,8 +65,6 @@ public class AimShooterCommand extends Command {
               m_swervePoseEstimator.getPose(), m_photonVision.getTargetID());
       double wristAngle = WristAngleUtil.getAngle(distanceToTarget);
       // double wristAngle = SmartDashboard.getNumber("SHOOTPOINT", Constants.kWristAmp);
-      Logger.SmartDashboard.putNumber("DISTANCE", distanceToTarget);
-
       if (distanceToTarget >= 3.1) {
         m_shooterSubsystem.spinFastFar();
       } else {

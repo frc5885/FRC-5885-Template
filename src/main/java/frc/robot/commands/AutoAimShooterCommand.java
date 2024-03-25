@@ -10,7 +10,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
-import frc.robot.Logger;
+import frc.robot.WCLogger;
 import frc.robot.Robot;
 import frc.robot.WristAngleUtil;
 import frc.robot.base.RobotSystem;
@@ -99,8 +99,6 @@ public class AutoAimShooterCommand extends Command {
       double wristAngle = WristAngleUtil.getAngle(distanceToTarget); // Jack Frias special
       // double wristAngle = SmartDashboard.getNumber("SHOOTPOINT",
       // Constants.kWristAmp);
-      Logger.SmartDashboard.putNumber("DISTANCE", distanceToTarget);
-      Logger.SmartDashboard.putNumber("WRISTANGLEE", wristAngle);
 
       if (wristAngle >= Constants.kWristEncoderMin && wristAngle <= Constants.kWristStow) {
         m_wristSubsystem.pos(wristAngle);

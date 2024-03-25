@@ -3,7 +3,7 @@ package frc.robot.base.subsystems;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Logger;
+import frc.robot.WCLogger;
 import frc.robot.base.RobotSystem;
 
 public abstract class WCDualSubsystem extends SubsystemBase {
@@ -28,7 +28,7 @@ public abstract class WCDualSubsystem extends SubsystemBase {
   public void periodic() {
     motors.getFirst().setVoltage(speed1 * baseVoltage * getBaseSpeed());
     motors.getSecond().setVoltage(speed2 * baseVoltage * getBaseSpeed());
-    if (Logger.isDebugMode) {
+    if (WCLogger.isEnabled) {
       putDebugDataPeriodic(RobotSystem.isReal());
     }
   }

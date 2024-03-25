@@ -4,9 +4,8 @@ import com.ctre.phoenix6.hardware.*;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
-import frc.robot.Logger;
+import frc.robot.WCLogger;
 import frc.robot.base.RobotSystem;
 import frc.robot.base.subsystems.SubsystemAction;
 import frc.robot.base.subsystems.WCStaticSubsystem;
@@ -36,7 +35,6 @@ public class ArmSubsystem extends WCStaticSubsystem {
     m_arm = new TalonFX(Constants.kArm);
     m_encoder = new DutyCycleEncoder(1);
     m_PidController = new PIDController(250, 0, 0);
-    Logger.SmartDashboard.putData("ArmPID", m_PidController);
     return List.of(m_arm);
   }
 
@@ -50,15 +48,14 @@ public class ArmSubsystem extends WCStaticSubsystem {
       stopMotors();
     }
     positionSim -= m_arm.getMotorVoltage().getValueAsDouble() * 0.001;
-    SmartDashboard.putNumber("ArmPosition", getArmPosition());
   }
 
   @Override
   protected void putDebugDataPeriodic(boolean isRealRobot) {
-    Logger.SmartDashboard.putNumber("ArmVoltage", m_arm.getMotorVoltage().getValueAsDouble());
-    Logger.SmartDashboard.putNumber("ArmPosition", getArmPosition());
-    Logger.SmartDashboard.putNumber("ArmCurrent", m_arm.getSupplyCurrent().getValueAsDouble());
-    Logger.SmartDashboard.putString("ArmAction", getActionName());
+    WCLogger.putNumber(this, "Voltage", m_arm.getMotorVoltage().getValueAsDouble());
+    WCLogger.putNumber(this, "Position", getArmPosition());
+    WCLogger.putNumber(this, "Current", m_arm.getSupplyCurrent().getValueAsDouble());
+    WCLogger.putAction(this, "Action", subsystemAction);
   }
 
   private boolean withinUpperLimit() {

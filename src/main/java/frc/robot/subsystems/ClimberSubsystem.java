@@ -7,7 +7,7 @@ import edu.wpi.first.math.Pair;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
-import frc.robot.Logger;
+import frc.robot.WCLogger;
 import frc.robot.base.RobotSystem;
 import frc.robot.base.subsystems.WCDualSubsystem;
 
@@ -49,19 +49,19 @@ public class ClimberSubsystem extends WCDualSubsystem {
 
   @Override
   protected void putDebugDataPeriodic(boolean isRealRobot) {
-    Logger.SmartDashboard.putNumber("ClimberLeftVoltage", m_leftMotor.getAppliedOutput());
-    Logger.SmartDashboard.putNumber("ClimberLeftPosition", getLeftPosition());
-    Logger.SmartDashboard.putNumber("ClimberLeftCurrent", m_leftMotor.getOutputCurrent());
+    WCLogger.putNumber(this, "Left/Voltage", m_leftMotor.getAppliedOutput());
+    WCLogger.putNumber(this,"Left/Position", getLeftPosition());
+    WCLogger.putNumber(this,"Left/Current", m_leftMotor.getOutputCurrent());
 
-    Logger.SmartDashboard.putNumber("ClimberRightVoltage", m_rightMotor.getAppliedOutput());
-    Logger.SmartDashboard.putNumber("ClimberRightPosition", getRightPosition());
-    Logger.SmartDashboard.putNumber("ClimberRightCurrent", m_rightMotor.getOutputCurrent());
+    WCLogger.putNumber(this,"Right/Voltage", m_rightMotor.getAppliedOutput());
+    WCLogger.putNumber(this,"Right/Position", getRightPosition());
+    WCLogger.putNumber(this,"Right/Current", m_rightMotor.getOutputCurrent());
   }
 
   public void setLeftClimberSpeed(double leftPosition) {
     double leftEncoderValue = Math.abs(getLeftPosition());
-    Logger.SmartDashboard.putNumber("ClimberLeftStickPosition", leftPosition);
-    boolean armLimited = SmartDashboard.getBoolean("ARMLIMITTOGGLE", true);
+    WCLogger.putNumber(this, "Left/StickPosition", leftPosition);
+    boolean armLimited = SmartDashboard.getBoolean("ClimberSubsystem/isLimitsEnabled", true);
     if (!armLimited) {
       speed1 = -leftPosition;
     } else if (leftPosition > 0 && leftEncoderValue <= Constants.kLeftClimberMax) {
@@ -79,8 +79,8 @@ public class ClimberSubsystem extends WCDualSubsystem {
 
   public void rightStickPosition(double rightPosition) {
     double rightEncoderValue = Math.abs(getRightPosition());
-    Logger.SmartDashboard.putNumber("ClimberRightStickPosition", rightPosition);
-    boolean armLimited = SmartDashboard.getBoolean("ARMLIMITTOGGLE", true);
+    WCLogger.putNumber(this, "RightStickPosition", rightPosition);
+    boolean armLimited = SmartDashboard.getBoolean("ClimberSubsystem/isLimitsEnabled", true);
     if (!armLimited) {
       speed2 = -rightPosition;
     } else if (rightPosition > 0 && rightEncoderValue <= Constants.kRightClimberMax) {

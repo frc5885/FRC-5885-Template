@@ -15,12 +15,15 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.WCLogger;
 import frc.robot.base.modules.swerve.SwerveConstants;
 import frc.robot.base.subsystems.PoseEstimator.PhotonVisionSystem;
 import frc.robot.base.subsystems.PoseEstimator.SwervePoseEstimator;
 import frc.robot.base.subsystems.swerve.SwerveAction;
 import frc.robot.base.subsystems.swerve.SwerveDriveSubsystem;
 import java.util.function.Supplier;
+
+import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class SwerveJoystickCommand extends Command {
@@ -38,21 +41,21 @@ public class SwerveJoystickCommand extends Command {
   private PIDController m_aimBotPID;
   private PIDController m_facingPID;
 
-  private static final LoggedDashboardChooser<Double> m_linearSpeedLimitChooser =
-      new LoggedDashboardChooser<>("Linear Speed Limit");
-  private static final LoggedDashboardChooser<Double> m_angularSpeedLimitChooser =
-      new LoggedDashboardChooser<>("Angular Speed Limit");
-
-  static {
-    m_linearSpeedLimitChooser.addDefaultOption("100%", 1.0);
-    m_linearSpeedLimitChooser.addOption("75%", 0.75);
-    m_linearSpeedLimitChooser.addOption("50%", 0.5);
-    m_linearSpeedLimitChooser.addOption("25%", 0.25);
-    m_angularSpeedLimitChooser.addDefaultOption("100%", 1.0);
-    m_angularSpeedLimitChooser.addOption("75%", 0.75);
-    m_angularSpeedLimitChooser.addOption("50%", 0.5);
-    m_angularSpeedLimitChooser.addOption("25%", 0.25);
-  }
+//  private static final LoggedDashboardChooser<Double> m_linearSpeedLimitChooser =
+//      new LoggedDashboardChooser<>("Linear Speed Limit");
+//  private static final LoggedDashboardChooser<Double> m_angularSpeedLimitChooser =
+//      new LoggedDashboardChooser<>("Angular Speed Limit");
+//
+//  static {
+//    m_linearSpeedLimitChooser.addDefaultOption("100%", 1.0);
+//    m_linearSpeedLimitChooser.addOption("75%", 0.75);
+//    m_linearSpeedLimitChooser.addOption("50%", 0.5);
+//    m_linearSpeedLimitChooser.addOption("25%", 0.25);
+//    m_angularSpeedLimitChooser.addDefaultOption("100%", 1.0);
+//    m_angularSpeedLimitChooser.addOption("75%", 0.75);
+//    m_angularSpeedLimitChooser.addOption("50%", 0.5);
+//    m_angularSpeedLimitChooser.addOption("25%", 0.25);
+//  }
 
   /** Creates a new SwerveJoystickCmd. */
   public SwerveJoystickCommand(
@@ -86,7 +89,8 @@ public class SwerveJoystickCommand extends Command {
     m_facingPID = new PIDController(1.4, 0.0, 0.105);
     m_facingPID.enableContinuousInput(-Math.PI, Math.PI);
     m_facingPID.setTolerance(Units.degreesToRadians(1.5));
-    frc.robot.Logger.SmartDashboard.putData("FacingPID", m_facingPID);
+    WCLogger.putData(this, "FacingPID", m_facingPID);
+    WCLogger.putData(this, "AimbotPID", m_aimBotPID);
 
     addRequirements(m_swerveSubsystem);
   }
@@ -224,9 +228,11 @@ public class SwerveJoystickCommand extends Command {
     SwerveModuleState[] moduleStates =
         SwerveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
 
-    // Logger.recordOutput("SwerveJoystickCmd/expectedModuleStates", moduleStates);
-    // Logger.recordOutput("SwerveJoystickCmd/expectedVelocity", linearVelocity);
-    // Logger.recordOutput("SwerveJoystickCmd/expectedAngularVelocity", angularVelocity);
+    if (WCLogger.isEnabled) {
+      Logger.recordOutput(this.getClass().getSimpleName() + "/ExpectedModuleStates", moduleStates);
+      Logger.recordOutput(this.getClass().getSimpleName() + "/ExpectedVelocity", linearVelocity);
+      Logger.recordOutput(this.getClass().getSimpleName() + "/ExpectedAngularVelocity", angularVelocity);
+    }
     m_swerveSubsystem.setModuleStates(moduleStates);
   }
 

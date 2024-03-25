@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.base.WCRobot;
 import frc.robot.base.io.Beambreak;
@@ -21,10 +22,13 @@ public class Robot extends WCRobot {
 
   LEDSubsystem m_ledSubsystem;
 
+  public Robot() {
+    SmartDashboard.putBoolean("ClimberSubsystem/isLimitsEnabled", true);
+  }
+
   @Override
   protected void initComponents() {
     m_beambreak = new Beambreak();
-    Logger.SmartDashboard.putNumber("SHOOTPOINT", Constants.kWristAmp);
   }
 
   @Override

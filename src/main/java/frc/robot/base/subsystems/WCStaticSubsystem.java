@@ -2,7 +2,7 @@ package frc.robot.base.subsystems;
 
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Logger;
+import frc.robot.WCLogger;
 import frc.robot.base.RobotSystem;
 import java.util.List;
 
@@ -28,7 +28,7 @@ public abstract class WCStaticSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     super.periodic();
-    if (Logger.isDebugMode) {
+    if (WCLogger.isEnabled) {
       putDebugDataPeriodic(RobotSystem.isReal());
     }
   }
@@ -51,9 +51,5 @@ public abstract class WCStaticSubsystem extends SubsystemBase {
     for (MotorController motor : motors) {
       motor.setVoltage(0);
     }
-  }
-
-  protected String getActionName() {
-    return (subsystemAction != null) ? subsystemAction.toString() : "null";
   }
 }

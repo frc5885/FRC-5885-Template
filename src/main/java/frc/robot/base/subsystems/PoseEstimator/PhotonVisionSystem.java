@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.AprilTagCameraConstants;
-import frc.robot.Logger;
+import frc.robot.WCLogger;
 import java.util.Optional;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
@@ -175,10 +175,12 @@ public class PhotonVisionSystem extends SubsystemBase {
     double robotX = robotPose.getTranslation().getX();
     double robotY = robotPose.getTranslation().getY();
     double angleToTarget = Math.atan2(targetY - robotY, targetX - robotX);
-    // Logger.SmartDashboard.putNumber("AngleToTarget", angleToTarget);
     double offset = Units.degreesToRadians(0);
-    return angleToTarget + offset;
-    // return m_angleFilter.calculate(angleToTarget + offset);
+    double calculated = angleToTarget + offset;
+    WCLogger.putNumber(this, "Angle/Raw", angleToTarget);
+    WCLogger.putNumber(this, "Angle/Offset", offset);
+    WCLogger.putNumber(this, "Angle/Calculated", calculated);
+    return calculated;
   }
 
   public double getDistanceToTarget(Pose2d robotPose, int targetID) {
@@ -187,11 +189,12 @@ public class PhotonVisionSystem extends SubsystemBase {
     double targetY = aprilTagLocation.getTranslation().getY();
     double robotX = robotPose.getTranslation().getX();
     double robotY = robotPose.getTranslation().getY();
-    double distanceToTarget =
+    double distanceRaw =
         Math.sqrt(Math.pow(targetX - robotX, 2) + Math.pow(targetY - robotY, 2));
-    Logger.SmartDashboard.putNumber("DistanceToTarget", distanceToTarget);
-    // return distanceToTarget;
-    return m_distanceFilter.calculate(distanceToTarget);
+    double distanceCalculated = m_distanceFilter.calculate(distanceRaw);
+    WCLogger.putNumber(this, "Distance/Raw", distanceRaw);
+    WCLogger.putNumber(this, "Distance/Calculated", distanceRaw);
+    return distanceCalculated;
   }
 
   public void setRobotToCameraTransform(Transform3d transform) {

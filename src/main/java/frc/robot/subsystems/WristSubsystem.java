@@ -7,7 +7,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
-import frc.robot.Logger;
+import frc.robot.WCLogger;
 import frc.robot.base.RobotSystem;
 import frc.robot.base.subsystems.SubsystemAction;
 import frc.robot.base.subsystems.WCStaticSubsystem;
@@ -32,7 +32,7 @@ public class WristSubsystem extends WCStaticSubsystem {
     m_wrist = new CANSparkMax(Constants.kWrist, MotorType.kBrushless);
     m_absoluteEncoder = m_wrist.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
     m_PidController = new PIDController(35, 10, 0.5);
-    Logger.SmartDashboard.putData("WristPID", m_PidController);
+    WCLogger.putData(this, "PID", m_PidController);
     return List.of(m_wrist);
   }
 
@@ -51,16 +51,15 @@ public class WristSubsystem extends WCStaticSubsystem {
       stopMotors();
     }
     positionSim += m_wrist.getAppliedOutput() * 0.005;
-    SmartDashboard.putNumber("WristPosition", getWristPosition());
   }
 
   @Override
   protected void putDebugDataPeriodic(boolean isRealRobot) {
-    Logger.SmartDashboard.putNumber("WristVoltage", m_wrist.getAppliedOutput());
-    Logger.SmartDashboard.putNumber("WristPosition", getWristPosition());
-    Logger.SmartDashboard.putNumber("WristCurrent", m_wrist.getOutputCurrent());
-    Logger.SmartDashboard.putString("WristAction", getActionName());
-    Logger.SmartDashboard.putNumber("WristSetPoint", m_setPoint);
+    WCLogger.putNumber(this, "Voltage", m_wrist.getAppliedOutput());
+    WCLogger.putNumber(this, "Position", getWristPosition());
+    WCLogger.putNumber(this, "Current", m_wrist.getOutputCurrent());
+    WCLogger.putAction(this, "Action", subsystemAction);
+    WCLogger.putNumber(this, "SetPoint", m_setPoint);
   }
 
   public void pos(double setpoint) {
@@ -74,11 +73,5 @@ public class WristSubsystem extends WCStaticSubsystem {
 
   public boolean isStowed() {
     return getWristPosition() >= Constants.kWristStow - 0.003;
-  }
-
-  @Override
-  public void stop() {
-    super.stop();
-    double d = 0;
   }
 }
