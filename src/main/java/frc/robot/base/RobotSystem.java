@@ -110,16 +110,16 @@ public class RobotSystem extends LoggedRobot {
 
   @Override
   public void autonomousPeriodic() {
-    m_robotContainer.m_shooterSubsystem.spinFastClose();
-    if (m_robotContainer.m_beambreak.isOpen()) {
-      m_robotContainer.m_intakeSubsystem.intake();
-      m_robotContainer.m_feederSubsystem.intake();
-    } else {
-      m_robotContainer.m_intakeSubsystem.stop();
-      if (m_robotContainer.m_wristSubsystem.isStowed()) {
-        m_robotContainer.m_feederSubsystem.stop();
-      }
-    }
+    // m_robotContainer.m_shooterSubsystem.spinFastClose();
+    // if (m_robotContainer.m_beambreak.isOpen()) {
+    //   m_robotContainer.m_intakeSubsystem.intake();
+    //   m_robotContainer.m_feederSubsystem.intake();
+    // } else {
+    //   m_robotContainer.m_intakeSubsystem.stop();
+    //   if (m_robotContainer.m_wristSubsystem.isStowed()) {
+    //     m_robotContainer.m_feederSubsystem.stop();
+    //   }
+    // }
   }
 
   @Override
@@ -144,8 +144,8 @@ public class RobotSystem extends LoggedRobot {
     m_robotContainer.m_intakeSubsystem.stop();
     m_robotContainer.m_shooterSubsystem.stop();
     m_robotContainer.setSwerveAction(SwerveAction.DEFAULT);
-    new StowWristCommand(m_robotContainer.m_armSubsystem, m_robotContainer.m_wristSubsystem)
-        .schedule();
+    // new StowWristCommand(m_robotContainer.m_armSubsystem, m_robotContainer.m_wristSubsystem)
+    //     .schedule();
     m_robotContainer.setLEDsTeleop();
   }
 
