@@ -42,12 +42,18 @@ public final class Constants {
   public static final double kWristEject = 0.0;
 
   // Climber Deadzones
-  public static final double kOperatorRightDeadzone = 0.02;
-  public static final double kOperatorLeftDeadzone = 0.02;
+  public static final double kOperatorRightDeadzone = 0.08;
+  public static final double kOperatorLeftDeadzone = 0.08;
   public static final double kRightClimberMin = 0.0;
   public static final double kRightClimberMax = 200;
   public static final double kLeftClimberMin = 0.0;
   public static final double kLeftClimberMax = 180;
+
+
+  // Driver Deadzones
+  public static final double kDriverRightDeadzone = 0.06;
+  public static final double kDriverLeftDeadzone = 0.06;
+
 
   // LED
   public static final int kLED = 9;

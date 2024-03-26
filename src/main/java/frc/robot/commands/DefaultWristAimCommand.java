@@ -14,14 +14,11 @@ import frc.robot.base.io.Beambreak;
 import frc.robot.base.io.DriverController;
 import frc.robot.base.subsystems.PoseEstimator.PhotonVisionSystem;
 import frc.robot.base.subsystems.PoseEstimator.SwervePoseEstimator;
-import frc.robot.base.subsystems.swerve.SwerveAction;
 import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.WristSubsystem;
 
-public class AimShooterCommand extends Command {
+public class DefaultWristAimCommand extends Command {
 
-  ShooterSubsystem m_shooterSubsystem;
   DriverController m_driverController;
   WristSubsystem m_wristSubsystem;
   ArmSubsystem m_armSubsystem;
@@ -31,24 +28,20 @@ public class AimShooterCommand extends Command {
   Beambreak m_beambreak;
 
   /** Creates a new SpinShooterCMD. */
-  public AimShooterCommand(
+  public DefaultWristAimCommand(
       DriverController driverController,
-      ShooterSubsystem shooterSubsystem,
       Robot robot,
       WristSubsystem wristSubsystem,
-      ArmSubsystem armSubsystem,
       PhotonVisionSystem photonVision,
       SwervePoseEstimator swervePoseEstimator,
       Beambreak beambreak) {
-    m_shooterSubsystem = shooterSubsystem;
     m_driverController = driverController;
     m_robot = robot;
     m_photonVision = photonVision;
     m_swervePoseEstimator = swervePoseEstimator;
     m_wristSubsystem = wristSubsystem;
     m_beambreak = beambreak;
-    m_armSubsystem = armSubsystem;
-    addRequirements(m_shooterSubsystem);
+    addRequirements(m_wristSubsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -59,29 +52,17 @@ public class AimShooterCommand extends Command {
   @Override
   public void execute() {
     if (m_beambreak.isBroken() && m_armSubsystem.isArmDown()) {
-      // m_robot.setSwerveAction(SwerveAction.AIMBOTTING);
       double distanceToTarget =
           m_photonVision.getDistanceToTarget(
               m_swervePoseEstimator.getPose(), m_photonVision.getTargetID());
       double wristAngle = WristAngleUtil.getAngle(distanceToTarget);
       // double wristAngle = SmartDashboard.getNumber("SHOOTPOINT", Constants.kWristAmp);
-      // if (distanceToTarget >= 3.1) {
-      //   m_shooterSubsystem.spinFastFar();
-      // } else {
-      //   m_shooterSubsystem.spinFastClose();
-      // }
-
-      if (distanceToTarget >= 5.0) {
-        m_wristSubsystem.pos(Constants.kWristPass);
-      } else if (wristAngle >= Constants.kWristEncoderMin && wristAngle <= Constants.kWristStow) {
+      if (distanceToTarget < 3.1) {
         m_wristSubsystem.pos(wristAngle);
+      } else if (!m_wristSubsystem.isStowed()){
+        m_wristSubsystem.pos(Constants.kWristStow);
       } else {
-        m_wristSubsystem.pos(Constants.kWristPass);
-      }
-      if (m_shooterSubsystem.isVelocityTerminal()) {
-        m_driverController.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 1.0);
-      } else {
-        m_driverController.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0.0);
+        m_wristSubsystem.stop();
       }
     }
   }
@@ -89,15 +70,7 @@ public class AimShooterCommand extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_robot.setSwerveAction(SwerveAction.DEFAULT);
-    m_driverController.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0);
-    if (m_armSubsystem.isArmDown()) {
-      m_shooterSubsystem.stop();
-      m_wristSubsystem.stop();
-      if (interrupted) {
-        new StowWristCommand(m_armSubsystem, m_wristSubsystem).schedule();
-      }
-    }
+
   }
 
   // Returns true when the command should end.

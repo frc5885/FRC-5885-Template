@@ -140,6 +140,7 @@ public final class SwerveConstants {
 
     /////////////
     // Wheel Size
+    // TODO need to remeasure
     public static final double kWheelDiameterMeters = Units.inchesToMeters(4);
 
     //////////////

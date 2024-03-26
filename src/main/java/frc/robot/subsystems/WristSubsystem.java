@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.WCLogger;
 import frc.robot.base.RobotSystem;
+import frc.robot.base.io.Beambreak;
 import frc.robot.base.subsystems.SubsystemAction;
 import frc.robot.base.subsystems.WCStaticSubsystem;
 import java.util.List;
