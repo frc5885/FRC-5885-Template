@@ -25,7 +25,7 @@ public class ShooterSubsystem extends WCStaticSubsystem {
   double topVelocitySim = 0.0;
   double bottomVelocitySim = 0.0;
 
-  double idleVelocity = -50;
+  double idleVelocity = -2800;
   double shootCloseVelocity = -2800;
   double shootFarVelocity = -3700;
   public RobotMode robotMode = RobotMode.AUTO;
@@ -113,7 +113,7 @@ public class ShooterSubsystem extends WCStaticSubsystem {
               0);
       double setVoltage2 =
           MathUtil.clamp(
-              m_bottomPIDController.calculate(getBottomVelocity(), shootCloseVelocity)
+              m_bottomPIDController.calculate(getBottomVelocity(), idleVelocity)
                   + m_bottomFeedforward.calculate(idleVelocity),
               -12,
               0);
