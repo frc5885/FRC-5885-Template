@@ -59,17 +59,17 @@ public class AimShooterCommand extends Command {
   @Override
   public void execute() {
     if (m_beambreak.isBroken() && m_armSubsystem.isArmDown()) {
-      m_robot.setSwerveAction(SwerveAction.AIMBOTTING);
+      // m_robot.setSwerveAction(SwerveAction.AIMBOTTING);
       double distanceToTarget =
           m_photonVision.getDistanceToTarget(
               m_swervePoseEstimator.getPose(), m_photonVision.getTargetID());
       double wristAngle = WristAngleUtil.getAngle(distanceToTarget);
       // double wristAngle = SmartDashboard.getNumber("SHOOTPOINT", Constants.kWristAmp);
-      if (distanceToTarget >= 3.1) {
-        m_shooterSubsystem.spinFastFar();
-      } else {
-        m_shooterSubsystem.spinFastClose();
-      }
+      // if (distanceToTarget >= 3.1) {
+      //   m_shooterSubsystem.spinFastFar();
+      // } else {
+      //   m_shooterSubsystem.spinFastClose();
+      // }
 
       if (distanceToTarget >= 5.0) {
         m_WristSubsystem.pos(Constants.kWristPass);
