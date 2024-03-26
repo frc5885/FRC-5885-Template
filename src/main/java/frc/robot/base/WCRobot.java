@@ -39,8 +39,6 @@ public abstract class WCRobot {
 
   private final SendableChooser<Command> m_chooser = new SendableChooser<>();
 
-  // protected boolean m_isAimbotting = false;
-
   public WCRobot() {
     m_swerveDrive = new SwerveDriveSubsystem();
     m_photonVision = new PhotonVisionSystem();
@@ -51,8 +49,9 @@ public abstract class WCRobot {
         new DriverController(
             new InstantCommand(
                 () -> {
-                  // m_swerveDrive.resetGyro();
-                  // m_swervePoseEstimator.reset();
+                  // TODO needs to be commented out during match! 
+                  m_swerveDrive.resetGyro();
+                  m_swervePoseEstimator.reset();
                 }),
             new InstantCommand(
                 () -> {
@@ -71,8 +70,6 @@ public abstract class WCRobot {
     // registered in initAutoCommands())
     m_simplePathPlanner.setRotationTargetOverrideFunction(this::getOverrideAutoTargetRotation);
     m_simplePathPlanner.buildAutoChooser();
-
-    // SmartDashboard.putBoolean("Aimbotting", m_isAimbotting);
   }
 
   private void initSwerveBindings() {
@@ -81,27 +78,16 @@ public abstract class WCRobot {
             m_swerveDrive,
             m_swervePoseEstimator,
             m_photonVision,
-            m_driverController::getLeftY,
+            () -> -m_driverController.getLeftY(),
             () -> -m_driverController.getLeftX(),
             () -> -getDriverRotationAxis(),
             () -> m_isFieldOriented,
-            // () -> isAimBotting(),
             this::getSwerveAction));
   }
-
-  // so that aimBotting can be set and accessed by other stuff in Robot.java
-  // protected Boolean isAimBotting() {
-  // return m_isAimbotting;
-  // }
 
   public SwerveAction getSwerveAction() {
     return m_swerveAction;
   }
-
-  // public void setAimBotting(Boolean value) {
-  // m_isAimbotting = value;
-  // SmartDashboard.putBoolean("Aimbotting", m_isAimbotting);
-  // }
 
   public void setSwerveAction(SwerveAction desiredAction) {
     m_swerveAction = desiredAction;
@@ -120,8 +106,9 @@ public abstract class WCRobot {
         || (m_swerveAction == SwerveAction.FACEBACKWARD
             && MathUtil.isNear(alliance == Alliance.Blue ? 180 : 0, robotHeadingDeg, 2.5))
         || (m_swerveAction == SwerveAction.FACEAMP
-            && MathUtil.isNear(alliance == Alliance.Blue ? 90 : 90, robotHeadingDeg, 2.5))) {
-      // setAimBotting(false);
+            && MathUtil.isNear(alliance == Alliance.Blue ? 90 : 90, robotHeadingDeg, 2.5))
+        || (m_swerveAction == SwerveAction.FACESOURCE
+            && MathUtil.isNear(alliance == Alliance.Blue ? 120 : 60, robotHeadingDeg, 2.5))) {
       setSwerveAction(SwerveAction.DEFAULT);
     }
     return m_driverController.getRightX();

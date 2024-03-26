@@ -88,7 +88,7 @@ public class Robot extends WCRobot {
         .onFalse(new ArmDownCommand(m_armSubsystem, m_wristSubsystem));
 
     // Spin & Aim Shooter
-    m_driverController.scheduleOnLeftTrigger(
+    m_driverController.scheduleOnLeftTriggerTrue(
         new ShootCommand(
             this,
             m_driverController,
@@ -97,6 +97,16 @@ public class Robot extends WCRobot {
             m_armSubsystem,
             m_photonVision,
             m_swervePoseEstimator,
+            m_beambreak));
+
+    // Aim Wrist
+    m_driverController.scheduleOnLeftTriggerFalse(
+        new DefaultWristAimCommand(
+            m_driverController, 
+            this, 
+            m_wristSubsystem, 
+            m_photonVision, 
+            m_swervePoseEstimator, 
             m_beambreak));
 
     // Shoot
@@ -108,6 +118,11 @@ public class Robot extends WCRobot {
     m_driverController
         .getStartButton()
         .whileTrue(new SetSwerveActionCommand(this, SwerveAction.FACEAMP));
+
+    // snap to source
+    m_driverController
+        .getBButton()
+        .whileTrue(new SetSwerveActionCommand(this, SwerveAction.FACESOURCE));
 
     // Face forward
     m_driverController

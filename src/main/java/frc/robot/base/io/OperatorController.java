@@ -9,19 +9,23 @@ public class OperatorController extends WCXboxController {
     super(ControllerConstants.kOperatorControllerPort);
   }
 
-  public double getLeftXWithDeadband() {
+  @Override
+  public double getLeftY() {
+    return -MathUtil.applyDeadband(super.getLeftY(), Constants.kOperatorLeftDeadzone);
+  }
+
+  @Override
+  public double getLeftX() {
     return MathUtil.applyDeadband(super.getLeftX(), Constants.kOperatorLeftDeadzone);
   }
 
-  public double getLeftYWithDeadband() {
-    return MathUtil.applyDeadband(super.getLeftY(), Constants.kOperatorLeftDeadzone);
-  }
-
-  public double getRightXWithDeadband() {
+  @Override
+  public double getRightX() {
     return MathUtil.applyDeadband(super.getRightX(), Constants.kOperatorRightDeadzone);
   }
 
-  public double getRightYWithDeadband() {
-    return MathUtil.applyDeadband(super.getRightY(), Constants.kOperatorRightDeadzone);
+  @Override
+  public double getRightY() {
+    return -MathUtil.applyDeadband(super.getRightY(), Constants.kOperatorRightDeadzone);
   }
 }

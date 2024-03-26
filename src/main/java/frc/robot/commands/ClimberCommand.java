@@ -30,8 +30,8 @@ public class ClimberCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double leftPosition = m_operatorController.getLeftYWithDeadband();
-    double rightPosition = m_operatorController.getRightYWithDeadband();
+    double leftPosition = m_operatorController.getLeftY();
+    double rightPosition = m_operatorController.getRightY();
     m_climberSubsystem.rightStickPosition(rightPosition);
     m_climberSubsystem.setLeftClimberSpeed(leftPosition);
   }

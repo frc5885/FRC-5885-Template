@@ -5,5 +5,6 @@ public enum SwerveAction {
   AIMBOTTING,
   FACEFORWARD,
   FACEBACKWARD,
-  FACEAMP
+  FACEAMP, 
+  FACESOURCE
 }

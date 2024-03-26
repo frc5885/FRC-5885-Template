@@ -9,11 +9,11 @@ public class Beambreak extends DigitalInput {
     super(Constants.kBeambreak);
   }
 
-  public Boolean isBroken() {
+  public boolean isBroken() {
     return get();
   }
 
-  public Boolean isOpen() {
+  public boolean isOpen() {
     return !get();
   }
 }

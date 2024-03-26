@@ -172,6 +172,15 @@ public class SwerveJoystickCommand extends Command {
           angularVelocity = 0;
         }
         break;
+      case FACESOURCE:
+      angularVelocity =
+          m_facingPID.calculate(
+              robotPose.getRotation().getRadians(),
+              alliance == Alliance.Blue ? Math.PI * 2 / 3 : Math.PI / 3);
+        if (m_facingPID.atSetpoint()) {
+          angularVelocity = 0;
+        }
+        break;
       default:
         angularVelocity =
             MathUtil.applyDeadband(rightJoystickX, SwerveConstants.kSwerveDriveDeadband);

@@ -10,26 +10,16 @@ import java.util.function.BooleanSupplier;
 
 public class WCXboxController extends CommandXboxController {
 
-  protected final JoystickButton xButton =
-      new JoystickButton(getHID(), XboxController.Button.kX.value);
-  protected final JoystickButton yButton =
-      new JoystickButton(getHID(), XboxController.Button.kY.value);
-  protected final JoystickButton aButton =
-      new JoystickButton(getHID(), XboxController.Button.kA.value);
-  protected final JoystickButton bButton =
-      new JoystickButton(getHID(), XboxController.Button.kB.value);
-  protected final JoystickButton leftBumper =
-      new JoystickButton(getHID(), XboxController.Button.kLeftBumper.value);
-  protected final JoystickButton rightBumper =
-      new JoystickButton(getHID(), XboxController.Button.kRightBumper.value);
-  protected final JoystickButton leftStick =
-      new JoystickButton(getHID(), XboxController.Button.kLeftStick.value);
-  protected final JoystickButton rightStick =
-      new JoystickButton(getHID(), XboxController.Button.kRightStick.value);
-  protected final JoystickButton backButton =
-      new JoystickButton(getHID(), XboxController.Button.kBack.value);
-  protected final JoystickButton startButton =
-      new JoystickButton(getHID(), XboxController.Button.kStart.value);
+  protected final JoystickButton xButton = new JoystickButton(getHID(), XboxController.Button.kX.value);
+  protected final JoystickButton yButton = new JoystickButton(getHID(), XboxController.Button.kY.value);
+  protected final JoystickButton aButton = new JoystickButton(getHID(), XboxController.Button.kA.value);
+  protected final JoystickButton bButton = new JoystickButton(getHID(), XboxController.Button.kB.value);
+  protected final JoystickButton leftBumper = new JoystickButton(getHID(), XboxController.Button.kLeftBumper.value);
+  protected final JoystickButton rightBumper = new JoystickButton(getHID(), XboxController.Button.kRightBumper.value);
+  protected final JoystickButton leftStick = new JoystickButton(getHID(), XboxController.Button.kLeftStick.value);
+  protected final JoystickButton rightStick = new JoystickButton(getHID(), XboxController.Button.kRightStick.value);
+  protected final JoystickButton backButton = new JoystickButton(getHID(), XboxController.Button.kBack.value);
+  protected final JoystickButton startButton = new JoystickButton(getHID(), XboxController.Button.kStart.value);
 
   public WCXboxController(int port) {
     super(port);
@@ -93,12 +83,20 @@ public class WCXboxController extends CommandXboxController {
     scheduleOnInput(command, () -> getRightTriggerAxis() > minimumInput);
   }
 
-  public void scheduleOnLeftTrigger(Command command) {
-    scheduleOnLeftTrigger(command, 0.1);
+  public void scheduleOnLeftTriggerTrue(Command command) {
+    scheduleOnLeftTriggerTrue(command, 0.1);
   }
 
-  public void scheduleOnLeftTrigger(Command command, double minimumInput) {
+  public void scheduleOnLeftTriggerFalse(Command command) {
+    scheduleOnLeftTriggerFalse(command, 0.1);
+  }
+
+  public void scheduleOnLeftTriggerTrue(Command command, double minimumInput) {
     scheduleOnInput(command, () -> getLeftTriggerAxis() > minimumInput);
+  }
+
+  public void scheduleOnLeftTriggerFalse(Command command, double minimumInput) {
+    scheduleOnInput(command, () -> getLeftTriggerAxis() <= minimumInput);
   }
 
   private void scheduleOnInput(Command command, BooleanSupplier condition) {

@@ -1,7 +1,9 @@
 package frc.robot.base.io;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.Constants;
 
 public class DriverController extends WCXboxController {
 
@@ -19,5 +21,15 @@ public class DriverController extends WCXboxController {
   @Override
   public JoystickButton getRightStick() {
     throw new RuntimeException("Right stick is reserved for changing swerve field orientation!");
+  }
+
+  @Override
+  public double getLeftY() {
+    return -super.getLeftY();
+  }
+
+  @Override
+  public double getRightY() {
+      return -super.getRightY();
   }
 }
