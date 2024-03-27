@@ -39,7 +39,7 @@ public class IntakeAutoAimCommand extends ParallelCommandGroup {
     m_wristSubsystem = wristSubsystem;
     m_armSubsystem = armSubsystem;
 
-    m_robot.setFieldOriented(true);
+    m_robot.setFieldOriented(false);
 
     addCommands(new SetSwerveActionCommand(m_robot, SwerveAction.AIMNOTE),
                 new IntakeCommand(m_beambreak, m_intakeSubsystem, m_feederSubsystem, m_wristSubsystem, m_armSubsystem)
