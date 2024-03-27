@@ -10,6 +10,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.AprilTagCameraConstants;
 import frc.robot.WCLogger;
@@ -18,6 +19,7 @@ import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+import org.photonvision.targeting.PhotonPipelineResult;
 
 // this object is created in the WCRobot class
 public class PhotonVisionSystem extends SubsystemBase {
@@ -52,16 +54,16 @@ public class PhotonVisionSystem extends SubsystemBase {
       System.out.println("Photon camera not found: " + e.getMessage());
       return; // Exit the constructor if the camera isn't found
     }
-    m_robotToCamIntake =
-        new Transform3d(
-            new Translation3d(
-                AprilTagCameraConstants.Intake.kCameraPositionX,
-                AprilTagCameraConstants.Intake.kCameraPositonY,
-                AprilTagCameraConstants.Intake.kCameraPositionZ),
-            new Rotation3d(
-                AprilTagCameraConstants.Intake.kCameraRoll,
-                AprilTagCameraConstants.Intake.kCameraPitch,
-                AprilTagCameraConstants.Intake.kCameraYaw));
+    // m_robotToCamIntake =
+    //     new Transform3d(
+    //         new Translation3d(
+    //             AprilTagCameraConstants.Intake.kCameraPositionX,
+    //             AprilTagCameraConstants.Intake.kCameraPositonY,
+    //             AprilTagCameraConstants.Intake.kCameraPositionZ),
+    //         new Rotation3d(
+    //             AprilTagCameraConstants.Intake.kCameraRoll,
+    //             AprilTagCameraConstants.Intake.kCameraPitch,
+    //             AprilTagCameraConstants.Intake.kCameraYaw));
     m_robotToCamShooter =
         new Transform3d(
             new Translation3d(
@@ -199,5 +201,14 @@ public class PhotonVisionSystem extends SubsystemBase {
 
   public void setRobotToCameraTransform(Transform3d transform) {
     m_photonPoseEstimatorShooter.setRobotToCameraTransform(transform);
+  }
+
+  public double getAngleToNote(){
+    PhotonPipelineResult result = m_photonCameraIntake.getLatestResult();
+    if (result.hasTargets()) {
+      WCLogger.putNumber(this, "AngleToNote", result.getBestTarget().getYaw());
+      return result.getBestTarget().getYaw();
+    }
+    return 0.0;
   }
 }

@@ -101,12 +101,18 @@ public class Robot extends WCRobot {
         // Aim Wrist
         m_driverController.scheduleOnLeftTriggerFalse(
                 new DefaultWristAimCommand(
-                        m_driverController,
-                        this,
-                        m_wristSubsystem,
-                        m_photonVision,
-                        m_swervePoseEstimator,
+                        m_driverController, 
+                        this, 
+                        m_armSubsystem, 
+                        m_wristSubsystem, 
+                        m_photonVision, 
+                        m_swervePoseEstimator, 
                         m_beambreak));
+
+        // Aim Note
+        m_driverController
+                .getLeftBumper()
+                .whileTrue(new SetSwerveActionCommand(this, SwerveAction.AIMNOTE));
 
         // Shoot
         m_driverController.scheduleOnRightTrigger(

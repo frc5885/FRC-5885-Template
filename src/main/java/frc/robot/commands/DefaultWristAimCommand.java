@@ -31,6 +31,7 @@ public class DefaultWristAimCommand extends Command {
   public DefaultWristAimCommand(
       DriverController driverController,
       Robot robot,
+      ArmSubsystem armSubsystem, 
       WristSubsystem wristSubsystem,
       PhotonVisionSystem photonVision,
       SwervePoseEstimator swervePoseEstimator,
@@ -39,6 +40,7 @@ public class DefaultWristAimCommand extends Command {
     m_robot = robot;
     m_photonVision = photonVision;
     m_swervePoseEstimator = swervePoseEstimator;
+    m_armSubsystem = armSubsystem;
     m_wristSubsystem = wristSubsystem;
     m_beambreak = beambreak;
     addRequirements(m_wristSubsystem);

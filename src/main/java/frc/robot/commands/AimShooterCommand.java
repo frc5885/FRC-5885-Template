@@ -72,7 +72,7 @@ public class AimShooterCommand extends Command {
       // }
 
       if (distanceToTarget >= 5.0) {
-        m_wristSubsystem.pos(Constants.kWristPass);
+        m_wristSubsystem.pos(0.33);
       } else if (wristAngle >= Constants.kWristEncoderMin && wristAngle <= Constants.kWristStow) {
         m_wristSubsystem.pos(wristAngle);
       } else {
