@@ -97,10 +97,10 @@ public class Robot extends WCRobot {
                         m_photonVision,
                         m_swervePoseEstimator,
                         m_beambreak));
+                        //TODO: add if beambreak not broken, call IntakeAutoAimCommand
 
         // Aim Wrist
         m_driverController.scheduleOnLeftTriggerFalse(
-                m_beambreak.isBroken() ? 
                 new DefaultWristAimCommand(
                         m_driverController, 
                         this, 
@@ -108,10 +108,10 @@ public class Robot extends WCRobot {
                         m_wristSubsystem, 
                         m_photonVision, 
                         m_swervePoseEstimator, 
-                        m_beambreak) : 
-                new SetSwerveActionCommand(this, SwerveAction.AIMNOTE));
+                        m_beambreak));
+                        //TODO: add if beambreak is broken, call robot.setFieldOriented(false) (if beambreak is broken that means we probably just intook a note)
 
-        // Aim Note
+        // Aim Note (temporary)
         m_driverController
                 .getLeftBumper()
                 .whileTrue(new SetSwerveActionCommand(this, SwerveAction.AIMNOTE));

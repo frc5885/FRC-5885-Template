@@ -55,7 +55,7 @@ public abstract class WCRobot {
                 }),
             new InstantCommand(
                 () -> {
-                  m_isFieldOriented = !m_isFieldOriented;
+                  setFieldOriented(!m_isFieldOriented);
                 }));
 
     initComponents();
@@ -92,6 +92,10 @@ public abstract class WCRobot {
   public void setSwerveAction(SwerveAction desiredAction) {
     m_swerveAction = desiredAction;
     WCLogger.putString(this, "SwerveAction", m_swerveAction != null ? m_swerveAction.toString() : "null");
+  }
+
+  public void setFieldOriented(boolean isFieldOriented) {
+    m_isFieldOriented = isFieldOriented;
   }
 
   protected double getDriverRotationAxis() {
