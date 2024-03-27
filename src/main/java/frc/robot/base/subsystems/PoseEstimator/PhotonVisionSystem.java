@@ -34,8 +34,8 @@ public class PhotonVisionSystem extends SubsystemBase {
   private Transform3d m_robotToCamIntake;
   private Transform3d m_robotToCamShooter;
 
-  private PhotonPoseEstimator m_photonPoseEstimatorIntake;
   private PhotonPoseEstimator m_photonPoseEstimatorShooter;
+  private PhotonPoseEstimator m_photonPoseEstimatorIntake;
 
   private double m_shooterCamPoseUpdateTimestamp = 0;
   private double m_intakeCamPoseUpdateTimestamp = 0;
@@ -211,7 +211,8 @@ public class PhotonVisionSystem extends SubsystemBase {
       double pitch = target.getPitch();
       double yaw = target.getYaw();
       WCLogger.putNumber(this, "AngleToNote", yaw);
-      return yaw + 4.09*pitch + 9.61;
+      double angle = yaw + 4.09*pitch + 9.61;
+      return m_angleFilter.calculate(angle);
     }
     return 0.0;
   }
