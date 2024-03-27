@@ -79,7 +79,7 @@ public class SwervePoseEstimator extends SubsystemBase {
     // are present
     Optional<EstimatedRobotPose> estimatedGlobalPosition =
         m_photonVision.getEstimatedGlobalPoseShooter(estimatedPosition);
-    WCLogger.putBoolean(this, "IsEstimatedPositionPresent", estimatedGlobalPosition.isPresent());
+    // WCLogger.putBoolean(this, "IsEstimatedPositionPresent", estimatedGlobalPosition.isPresent());
     if (estimatedGlobalPosition.isPresent()) {
 
       // have to call .get() to get the value from the optional
@@ -94,10 +94,10 @@ public class SwervePoseEstimator extends SubsystemBase {
           estimatedVisionPose.timestampSeconds
       );
 
-      if (WCLogger.isEnabled) {
-        Logger.recordOutput(this.getClass().getSimpleName() + "/VisionEstimatedPose3D", pose3d);
-        Logger.recordOutput(this.getClass().getSimpleName() + "/VisionEstimatedPose", pose2d);
-      }
+      // if (WCLogger.isEnabled) {
+      //   Logger.recordOutput(this.getClass().getSimpleName() + "/VisionEstimatedPose3D", pose3d);
+      //   Logger.recordOutput(this.getClass().getSimpleName() + "/VisionEstimatedPose", pose2d);
+      // }
     }
     // }
   }

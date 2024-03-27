@@ -63,7 +63,7 @@ public class AutoConstants {
   public static final HolonomicPathFollowerConfig pathFollowerConfig =
       new HolonomicPathFollowerConfig(
           new PIDConstants(5.0, 0.0, 0.0), // Translation constants
-          new PIDConstants(0.7, 0.0, 0.0), // Rotation constants
+          new PIDConstants(1.3, 0.0, 0.0), // Rotation constants
           SwerveConstants.kMaxSpeedMetersPerSecond,
           Math.hypot(
               SwerveConstants.kTrackWidthMeters / 2,
