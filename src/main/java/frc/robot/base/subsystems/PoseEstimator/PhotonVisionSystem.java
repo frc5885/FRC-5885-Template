@@ -20,6 +20,7 @@ import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 // this object is created in the WCRobot class
 public class PhotonVisionSystem extends SubsystemBase {
@@ -206,8 +207,11 @@ public class PhotonVisionSystem extends SubsystemBase {
   public double getAngleToNote(){
     PhotonPipelineResult result = m_photonCameraIntake.getLatestResult();
     if (result.hasTargets()) {
-      WCLogger.putNumber(this, "AngleToNote", result.getBestTarget().getYaw());
-      return result.getBestTarget().getYaw();
+      PhotonTrackedTarget target = result.getBestTarget();
+      double pitch = target.getPitch();
+      double yaw = target.getYaw();
+      WCLogger.putNumber(this, "AngleToNote", yaw);
+      return yaw + 4.09*pitch + 9.61;
     }
     return 0.0;
   }

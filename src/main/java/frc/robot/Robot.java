@@ -100,6 +100,7 @@ public class Robot extends WCRobot {
 
         // Aim Wrist
         m_driverController.scheduleOnLeftTriggerFalse(
+                m_beambreak.isBroken() ? 
                 new DefaultWristAimCommand(
                         m_driverController, 
                         this, 
@@ -107,7 +108,8 @@ public class Robot extends WCRobot {
                         m_wristSubsystem, 
                         m_photonVision, 
                         m_swervePoseEstimator, 
-                        m_beambreak));
+                        m_beambreak) : 
+                new SetSwerveActionCommand(this, SwerveAction.AIMNOTE));
 
         // Aim Note
         m_driverController
