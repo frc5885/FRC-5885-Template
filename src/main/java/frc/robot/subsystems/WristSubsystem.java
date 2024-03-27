@@ -71,7 +71,6 @@ public class WristSubsystem extends WCStaticSubsystem {
     WCLogger.putAction(this, "Action", subsystemAction);
     WCLogger.putNumber(this, "SetPoint", m_setPoint);
     WCLogger.putData(this, "SimMech", m_mechanism2d);
-    SmartDashboard.putData(m_PidController);
   }
 
   public void pos(double setpoint) {
