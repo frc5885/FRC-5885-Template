@@ -87,7 +87,9 @@ public class RobotSystem extends LoggedRobot {
   }
 
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    m_robotContainer.setLEDsRainbow();
+  }
 
   @Override
   public void disabledPeriodic() {

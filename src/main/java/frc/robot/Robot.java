@@ -196,4 +196,8 @@ public class Robot extends WCRobot {
     public void setLEDsTeleop() {
         m_ledSubsystem.setTeleop();
     }
+
+    public void setLEDsRainbow() {
+        m_ledSubsystem.setRainbow();
+    }
 }

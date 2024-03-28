@@ -110,7 +110,8 @@ public class AutoAimShooterCommand extends Command {
       double buffer = 0.01;
       if (m_shooterSubsystem.isVelocityTerminal()
           && wristPos >= wristAngle - buffer
-          && wristPos <= wristAngle + buffer) {
+          && wristPos <= wristAngle + buffer
+          && m_aimBotPID.atSetpoint()) {
         if (dwellStart == 0) {
           dwellStart = System.currentTimeMillis();
         } else if (System.currentTimeMillis() - dwellStart >= 250) {
