@@ -79,15 +79,16 @@ public class Robot extends WCRobot {
         // Arm Up, snap to amp
         m_driverController
                 .getAButton()
-                .whileTrue(
+                .onTrue( //.whileTrue(
                         new ArmUpSnapCommand(
                                 m_armSubsystem,
                                 m_wristSubsystem,
                                 m_shooterSubsystem,
                                 m_feederSubsystem,
                                 m_beambreak,
-                                this))
-                .onFalse(new ArmDownCommand(m_armSubsystem, m_wristSubsystem));
+                                this));
+                //.onFalse(new ArmDownCommand(m_armSubsystem, m_wristSubsystem));
+                // (Evan wants press A to go up and shoot to make it go down (which it already does))
 
         // Spin & Aim Shooter
         m_driverController.scheduleOnLeftTriggerTrue(
