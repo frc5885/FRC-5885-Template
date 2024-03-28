@@ -61,6 +61,7 @@ public class DefaultWristAimCommand extends Command {
         m_wristSubsystem.pos(wristAngle);
       } else if (!m_wristSubsystem.isStowed()) {
         m_wristSubsystem.pos(Constants.kWristStow);
+        // m_wristSubsystem.pos(m_wristSubsystem.getWristPosition());
       } else {
         m_wristSubsystem.stop();
       }

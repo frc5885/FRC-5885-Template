@@ -192,6 +192,10 @@ public class Robot extends WCRobot {
             m_wristSubsystem,
             m_armSubsystem,
             m_beambreak));
+
+        // Wrist Test
+        // m_operatorController.getAButton().onTrue(new InstantCommand(() -> m_wristSubsystem.pos(0.39)));
+        // m_operatorController.getBButton().onTrue(new InstantCommand(() -> m_wristSubsystem.pos(0.34)));
     }
 
     public void setLEDsTeleop() {

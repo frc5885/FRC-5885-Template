@@ -29,6 +29,7 @@ public class StowWristCommand extends Command {
   public void execute() {
     if (m_armSubsystem.isArmDown()) {
       m_wristSubsystem.pos(Constants.kWristStow);
+      // m_wristSubsystem.pos(m_wristSubsystem.getWristPosition());
     }
   }
 
