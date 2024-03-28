@@ -50,12 +50,12 @@ public class ClimberSubsystem extends WCDualSubsystem {
   @Override
   protected void putDebugDataPeriodic(boolean isRealRobot) {
     WCLogger.putNumber(this, "Left/Voltage", m_leftMotor.getAppliedOutput());
-    WCLogger.putNumber(this,"Left/Position", getLeftPosition());
-    WCLogger.putNumber(this,"Left/Current", m_leftMotor.getOutputCurrent());
+    WCLogger.putNumber(this, "Left/Position", getLeftPosition());
+    WCLogger.putNumber(this, "Left/Current", m_leftMotor.getOutputCurrent());
 
-    WCLogger.putNumber(this,"Right/Voltage", m_rightMotor.getAppliedOutput());
-    WCLogger.putNumber(this,"Right/Position", getRightPosition());
-    WCLogger.putNumber(this,"Right/Current", m_rightMotor.getOutputCurrent());
+    WCLogger.putNumber(this, "Right/Voltage", m_rightMotor.getAppliedOutput());
+    WCLogger.putNumber(this, "Right/Position", getRightPosition());
+    WCLogger.putNumber(this, "Right/Current", m_rightMotor.getOutputCurrent());
   }
 
   public void setLeftClimberSpeed(double leftPosition) {

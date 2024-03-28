@@ -7,17 +7,13 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import frc.robot.Constants;
 import frc.robot.WCLogger;
 import frc.robot.base.RobotSystem;
-import frc.robot.base.io.Beambreak;
 import frc.robot.base.subsystems.SubsystemAction;
 import frc.robot.base.subsystems.WCStaticSubsystem;
 import java.util.List;
-
-import org.littletonrobotics.junction.Logger;
 
 public class WristSubsystem extends WCStaticSubsystem {
 

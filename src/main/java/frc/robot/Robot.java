@@ -2,6 +2,9 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.robot.base.WCRobot;
 import frc.robot.base.io.Beambreak;
 import frc.robot.base.io.DriverController;
@@ -100,21 +103,30 @@ public class Robot extends WCRobot {
                         //TODO: add if beambreak not broken, call IntakeAutoAimCommand
 
         // Aim Wrist
-        m_driverController.scheduleOnLeftTriggerFalse(
-                new DefaultWristAimCommand(
-                        m_driverController, 
-                        this, 
-                        m_armSubsystem, 
-                        m_wristSubsystem, 
-                        m_photonVision, 
-                        m_swervePoseEstimator, 
-                        m_beambreak)
-                );
+        // m_driverController.scheduleOnLeftTriggerFalse(
+        //         new DefaultWristAimCommand(
+        //                 m_driverController, 
+        //                 this, 
+        //                 m_armSubsystem, 
+        //                 m_wristSubsystem, 
+        //                 m_photonVision, 
+        //                 m_swervePoseEstimator, 
+        //                 m_beambreak)
+        //         );
 
-        // Aim Note (temporary)
+        // Aim Note
         m_driverController
                 .getLeftBumper()
-                .whileTrue(new SetSwerveActionCommand(this, SwerveAction.AIMNOTE));
+                .whileTrue(new IntakeAutoAimCommand(
+                                this, 
+                                m_beambreak, 
+                                m_intakeSubsystem, 
+                                m_feederSubsystem, 
+                                m_wristSubsystem, 
+                                m_armSubsystem))
+                .onFalse(new ParallelCommandGroup(
+                        new SetSwerveActionCommand(this, SwerveAction.DEFAULT), 
+                        new InstantCommand(() -> setFieldOriented(true))));
 
         // Shoot
         m_driverController.scheduleOnRightTrigger(

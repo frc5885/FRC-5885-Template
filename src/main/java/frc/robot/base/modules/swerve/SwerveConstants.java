@@ -58,7 +58,11 @@ public final class SwerveConstants {
     public static final double kAimbotP = 1.4;
     public static final double kAimbotI = 0.0;
     public static final double kAimbotD = 0.105;
+    public static final double kAutoAimbotP = 3.0;
+    public static final double kAutoAimbotI = 0.0;
+    public static final double kAutoAimbotD = 0.0;
     public static final double kAimbotTolerance = Units.degreesToRadians(1.5);
+    public static final double kAimNoteTolerance = Units.degreesToRadians(5);
   }
 
   ///////////////////

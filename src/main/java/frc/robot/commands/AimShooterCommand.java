@@ -7,7 +7,6 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
-import frc.robot.WCLogger;
 import frc.robot.Robot;
 import frc.robot.WristAngleUtil;
 import frc.robot.base.io.Beambreak;
@@ -72,7 +71,8 @@ public class AimShooterCommand extends Command {
       }
 
       if (distanceToTarget >= 5.0) {
-        m_wristSubsystem.pos(0.41 );
+        // Passing
+        m_wristSubsystem.pos(Constants.kWristPass);
       } else if (wristAngle >= Constants.kWristEncoderMin && wristAngle <= Constants.kWristStow) {
         m_wristSubsystem.pos(wristAngle);
       } else {

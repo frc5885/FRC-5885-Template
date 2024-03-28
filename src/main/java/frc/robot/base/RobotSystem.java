@@ -9,8 +9,8 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.AprilTagCameraConstants;
@@ -19,12 +19,11 @@ import frc.robot.WCLogger;
 import frc.robot.base.subsystems.swerve.SwerveAction;
 import frc.robot.commands.StowWristCommand;
 import frc.robot.subsystems.ShooterSubsystem.RobotMode;
+import java.io.File;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
-
-import java.io.File;
 
 public class RobotSystem extends LoggedRobot {
   private Command m_autonomousCommand;
@@ -92,7 +91,9 @@ public class RobotSystem extends LoggedRobot {
 
   @Override
   public void disabledPeriodic() {
-    SmartDashboard.putBoolean("AUTO SELECTED", !m_robotContainer.m_simplePathPlanner.getSelectedAuto().getName().equals("InstantCommand"));
+    SmartDashboard.putBoolean(
+        "AUTO SELECTED",
+        !m_robotContainer.m_simplePathPlanner.getSelectedAuto().getName().equals("InstantCommand"));
   }
 
   @Override
@@ -110,7 +111,15 @@ public class RobotSystem extends LoggedRobot {
 
   @Override
   public void autonomousPeriodic() {
-    m_robotContainer.m_shooterSubsystem.spinFastClose();
+    double distanceToTarget =
+        m_robotContainer.m_photonVision.getDistanceToTarget(
+            m_robotContainer.m_swervePoseEstimator.getPose(),
+            m_robotContainer.m_photonVision.getTargetID());
+    if (distanceToTarget >= 3.1) {
+      m_robotContainer.m_shooterSubsystem.spinFastFar();
+    } else {
+      m_robotContainer.m_shooterSubsystem.spinFastClose();
+    }
     if (m_robotContainer.m_beambreak.isOpen()) {
       m_robotContainer.m_intakeSubsystem.intake();
       m_robotContainer.m_feederSubsystem.intake();
@@ -150,9 +159,7 @@ public class RobotSystem extends LoggedRobot {
   }
 
   @Override
-  public void teleopPeriodic() {
-
-  }
+  public void teleopPeriodic() {}
 
   @Override
   public void teleopExit() {

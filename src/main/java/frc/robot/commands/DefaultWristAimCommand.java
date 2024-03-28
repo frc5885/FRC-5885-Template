@@ -4,10 +4,8 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
-import frc.robot.WCLogger;
 import frc.robot.Robot;
 import frc.robot.WristAngleUtil;
 import frc.robot.base.io.Beambreak;
@@ -31,7 +29,7 @@ public class DefaultWristAimCommand extends Command {
   public DefaultWristAimCommand(
       DriverController driverController,
       Robot robot,
-      ArmSubsystem armSubsystem, 
+      ArmSubsystem armSubsystem,
       WristSubsystem wristSubsystem,
       PhotonVisionSystem photonVision,
       SwervePoseEstimator swervePoseEstimator,
@@ -61,7 +59,7 @@ public class DefaultWristAimCommand extends Command {
       // double wristAngle = SmartDashboard.getNumber("SHOOTPOINT", Constants.kWristAmp);
       if (distanceToTarget < 3.1) {
         m_wristSubsystem.pos(wristAngle);
-      } else if (!m_wristSubsystem.isStowed()){
+      } else if (!m_wristSubsystem.isStowed()) {
         m_wristSubsystem.pos(Constants.kWristStow);
       } else {
         m_wristSubsystem.stop();
@@ -71,9 +69,7 @@ public class DefaultWristAimCommand extends Command {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override

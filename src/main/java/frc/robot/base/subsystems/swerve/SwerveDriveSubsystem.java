@@ -154,9 +154,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
       m_modules[i].updateInputs(m_modulesInput[i]);
       if (WCLogger.isEnabled) {
         Logger.processInputs(
-            this.getClass().getSimpleName() + "/Modules/Module" + i,
-            m_modulesInput[i]
-        );
+            this.getClass().getSimpleName() + "/Modules/Module" + i, m_modulesInput[i]);
       }
     }
 
@@ -170,9 +168,12 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     }
 
     if (WCLogger.isEnabled) {
-      Logger.recordOutput(this.getClass().getSimpleName() + "/CurrentModuleStates", getModuleStates());
-      Logger.recordOutput(this.getClass().getSimpleName() + "/HeadingDegrees", m_heading.getDegrees());
-      Logger.recordOutput(this.getClass().getSimpleName() + "/HeadingRadians", m_heading.getRadians());
+      Logger.recordOutput(
+          this.getClass().getSimpleName() + "/CurrentModuleStates", getModuleStates());
+      Logger.recordOutput(
+          this.getClass().getSimpleName() + "/HeadingDegrees", m_heading.getDegrees());
+      Logger.recordOutput(
+          this.getClass().getSimpleName() + "/HeadingRadians", m_heading.getRadians());
     }
   }
 

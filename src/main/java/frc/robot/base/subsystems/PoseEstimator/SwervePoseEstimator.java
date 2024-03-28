@@ -18,7 +18,6 @@ import frc.robot.base.modules.swerve.SwerveConstants;
 import frc.robot.base.subsystems.swerve.SwerveDriveSubsystem;
 import java.util.Optional;
 import java.util.function.Supplier;
-
 import org.littletonrobotics.junction.Logger;
 import org.photonvision.EstimatedRobotPose;
 
@@ -89,10 +88,7 @@ public class SwervePoseEstimator extends SubsystemBase {
       Pose2d pose2d = pose3d.toPose2d();
 
       // actually add the vision measurement
-      m_poseEstimator.addVisionMeasurement(
-          pose2d,
-          estimatedVisionPose.timestampSeconds
-      );
+      m_poseEstimator.addVisionMeasurement(pose2d, estimatedVisionPose.timestampSeconds);
 
       // if (WCLogger.isEnabled) {
       //   Logger.recordOutput(this.getClass().getSimpleName() + "/VisionEstimatedPose3D", pose3d);

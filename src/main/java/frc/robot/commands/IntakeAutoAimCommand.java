@@ -26,12 +26,13 @@ public class IntakeAutoAimCommand extends ParallelCommandGroup {
   ArmSubsystem m_armSubsystem;
 
   /** Creates a new IntakeAutoAimCommand. */
-  public IntakeAutoAimCommand(Robot robot,
-    Beambreak beambreak,
-    IntakeSubsystem intakeSubsystem,
-    FeederSubsystem feederSubsystem,
-    WristSubsystem wristSubsystem,
-    ArmSubsystem armSubsystem) {
+  public IntakeAutoAimCommand(
+      Robot robot,
+      Beambreak beambreak,
+      IntakeSubsystem intakeSubsystem,
+      FeederSubsystem feederSubsystem,
+      WristSubsystem wristSubsystem,
+      ArmSubsystem armSubsystem) {
     m_robot = robot;
     m_beambreak = beambreak;
     m_intakeSubsystem = intakeSubsystem;
@@ -41,8 +42,9 @@ public class IntakeAutoAimCommand extends ParallelCommandGroup {
 
     m_robot.setFieldOriented(false);
 
-    addCommands(new SetSwerveActionCommand(m_robot, SwerveAction.AIMNOTE),
-                new IntakeCommand(m_beambreak, m_intakeSubsystem, m_feederSubsystem, m_wristSubsystem, m_armSubsystem)
-              );
+    addCommands(
+        new SetSwerveActionCommand(m_robot, SwerveAction.AIMNOTE),
+        new IntakeCommand(
+            m_beambreak, m_intakeSubsystem, m_feederSubsystem, m_wristSubsystem, m_armSubsystem));
   }
 }

@@ -49,7 +49,7 @@ public abstract class WCRobot {
         new DriverController(
             new InstantCommand(
                 () -> {
-                  // TODO needs to be commented out during match! 
+                  // TODO needs to be commented out during match!
                   m_swerveDrive.resetGyro();
                   m_swervePoseEstimator.reset();
                 }),
@@ -91,7 +91,8 @@ public abstract class WCRobot {
 
   public void setSwerveAction(SwerveAction desiredAction) {
     m_swerveAction = desiredAction;
-    WCLogger.putString(this, "SwerveAction", m_swerveAction != null ? m_swerveAction.toString() : "null");
+    WCLogger.putString(
+        this, "SwerveAction", m_swerveAction != null ? m_swerveAction.toString() : "null");
   }
 
   public void setFieldOriented(boolean isFieldOriented) {

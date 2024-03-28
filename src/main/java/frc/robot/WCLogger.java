@@ -1,13 +1,11 @@
 package frc.robot;
 
-import edu.wpi.first.util.WPISerializable;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.base.subsystems.SubsystemAction;
-import org.littletonrobotics.junction.Logger;
 
 public class WCLogger {
-  public static final boolean isEnabled = true;
+  public static final boolean isEnabled = false;
 
   public static boolean putBoolean(Object object, String key, boolean value) {
     if (!isEnabled) {
@@ -41,7 +39,8 @@ public class WCLogger {
     if (!isEnabled) {
       return true;
     }
-    return SmartDashboard.putString(object.getClass().getSimpleName() + "/" + key, value == null ? "null" : value);
+    return SmartDashboard.putString(
+        object.getClass().getSimpleName() + "/" + key, value == null ? "null" : value);
   }
 
   public static String getString(String key, String defaultValue) {
@@ -55,7 +54,8 @@ public class WCLogger {
     if (!isEnabled) {
       return true;
     }
-    return SmartDashboard.putString(object.getClass().getSimpleName() + "/" + key, action == null ? "null" : action.toString());
+    return SmartDashboard.putString(
+        object.getClass().getSimpleName() + "/" + key, action == null ? "null" : action.toString());
   }
 
   public static void putData(Object object, String key, Sendable data) {

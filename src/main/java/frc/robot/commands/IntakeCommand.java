@@ -6,7 +6,6 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
-import frc.robot.WCLogger;
 import frc.robot.base.io.Beambreak;
 import frc.robot.base.subsystems.SubsystemAction;
 import frc.robot.subsystems.ArmSubsystem;

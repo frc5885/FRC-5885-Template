@@ -3,9 +3,9 @@ package frc.robot.base.subsystems.swerve;
 public enum SwerveAction {
   DEFAULT,
   AIMBOTTING,
-  AIMNOTE, 
+  AIMNOTE,
   FACEFORWARD,
   FACEBACKWARD,
-  FACEAMP, 
+  FACEAMP,
   FACESOURCE
 }

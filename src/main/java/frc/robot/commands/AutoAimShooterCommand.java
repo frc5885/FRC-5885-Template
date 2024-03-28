@@ -10,7 +10,6 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
-import frc.robot.WCLogger;
 import frc.robot.Robot;
 import frc.robot.WristAngleUtil;
 import frc.robot.base.RobotSystem;
@@ -18,6 +17,7 @@ import frc.robot.base.io.Beambreak;
 import frc.robot.base.modules.swerve.SwerveConstants;
 import frc.robot.base.subsystems.PoseEstimator.PhotonVisionSystem;
 import frc.robot.base.subsystems.PoseEstimator.SwervePoseEstimator;
+import frc.robot.base.subsystems.swerve.SwerveAction;
 import frc.robot.base.subsystems.swerve.SwerveDriveSubsystem;
 import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -56,9 +56,9 @@ public class AutoAimShooterCommand extends Command {
     m_SwerveDriveSubsystem = swerveDriveSubsystem;
     m_aimBotPID =
         new PIDController(
-            SwerveConstants.AimBotConstants.kAimbotP,
-            SwerveConstants.AimBotConstants.kAimbotI,
-            SwerveConstants.AimBotConstants.kAimbotD);
+            SwerveConstants.AimBotConstants.kAutoAimbotP,
+            SwerveConstants.AimBotConstants.kAutoAimbotI,
+            SwerveConstants.AimBotConstants.kAutoAimbotD);
     m_aimBotPID.enableContinuousInput(-Math.PI, Math.PI);
     m_aimBotPID.setTolerance(SwerveConstants.AimBotConstants.kAimbotTolerance);
     // addRequirements(m_SwerveDriveSubsystem);
@@ -71,8 +71,8 @@ public class AutoAimShooterCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // m_robot.setSwerveAction(SwerveAction.AIMBOTTING);
     if (m_beambreak.isBroken()) {
+      m_robot.setSwerveAction(SwerveAction.AIMBOTTING);
       hadNote = true;
 
       Pose2d robotPose = m_swervePoseEstimator.getPose();
@@ -125,7 +125,7 @@ public class AutoAimShooterCommand extends Command {
   public void end(boolean interrupted) {
     m_wristSubsystem.pos(Constants.kWristStow);
     m_feederSubsystem.stop();
-    // m_robot.setSwerveAction(SwerveAction.DEFAULT);
+    m_robot.setSwerveAction(SwerveAction.DEFAULT);
     // stop the robot
     ChassisSpeeds chassisSpeeds = new ChassisSpeeds(0, 0, 0);
     SwerveModuleState[] moduleStates =

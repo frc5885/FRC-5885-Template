@@ -22,9 +22,7 @@ import frc.robot.base.subsystems.PoseEstimator.SwervePoseEstimator;
 import frc.robot.base.subsystems.swerve.SwerveAction;
 import frc.robot.base.subsystems.swerve.SwerveDriveSubsystem;
 import java.util.function.Supplier;
-
 import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class SwerveJoystickCommand extends Command {
 
@@ -41,21 +39,21 @@ public class SwerveJoystickCommand extends Command {
   private PIDController m_aimBotPID;
   private PIDController m_facingPID;
 
-//  private static final LoggedDashboardChooser<Double> m_linearSpeedLimitChooser =
-//      new LoggedDashboardChooser<>("Linear Speed Limit");
-//  private static final LoggedDashboardChooser<Double> m_angularSpeedLimitChooser =
-//      new LoggedDashboardChooser<>("Angular Speed Limit");
-//
-//  static {
-//    m_linearSpeedLimitChooser.addDefaultOption("100%", 1.0);
-//    m_linearSpeedLimitChooser.addOption("75%", 0.75);
-//    m_linearSpeedLimitChooser.addOption("50%", 0.5);
-//    m_linearSpeedLimitChooser.addOption("25%", 0.25);
-//    m_angularSpeedLimitChooser.addDefaultOption("100%", 1.0);
-//    m_angularSpeedLimitChooser.addOption("75%", 0.75);
-//    m_angularSpeedLimitChooser.addOption("50%", 0.5);
-//    m_angularSpeedLimitChooser.addOption("25%", 0.25);
-//  }
+  //  private static final LoggedDashboardChooser<Double> m_linearSpeedLimitChooser =
+  //      new LoggedDashboardChooser<>("Linear Speed Limit");
+  //  private static final LoggedDashboardChooser<Double> m_angularSpeedLimitChooser =
+  //      new LoggedDashboardChooser<>("Angular Speed Limit");
+  //
+  //  static {
+  //    m_linearSpeedLimitChooser.addDefaultOption("100%", 1.0);
+  //    m_linearSpeedLimitChooser.addOption("75%", 0.75);
+  //    m_linearSpeedLimitChooser.addOption("50%", 0.5);
+  //    m_linearSpeedLimitChooser.addOption("25%", 0.25);
+  //    m_angularSpeedLimitChooser.addDefaultOption("100%", 1.0);
+  //    m_angularSpeedLimitChooser.addOption("75%", 0.75);
+  //    m_angularSpeedLimitChooser.addOption("50%", 0.5);
+  //    m_angularSpeedLimitChooser.addOption("25%", 0.25);
+  //  }
 
   /** Creates a new SwerveJoystickCmd. */
   public SwerveJoystickCommand(
@@ -86,9 +84,12 @@ public class SwerveJoystickCommand extends Command {
             SwerveConstants.AimBotConstants.kAimbotD);
     m_aimBotPID.enableContinuousInput(-Math.PI, Math.PI);
     m_aimBotPID.setTolerance(SwerveConstants.AimBotConstants.kAimbotTolerance);
-    m_facingPID = new PIDController(1.4, 0.0, 0.105);
-    m_facingPID.enableContinuousInput(-Math.PI, Math.PI);
-    m_facingPID.setTolerance(Units.degreesToRadians(1.5));
+    m_facingPID = new PIDController(0.015, 0, 0);
+    //         SwerveConstants.AimBotConstants.kAimbotP,
+    //         SwerveConstants.AimBotConstants.kAimbotI,
+    //         SwerveConstants.AimBotConstants.kAimbotD);
+    // m_facingPID.enableContinuousInput(-Math.PI, Math.PI);
+    m_facingPID.setTolerance(SwerveConstants.AimBotConstants.kAimNoteTolerance);
     WCLogger.putData(this, "FacingPID", m_facingPID);
     WCLogger.putData(this, "AimbotPID", m_aimBotPID);
 
@@ -148,45 +149,42 @@ public class SwerveJoystickCommand extends Command {
         }
         break;
       case AIMNOTE:
-      angularVelocity =
-          m_facingPID.calculate(
-              m_photonVision.getAngleToNote(),
-              0);
+        angularVelocity = m_facingPID.calculate(m_photonVision.getAngleToNote(), 0);
         if (m_facingPID.atSetpoint()) {
           angularVelocity = 0;
         }
         break;
       case FACEFORWARD:
         angularVelocity =
-            m_facingPID.calculate(
+            m_aimBotPID.calculate(
                 robotPose.getRotation().getRadians(), alliance == Alliance.Blue ? 0 : Math.PI);
-        if (m_facingPID.atSetpoint()) {
+        if (m_aimBotPID.atSetpoint()) {
           angularVelocity = 0;
         }
         break;
       case FACEBACKWARD:
         angularVelocity =
-            m_facingPID.calculate(
+            m_aimBotPID.calculate(
                 robotPose.getRotation().getRadians(), alliance == Alliance.Blue ? Math.PI : 0);
-        if (m_facingPID.atSetpoint()) {
+        if (m_aimBotPID.atSetpoint()) {
           angularVelocity = 0;
         }
         break;
       case FACEAMP:
         angularVelocity =
-            m_facingPID.calculate(
+            m_aimBotPID.calculate(
                 robotPose.getRotation().getRadians(),
                 alliance == Alliance.Blue ? Math.PI / 2 : Math.PI / 2);
-        if (m_facingPID.atSetpoint()) {
+        if (m_aimBotPID.atSetpoint()) {
           angularVelocity = 0;
         }
         break;
       case FACESOURCE:
-      angularVelocity =
-          m_facingPID.calculate(
-              robotPose.getRotation().getRadians(),
-              alliance == Alliance.Blue ? Math.PI * 2 / 3 : Math.PI / 3);
-        if (m_facingPID.atSetpoint()) {
+        angularVelocity =
+            m_aimBotPID.calculate(
+                robotPose.getRotation().getRadians(),
+                alliance == Alliance.Blue ? Math.PI * 2 / 3 : Math.PI / 3);
+        if (m_aimBotPID.atSetpoint()) {
           angularVelocity = 0;
         }
         break;
@@ -249,7 +247,8 @@ public class SwerveJoystickCommand extends Command {
     if (WCLogger.isEnabled) {
       Logger.recordOutput(this.getClass().getSimpleName() + "/ExpectedModuleStates", moduleStates);
       Logger.recordOutput(this.getClass().getSimpleName() + "/ExpectedVelocity", linearVelocity);
-      Logger.recordOutput(this.getClass().getSimpleName() + "/ExpectedAngularVelocity", angularVelocity);
+      Logger.recordOutput(
+          this.getClass().getSimpleName() + "/ExpectedAngularVelocity", angularVelocity);
     }
     m_swerveSubsystem.setModuleStates(moduleStates);
   }
