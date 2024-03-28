@@ -48,7 +48,7 @@ public class WristSubsystem extends WCStaticSubsystem {
     m_mechanism2d = new Mechanism2d(2, 10, new Color8Bit(255, 0, 0));
     m_Ligament2d = new MechanismLigament2d("Wrist", 5, 45, 2, new Color8Bit(255, 0, 0));
     WCLogger.putData(this, "PID", m_PidController);
-    SmartDashboard.putData("WristPID", m_PidController);
+    // SmartDashboard.putData("WristPID", m_PidController);
     return List.of(m_wrist);
   }
 
@@ -59,12 +59,12 @@ public class WristSubsystem extends WCStaticSubsystem {
       return;
     }
 
-    SmartDashboard.putNumber("WristSetpoint", m_setPoint);
-    SmartDashboard.putNumber("WristRaw", getWristPosition());
-    m_PidController.setP(SmartDashboard.getNumber("WristPID/p", 0.0));
-    m_PidController.setI(SmartDashboard.getNumber("WristPID/i", 0.0));
-    m_PidController.setD(SmartDashboard.getNumber("WristPID/d", 0.0));
-    SmartDashboard.putNumber("WristVoltage", m_wrist.getAppliedOutput());
+    // SmartDashboard.putNumber("WristSetpoint", m_setPoint);
+    // SmartDashboard.putNumber("WristRaw", getWristPosition());
+    // m_PidController.setP(SmartDashboard.getNumber("WristPID/p", 0.0));
+    // m_PidController.setI(SmartDashboard.getNumber("WristPID/i", 0.0));
+    // m_PidController.setD(SmartDashboard.getNumber("WristPID/d", 0.0));
+    // SmartDashboard.putNumber("WristVoltage", m_wrist.getAppliedOutput());
 
     if (subsystemAction == SubsystemAction.POS) {
       double measurement = getWristPosition();
