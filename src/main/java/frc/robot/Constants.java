@@ -32,7 +32,7 @@ public final class Constants {
   public static final double kWristPass = 0.38; // Pass cross field
   public static final double kWristAmp = 0.376; // Amp
   // public static final double kWristSubwoofer = -0.5;
-  public static final double kWristSubwoofer = 0.0;
+  public static final double kWristSubwoofer = 0.383;
   public static final double kWrist15 = 0.0;
   public static final double kWrist30 = 0.0;
   public static final double kWrist45 = 0.0;
