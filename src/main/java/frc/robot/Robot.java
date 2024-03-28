@@ -50,60 +50,27 @@ public class Robot extends WCRobot {
     @Override
     protected void initDriverControllerBindings(DriverController m_driverController) {
 
-        m_driverController
-                .getAButton()
-                .whileTrue(m_wristSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-
-        m_driverController
-                .getBButton()
-                .whileTrue(m_wristSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-
-        m_driverController
-                .getXButton()
-                .whileTrue(m_wristSubsystem.sysIdDynamic(SysIdRoutine.Direction.kForward));
-
-        m_driverController
-                .getYButton()
-                .whileTrue(m_wristSubsystem.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-
         
     }
 
     @Override
     protected void initOperatorControllerBindings(OperatorController m_operatorController) {
 
-        // // Outtake
-        // m_operatorController
-        //         .getRightBumper()
-        //         .whileTrue(new OuttakeCommand(m_beambreak, m_intakeSubsystem, m_feederSubsystem));
+        m_operatorController
+                .getAButton()
+                .whileTrue(m_wristSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
 
-        // // Eject Feeder
-        // m_operatorController
-        //         .getLeftBumper()
-        //         .onTrue(new EjectFeederCommand(m_wristSubsystem, m_feederSubsystem, m_armSubsystem));
+        m_operatorController
+                .getBButton()
+                .whileTrue(m_wristSubsystem.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
 
-        // // Arm up
-        // m_operatorController
-        //         .getAButton()
-        //         .onTrue(
-        //                 new ArmUpCommand(
-        //                         m_armSubsystem,
-        //                         m_wristSubsystem,
-        //                         m_shooterSubsystem,
-        //                         m_feederSubsystem,
-        //                         m_beambreak));
+        m_operatorController
+                .getXButton()
+                .whileTrue(m_wristSubsystem.sysIdDynamic(SysIdRoutine.Direction.kForward));
 
-        // // Arm down
-        // m_operatorController.getBButton().onTrue(new ArmDownCommand(m_armSubsystem, m_wristSubsystem));
-
-        // // Shooter Aim Override
-        // m_operatorController.scheduleOnLeftTriggerTrue(new OverrideShootCommand(
-        //     this,
-        //     m_operatorController,
-        //     m_shooterSubsystem,
-        //     m_wristSubsystem,
-        //     m_armSubsystem,
-        //     m_beambreak));
+        m_operatorController
+                .getYButton()
+                .whileTrue(m_wristSubsystem.sysIdDynamic(SysIdRoutine.Direction.kReverse));
     }
 
     public void setLEDsTeleop() {

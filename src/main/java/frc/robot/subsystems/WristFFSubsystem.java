@@ -8,12 +8,17 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.units.Angle;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.MutableMeasure;
+import edu.wpi.first.units.Time;
+import edu.wpi.first.units.Unit;
+import edu.wpi.first.units.Units;
 import edu.wpi.first.units.Velocity;
 import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.WCLogger;
@@ -27,7 +32,11 @@ import java.util.function.DoubleSupplier;
 import static edu.wpi.first.units.MutableMeasure.mutable;
 import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
+import static edu.wpi.first.units.Units.Second;
+import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
+import static edu.wpi.first.units.Units.VoltsPerRadianPerSecond;
+
 import edu.wpi.first.wpilibj.Encoder;
 
 public class WristFFSubsystem extends WCStaticSubsystem {
@@ -58,10 +67,14 @@ public class WristFFSubsystem extends WCStaticSubsystem {
   private final MutableMeasure<Velocity<Angle>> m_velocity = mutable(RotationsPerSecond.of(0));
 
   // Create a new SysId routine for characterizing the shooter.
+  Measure<Velocity<Voltage>> rampRate = Volts.of(0.2).per(Seconds.of(1));
+  Measure<Voltage> stepVoltage = Volts.of(3.0);
+  Measure<Time> timeout = Seconds.of(10);
   private final SysIdRoutine m_sysIdRoutine =
       new SysIdRoutine(
           // Empty config defaults to 1 volt/second ramp rate and 7 volt step voltage.
-          new SysIdRoutine.Config(),
+
+          new SysIdRoutine.Config(rampRate, stepVoltage, timeout),
           new SysIdRoutine.Mechanism(
               // Tell SysId how to plumb the driving voltage to the motor(s).
               (Measure<Voltage> volts) -> {
@@ -126,7 +139,7 @@ public class WristFFSubsystem extends WCStaticSubsystem {
    * @param direction The direction (forward or reverse) to run the test in
    */
   public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
-    return m_sysIdRoutine.quasistatic(direction);
+    return new SequentialCommandGroup(new InstantCommand(() -> System.out.println("Quasi")), m_sysIdRoutine.quasistatic(direction));
   }
 
   /**
