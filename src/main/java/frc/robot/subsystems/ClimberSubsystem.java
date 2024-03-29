@@ -62,13 +62,13 @@ public class ClimberSubsystem extends WCDualSubsystem {
 
   public void setLeftClimberSpeed(double leftPosition) {
     double leftEncoderValue = Math.abs(getLeftPosition());
-    WCLogger.putNumber(this, "Left/StickPosition", leftPosition);
-    SmartDashboard.putNumber("Left/Position", leftEncoderValue);
     boolean armLimited = SmartDashboard.getBoolean("ClimberSubsystem/isLimitsEnabled", true);
     if (!armLimited) {
       speed1 = leftPosition;
+      // if stick is up and encoder value is less than max
     } else if (leftPosition > 0 && leftEncoderValue <= Constants.kLeftClimberMax) {
       speed1 = leftPosition;
+      // if stick is down and encoder value is greater than min + buffer
     } else if (leftPosition < 0 && leftEncoderValue >= Constants.kLeftClimberMin + buffer) {
       speed1 = leftPosition;
     } else {
@@ -80,15 +80,15 @@ public class ClimberSubsystem extends WCDualSubsystem {
     return RobotSystem.isReal() ? m_leftRelativeEncoder.getPosition() : positionSim1;
   }
 
-  public void rightStickPosition(double rightPosition) {
+  public void setRightClimberSpeed(double rightPosition) {
     double rightEncoderValue = Math.abs(getRightPosition());
-    WCLogger.putNumber(this, "RightStickPosition", rightPosition);
-    SmartDashboard.putNumber("Right/Position", rightEncoderValue);
     boolean armLimited = SmartDashboard.getBoolean("ClimberSubsystem/isLimitsEnabled", true);
     if (!armLimited) {
       speed2 = rightPosition;
+      // if stick is up and encoder value is less than max
     } else if (rightPosition > 0 && rightEncoderValue <= Constants.kRightClimberMax) {
       speed2 = rightPosition;
+      // if stick is down and encoder value is greater than min + buffer
     } else if (rightPosition < 0 && rightEncoderValue >= Constants.kRightClimberMin + buffer) {
       speed2 = rightPosition;
     } else {

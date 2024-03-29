@@ -32,7 +32,7 @@ public class ClimberCommand extends Command {
   public void execute() {
     double leftPosition = m_operatorController.getLeftY();
     double rightPosition = m_operatorController.getRightY();
-    m_climberSubsystem.rightStickPosition(rightPosition);
+    m_climberSubsystem.setRightClimberSpeed(rightPosition);
     m_climberSubsystem.setLeftClimberSpeed(leftPosition);
   }
 
