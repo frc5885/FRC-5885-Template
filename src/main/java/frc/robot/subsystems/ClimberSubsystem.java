@@ -39,6 +39,8 @@ public class ClimberSubsystem extends WCDualSubsystem {
     m_leftRelativeEncoder = m_leftMotor.getEncoder();
     m_rightRelativeEncoder = m_rightMotor.getEncoder();
     resetEncoders();
+    SmartDashboard.putBoolean("ClimberSubsystem/isLimitsEnabled", true);
+
     return Pair.of(m_leftMotor, m_rightMotor);
   }
 
@@ -61,6 +63,7 @@ public class ClimberSubsystem extends WCDualSubsystem {
   public void setLeftClimberSpeed(double leftPosition) {
     double leftEncoderValue = Math.abs(getLeftPosition());
     WCLogger.putNumber(this, "Left/StickPosition", leftPosition);
+    SmartDashboard.putNumber("Left/Position", leftEncoderValue);
     boolean armLimited = SmartDashboard.getBoolean("ClimberSubsystem/isLimitsEnabled", true);
     if (!armLimited) {
       speed1 = leftPosition;
@@ -80,6 +83,7 @@ public class ClimberSubsystem extends WCDualSubsystem {
   public void rightStickPosition(double rightPosition) {
     double rightEncoderValue = Math.abs(getRightPosition());
     WCLogger.putNumber(this, "RightStickPosition", rightPosition);
+    SmartDashboard.putNumber("Right/Position", rightEncoderValue);
     boolean armLimited = SmartDashboard.getBoolean("ClimberSubsystem/isLimitsEnabled", true);
     if (!armLimited) {
       speed2 = rightPosition;

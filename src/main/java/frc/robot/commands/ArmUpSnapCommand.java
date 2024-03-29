@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.Robot;
 import frc.robot.base.io.Beambreak;
@@ -18,6 +19,7 @@ public class ArmUpSnapCommand extends ParallelCommandGroup {
       Beambreak beambreak,
       Robot robot) {
     super(
+        new InstantCommand(() -> robot.setFieldOriented(true)),
         new ArmUpCommand(
             armSubsystem, wristSubsystem, shooterSubsystem, feederSubsystem, beambreak),
         new SetSwerveActionCommand(robot, SwerveAction.FACEAMP));

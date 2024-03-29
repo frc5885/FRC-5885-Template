@@ -107,7 +107,7 @@ public class AutoAimShooterCommand extends Command {
       }
 
       double wristPos = m_wristSubsystem.getWristPosition();
-      double buffer = 0.01;
+      double buffer = 0.02;
       if (m_shooterSubsystem.isVelocityTerminal()
           && wristPos >= wristAngle - buffer
           && wristPos <= wristAngle + buffer

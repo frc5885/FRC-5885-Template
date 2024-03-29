@@ -4,6 +4,7 @@ import com.ctre.phoenix6.hardware.*;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.WCLogger;
 import frc.robot.base.RobotSystem;
@@ -40,6 +41,7 @@ public class ArmSubsystem extends WCStaticSubsystem {
 
   @Override
   public void periodic() {
+      SmartDashboard.putNumber("ArmRaw", getArmPosition());
     super.periodic();
     if (subsystemAction == SubsystemAction.POS) {
       double measurement = getArmPosition();

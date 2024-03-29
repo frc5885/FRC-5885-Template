@@ -45,9 +45,9 @@ public final class Constants {
   public static final double kOperatorRightDeadzone = 0.08;
   public static final double kOperatorLeftDeadzone = 0.08;
   public static final double kRightClimberMin = 0.0;
-  public static final double kRightClimberMax = 200;
+  public static final double kRightClimberMax = -200;
   public static final double kLeftClimberMin = 0.0;
-  public static final double kLeftClimberMax = 180;
+  public static final double kLeftClimberMax = -180;
 
   // Driver Deadzones
   public static final double kDriverRightDeadzone = 0.06;
