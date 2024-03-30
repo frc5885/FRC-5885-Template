@@ -62,15 +62,19 @@ public class ClimberSubsystem extends WCDualSubsystem {
 
   public void setLeftClimberSpeed(double leftPosition) {
     double leftEncoderValue = Math.abs(getLeftPosition());
+    // SmartDashboard.putNumber("Left Joystick", leftPosition);
+    // SmartDashboard.putNumber("Left Encoder (abs)", leftEncoderValue);
+    leftPosition = -leftPosition;
+
     boolean armLimited = SmartDashboard.getBoolean("ClimberSubsystem/isLimitsEnabled", true);
     if (!armLimited) {
-      speed1 = leftPosition;
+      speed1 = -leftPosition;
       // if stick is up and encoder value is less than max
     } else if (leftPosition > 0 && leftEncoderValue <= Constants.kLeftClimberMax) {
-      speed1 = leftPosition;
+      speed1 = -leftPosition;
       // if stick is down and encoder value is greater than min + buffer
     } else if (leftPosition < 0 && leftEncoderValue >= Constants.kLeftClimberMin + buffer) {
-      speed1 = leftPosition;
+      speed1 = -leftPosition;
     } else {
       speed1 = 0;
     }
@@ -83,14 +87,17 @@ public class ClimberSubsystem extends WCDualSubsystem {
   public void setRightClimberSpeed(double rightPosition) {
     double rightEncoderValue = Math.abs(getRightPosition());
     boolean armLimited = SmartDashboard.getBoolean("ClimberSubsystem/isLimitsEnabled", true);
+
+    rightPosition = -rightPosition; // fix for negative added at windsor
+
     if (!armLimited) {
-      speed2 = rightPosition;
+      speed2 = -rightPosition;
       // if stick is up and encoder value is less than max
     } else if (rightPosition > 0 && rightEncoderValue <= Constants.kRightClimberMax) {
-      speed2 = rightPosition;
+      speed2 = -rightPosition;
       // if stick is down and encoder value is greater than min + buffer
     } else if (rightPosition < 0 && rightEncoderValue >= Constants.kRightClimberMin + buffer) {
-      speed2 = rightPosition;
+      speed2 = -rightPosition;
     } else {
       speed2 = 0;
     }

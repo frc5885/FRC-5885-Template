@@ -45,6 +45,8 @@ public class WristSubsystem extends WCStaticSubsystem {
     m_PidController.setTolerance(0.02);
 
     m_feedForward = new ArmFeedforward(0, 0.45, 0);
+    SmartDashboard.putNumber("WristAngleCorrectionFactorClose", Constants.kWristAngleCorrectionFactorClose);
+    SmartDashboard.putNumber("WristAngleCorrectionFactorFar", Constants.kWristAngleCorrectionFactorFar);
 
     m_mechanism2d = new Mechanism2d(2, 10, new Color8Bit(255, 0, 0));
     m_Ligament2d = new MechanismLigament2d("Wrist", 5, 45, 2, new Color8Bit(255, 0, 0));
@@ -59,14 +61,14 @@ public class WristSubsystem extends WCStaticSubsystem {
     if (m_setPoint < Constants.kWristEncoderMin || m_setPoint > Constants.kWristEncoderMax) {
       return;
     }
-
-    SmartDashboard.putNumber("WristSetpoint", m_setPoint);
-    SmartDashboard.putNumber("WristRaw", getWristPosition());
-    SmartDashboard.putBoolean("WrsitPID/atSetpoint", m_PidController.atSetpoint());
-    m_PidController.setP(SmartDashboard.getNumber("WristPID/p", 0.0));
-    m_PidController.setI(SmartDashboard.getNumber("WristPID/i", 0.0));
-    m_PidController.setD(SmartDashboard.getNumber("WristPID/d", 0.0));
-    SmartDashboard.putNumber("WristVoltage", m_wrist.getAppliedOutput()*RobotController.getBatteryVoltage());
+    SmartDashboard.putNumber("WristPosition", m_absoluteEncoder.getPosition());
+    // SmartDashboard.putNumber("WristSetpoint", m_setPoint);
+    // SmartDashboard.putNumber("WristRaw", getWristPosition());
+    // SmartDashboard.putBoolean("WrsitPID/atSetpoint", m_PidController.atSetpoint());
+    // m_PidController.setP(SmartDashboard.getNumber("WristPID/p", 0.0));
+    // m_PidController.setI(SmartDashboard.getNumber("WristPID/i", 0.0));
+    // m_PidController.setD(SmartDashboard.getNumber("WristPID/d", 0.0));
+    // SmartDashboard.putNumber("WristVoltage", m_wrist.getAppliedOutput()*RobotController.getBatteryVoltage());
 
     if (subsystemAction == SubsystemAction.POS) {
       double measurement = getWristPosition();

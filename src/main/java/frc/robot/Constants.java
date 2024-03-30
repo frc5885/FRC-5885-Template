@@ -26,6 +26,9 @@ public final class Constants {
   // Min to max 30 degrees
   // Max 0.315
   // Min  0.625
+  // 1.03 worked for old tape
+  public static final double kWristAngleCorrectionFactorClose = 1.015;
+  public static final double kWristAngleCorrectionFactorFar = 1.02;
   public static final double kWristEncoderMax = 0.577; // Max
   public static final double kWristEncoderMin = 0.325; // Min
   public static final double kWristStow = 0.441; // Stow
