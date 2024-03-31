@@ -23,7 +23,7 @@ public class Robot extends WCRobot {
     ClimberSubsystem m_climberSubsystem;
     public ShooterSubsystem m_shooterSubsystem;
 
-    LEDSubsystem m_ledSubsystem;
+    public LEDSubsystem m_ledSubsystem;
 
     public Robot() {
         SmartDashboard.putBoolean("ClimberSubsystem/isLimitsEnabled", true);

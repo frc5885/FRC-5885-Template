@@ -51,6 +51,10 @@ public class IntakeSubsystem extends WCStaticSubsystem {
     subsystemAction = SubsystemAction.OUTTAKE;
   }
 
+  public double getVelocity() {
+    return m_intakeMotor.getEncoder().getVelocity();
+  }
+
   public SubsystemAction getSubsystemAction() {
     return subsystemAction;
   }

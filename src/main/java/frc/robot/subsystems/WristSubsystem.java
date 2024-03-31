@@ -22,7 +22,7 @@ import java.util.List;
 
 public class WristSubsystem extends WCStaticSubsystem {
 
-  private final double buffer = 0.0;
+  private final double buffer = 0.003;
 
   private SparkAbsoluteEncoder m_absoluteEncoder;
   private CANSparkMax m_wrist;
@@ -79,7 +79,7 @@ public class WristSubsystem extends WCStaticSubsystem {
     } else {
       stopMotors();
     }
-    positionSim += m_wrist.getAppliedOutput() * 0.005;
+    positionSim += m_wrist.getAppliedOutput() * -0.005;
   }
 
   @Override
@@ -102,6 +102,10 @@ public class WristSubsystem extends WCStaticSubsystem {
   }
 
   public boolean isStowed() {
-    return getWristPosition() >= Constants.kWristStow - 0.003;
+    return getWristPosition() >= Constants.kWristStow + buffer;
+  }
+
+  public boolean isAtPos() {
+    return getWristPosition() >= m_setPoint - buffer && getWristPosition() <= m_setPoint + buffer;
   }
 }

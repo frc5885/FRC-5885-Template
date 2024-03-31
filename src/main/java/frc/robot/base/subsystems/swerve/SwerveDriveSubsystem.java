@@ -255,16 +255,21 @@ public class SwerveDriveSubsystem extends SubsystemBase {
   }
 
   public void setModulesAngle(double angle) {
-
     for (int i = 0; i != 4; i++) {
       m_modules[i].setTurnVoltage(
           (m_turnController[i].calculate(m_modulesInput[i].turnPositionRad, angle)));
     }
   }
 
-  public void setVoltage(double voltage) {
+  public void setDriveVoltage(double voltage) {
     for (int i = 0; i != 4; i++) {
       m_modules[i].setDriveVoltage(voltage);
+    }
+  }
+
+  public void setTurnVoltage(double voltage) {
+    for (int i = 0; i != 4; i++) {
+      m_modules[i].setTurnVoltage(voltage);
     }
   }
 

@@ -4,22 +4,35 @@
 
 package frc.robot.base;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.AprilTagCameraConstants;
 import frc.robot.Robot;
 import frc.robot.WCLogger;
+import frc.robot.base.modules.swerve.SwerveConstants;
 import frc.robot.base.subsystems.swerve.SwerveAction;
 import frc.robot.commands.StowWristCommand;
+import frc.robot.commands.SwerveJoystickCommand;
+import frc.robot.commands.test.*;
 import frc.robot.subsystems.ShooterSubsystem.RobotMode;
 import java.io.File;
+import java.util.Map;
+
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
@@ -172,10 +185,172 @@ public class RobotSystem extends LoggedRobot {
   @Override
   public void testInit() {
     CommandScheduler.getInstance().cancelAll();
+    ShuffleboardTab testTab = Shuffleboard.getTab("Systems Test");
+
+    // System
+    testTab.add(
+        "System.Test",
+        new TestSystemCommand(
+            m_robotContainer.m_swerveDrive,
+            m_robotContainer.m_armSubsystem,
+            m_robotContainer.m_wristSubsystem,
+            m_robotContainer.m_shooterSubsystem,
+            m_robotContainer.m_intakeSubsystem,
+            m_robotContainer.m_feederSubsystem,
+            m_robotContainer.m_ledSubsystem
+        )
+    );
+
+    // Swerve
+    testTab.add(
+            "Swerve.Drive.Positive",
+            new SequentialCommandGroup(
+                new TestResetSwerveCommand(m_robotContainer.m_swerveDrive),
+                new TestSwerveCommand(
+                    m_robotContainer.m_swerveDrive,
+                    TestSwerveCommand.Type.FORWARD,
+                    m_robotContainer.m_ledSubsystem
+                )
+            )
+        )
+        .withWidget(BuiltInWidgets.kCommand);
+    testTab.add(
+            "Swerve.Drive.Negative",
+            new SequentialCommandGroup(
+              new TestResetSwerveCommand(m_robotContainer.m_swerveDrive),
+              new TestSwerveCommand(
+                  m_robotContainer.m_swerveDrive,
+                  TestSwerveCommand.Type.BACKWARD,
+                  m_robotContainer.m_ledSubsystem
+              )
+          )
+        )
+        .withWidget(BuiltInWidgets.kCommand);
+    testTab.add(
+            "Swerve.Rotate.Positive",
+            new SequentialCommandGroup(
+              new TestResetSwerveCommand(m_robotContainer.m_swerveDrive),
+              new TestSwerveCommand(
+                  m_robotContainer.m_swerveDrive,
+                  TestSwerveCommand.Type.ROTATE_CLOCKWISE,
+                  m_robotContainer.m_ledSubsystem
+              )
+            )
+        )
+        .withWidget(BuiltInWidgets.kCommand);
+    testTab.add(
+            "Swerve.Rotate.Negative",
+            new SequentialCommandGroup(
+              new TestResetSwerveCommand(m_robotContainer.m_swerveDrive),
+              new TestSwerveCommand(
+                  m_robotContainer.m_swerveDrive,
+                  TestSwerveCommand.Type.ROTATE_COUNTER_CLOCKWISE,
+                  m_robotContainer.m_ledSubsystem
+              )
+            )
+        )
+        .withWidget(BuiltInWidgets.kCommand);
+
+    // Arm
+    testTab
+        .add(
+            "Arm.Up",
+            new TestArmUpCommand(
+                m_robotContainer.m_armSubsystem,
+                m_robotContainer.m_ledSubsystem
+            )
+
+        );
+    testTab
+        .add(
+            "Arm.Down",
+            new TestArmDownCommand(
+                m_robotContainer.m_armSubsystem,
+                m_robotContainer.m_ledSubsystem
+            )
+
+        );
+
+    // Wrist
+    testTab
+        .add(
+            "Wrist.Aim",
+            new TestWristAimCommand(
+                m_robotContainer.m_wristSubsystem,
+                m_robotContainer.m_ledSubsystem
+            )
+
+        );
+    testTab
+        .add(
+            "Wrist.Stow",
+            new TestWristStowCommand(
+                m_robotContainer.m_wristSubsystem,
+                m_robotContainer.m_ledSubsystem
+            )
+
+        );
+
+    // Shooters
+    testTab
+        .add(
+            "Shooter.Velocity",
+            new TestShooterCommand(
+                m_robotContainer.m_shooterSubsystem,
+                m_robotContainer.m_ledSubsystem
+            )
+
+        );
+
+    // Intake
+    testTab
+        .add(
+            "Intake.Intake",
+            new TestIntakeCommand(
+                m_robotContainer.m_intakeSubsystem,
+                TestIntakeCommand.Type.INTAKE,
+                m_robotContainer.m_ledSubsystem
+            )
+
+        );
+    testTab
+        .add(
+            "Intake.Outtake",
+            new TestIntakeCommand(
+                m_robotContainer.m_intakeSubsystem,
+                TestIntakeCommand.Type.OUTTAKE,
+                m_robotContainer.m_ledSubsystem
+            )
+
+        );
+
+    // Feeder
+    testTab
+        .add(
+            "Feeder.Intake",
+            new TestFeederCommand(
+                m_robotContainer.m_feederSubsystem,
+                TestFeederCommand.Type.OUTTAKE,
+                m_robotContainer.m_ledSubsystem
+            )
+
+        );
+    testTab
+        .add(
+            "Feeder.Outtake",
+            new TestFeederCommand(
+                m_robotContainer.m_feederSubsystem,
+                TestFeederCommand.Type.OUTTAKE,
+                m_robotContainer.m_ledSubsystem
+            )
+
+        );
   }
 
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+
+  }
 
   @Override
   public void testExit() {}

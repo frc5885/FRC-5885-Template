@@ -58,7 +58,7 @@ public class SwerveSolveFeedForward extends Command {
     if (m_timer.get() < m_delay) {
       return;
     } else {
-      m_swerveSubsystem.setVoltage(m_currentVoltage);
+      m_swerveSubsystem.setDriveVoltage(m_currentVoltage);
 
       if ((currentVelocityMetersPerSecond - m_previousVelocityMetersPerSecond) / 0.02 <= 0.0005
           && (m_timer.get() - m_lastSetTime) >= m_minimumWaitTime) {

@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.base.io.Beambreak;
@@ -14,7 +15,10 @@ public class LEDSubsystem extends SubsystemBase {
     RAINBOW,
     SOLID,
     TELEOP,
-    AUTO
+    AUTO,
+    ERROR,
+    TESTING,
+    SUCCESS
   }
 
   private AddressableLED m_led;
@@ -84,6 +88,15 @@ public class LEDSubsystem extends SubsystemBase {
         // TODO AUTO LED CODE
         updateLedRainbow();
         break;
+      case ERROR:
+        flash(255, 0, 0);
+        break;
+      case TESTING:
+        flash(0, 0, 255);
+        break;
+      case SUCCESS:
+        flash(0, 255, 0);
+        break;
     }
   }
 
@@ -140,5 +153,8 @@ public class LEDSubsystem extends SubsystemBase {
 
   public void setAuto() {
     m_mode = LEDMode.AUTO;
+  }
+  public void setMode(LEDMode mode) {
+    m_mode = mode;
   }
 }
