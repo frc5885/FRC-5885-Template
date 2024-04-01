@@ -60,6 +60,13 @@ public class Robot extends WCRobot {
                         m_photonVision,
                         m_swervePoseEstimator,
                         m_beambreak));
+        
+        pathPlannerRegisterNamedCommand(
+                "eject",
+                new EjectFeederCommand(
+                        m_wristSubsystem,
+                        m_feederSubsystem,
+                        m_armSubsystem));
     }
 
     @Override
