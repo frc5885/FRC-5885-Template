@@ -144,7 +144,7 @@ public final class SwerveConstants {
 
     /////////////
     // Wheel Size
-    public static final double kWheelDiameterMeters = Units.inchesToMeters(3.875);
+    public static final double kWheelDiameterMeters = Units.inchesToMeters(3.9855);
 
     //////////////
     // Gear Ratios

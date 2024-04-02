@@ -12,15 +12,22 @@
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "eject"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Michael Special.1"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "eject"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Michael Special.1"
+                }
+              }
+            ]
           }
         },
         {

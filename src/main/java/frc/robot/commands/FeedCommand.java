@@ -44,7 +44,7 @@ public class FeedCommand extends Command {
   @Override
   public void execute() {
     if (m_shooterSubsystem.isVelocityTerminal() || m_armSubsystem.isArmUp()) {
-      m_feederSubsystem.intake();
+      m_feederSubsystem.shoot();
     } else {
       m_feederSubsystem.stop();
     }

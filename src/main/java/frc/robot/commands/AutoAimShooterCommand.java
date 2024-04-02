@@ -115,7 +115,7 @@ public class AutoAimShooterCommand extends Command {
         if (dwellStart == 0) {
           dwellStart = System.currentTimeMillis();
         } else if (System.currentTimeMillis() - dwellStart >= 250) {
-          m_feederSubsystem.intake();
+          m_feederSubsystem.shoot();
         }
       }
     }

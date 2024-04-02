@@ -43,7 +43,7 @@ public class Robot extends WCRobot {
         m_climberSubsystem = new ClimberSubsystem();
         m_shooterSubsystem = new ShooterSubsystem(m_beambreak);
         m_ledSubsystem = new LEDSubsystem(
-                m_beambreak, m_shooterSubsystem, () -> getSwerveAction() == SwerveAction.AIMBOTTING);
+                m_beambreak, m_shooterSubsystem, m_intakeSubsystem, () -> getSwerveAction() == SwerveAction.AIMBOTTING);
     }
 
     @Override

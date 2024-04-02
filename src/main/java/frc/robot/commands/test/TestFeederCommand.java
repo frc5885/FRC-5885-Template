@@ -1,5 +1,6 @@
 package frc.robot.commands.test;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
@@ -13,7 +14,11 @@ public class TestFeederCommand extends WCTestCommand {
 
   @Override
   boolean wasSuccessful() {
-    return true;
+    boolean success = Math.abs(m_feederSubsystem.getVelocity()) > 1000;
+    if (!success) {
+      DriverStation.reportError("Test: Feeder did not report as being above specified velocity threshold!", false);
+    }
+    return success;  
   }
 
   @Override

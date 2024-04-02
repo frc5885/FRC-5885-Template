@@ -220,7 +220,8 @@ public class PhotonVisionSystem extends SubsystemBase {
       double yaw = target.getYaw();
       WCLogger.putNumber(this, "AngleToNote", yaw);
       double angle = yaw + 0.391 * pitch + 0.478;
-      return m_angleFilter.calculate(angle);
+      double degrees = m_angleFilter.calculate(angle);
+      return Units.degreesToRadians(degrees);
     }
     return 0.0;
   }

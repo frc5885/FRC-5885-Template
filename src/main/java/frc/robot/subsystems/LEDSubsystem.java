@@ -34,11 +34,13 @@ public class LEDSubsystem extends SubsystemBase {
 
   Beambreak m_beambreak;
   ShooterSubsystem m_shooterSubsystem;
+  IntakeSubsystem m_intakeSubsystem;
   Supplier<Boolean> m_isAimbottingFunction;
 
   public LEDSubsystem(
       Beambreak beambreak,
       ShooterSubsystem shooterSubsystem,
+      IntakeSubsystem intakeSubsystem,
       Supplier<Boolean> isAimbottingFunction) {
     m_led = new AddressableLED(Constants.kLED);
     m_ledBuffer = new AddressableLEDBuffer(60);
@@ -51,6 +53,7 @@ public class LEDSubsystem extends SubsystemBase {
     m_beambreak = beambreak;
     m_isAimbottingFunction = isAimbottingFunction;
     m_shooterSubsystem = shooterSubsystem;
+    m_intakeSubsystem = intakeSubsystem;
   }
 
   @Override
@@ -79,6 +82,9 @@ public class LEDSubsystem extends SubsystemBase {
             // Flash blue when note present & not aimbotting
             flash(0, 0, 255);
           }
+        } else if (m_intakeSubsystem.hasNote()){
+          // solid blue when intake has note but beambreak is not broken
+          setLedColor(255, 0, 255);
         } else {
           // Solid red when no note present
           setLedColor(255, 0, 0);
