@@ -27,7 +27,7 @@ public class FeedCommand extends Command {
       ShooterSubsystem shooterSubsystem,
       ArmSubsystem armSubsystem,
       WristSubsystem wristSubsystem,
-      Beambreak beambreak, 
+      Beambreak beambreak,
       NoteVisualizer noteVisualizer) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_feederSubsystem = feederSubsystem;

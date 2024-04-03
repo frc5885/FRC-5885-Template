@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.AutoConstants.PoseEstimatorConstants;
-import frc.robot.WCLogger;
 import frc.robot.base.modules.swerve.SwerveConstants;
 import frc.robot.base.subsystems.swerve.SwerveDriveSubsystem;
 import java.util.Optional;
@@ -70,7 +69,7 @@ public class SwervePoseEstimator extends SubsystemBase {
     m_poseEstimator.update(m_rotationSupplier.get(), m_swerveModulePositionSupplier.get());
     Pose2d estimatedPosition = getPose();
     // if (WCLogger.isEnabled) {
-      Logger.recordOutput(this.getClass().getSimpleName() + "/EstimatedPose", estimatedPosition);
+    Logger.recordOutput(this.getClass().getSimpleName() + "/EstimatedPose", estimatedPosition);
     // }
 
     // Update the WPI pose estimator with the latest vision measurements from photon

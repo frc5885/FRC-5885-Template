@@ -2,7 +2,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.base.WCRobot;
 import frc.robot.base.io.Beambreak;
 import frc.robot.base.io.DriverController;
@@ -135,7 +134,12 @@ public class Robot extends WCRobot {
     // Shoot
     m_driverController.scheduleOnRightTrigger(
         new FeedCommand(
-            m_feederSubsystem, m_shooterSubsystem, m_armSubsystem, m_wristSubsystem, m_beambreak, m_noteVisualizer));
+            m_feederSubsystem,
+            m_shooterSubsystem,
+            m_armSubsystem,
+            m_wristSubsystem,
+            m_beambreak,
+            m_noteVisualizer));
 
     // snap to amp
     m_driverController

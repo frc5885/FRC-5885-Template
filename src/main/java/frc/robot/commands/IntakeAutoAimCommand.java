@@ -4,7 +4,6 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.robot.Robot;
@@ -47,9 +46,6 @@ public class IntakeAutoAimCommand extends ParallelCommandGroup {
         new IntakeCommand(
             m_beambreak, m_intakeSubsystem, m_feederSubsystem, m_wristSubsystem, m_armSubsystem),
         new StartEndCommand(
-          () -> m_robot.setFieldOriented(false),
-          () -> m_robot.setFieldOriented(true)
-          )
-        );
+            () -> m_robot.setFieldOriented(false), () -> m_robot.setFieldOriented(true)));
   }
 }
