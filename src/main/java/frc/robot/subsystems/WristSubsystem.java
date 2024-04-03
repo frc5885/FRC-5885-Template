@@ -102,7 +102,7 @@ public class WristSubsystem extends WCStaticSubsystem {
   }
 
   public boolean isStowed() {
-    return getWristPosition() >= Constants.kWristStow + buffer;
+    return getWristPosition() >= Constants.kWristStow - buffer;
   }
 
   public boolean isAtPos() {

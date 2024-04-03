@@ -23,7 +23,7 @@ public class FeederSubsystem extends WCStaticSubsystem {
 
   @Override
   protected List<MotorController> initMotors() {
-    m_feeder = new CANSparkMax(Constants.kFeeder, RobotSystem.isReal() ? MotorType.kBrushed : MotorType.kBrushless);
+    m_feeder = new CANSparkMax(Constants.kFeeder, MotorType.kBrushless);
     return List.of(m_feeder);
   }
 
