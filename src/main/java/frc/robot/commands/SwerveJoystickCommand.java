@@ -15,6 +15,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.WCLogger;
 import frc.robot.base.modules.swerve.SwerveConstants;
 import frc.robot.base.subsystems.PoseEstimator.PhotonVisionSystem;
@@ -38,6 +39,11 @@ public class SwerveJoystickCommand extends Command {
 
   private PIDController m_aimBotPID;
   private PIDController m_facingPID;
+
+  private PIDController m_passTranslationPID;
+  private PIDController m_passRotationPID;
+
+  private Pose2d targetPose;
 
   //  private static final LoggedDashboardChooser<Double> m_linearSpeedLimitChooser =
   //      new LoggedDashboardChooser<>("Linear Speed Limit");
@@ -76,6 +82,9 @@ public class SwerveJoystickCommand extends Command {
     // m_aimBotFunction = aimBotFunction;
     m_swerveActionFuntion = swerveActionFunction;
 
+    Alliance alliance = DriverStation.getAlliance().orElse(Alliance.Blue);
+    targetPose = alliance == Alliance.Blue ? Constants.kPassPoseBlue : Constants.kPassPoseRed;
+
     // F = 1.54hz
     m_aimBotPID =
         new PIDController(
@@ -90,6 +99,14 @@ public class SwerveJoystickCommand extends Command {
     //         SwerveConstants.AimBotConstants.kAimbotD);
     // m_facingPID.enableContinuousInput(-Math.PI, Math.PI);
     m_facingPID.setTolerance(SwerveConstants.AimBotConstants.kAimNoteTolerance);
+
+    m_passTranslationPID = new PIDController(5.0, 0.0, 0.0);
+    m_passTranslationPID.setTolerance(1.0);
+
+    m_passRotationPID = new PIDController(1.3, 0.0, 0.0);
+    m_passRotationPID.enableContinuousInput(-Math.PI, Math.PI);
+    m_passRotationPID.setTolerance(Units.degreesToRadians(5));
+
     WCLogger.putData(this, "FacingPID", m_facingPID);
     WCLogger.putData(this, "AimbotPID", m_aimBotPID);
 
@@ -133,6 +150,12 @@ public class SwerveJoystickCommand extends Command {
     double angularVelocity;
     double rightJoystickX = m_turnDrivePercentFunction.get();
     Pose2d robotPose = m_poseEstimator.getPose();
+
+    if (m_swerveActionFuntion.get() == SwerveAction.PASS) {
+      xDir = targetPose.getX() - robotPose.getX();
+      yDir = targetPose.getY() - robotPose.getY();
+      linearDirection = new Rotation2d(xDir, yDir);
+    }
 
     switch (m_swerveActionFuntion.get()) {
       case DEFAULT:
@@ -186,6 +209,19 @@ public class SwerveJoystickCommand extends Command {
                 alliance == Alliance.Blue ? Math.PI * 2 / 3 : Math.PI / 3);
         if (m_aimBotPID.atSetpoint()) {
           angularVelocity = 0;
+        }
+        break;
+      case PASS:
+        angularVelocity = m_passRotationPID.calculate(
+            robotPose.getRotation().getRadians(),
+            targetPose.getRotation().getRadians());
+        if (m_passRotationPID.atSetpoint()) {
+          angularVelocity = 0;
+        }
+        double distance = Math.hypot(xDir, yDir);
+        linearVelocity = m_passTranslationPID.calculate(distance, 0);
+        if (m_passTranslationPID.atSetpoint()) {
+          linearVelocity = 0;
         }
         break;
       default:

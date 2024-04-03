@@ -7,5 +7,6 @@ public enum SwerveAction {
   FACEFORWARD,
   FACEBACKWARD,
   FACEAMP,
-  FACESOURCE
+  FACESOURCE, 
+  PASS
 }

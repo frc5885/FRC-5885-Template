@@ -1,5 +1,8 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+
 public final class Constants {
   // Intake Motor IDs
   public static final int kIntakeLeft = 31;
@@ -58,4 +61,8 @@ public final class Constants {
 
   // LED
   public static final int kLED = 9;
+
+  // Pass Poses
+  public static final Pose2d kPassPoseBlue = new Pose2d(3.0, 3.0, new Rotation2d());
+  public static final Pose2d kPassPoseRed = new Pose2d(7.0, 7.0, new Rotation2d());
 }

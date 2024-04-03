@@ -155,11 +155,19 @@ public class Robot extends WCRobot {
         m_driverController
                 .getYButton()
                 .onTrue(new InstantCommand(() -> setSwerveAction(SwerveAction.FACEFORWARD)));
-
-        // Face backward
+        
         m_driverController
                 .getXButton()
-                .onTrue(new InstantCommand(() -> setSwerveAction(SwerveAction.FACEBACKWARD)));
+                .onTrue(new SnapToPassPoseCommand(this));
+
+        // m_driverController.getXButton().onTrue(new ParallelCommandGroup(new InstantCommand(() -> setFieldOriented(true)), new InstantCommand(() -> setSwerveAction(SwerveAction.PASS))));
+
+        // // Face backward
+        // m_driverController
+        //         .getXButton()
+        //         .onTrue(new InstantCommand(() -> setSwerveAction(SwerveAction.FACEBACKWARD)));
+
+        // m_driverController.getXButton().onTrue(new SequentialCommandGroup(new InstantCommand(() -> setFieldOriented(m_isFieldOriented);))));
     }
 
     @Override
