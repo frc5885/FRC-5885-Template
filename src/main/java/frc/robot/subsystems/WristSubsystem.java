@@ -3,22 +3,21 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkAbsoluteEncoder;
-
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
-import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
-import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.util.Color8Bit;
 import frc.robot.Constants;
 import frc.robot.WCLogger;
 import frc.robot.base.RobotSystem;
 import frc.robot.base.subsystems.SubsystemAction;
 import frc.robot.base.subsystems.WCStaticSubsystem;
 import java.util.List;
+import org.littletonrobotics.junction.Logger;
 
 public class WristSubsystem extends WCStaticSubsystem {
 
@@ -29,8 +28,7 @@ public class WristSubsystem extends WCStaticSubsystem {
   private PIDController m_PidController;
   private ArmFeedforward m_feedForward;
   private double m_setPoint = Constants.kWristStow;
-  private Mechanism2d m_mechanism2d;
-  private MechanismLigament2d m_Ligament2d;
+  private Pose3d m_wristSim;
 
   @Override
   protected double getBaseSpeed() {
@@ -45,11 +43,14 @@ public class WristSubsystem extends WCStaticSubsystem {
     m_PidController.setTolerance(0.02);
 
     m_feedForward = new ArmFeedforward(0, 0.45, 0);
-    SmartDashboard.putNumber("WristAngleCorrectionFactorClose", Constants.kWristAngleCorrectionFactorClose);
-    SmartDashboard.putNumber("WristAngleCorrectionFactorFar", Constants.kWristAngleCorrectionFactorFar);
+    SmartDashboard.putNumber(
+        "WristAngleCorrectionFactorClose", Constants.kWristAngleCorrectionFactorClose);
+    SmartDashboard.putNumber(
+        "WristAngleCorrectionFactorFar", Constants.kWristAngleCorrectionFactorFar);
 
-    m_mechanism2d = new Mechanism2d(2, 10, new Color8Bit(255, 0, 0));
-    m_Ligament2d = new MechanismLigament2d("Wrist", 5, 45, 2, new Color8Bit(255, 0, 0));
+    positionSim = Constants.kWristStow;
+    m_wristSim =
+        new Pose3d(-0.096, -0.003, 0.344, new Rotation3d(0, Units.degreesToRadians(60), Math.PI));
     WCLogger.putData(this, "PID", m_PidController);
     SmartDashboard.putData("WristPID", m_PidController);
     return List.of(m_wrist);
@@ -68,18 +69,27 @@ public class WristSubsystem extends WCStaticSubsystem {
     // m_PidController.setP(SmartDashboard.getNumber("WristPID/p", 0.0));
     // m_PidController.setI(SmartDashboard.getNumber("WristPID/i", 0.0));
     // m_PidController.setD(SmartDashboard.getNumber("WristPID/d", 0.0));
-    // SmartDashboard.putNumber("WristVoltage", m_wrist.getAppliedOutput()*RobotController.getBatteryVoltage());
+    // SmartDashboard.putNumber("WristVoltage",
+    // m_wrist.getAppliedOutput()*RobotController.getBatteryVoltage());
 
     if (subsystemAction == SubsystemAction.POS) {
       double measurement = getWristPosition();
       // double calc = -m_PidController.calculate(measurement, m_setPoint);
       double offsetRadians = -Math.PI / 6.0;
-      double calc = -m_feedForward.calculate(measurement*2*Math.PI + offsetRadians, m_setPoint*2*Math.PI + offsetRadians)- m_PidController.calculate(measurement, m_setPoint);
+      double calc =
+          -m_feedForward.calculate(
+                  measurement * 2 * Math.PI + offsetRadians,
+                  m_setPoint * 2 * Math.PI + offsetRadians)
+              - m_PidController.calculate(measurement, m_setPoint);
       m_wrist.setVoltage(calc);
     } else {
       stopMotors();
     }
     positionSim += m_wrist.getAppliedOutput() * -0.005;
+    m_wristSim =
+        m_wristSim.plus(
+            new Transform3d(
+                0, 0, 0, new Rotation3d(0, m_wrist.getAppliedOutput() * -0.005 * 2 * Math.PI, 0)));
   }
 
   @Override
@@ -89,7 +99,9 @@ public class WristSubsystem extends WCStaticSubsystem {
     WCLogger.putNumber(this, "Current", m_wrist.getOutputCurrent());
     WCLogger.putAction(this, "Action", subsystemAction);
     WCLogger.putNumber(this, "SetPoint", m_setPoint);
-    WCLogger.putData(this, "SimMech", m_mechanism2d);
+    if (WCLogger.isEnabled) {
+      Logger.recordOutput("WristSim", m_wristSim);
+    }
   }
 
   public void pos(double setpoint) {
@@ -99,6 +111,10 @@ public class WristSubsystem extends WCStaticSubsystem {
 
   public double getWristPosition() {
     return RobotSystem.isReal() ? m_absoluteEncoder.getPosition() : positionSim;
+  }
+
+  public Rotation3d getWristSimRotation() {
+    return m_wristSim.getRotation();
   }
 
   public boolean isStowed() {

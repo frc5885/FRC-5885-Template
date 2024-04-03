@@ -23,10 +23,7 @@ public class TestArmDownCommand extends WCTestCommand {
 
   private ArmSubsystem m_armSubsystem;
 
-  public TestArmDownCommand(
-      ArmSubsystem armSubsystem,
-      LEDSubsystem ledSubsystem
-  ) {
+  public TestArmDownCommand(ArmSubsystem armSubsystem, LEDSubsystem ledSubsystem) {
     super(ledSubsystem);
     m_armSubsystem = armSubsystem;
   }

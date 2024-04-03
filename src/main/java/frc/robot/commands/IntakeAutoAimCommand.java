@@ -4,7 +4,9 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.robot.Robot;
 import frc.robot.base.io.Beambreak;
 import frc.robot.base.subsystems.swerve.SwerveAction;
@@ -40,11 +42,14 @@ public class IntakeAutoAimCommand extends ParallelCommandGroup {
     m_wristSubsystem = wristSubsystem;
     m_armSubsystem = armSubsystem;
 
-    m_robot.setFieldOriented(false);
-
     addCommands(
         new SetSwerveActionCommand(m_robot, SwerveAction.AIMNOTE),
         new IntakeCommand(
-            m_beambreak, m_intakeSubsystem, m_feederSubsystem, m_wristSubsystem, m_armSubsystem));
+            m_beambreak, m_intakeSubsystem, m_feederSubsystem, m_wristSubsystem, m_armSubsystem),
+        new StartEndCommand(
+          () -> m_robot.setFieldOriented(false),
+          () -> m_robot.setFieldOriented(true)
+          )
+        );
   }
 }

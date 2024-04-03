@@ -2,7 +2,6 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.base.io.Beambreak;
@@ -82,7 +81,7 @@ public class LEDSubsystem extends SubsystemBase {
             // Flash blue when note present & not aimbotting
             flash(0, 0, 255);
           }
-        } else if (m_intakeSubsystem.hasNote()){
+        } else if (m_intakeSubsystem.hasNote()) {
           // solid blue when intake has note but beambreak is not broken
           setLedColor(255, 0, 255);
         } else {
@@ -160,6 +159,7 @@ public class LEDSubsystem extends SubsystemBase {
   public void setAuto() {
     m_mode = LEDMode.AUTO;
   }
+
   public void setMode(LEDMode mode) {
     m_mode = mode;
   }

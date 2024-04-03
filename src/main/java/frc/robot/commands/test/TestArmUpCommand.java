@@ -1,12 +1,7 @@
 package frc.robot.commands.test;
 
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants;
-import frc.robot.base.modules.swerve.SwerveConstants;
-import frc.robot.base.subsystems.swerve.SwerveDriveSubsystem;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
 
@@ -28,10 +23,7 @@ public class TestArmUpCommand extends WCTestCommand {
 
   private ArmSubsystem m_armSubsystem;
 
-  public TestArmUpCommand(
-      ArmSubsystem armSubsystem,
-      LEDSubsystem ledSubsystem
-  ) {
+  public TestArmUpCommand(ArmSubsystem armSubsystem, LEDSubsystem ledSubsystem) {
     super(ledSubsystem);
     m_armSubsystem = armSubsystem;
   }

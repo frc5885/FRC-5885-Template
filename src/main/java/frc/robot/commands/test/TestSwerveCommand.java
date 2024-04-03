@@ -4,8 +4,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.base.modules.swerve.SwerveConstants;
 import frc.robot.base.subsystems.swerve.SwerveDriveSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
@@ -47,7 +45,8 @@ public class TestSwerveCommand extends WCTestCommand {
 
     for (int i = 0; i <= 3; i++) {
       if (values[i] < totalDiv - buffer || values[i] > totalDiv + buffer) {
-        DriverStation.reportError("Test: 1 or more swerve modules was out of sync from the others!", false);
+        DriverStation.reportError(
+            "Test: 1 or more swerve modules was out of sync from the others!", false);
         return false;
       }
     }
@@ -61,10 +60,7 @@ public class TestSwerveCommand extends WCTestCommand {
   }
 
   public TestSwerveCommand(
-      SwerveDriveSubsystem swerveDriveSubsystem,
-      Type type,
-      LEDSubsystem ledSubsystem
-  ) {
+      SwerveDriveSubsystem swerveDriveSubsystem, Type type, LEDSubsystem ledSubsystem) {
     super(ledSubsystem);
     m_swerveDriveSubsystem = swerveDriveSubsystem;
     m_type = type;
@@ -88,14 +84,7 @@ public class TestSwerveCommand extends WCTestCommand {
     }
     m_swerveDriveSubsystem.setModuleStates(
         SwerveConstants.kDriveKinematics.toSwerveModuleStates(
-            ChassisSpeeds.fromRobotRelativeSpeeds(
-                xVel,
-                0,
-                0,
-                Rotation2d.fromDegrees(0)
-            )
-        )
-    );
+            ChassisSpeeds.fromRobotRelativeSpeeds(xVel, 0, 0, Rotation2d.fromDegrees(0))));
   }
 
   @Override
@@ -103,13 +92,6 @@ public class TestSwerveCommand extends WCTestCommand {
     super.end(interrupted);
     m_swerveDriveSubsystem.setModuleStates(
         SwerveConstants.kDriveKinematics.toSwerveModuleStates(
-            ChassisSpeeds.fromRobotRelativeSpeeds(
-                0,
-                0,
-                0,
-                Rotation2d.fromDegrees(0)
-            )
-        )
-    );
+            ChassisSpeeds.fromRobotRelativeSpeeds(0, 0, 0, Rotation2d.fromDegrees(0))));
   }
 }

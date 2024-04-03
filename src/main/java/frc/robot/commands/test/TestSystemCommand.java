@@ -2,13 +2,13 @@ package frc.robot.commands.test;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.Constants;
 import frc.robot.base.subsystems.swerve.SwerveDriveSubsystem;
 import frc.robot.commands.DwellCommand;
 import frc.robot.subsystems.*;
 
 public class TestSystemCommand extends SequentialCommandGroup {
   private static final long dwell = 1500;
+
   public TestSystemCommand(
       SwerveDriveSubsystem swerveDriveSubsystem,
       ArmSubsystem armSubsystem,
@@ -16,8 +16,7 @@ public class TestSystemCommand extends SequentialCommandGroup {
       ShooterSubsystem shooterSubsystem,
       IntakeSubsystem intakeSubsystem,
       FeederSubsystem feederSubsystem,
-      LEDSubsystem ledSubsystem
-  ) {
+      LEDSubsystem ledSubsystem) {
     super(
         // Swerve
         new TestResetSwerveCommand(swerveDriveSubsystem),
@@ -27,10 +26,12 @@ public class TestSystemCommand extends SequentialCommandGroup {
         new TestSwerveCommand(swerveDriveSubsystem, TestSwerveCommand.Type.BACKWARD, ledSubsystem),
         new DwellCommand(dwell),
         new TestResetSwerveCommand(swerveDriveSubsystem),
-        new TestSwerveCommand(swerveDriveSubsystem, TestSwerveCommand.Type.ROTATE_CLOCKWISE, ledSubsystem),
+        new TestSwerveCommand(
+            swerveDriveSubsystem, TestSwerveCommand.Type.ROTATE_CLOCKWISE, ledSubsystem),
         new DwellCommand(dwell),
         new TestResetSwerveCommand(swerveDriveSubsystem),
-        new TestSwerveCommand(swerveDriveSubsystem, TestSwerveCommand.Type.ROTATE_COUNTER_CLOCKWISE, ledSubsystem),
+        new TestSwerveCommand(
+            swerveDriveSubsystem, TestSwerveCommand.Type.ROTATE_COUNTER_CLOCKWISE, ledSubsystem),
 
         // Arm
         new DwellCommand(dwell),
@@ -62,9 +63,6 @@ public class TestSystemCommand extends SequentialCommandGroup {
 
         // End
         new DwellCommand(dwell),
-        new InstantCommand(
-            ledSubsystem::setRainbow
-        )
-    );
+        new InstantCommand(ledSubsystem::setRainbow));
   }
 }

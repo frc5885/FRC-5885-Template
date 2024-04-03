@@ -84,7 +84,7 @@ public class SwerveJoystickCommand extends Command {
             SwerveConstants.AimBotConstants.kAimbotD);
     m_aimBotPID.enableContinuousInput(-Math.PI, Math.PI);
     m_aimBotPID.setTolerance(SwerveConstants.AimBotConstants.kAimbotTolerance);
-    m_facingPID = new PIDController(0.85, 0, 0);
+    m_facingPID = new PIDController(2, 0, 0.2);
     //         SwerveConstants.AimBotConstants.kAimbotP,
     //         SwerveConstants.AimBotConstants.kAimbotI,
     //         SwerveConstants.AimBotConstants.kAimbotD);
@@ -239,9 +239,7 @@ public class SwerveJoystickCommand extends Command {
       if (m_swerveActionFuntion.get() == SwerveAction.AIMNOTE) {
         chassisSpeedX += 0;
       }
-      chassisSpeeds =
-          new ChassisSpeeds(
-              chassisSpeedX, chassisSpeedY, angularVelocity);
+      chassisSpeeds = new ChassisSpeeds(chassisSpeedX, chassisSpeedY, angularVelocity);
     }
 
     // chassisSpeeds = ChassisSpeeds.discretize(chassisSpeeds, 0.02);

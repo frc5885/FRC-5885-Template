@@ -5,8 +5,11 @@ import frc.robot.subsystems.LEDSubsystem;
 
 public abstract class WCTestCommand extends Command {
   protected long startTime = 0;
+
   abstract long getDuration();
+
   abstract boolean wasSuccessful();
+
   private LEDSubsystem m_ledSubsystem;
 
   public WCTestCommand(LEDSubsystem ledSubsystem) {
@@ -14,7 +17,7 @@ public abstract class WCTestCommand extends Command {
   }
 
   @Override
-  final public void initialize() {
+  public final void initialize() {
     startTime = System.currentTimeMillis();
     m_ledSubsystem.setMode(LEDSubsystem.LEDMode.TESTING);
   }

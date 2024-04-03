@@ -2,6 +2,8 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.*;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -11,6 +13,7 @@ import frc.robot.base.RobotSystem;
 import frc.robot.base.subsystems.SubsystemAction;
 import frc.robot.base.subsystems.WCStaticSubsystem;
 import java.util.List;
+import org.littletonrobotics.junction.Logger;
 
 // NEXT STEPS
 // add encoder limits
@@ -25,6 +28,7 @@ public class ArmSubsystem extends WCStaticSubsystem {
   private DutyCycleEncoder m_encoder;
   private PIDController m_PidController;
   private double m_setPoint;
+  private Pose3d m_armSim;
 
   @Override
   protected double getBaseSpeed() {
@@ -36,12 +40,13 @@ public class ArmSubsystem extends WCStaticSubsystem {
     m_arm = new TalonFX(Constants.kArm);
     m_encoder = new DutyCycleEncoder(1);
     m_PidController = new PIDController(250, 0, 0);
+    m_armSim = new Pose3d(0.346, -0.003, 0.298, new Rotation3d(0, 0, Math.PI));
     return List.of(m_arm);
   }
 
   @Override
   public void periodic() {
-      SmartDashboard.putNumber("ArmRaw", getArmPosition());
+    // SmartDashboard.putNumber("ArmRaw", getArmPosition());
     super.periodic();
     if (subsystemAction == SubsystemAction.POS) {
       double measurement = getArmPosition();
@@ -58,6 +63,9 @@ public class ArmSubsystem extends WCStaticSubsystem {
     WCLogger.putNumber(this, "Position", getArmPosition());
     WCLogger.putNumber(this, "Current", m_arm.getSupplyCurrent().getValueAsDouble());
     WCLogger.putAction(this, "Action", subsystemAction);
+    if (WCLogger.isEnabled) {
+      Logger.recordOutput("ArmSim", m_armSim);
+    }
   }
 
   private boolean withinUpperLimit() {

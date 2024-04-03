@@ -1,8 +1,6 @@
 package frc.robot.commands.test;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import frc.robot.Constants;
-import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
@@ -24,10 +22,7 @@ public class TestShooterCommand extends WCTestCommand {
 
   private ShooterSubsystem m_shooterSubsystem;
 
-  public TestShooterCommand(
-      ShooterSubsystem shooterSubsystem,
-      LEDSubsystem ledSubsystem
-  ) {
+  public TestShooterCommand(ShooterSubsystem shooterSubsystem, LEDSubsystem ledSubsystem) {
     super(ledSubsystem);
     m_shooterSubsystem = shooterSubsystem;
   }

@@ -2,7 +2,6 @@ package frc.robot.commands.test;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants;
-import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.WristSubsystem;
 
@@ -24,10 +23,7 @@ public class TestWristStowCommand extends WCTestCommand {
 
   private final WristSubsystem m_wristSubsystem;
 
-  public TestWristStowCommand(
-      WristSubsystem wristSubsystem,
-      LEDSubsystem ledSubsystem
-  ) {
+  public TestWristStowCommand(WristSubsystem wristSubsystem, LEDSubsystem ledSubsystem) {
     super(ledSubsystem);
     m_wristSubsystem = wristSubsystem;
   }

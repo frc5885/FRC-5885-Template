@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -63,6 +64,7 @@ public class AimShooterCommand extends Command {
           m_photonVision.getDistanceToTarget(
               m_swervePoseEstimator.getPose(), m_photonVision.getTargetID());
       double wristAngle = WristAngleUtil.getAngle(distanceToTarget);
+      // SmartDashboard.putNumber("DistanceToTarget", distanceToTarget);
       // double wristAngle = SmartDashboard.getNumber("SHOOTPOINT", Constants.kWristAmp);
       if (distanceToTarget >= 3.1) {
         m_shooterSubsystem.spinFastFar();

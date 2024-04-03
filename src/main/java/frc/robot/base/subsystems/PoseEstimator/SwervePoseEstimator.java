@@ -69,9 +69,9 @@ public class SwervePoseEstimator extends SubsystemBase {
     // system
     m_poseEstimator.update(m_rotationSupplier.get(), m_swerveModulePositionSupplier.get());
     Pose2d estimatedPosition = getPose();
-    if (WCLogger.isEnabled) {
+    // if (WCLogger.isEnabled) {
       Logger.recordOutput(this.getClass().getSimpleName() + "/EstimatedPose", estimatedPosition);
-    }
+    // }
 
     // Update the WPI pose estimator with the latest vision measurements from photon
     // vision if they

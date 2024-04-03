@@ -13,12 +13,16 @@ public class WristAngleUtil {
 
   private static double getAngleClose(double distance) {
     // double correctionFactor = 1.015;
-    double correctionFactor = SmartDashboard.getNumber("WristAngleCorrectionFactor", Constants.kWristAngleCorrectionFactorClose);
-    return (0.140315 * Math.atan(1.2595 / distance) + 0.279903) * correctionFactor;
+    double correctionFactor =
+        SmartDashboard.getNumber(
+            "WristAngleCorrectionFactor", Constants.kWristAngleCorrectionFactorClose);
+    return (Math.atan(0.1562 / distance) + 0.28876) * correctionFactor;
   }
 
   private static double getAngleFar(double distance) {
-    double correctionFactor = SmartDashboard.getNumber("WristAngleCorrectionFactor", Constants.kWristAngleCorrectionFactorFar);
-    return (0.206139 * Math.atan(0.644976 / distance) + 0.29333) * correctionFactor;
+    double correctionFactor =
+        SmartDashboard.getNumber(
+            "WristAngleCorrectionFactor", Constants.kWristAngleCorrectionFactorFar);
+    return (Math.atan(132.358 / distance) + -1.21165) * correctionFactor;
   }
 }

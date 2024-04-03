@@ -1,7 +1,6 @@
 package frc.robot.commands.test;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import frc.robot.Constants;
 import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.WristSubsystem;
 
@@ -23,10 +22,7 @@ public class TestWristAimCommand extends WCTestCommand {
 
   private final WristSubsystem m_wristSubsystem;
 
-  public TestWristAimCommand(
-      WristSubsystem wristSubsystem,
-      LEDSubsystem ledSubsystem
-  ) {
+  public TestWristAimCommand(WristSubsystem wristSubsystem, LEDSubsystem ledSubsystem) {
     super(ledSubsystem);
     m_wristSubsystem = wristSubsystem;
   }

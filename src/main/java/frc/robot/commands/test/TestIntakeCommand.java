@@ -3,7 +3,6 @@ package frc.robot.commands.test;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
-import frc.robot.subsystems.ShooterSubsystem;
 
 public class TestIntakeCommand extends WCTestCommand {
 
@@ -16,7 +15,8 @@ public class TestIntakeCommand extends WCTestCommand {
   boolean wasSuccessful() {
     boolean success = Math.abs(m_intakeSubsystem.getVelocity()) > 100;
     if (!success) {
-      DriverStation.reportError("Test: Intake did not report as being above specified velocity threshold!", false);
+      DriverStation.reportError(
+          "Test: Intake did not report as being above specified velocity threshold!", false);
     }
     return success;
   }
@@ -29,11 +29,7 @@ public class TestIntakeCommand extends WCTestCommand {
   private IntakeSubsystem m_intakeSubsystem;
   private Type type;
 
-  public TestIntakeCommand(
-      IntakeSubsystem intakeSubsystem,
-      Type type,
-      LEDSubsystem ledSubsystem
-  ) {
+  public TestIntakeCommand(IntakeSubsystem intakeSubsystem, Type type, LEDSubsystem ledSubsystem) {
     super(ledSubsystem);
     m_intakeSubsystem = intakeSubsystem;
     this.type = type;
