@@ -204,13 +204,6 @@ public class Robot extends WCRobot {
             m_armSubsystem,
             m_beambreak));
 
-    m_operatorController.scheduleOnRightTrigger(new PassCommand(
-        m_wristSubsystem,
-        m_feederSubsystem,
-        m_armSubsystem,
-        m_shooterSubsystem,
-        m_beambreak));
-
     // Wrist Test
     // m_operatorController.getAButton().onTrue(new InstantCommand(() ->
     // m_wristSubsystem.pos(0.39)));

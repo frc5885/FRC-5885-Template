@@ -73,11 +73,14 @@ public class AimShooterCommand extends Command {
 
       if (distanceToTarget >= 5.0) {
         // Passing
-        m_wristSubsystem.pos(Constants.kWristPass);
+        // High pass
+        // m_wristSubsystem.pos(Constants.kWristPass);
+        // Low Pass
+        m_wristSubsystem.pos(Constants.kWristEncoderMin);
       } else if (wristAngle >= Constants.kWristEncoderMin && wristAngle <= Constants.kWristStow) {
         m_wristSubsystem.pos(wristAngle);
       } else {
-        m_wristSubsystem.pos(Constants.kWristPass);
+        m_wristSubsystem.pos(Constants.kWristStow);
       }
       if (m_shooterSubsystem.isVelocityTerminal()) {
         m_driverController.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 1.0);
