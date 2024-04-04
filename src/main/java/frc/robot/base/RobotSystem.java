@@ -305,6 +305,7 @@ public class RobotSystem extends LoggedRobot {
 
   private void setCameraOffset() {
     Alliance alliance = DriverStation.getAlliance().get();
+    // SmartDashboard.putString("Alliance", alliance.name());
     if (alliance == Alliance.Blue) {
       m_robotContainer.m_photonVision.setRobotToCameraTransform(
           new Transform3d(

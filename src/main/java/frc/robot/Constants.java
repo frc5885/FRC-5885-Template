@@ -58,5 +58,5 @@ public final class Constants {
 
   // LED
   public static final int kLED = 9;
-  public static final double kIntakeCurrentThreshold = 15.0;
+  public static final double kIntakeCurrentThreshold = 10.0;
 }
