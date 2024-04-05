@@ -1,0 +1,49 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.8427016139030457,
+      "y": 6.6769819259643555
+    },
+    "rotation": -119.75820821081996
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 11.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Windsor_Amp_MidfieldAmp_3nn.1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Windsor_Amp_MidfieldAmp_3nn.2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Windsor_Amp_MidfieldAmp_3nn.3"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": true
+}

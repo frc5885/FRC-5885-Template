@@ -2,19 +2,19 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.73,
-      "y": 6.7
+      "x": 1.4101016521453855,
+      "y": 7.379734992980957
     },
-    "rotation": -120.0
+    "rotation": -7.097460103896756e-16
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "shoot"
+            "pathName": "gOBLIN mODE.1"
           }
         }
       ]

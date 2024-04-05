@@ -5,7 +5,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
 import frc.robot.base.io.Beambreak;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.FeederSubsystem;
@@ -48,9 +47,8 @@ public class FeedCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (m_shooterSubsystem.isVelocityTerminal() ||
-      m_armSubsystem.isArmUp() ||
-      (m_wristSubsystem.getPIDSetPoint() == Constants.kWristPass && m_wristSubsystem.isAtPos())
+    if (m_shooterSubsystem.isVelocityTerminal() || m_armSubsystem.isArmUp() // ||
+    // (m_wristSubsystem.getPIDSetPoint() == Constants.kWristPass && m_wristSubsystem.isAtPos())
     ) {
       m_feederSubsystem.shoot();
     } else {

@@ -36,7 +36,7 @@ public class RobotSystem extends LoggedRobot {
 
   @Override
   public void robotInit() {
-    if (WCLogger.isEnabled) {
+    if (true) {
       if (RobotBase.isReal()) {
         boolean found_thumbdrive = false;
         File directory = new File("/media/");

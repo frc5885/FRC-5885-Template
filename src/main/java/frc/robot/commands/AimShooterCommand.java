@@ -65,19 +65,20 @@ public class AimShooterCommand extends Command {
       double wristAngle = WristAngleUtil.getAngle(distanceToTarget);
       // SmartDashboard.putNumber("DistanceToTarget", distanceToTarget);
       // double wristAngle = SmartDashboard.getNumber("SHOOTPOINT", Constants.kWristAmp);
-      if (distanceToTarget >= 3.1) {
+
+      if (distanceToTarget >= Constants.kPassDistanceFar) {
+        // pass far
+        m_shooterSubsystem.spinFastFar();
+      } else if (distanceToTarget >= Constants.kPassDistanceClose) {
+        // pass close
+        m_shooterSubsystem.spinFastClose();
+      } else if (distanceToTarget >= 3.1) {
         m_shooterSubsystem.spinFastFar();
       } else {
         m_shooterSubsystem.spinFastClose();
       }
 
-      if (distanceToTarget >= 5.0) {
-        // Passing
-        // High pass
-        // m_wristSubsystem.pos(Constants.kWristPass);
-        // Low Pass
-        m_wristSubsystem.pos(Constants.kWristEncoderMin);
-      } else if (wristAngle >= Constants.kWristEncoderMin && wristAngle <= Constants.kWristStow) {
+      if (wristAngle >= Constants.kWristEncoderMin && wristAngle <= Constants.kWristStow) {
         m_wristSubsystem.pos(wristAngle);
       } else {
         m_wristSubsystem.pos(Constants.kWristStow);

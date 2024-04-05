@@ -28,6 +28,8 @@ public class ShooterSubsystem extends WCStaticSubsystem {
   double idleVelocity = -2800;
   double shootCloseVelocity = -2800;
   double shootFarVelocity = -3700;
+  double passCloseVelocity = -2800;
+  double passFarVelocity = -3700;
   public RobotMode robotMode = RobotMode.AUTO;
 
   public enum RobotMode {

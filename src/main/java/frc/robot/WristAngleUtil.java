@@ -25,4 +25,11 @@ public class WristAngleUtil {
             "WristAngleCorrectionFactorFar", Constants.kWristAngleCorrectionFactorFar);
     return (Math.atan(132.358 / distance) + -1.21165) * correctionFactor;
   }
+
+  // private static double getAnglePass(double distance) {
+  //   // double correctionFactor =
+  //       // SmartDashboard.getNumber(
+  //       //     "WristAngleCorrectionFactorFar", Constants.kWristAngleCorrectionFactorFar);
+  //   return (Math.atan(132.358 / distance) + -1.21165);
+  // }
 }

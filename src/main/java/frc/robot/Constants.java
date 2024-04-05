@@ -32,7 +32,7 @@ public final class Constants {
   public static final double kWristEncoderMax = 0.577; // Max
   public static final double kWristEncoderMin = 0.325; // Min
   public static final double kWristStow = 0.441; // Stow
-  public static final double kWristPass = kWristEncoderMin; // Pass cross field
+  public static final double kWristPass = kWristStow; // Pass cross field
   public static final double kWristAmp = 0.376; // Amp
   // public static final double kWristSubwoofer = -0.5;
   public static final double kWristSubwoofer = 0.383;
@@ -59,4 +59,7 @@ public final class Constants {
   // LED
   public static final int kLED = 9;
   public static final double kIntakeCurrentThreshold = 10.0;
+
+  public static final double kPassDistanceClose = 5.0;
+  public static final double kPassDistanceFar = 9.25;
 }
