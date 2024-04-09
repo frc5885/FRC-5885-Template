@@ -204,6 +204,11 @@ public class Robot extends WCRobot {
             m_armSubsystem,
             m_beambreak));
 
+    m_operatorController.getStartButton().onTrue(new InstantCommand(
+        () -> {
+          setFieldOriented(!m_isFieldOriented);
+        }));
+
     // Wrist Test
     // m_operatorController.getAButton().onTrue(new InstantCommand(() ->
     // m_wristSubsystem.pos(0.39)));

@@ -28,7 +28,7 @@ public class AprilTagCameraConstants {
     // Blue
     // public static final double kCameraPositionX = Units.inchesToMeters(11.56 + 0.39 + 14.0);
     // Red
-    public static final double kCameraPositionX = Units.inchesToMeters(11.56 + 0.39 + 14.0);
+    public static final double kCameraPositionX = Units.inchesToMeters(11.56 + 0.39 + 12.0);
     public static final double kCameraPositonY = 0.0;
     public static final double kCameraPositionZ = Units.inchesToMeters(13.876 + 1.9);
     public static final double kCameraRoll = 0.0;

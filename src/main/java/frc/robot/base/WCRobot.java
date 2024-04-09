@@ -50,12 +50,12 @@ public abstract class WCRobot {
             new InstantCommand(
                 () -> {
                   // TODO needs to be commented out during match!
-                  m_swerveDrive.resetGyro();
-                  m_swervePoseEstimator.reset();
+                  // m_swerveDrive.resetGyro();
+                  // m_swervePoseEstimator.reset();
                 }),
             new InstantCommand(
                 () -> {
-                  setFieldOriented(!m_isFieldOriented);
+                  // setFieldOriented(!m_isFieldOriented);
                 }));
 
     initComponents();

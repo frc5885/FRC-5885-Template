@@ -14,7 +14,7 @@ import java.util.List;
 public class IntakeSubsystem extends WCStaticSubsystem {
 
   private CANSparkMax m_intakeMotor;
-  private LinearFilter m_currentFilter = LinearFilter.singlePoleIIR(0.3, 0.02);
+  private LinearFilter m_currentFilter = LinearFilter.singlePoleIIR(0.4, 0.02);
 
   @Override
   protected double getBaseSpeed() {
