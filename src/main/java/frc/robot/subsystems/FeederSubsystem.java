@@ -15,7 +15,7 @@ public class FeederSubsystem extends WCStaticSubsystem {
 
   @Override
   protected double getBaseSpeed() {
-    return 0.15;
+    return 0.5;
   }
 
   @Override

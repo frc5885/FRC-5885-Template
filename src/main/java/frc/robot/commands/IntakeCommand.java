@@ -4,9 +4,11 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.base.io.Beambreak;
+import frc.robot.base.io.DriverController;
 import frc.robot.base.subsystems.SubsystemAction;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.FeederSubsystem;
@@ -21,18 +23,23 @@ public class IntakeCommand extends Command {
   FeederSubsystem m_feederSubsystem;
   WristSubsystem m_wristSubsystem;
   ArmSubsystem m_armSubsystem;
+  DriverController m_driverController;
+  // Timer m_timer = new Timer();
+  long m_timer;
 
   public IntakeCommand(
       Beambreak beambreak,
       IntakeSubsystem intakeSubsystem,
       FeederSubsystem feederSubsystem,
       WristSubsystem wristSubsystem,
-      ArmSubsystem armSubsystem) {
+      ArmSubsystem armSubsystem,
+      DriverController driverController) {
     m_beambreak = beambreak;
     m_intakeSubsystem = intakeSubsystem;
     m_feederSubsystem = feederSubsystem;
     m_wristSubsystem = wristSubsystem;
     m_armSubsystem = armSubsystem;
+    m_driverController = driverController;
 
     addRequirements(m_intakeSubsystem, m_feederSubsystem);
   }
@@ -48,6 +55,14 @@ public class IntakeCommand extends Command {
       m_intakeSubsystem.intake();
       m_feederSubsystem.intake();
     }
+    if (m_intakeSubsystem.hasNote() && m_timer == 0) {
+      m_timer = System.currentTimeMillis();
+    } else if (m_intakeSubsystem.hasNote() && System.currentTimeMillis() - m_timer > 500) {
+      m_driverController.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 1.0);
+    } else {
+      m_timer = 0;
+      m_driverController.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0.0);
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -55,6 +70,7 @@ public class IntakeCommand extends Command {
   public void end(boolean interrupted) {
     m_intakeSubsystem.stop();
     m_feederSubsystem.stop();
+    m_timer = 0;
   }
 
   // Returns true when the command should end.

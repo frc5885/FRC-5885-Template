@@ -79,7 +79,8 @@ public class Robot extends WCRobot {
                 m_intakeSubsystem,
                 m_feederSubsystem,
                 m_wristSubsystem,
-                m_armSubsystem));
+                m_armSubsystem,
+                m_driverController));
 
     // Arm Up, snap to amp
     m_driverController
@@ -130,7 +131,8 @@ public class Robot extends WCRobot {
                 m_intakeSubsystem,
                 m_feederSubsystem,
                 m_wristSubsystem,
-                m_armSubsystem));
+                m_armSubsystem,
+                m_driverController));
     // Shoot
     m_driverController.scheduleOnRightTrigger(
         new FeedCommand(
@@ -204,10 +206,22 @@ public class Robot extends WCRobot {
             m_armSubsystem,
             m_beambreak));
 
-    m_operatorController.getStartButton().onTrue(new InstantCommand(
-        () -> {
-          setFieldOriented(!m_isFieldOriented);
-        }));
+    m_operatorController
+        .getStartButton()
+        .onTrue(
+            new InstantCommand(
+                () -> {
+                  setFieldOriented(!m_isFieldOriented);
+                }));
+
+    m_operatorController.scheduleOnRightTrigger(
+        new PassCommand(
+            this,
+            m_wristSubsystem,
+            m_feederSubsystem,
+            m_armSubsystem,
+            m_shooterSubsystem,
+            m_beambreak));
 
     // Wrist Test
     // m_operatorController.getAButton().onTrue(new InstantCommand(() ->

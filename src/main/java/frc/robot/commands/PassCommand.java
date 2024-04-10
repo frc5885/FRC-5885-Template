@@ -6,7 +6,9 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.base.io.Beambreak;
+import frc.robot.base.subsystems.swerve.SwerveAction;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -14,6 +16,7 @@ import frc.robot.subsystems.WristSubsystem;
 
 public class PassCommand extends Command {
 
+  Robot m_robot;
   WristSubsystem m_wristSubsystem;
   FeederSubsystem m_feederSubsystem;
   ArmSubsystem m_armSubsystem;
@@ -23,6 +26,7 @@ public class PassCommand extends Command {
 
   /** Creates a new PassCommand. */
   public PassCommand(
+      Robot m_robot,
       WristSubsystem wristSubsystem,
       FeederSubsystem feederSubsystem,
       ArmSubsystem armSubsystem,
@@ -44,6 +48,7 @@ public class PassCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    m_robot.setSwerveAction(SwerveAction.PASS);
     if (m_beambreak.isBroken()) {
       m_wristSubsystem.pos(Constants.kWristEncoderMin);
 
@@ -68,6 +73,8 @@ public class PassCommand extends Command {
   public void end(boolean interrupted) {
     m_wristSubsystem.pos(Constants.kWristStow);
     m_feederSubsystem.stop();
+    m_shooterSubsystem.stop();
+    m_robot.setSwerveAction(SwerveAction.DEFAULT);
   }
 
   // Returns true when the command should end.

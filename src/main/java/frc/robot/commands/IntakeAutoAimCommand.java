@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.robot.Robot;
 import frc.robot.base.io.Beambreak;
+import frc.robot.base.io.DriverController;
 import frc.robot.base.subsystems.swerve.SwerveAction;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.FeederSubsystem;
@@ -25,6 +26,7 @@ public class IntakeAutoAimCommand extends ParallelCommandGroup {
   FeederSubsystem m_feederSubsystem;
   WristSubsystem m_wristSubsystem;
   ArmSubsystem m_armSubsystem;
+  DriverController m_driverController;
 
   /** Creates a new IntakeAutoAimCommand. */
   public IntakeAutoAimCommand(
@@ -33,18 +35,25 @@ public class IntakeAutoAimCommand extends ParallelCommandGroup {
       IntakeSubsystem intakeSubsystem,
       FeederSubsystem feederSubsystem,
       WristSubsystem wristSubsystem,
-      ArmSubsystem armSubsystem) {
+      ArmSubsystem armSubsystem,
+      DriverController driverController) {
     m_robot = robot;
     m_beambreak = beambreak;
     m_intakeSubsystem = intakeSubsystem;
     m_feederSubsystem = feederSubsystem;
     m_wristSubsystem = wristSubsystem;
     m_armSubsystem = armSubsystem;
+    m_driverController = driverController;
 
     addCommands(
         new SetSwerveActionCommand(m_robot, SwerveAction.AIMNOTE),
         new IntakeCommand(
-            m_beambreak, m_intakeSubsystem, m_feederSubsystem, m_wristSubsystem, m_armSubsystem),
+            m_beambreak,
+            m_intakeSubsystem,
+            m_feederSubsystem,
+            m_wristSubsystem,
+            m_armSubsystem,
+            m_driverController),
         new StartEndCommand(
             () -> m_robot.setFieldOriented(false), () -> m_robot.setFieldOriented(true)));
   }

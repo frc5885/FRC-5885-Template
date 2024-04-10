@@ -6,6 +6,7 @@ import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -187,12 +188,21 @@ public class PhotonVisionSystem extends SubsystemBase {
     double robotX = robotPose.getTranslation().getX();
     double robotY = robotPose.getTranslation().getY();
     double angleToTarget = Math.atan2(targetY - robotY, targetX - robotX);
-    double offset = Units.degreesToRadians(0);
+    double offset = Units.degreesToRadians(-9);
     double calculated = angleToTarget + offset;
     WCLogger.putNumber(this, "Angle/Raw", angleToTarget);
     WCLogger.putNumber(this, "Angle/Offset", offset);
     WCLogger.putNumber(this, "Angle/Calculated", calculated);
     return calculated;
+  }
+
+  public double getAngleToPose(Pose2d robotPose, Translation2d target) {
+    double angleToTarget =
+        Math.atan2(target.getY() - robotPose.getY(), target.getY() - robotPose.getY());
+    double offset = Units.degreesToRadians(-9);
+    angleToTarget += offset;
+
+    return angleToTarget;
   }
 
   public double getDistanceToTarget(Pose2d robotPose, int targetID) {

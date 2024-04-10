@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.base.io.Beambreak;
 import frc.robot.base.subsystems.SubsystemAction;
-
 import java.util.function.Supplier;
 
 public class LEDSubsystem extends SubsystemBase {
@@ -86,7 +85,7 @@ public class LEDSubsystem extends SubsystemBase {
         } else if (m_intakeSubsystem.hasNote()) {
           // solid blue when intake has note but beambreak is not broken
           setLedColor(255, 0, 255);
-        } else if (m_intakeSubsystem.getSubsystemAction() == SubsystemAction.INTAKE){
+        } else if (m_intakeSubsystem.getSubsystemAction() == SubsystemAction.INTAKE) {
           // Solid white when intaking
           setLedColor(255, 255, 255);
         } else {

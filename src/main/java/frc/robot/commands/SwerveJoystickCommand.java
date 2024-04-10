@@ -188,6 +188,16 @@ public class SwerveJoystickCommand extends Command {
           angularVelocity = 0;
         }
         break;
+      case PASS:
+        angularVelocity =
+            m_aimBotPID.calculate(
+                robotPose.getRotation().getRadians(),
+                m_photonVision.getAngleToPose(
+                    m_poseEstimator.getPose(), new Translation2d(1.021, 7.095)));
+        if (m_aimBotPID.atSetpoint()) {
+          angularVelocity = 0;
+        }
+        break;
       default:
         angularVelocity =
             MathUtil.applyDeadband(rightJoystickX, SwerveConstants.kSwerveDriveDeadband);
