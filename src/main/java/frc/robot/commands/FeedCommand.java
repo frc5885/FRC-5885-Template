@@ -51,7 +51,7 @@ public class FeedCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if ((m_shooterSubsystem.isVelocityTerminal() && m_robot.swerveIsAtSetpoint()) || m_armSubsystem.isArmUp() // ||
+    if ((m_shooterSubsystem.isVelocityTerminal() && m_robot.swerveIsAtSetpoint() && m_wristSubsystem.isAtPos()) || m_armSubsystem.isArmUp() // ||
     // (m_wristSubsystem.getPIDSetPoint() == Constants.kWristPass && m_wristSubsystem.isAtPos())
     ) {
       m_feederSubsystem.shoot();
