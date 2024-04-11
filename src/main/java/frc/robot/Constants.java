@@ -1,5 +1,7 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Translation2d;
+
 public final class Constants {
   // Intake Motor IDs
   public static final int kIntakeLeft = 31;
@@ -62,4 +64,10 @@ public final class Constants {
 
   public static final double kPassDistanceClose = 5.0;
   public static final double kPassDistanceFar = 9.25;
+
+  // Pass target
+  public static final Translation2d kPassTargetRed = new Translation2d(1.021, 7.095);
+  public static final Translation2d kPassTargetBlue = new Translation2d(15.1, 6.8);   
+  
+  
 }

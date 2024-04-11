@@ -26,12 +26,13 @@ public class PassCommand extends Command {
 
   /** Creates a new PassCommand. */
   public PassCommand(
-      Robot m_robot,
+      Robot robot,
       WristSubsystem wristSubsystem,
       FeederSubsystem feederSubsystem,
       ArmSubsystem armSubsystem,
       ShooterSubsystem shooterSubsystem,
       Beambreak beambreak) {
+    m_robot = robot;
     m_armSubsystem = armSubsystem;
     m_feederSubsystem = feederSubsystem;
     m_wristSubsystem = wristSubsystem;

@@ -37,6 +37,8 @@ public abstract class WCRobot {
 
   protected SwerveAction m_swerveAction = SwerveAction.DEFAULT;
 
+  protected final SwerveJoystickCommand m_SwerveJoystickCommand;
+
   private final SendableChooser<Command> m_chooser = new SendableChooser<>();
 
   public WCRobot() {
@@ -58,6 +60,16 @@ public abstract class WCRobot {
                   // setFieldOriented(!m_isFieldOriented);
                 }));
 
+    m_SwerveJoystickCommand = new SwerveJoystickCommand(
+            m_swerveDrive,
+            m_swervePoseEstimator,
+            m_photonVision,
+            () -> -m_driverController.getLeftY(),
+            () -> -m_driverController.getLeftX(),
+            () -> -getDriverRotationAxis(),
+            () -> m_isFieldOriented,
+            this::getSwerveAction);
+
     initComponents();
     initSubsystems();
     initAutoCommands();
@@ -73,16 +85,7 @@ public abstract class WCRobot {
   }
 
   private void initSwerveBindings() {
-    m_swerveDrive.setDefaultCommand(
-        new SwerveJoystickCommand(
-            m_swerveDrive,
-            m_swervePoseEstimator,
-            m_photonVision,
-            () -> -m_driverController.getLeftY(),
-            () -> -m_driverController.getLeftX(),
-            () -> -getDriverRotationAxis(),
-            () -> m_isFieldOriented,
-            this::getSwerveAction));
+    m_swerveDrive.setDefaultCommand(m_SwerveJoystickCommand);
   }
 
   public SwerveAction getSwerveAction() {
@@ -97,6 +100,10 @@ public abstract class WCRobot {
 
   public void setFieldOriented(boolean isFieldOriented) {
     m_isFieldOriented = isFieldOriented;
+  }
+
+  public boolean swerveIsAtSetpoint() {
+    return m_SwerveJoystickCommand.aimbotPIDAtSetpoint();
   }
 
   protected double getDriverRotationAxis() {

@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Robot;
 import frc.robot.base.io.Beambreak;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.FeederSubsystem;
@@ -20,6 +21,7 @@ public class FeedCommand extends Command {
   private WristSubsystem m_wristSubsystem;
   private Beambreak m_beambreak;
   private NoteVisualizer m_noteVisualizer;
+  private Robot m_robot;
 
   /** Creates a new Shoot. */
   public FeedCommand(
@@ -28,7 +30,8 @@ public class FeedCommand extends Command {
       ArmSubsystem armSubsystem,
       WristSubsystem wristSubsystem,
       Beambreak beambreak,
-      NoteVisualizer noteVisualizer) {
+      NoteVisualizer noteVisualizer,
+      Robot robot) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_feederSubsystem = feederSubsystem;
     m_shooterSubsystem = shooterSubsystem;
@@ -36,6 +39,7 @@ public class FeedCommand extends Command {
     m_armSubsystem = armSubsystem;
     m_wristSubsystem = wristSubsystem;
     m_noteVisualizer = noteVisualizer;
+    m_robot = robot;
 
     addRequirements(m_feederSubsystem);
   }
@@ -47,7 +51,7 @@ public class FeedCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (m_shooterSubsystem.isVelocityTerminal() || m_armSubsystem.isArmUp() // ||
+    if ((m_shooterSubsystem.isVelocityTerminal() && m_robot.swerveIsAtSetpoint()) || m_armSubsystem.isArmUp() // ||
     // (m_wristSubsystem.getPIDSetPoint() == Constants.kWristPass && m_wristSubsystem.isAtPos())
     ) {
       m_feederSubsystem.shoot();

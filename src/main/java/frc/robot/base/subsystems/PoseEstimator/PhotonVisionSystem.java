@@ -198,7 +198,7 @@ public class PhotonVisionSystem extends SubsystemBase {
 
   public double getAngleToPose(Pose2d robotPose, Translation2d target) {
     double angleToTarget =
-        Math.atan2(target.getY() - robotPose.getY(), target.getY() - robotPose.getY());
+        Math.atan2(target.getY() - robotPose.getY(), target.getX() - robotPose.getX());
     double offset = Units.degreesToRadians(-9);
     angleToTarget += offset;
 

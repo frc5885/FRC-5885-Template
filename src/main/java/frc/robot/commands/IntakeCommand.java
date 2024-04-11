@@ -25,7 +25,10 @@ public class IntakeCommand extends Command {
   ArmSubsystem m_armSubsystem;
   DriverController m_driverController;
   // Timer m_timer = new Timer();
-  long m_timer;
+  long m_timer = 0;
+
+  long m_rumbleDuration = 200;
+  long m_rumbleCooldown = 3000;
 
   public IntakeCommand(
       Beambreak beambreak,
@@ -55,12 +58,14 @@ public class IntakeCommand extends Command {
       m_intakeSubsystem.intake();
       m_feederSubsystem.intake();
     }
-    if (m_intakeSubsystem.hasNote() && m_timer == 0) {
+    if (m_intakeSubsystem.hasNote() && System.currentTimeMillis() - m_timer >= m_rumbleCooldown) {
+      // if there is a note and cooldown time has passed, start rumble timer
       m_timer = System.currentTimeMillis();
-    } else if (m_intakeSubsystem.hasNote() && System.currentTimeMillis() - m_timer > 500) {
+    } else if (m_intakeSubsystem.hasNote() && System.currentTimeMillis() - m_timer < 300) {
+      // if there is a note and we're within rumble time, rumble
       m_driverController.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 1.0);
     } else {
-      m_timer = 0;
+      // turn off rumble
       m_driverController.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0.0);
     }
   }

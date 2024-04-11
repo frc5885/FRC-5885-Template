@@ -15,12 +15,15 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.WCLogger;
 import frc.robot.base.modules.swerve.SwerveConstants;
 import frc.robot.base.subsystems.PoseEstimator.PhotonVisionSystem;
 import frc.robot.base.subsystems.PoseEstimator.SwervePoseEstimator;
 import frc.robot.base.subsystems.swerve.SwerveAction;
 import frc.robot.base.subsystems.swerve.SwerveDriveSubsystem;
+
+import java.io.Console;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
@@ -193,7 +196,7 @@ public class SwerveJoystickCommand extends Command {
             m_aimBotPID.calculate(
                 robotPose.getRotation().getRadians(),
                 m_photonVision.getAngleToPose(
-                    m_poseEstimator.getPose(), new Translation2d(1.021, 7.095)));
+                    m_poseEstimator.getPose(), alliance == Alliance.Red ? Constants.kPassTargetBlue : Constants.kPassTargetRed));
         if (m_aimBotPID.atSetpoint()) {
           angularVelocity = 0;
         }
@@ -274,5 +277,9 @@ public class SwerveJoystickCommand extends Command {
   @Override
   public boolean isFinished() {
     return false;
+  }
+
+  public boolean aimbotPIDAtSetpoint() {
+    return m_aimBotPID.atSetpoint();
   }
 }

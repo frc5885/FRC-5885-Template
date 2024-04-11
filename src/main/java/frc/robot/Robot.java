@@ -141,7 +141,8 @@ public class Robot extends WCRobot {
             m_armSubsystem,
             m_wristSubsystem,
             m_beambreak,
-            m_noteVisualizer));
+            m_noteVisualizer,
+            this));
 
     // snap to amp
     m_driverController
@@ -237,4 +238,5 @@ public class Robot extends WCRobot {
   public void setLEDsRainbow() {
     m_ledSubsystem.setRainbow();
   }
+
 }
