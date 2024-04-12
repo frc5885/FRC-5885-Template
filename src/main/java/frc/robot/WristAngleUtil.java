@@ -24,15 +24,18 @@ public class WristAngleUtil {
     double correctionFactor =
         SmartDashboard.getNumber(
             "WristAngleCorrectionFactorFar", Constants.kWristAngleCorrectionFactorFar);
-    return MathUtil.clamp((Math.atan(0.129376 / distance) + 0.288527) * correctionFactor, Constants.kWristEncoderMin, Constants.kWristEncoderMax);
+    return MathUtil.clamp(
+        (Math.atan(0.129376 / distance) + 0.288527) * correctionFactor,
+        Constants.kWristEncoderMin,
+        Constants.kWristEncoderMax);
   }
 
   public static double getVelocityFar(double distance) {
-          // return (2781.37 * Math.pow(distance, 2)) + (-20080.6 * distance) + 32341.4;
-          return 2520 * distance -13457.8;
-  
+    // return (2781.37 * Math.pow(distance, 2)) + (-20080.6 * distance) + 32341.4;
+    return 2520 * distance - 13457.8;
+
     // return distance * 739.005 - 6176.93;
-      // return Math.atan(-3.74952 / distance) + -3449.2;
+    // return Math.atan(-3.74952 / distance) + -3449.2;
   }
 
   // private static double getAnglePass(double distance) {

@@ -126,7 +126,8 @@ public class WristSubsystem extends WCStaticSubsystem {
   }
 
   public boolean isAtBadPos() {
-    return getWristPosition() >= m_setPoint - (buffer * 2) && getWristPosition() <= m_setPoint + (buffer * 2);
+    return getWristPosition() >= m_setPoint - (buffer * 2)
+        && getWristPosition() <= m_setPoint + (buffer * 2);
   }
 
   public double getPIDSetPoint() {

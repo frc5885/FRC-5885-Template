@@ -53,8 +53,7 @@ public class AimShooterCommand extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -75,7 +74,7 @@ public class AimShooterCommand extends Command {
       // } else if (distanceToTarget >= Constants.kPassDistanceClose) {
       //   // pass close
       //   m_shooterSubsystem.spinFastClose();
-      // } else 
+      // } else
       if (distanceToTarget >= 3.3) {
         m_shooterSubsystem.spinFastFar(WristAngleUtil.getVelocityFar(distanceToTarget));
       } else {

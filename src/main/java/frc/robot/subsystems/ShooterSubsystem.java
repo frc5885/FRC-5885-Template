@@ -131,13 +131,13 @@ public class ShooterSubsystem extends WCStaticSubsystem {
       topVelocitySim += m_top.getAppliedOutput() * 1.75;
       bottomVelocitySim += m_bottom.getAppliedOutput() * 1.75;
     }
-    SmartDashboard.putNumber( "Top/Voltage", m_top.getAppliedOutput());
-    SmartDashboard.putNumber( "Top/Current", m_top.getOutputCurrent());
-    SmartDashboard.putNumber( "Top/Velocity", getTopVelocity());
+    SmartDashboard.putNumber("Top/Voltage", m_top.getAppliedOutput());
+    SmartDashboard.putNumber("Top/Current", m_top.getOutputCurrent());
+    SmartDashboard.putNumber("Top/Velocity", getTopVelocity());
 
-    SmartDashboard.putNumber( "Bottom/Voltage", m_bottom.getAppliedOutput());
-    SmartDashboard.putNumber( "Bottom/Current", m_bottom.getOutputCurrent());
-    SmartDashboard.putNumber( "Bottom/Velocity", getBottomVelocity());
+    SmartDashboard.putNumber("Bottom/Voltage", m_bottom.getAppliedOutput());
+    SmartDashboard.putNumber("Bottom/Current", m_bottom.getOutputCurrent());
+    SmartDashboard.putNumber("Bottom/Velocity", getBottomVelocity());
   }
 
   @Override
