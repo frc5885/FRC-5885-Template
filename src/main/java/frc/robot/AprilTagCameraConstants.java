@@ -12,7 +12,7 @@ public class AprilTagCameraConstants {
     public static final String kCameraName = "USB_Camera";
     // Higher offset = further away
     // Blue
-    public static final double kCameraPositionX = Units.inchesToMeters(11.56 + 0.39 + 13.0);
+    public static final double kCameraPositionX = Units.inchesToMeters(11.56 + 0.39 + 20.0);
     // Red
     // public static final double kCameraPositionX = Units.inchesToMeters(11.56 + 0.39 + 12.0);
     public static final double kCameraPositonY = 0.0;

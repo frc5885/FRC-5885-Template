@@ -21,7 +21,7 @@ import org.littletonrobotics.junction.Logger;
 
 public class WristSubsystem extends WCStaticSubsystem {
 
-  private final double buffer = 0.003;
+  private final double buffer = 0.005;
 
   private SparkAbsoluteEncoder m_absoluteEncoder;
   private CANSparkMax m_wrist;
@@ -63,12 +63,12 @@ public class WristSubsystem extends WCStaticSubsystem {
       return;
     }
     SmartDashboard.putNumber("WristPosition", m_absoluteEncoder.getPosition());
-    // SmartDashboard.putNumber("WristSetpoint", m_setPoint);
-    // SmartDashboard.putNumber("WristRaw", getWristPosition());
-    // SmartDashboard.putBoolean("WrsitPID/atSetpoint", m_PidController.atSetpoint());
-    // m_PidController.setP(SmartDashboard.getNumber("WristPID/p", 0.0));
-    // m_PidController.setI(SmartDashboard.getNumber("WristPID/i", 0.0));
-    // m_PidController.setD(SmartDashboard.getNumber("WristPID/d", 0.0));
+    SmartDashboard.putNumber("WristSetpoint", m_setPoint);
+    SmartDashboard.putNumber("WristRaw", getWristPosition());
+    SmartDashboard.putBoolean("WrsitPID/atSetpoint", m_PidController.atSetpoint());
+    m_PidController.setP(SmartDashboard.getNumber("WristPID/p", 0.0));
+    m_PidController.setI(SmartDashboard.getNumber("WristPID/i", 0.0));
+    m_PidController.setD(SmartDashboard.getNumber("WristPID/d", 0.0));
     // SmartDashboard.putNumber("WristVoltage",
     // m_wrist.getAppliedOutput()*RobotController.getBatteryVoltage());
 
@@ -123,6 +123,10 @@ public class WristSubsystem extends WCStaticSubsystem {
 
   public boolean isAtPos() {
     return getWristPosition() >= m_setPoint - buffer && getWristPosition() <= m_setPoint + buffer;
+  }
+
+  public boolean isAtBadPos() {
+    return getWristPosition() >= m_setPoint - (buffer * 2) && getWristPosition() <= m_setPoint + (buffer * 2);
   }
 
   public double getPIDSetPoint() {

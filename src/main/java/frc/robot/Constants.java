@@ -67,7 +67,5 @@ public final class Constants {
 
   // Pass target
   public static final Translation2d kPassTargetRed = new Translation2d(1.021, 7.095);
-  public static final Translation2d kPassTargetBlue = new Translation2d(15.1, 6.8);   
-  
-  
+  public static final Translation2d kPassTargetBlue = new Translation2d(15.1, 6.8);
 }

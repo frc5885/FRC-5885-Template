@@ -23,6 +23,7 @@ public class Robot extends WCRobot {
   public NoteVisualizer m_noteVisualizer;
 
   public Robot() {
+
     SmartDashboard.putBoolean("ClimberSubsystem/isLimitsEnabled", true);
   }
 
@@ -65,6 +66,21 @@ public class Robot extends WCRobot {
 
     pathPlannerRegisterNamedCommand(
         "eject", new EjectFeederCommand(m_wristSubsystem, m_feederSubsystem, m_armSubsystem));
+
+    pathPlannerRegisterNamedCommand(
+        "subwooferShot",
+        new AutoSubwooferShotCommand(
+            m_shooterSubsystem, m_feederSubsystem, m_wristSubsystem, m_beambreak));
+
+    pathPlannerRegisterNamedCommand(
+        "lowPass",
+        new PassCommand(
+            this,
+            m_wristSubsystem,
+            m_feederSubsystem,
+            m_armSubsystem,
+            m_shooterSubsystem,
+            m_beambreak));
   }
 
   @Override
@@ -238,5 +254,4 @@ public class Robot extends WCRobot {
   public void setLEDsRainbow() {
     m_ledSubsystem.setRainbow();
   }
-
 }

@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.AprilTagCameraConstants;
+import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.WCLogger;
 import frc.robot.base.subsystems.swerve.SwerveAction;
@@ -36,7 +37,10 @@ public class RobotSystem extends LoggedRobot {
 
   @Override
   public void robotInit() {
-    if (WCLogger.isEnabled) {
+    SmartDashboard.putNumber("SHOOTPOINT", Constants.kWristStow);
+    SmartDashboard.putNumber("FARVELOCITY", -5000);
+
+    if (WCLogger.isEnabled || true) {
       if (RobotBase.isReal()) {
         boolean found_thumbdrive = false;
         File directory = new File("/media/");
@@ -124,7 +128,7 @@ public class RobotSystem extends LoggedRobot {
             m_robotContainer.m_swervePoseEstimator.getPose(),
             m_robotContainer.m_photonVision.getTargetID());
     if (distanceToTarget >= 3.1) {
-      m_robotContainer.m_shooterSubsystem.spinFastFar();
+      // m_robotContainer.m_shooterSubsystem.spinFastFar();
     } else {
       m_robotContainer.m_shooterSubsystem.spinFastClose();
     }

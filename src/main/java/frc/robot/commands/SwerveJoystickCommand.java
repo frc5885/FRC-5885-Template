@@ -22,8 +22,6 @@ import frc.robot.base.subsystems.PoseEstimator.PhotonVisionSystem;
 import frc.robot.base.subsystems.PoseEstimator.SwervePoseEstimator;
 import frc.robot.base.subsystems.swerve.SwerveAction;
 import frc.robot.base.subsystems.swerve.SwerveDriveSubsystem;
-
-import java.io.Console;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.Logger;
 
@@ -196,7 +194,10 @@ public class SwerveJoystickCommand extends Command {
             m_aimBotPID.calculate(
                 robotPose.getRotation().getRadians(),
                 m_photonVision.getAngleToPose(
-                    m_poseEstimator.getPose(), alliance == Alliance.Red ? Constants.kPassTargetBlue : Constants.kPassTargetRed));
+                    m_poseEstimator.getPose(),
+                    alliance == Alliance.Red
+                        ? Constants.kPassTargetBlue
+                        : Constants.kPassTargetRed));
         if (m_aimBotPID.atSetpoint()) {
           angularVelocity = 0;
         }

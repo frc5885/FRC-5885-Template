@@ -60,7 +60,8 @@ public abstract class WCRobot {
                   // setFieldOriented(!m_isFieldOriented);
                 }));
 
-    m_SwerveJoystickCommand = new SwerveJoystickCommand(
+    m_SwerveJoystickCommand =
+        new SwerveJoystickCommand(
             m_swerveDrive,
             m_swervePoseEstimator,
             m_photonVision,

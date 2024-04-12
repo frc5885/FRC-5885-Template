@@ -7,6 +7,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.WCLogger;
 import frc.robot.base.RobotSystem;
@@ -26,8 +27,8 @@ public class ShooterSubsystem extends WCStaticSubsystem {
   double bottomVelocitySim = 0.0;
 
   double idleVelocity = -2800;
-  double shootCloseVelocity = -2800;
-  double shootFarVelocity = -3700;
+  double shootCloseVelocity = -5000;
+  double shootFarVelocity = -3500;
   double passCloseVelocity = -2800;
   double passFarVelocity = -3700;
   public RobotMode robotMode = RobotMode.AUTO;
@@ -38,7 +39,7 @@ public class ShooterSubsystem extends WCStaticSubsystem {
   }
 
   // Bad one
-  PIDController m_topPIDController = new PIDController(0.005, 0.0, 0.0);
+  PIDController m_topPIDController = new PIDController(0.005, 0.001, 0.0);
   SimpleMotorFeedforward m_topFeedforward = new SimpleMotorFeedforward(0.0, 0.002377, 0.0);
 
   // Good one
@@ -130,6 +131,13 @@ public class ShooterSubsystem extends WCStaticSubsystem {
       topVelocitySim += m_top.getAppliedOutput() * 1.75;
       bottomVelocitySim += m_bottom.getAppliedOutput() * 1.75;
     }
+    SmartDashboard.putNumber( "Top/Voltage", m_top.getAppliedOutput());
+    SmartDashboard.putNumber( "Top/Current", m_top.getOutputCurrent());
+    SmartDashboard.putNumber( "Top/Velocity", getTopVelocity());
+
+    SmartDashboard.putNumber( "Bottom/Voltage", m_bottom.getAppliedOutput());
+    SmartDashboard.putNumber( "Bottom/Current", m_bottom.getOutputCurrent());
+    SmartDashboard.putNumber( "Bottom/Velocity", getBottomVelocity());
   }
 
   @Override
@@ -145,8 +153,9 @@ public class ShooterSubsystem extends WCStaticSubsystem {
     WCLogger.putAction(this, "Action", subsystemAction);
   }
 
-  public void spinFastFar() {
+  public void spinFastFar(double velocity) {
     subsystemAction = SubsystemAction.SHOOT_FAR;
+    shootFarVelocity = velocity;
   }
 
   public void spinFastClose() {
