@@ -58,12 +58,12 @@ public class AutoSubwooferShotCommand extends Command {
 
     double wristPos = m_wristSubsystem.getWristPosition();
     double buffer = 0.02;
-    if (m_shooterSubsystem.isVelocityTerminal()
-        && wristPos >= wristAngle - buffer
+    if (/*m_shooterSubsystem.isVelocityTerminal()
+        && /**/wristPos >= wristAngle - buffer
         && wristPos <= wristAngle + buffer) {
       if (dwellStart == 0) {
         dwellStart = System.currentTimeMillis();
-      } else if (System.currentTimeMillis() - dwellStart >= 250) {
+      } else if (System.currentTimeMillis() - dwellStart >= 450) {
         m_feederSubsystem.shoot();
       }
     }

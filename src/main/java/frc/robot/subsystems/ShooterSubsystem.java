@@ -26,7 +26,7 @@ public class ShooterSubsystem extends WCStaticSubsystem {
   double topVelocitySim = 0.0;
   double bottomVelocitySim = 0.0;
 
-  double idleVelocity = -2800;
+  double idleVelocity = Constants.kShooterMinSpeed;
   double shootCloseVelocity = -5000;
   double shootFarVelocity = -3500;
   double passCloseVelocity = -2800;

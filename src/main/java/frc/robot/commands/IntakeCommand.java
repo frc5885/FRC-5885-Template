@@ -75,6 +75,7 @@ public class IntakeCommand extends Command {
   public void end(boolean interrupted) {
     m_intakeSubsystem.stop();
     m_feederSubsystem.stop();
+    m_driverController.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0.0);
     m_timer = 0;
   }
 

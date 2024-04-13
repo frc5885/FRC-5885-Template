@@ -20,7 +20,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "worlds_center_3n_plus1nmid.1"
+            "pathName": "worlds_center_3n_plus2nmid.1"
           }
         },
         {
@@ -32,7 +32,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "worlds_center_3n_plus1nmid.2"
+            "pathName": "worlds_center_3n_plus2nmid.2"
           }
         },
         {
@@ -44,7 +44,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "worlds_center_3n_plus1nmid.3"
+            "pathName": "worlds_center_3n_plus2nmid.3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "worlds_center_3n_plus2nmid.4"
           }
         },
         {

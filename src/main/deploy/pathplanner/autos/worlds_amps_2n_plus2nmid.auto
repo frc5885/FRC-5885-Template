@@ -2,21 +2,15 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.8580185770988464,
-      "y": 6.702547550201416
+      "x": 0.4853700399398804,
+      "y": 6.958516597747803
     },
-    "rotation": -119.75820821081996
+    "rotation": 179.90874767107852
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
-        {
-          "type": "named",
-          "data": {
-            "name": "subwooferShot"
-          }
-        },
         {
           "type": "path",
           "data": {
@@ -45,6 +39,18 @@
           "type": "path",
           "data": {
             "pathName": "worlds_amp_2n_plus2nmid.3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "worlds_amp_2n_plus2nmid.4"
           }
         },
         {

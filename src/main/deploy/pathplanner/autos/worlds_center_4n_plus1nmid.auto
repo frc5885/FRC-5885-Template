@@ -64,6 +64,12 @@
           "data": {
             "name": "shoot"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "worlds_center_4n_plus1nmid.5"
+          }
         }
       ]
     }

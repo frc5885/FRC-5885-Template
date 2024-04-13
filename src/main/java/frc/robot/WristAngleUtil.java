@@ -32,7 +32,7 @@ public class WristAngleUtil {
 
   public static double getVelocityFar(double distance) {
     // return (2781.37 * Math.pow(distance, 2)) + (-20080.6 * distance) + 32341.4;
-    return 2520 * distance - 13457.8;
+    return Math.min(2520 * distance - 13457.8, Constants.kShooterMinSpeed);
 
     // return distance * 739.005 - 6176.93;
     // return Math.atan(-3.74952 / distance) + -3449.2;

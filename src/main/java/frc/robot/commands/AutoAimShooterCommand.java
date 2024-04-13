@@ -38,7 +38,7 @@ public class AutoAimShooterCommand extends Command {
   long dwellStart = 0;
 
   long noteCheckDwellStart = 0;
-  long noteCheckWaitTime = 1000; // 2s
+  long noteCheckWaitTime = 250; // 2s
 
   /** Creates a new AutoAimShooterCommand. */
   public AutoAimShooterCommand(
@@ -66,7 +66,7 @@ public class AutoAimShooterCommand extends Command {
             SwerveConstants.AimBotConstants.kAutoAimbotI,
             SwerveConstants.AimBotConstants.kAutoAimbotD);
     m_aimBotPID.enableContinuousInput(-Math.PI, Math.PI);
-    m_aimBotPID.setTolerance(SwerveConstants.AimBotConstants.kAimbotTolerance);
+    m_aimBotPID.setTolerance(SwerveConstants.AimBotConstants.kAimbotToleranceAuto);
     // addRequirements(m_SwerveDriveSubsystem);
   }
 
@@ -118,7 +118,7 @@ public class AutoAimShooterCommand extends Command {
           && m_aimBotPID.atSetpoint()) {
         if (dwellStart == 0) {
           dwellStart = System.currentTimeMillis();
-        } else if (System.currentTimeMillis() - dwellStart >= 250) {
+        } else if (System.currentTimeMillis() - dwellStart >= 120) {
           m_feederSubsystem.shoot();
         }
       }

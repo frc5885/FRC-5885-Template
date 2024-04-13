@@ -124,6 +124,7 @@ public class Robot extends WCRobot {
             m_armSubsystem,
             m_photonVision,
             m_swervePoseEstimator,
+            m_feederSubsystem,
             m_beambreak));
     // TODO: add if beambreak not broken, call IntakeAutoAimCommand
 
@@ -225,6 +226,7 @@ public class Robot extends WCRobot {
             m_armSubsystem,
             m_photonVision,
             m_swervePoseEstimator,
+            m_feederSubsystem,
             m_beambreak));
 
     m_operatorController

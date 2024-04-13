@@ -13,6 +13,8 @@ public class FeederSubsystem extends WCStaticSubsystem {
 
   CANSparkMax m_feeder;
 
+  private boolean m_photonDied = false;
+
   @Override
   protected double getBaseSpeed() {
     return 0.5;
@@ -65,5 +67,13 @@ public class FeederSubsystem extends WCStaticSubsystem {
 
   public double getVelocity() {
     return m_feeder.getEncoder().getVelocity();
+  }
+
+  public boolean getPhotonDied(){
+    return m_photonDied;
+  }
+
+  public void setPhotonDied(boolean condition){
+    m_photonDied = condition;
   }
 }

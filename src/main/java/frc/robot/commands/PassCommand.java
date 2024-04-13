@@ -53,13 +53,12 @@ public class PassCommand extends Command {
     if (m_beambreak.isBroken()) {
       m_wristSubsystem.pos(Constants.kWristEncoderMin);
 
-      m_shooterSubsystem.spinFastClose();
+      m_shooterSubsystem.spinPass();
     }
 
     double wristPos = m_wristSubsystem.getWristPosition();
     double buffer = 0.02;
-    if (m_shooterSubsystem.isVelocityTerminal()
-        && wristPos >= Constants.kWristEncoderMin - buffer
+    if (wristPos >= Constants.kWristEncoderMin - buffer
         && wristPos <= Constants.kWristEncoderMin + buffer) {
       if (dwellStart == 0) {
         dwellStart = System.currentTimeMillis();

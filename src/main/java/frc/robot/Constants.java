@@ -37,7 +37,7 @@ public final class Constants {
   public static final double kWristPass = kWristStow; // Pass cross field
   public static final double kWristAmp = 0.376; // Amp
   // public static final double kWristSubwoofer = -0.5;
-  public static final double kWristSubwoofer = 0.383;
+  public static final double kWristSubwoofer = 0.393;
   public static final double kWrist15 = 0.0;
   public static final double kWrist30 = 0.0;
   public static final double kWrist45 = 0.0;
@@ -60,10 +60,12 @@ public final class Constants {
 
   // LED
   public static final int kLED = 9;
-  public static final double kIntakeCurrentThreshold = 10.0;
+  public static final double kIntakeCurrentThreshold = 18.0;
 
   public static final double kPassDistanceClose = 5.0;
   public static final double kPassDistanceFar = 9.25;
+
+  public static final double kShooterMinSpeed = -2800;
 
   // Pass target
   public static final Translation2d kPassTargetRed = new Translation2d(1.021, 7.095);

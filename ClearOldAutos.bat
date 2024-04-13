@@ -1,2 +1,2 @@
-@echo off
-ssh admin@10.58.5.2 "rm -r /home/lvuser/deploy/pathplanner/"
+ssh admin@10.58.85.2 "rm -r /home/lvuser/deploy/pathplanner/"
+PAUSE

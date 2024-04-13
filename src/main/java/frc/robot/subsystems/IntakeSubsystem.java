@@ -42,8 +42,8 @@ public class IntakeSubsystem extends WCStaticSubsystem {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("LeftIntake", m_intakeMotorLeft.getOutputCurrent());
-    SmartDashboard.putNumber("RightIntake", m_intakeMotorRight.getOutputCurrent());
+    // SmartDashboard.putNumber("LeftIntake", m_intakeMotorLeft.getOutputCurrent());
+    // SmartDashboard.putNumber("RightIntake", m_intakeMotorRight.getOutputCurrent());
     super.periodic();
     if (subsystemAction == SubsystemAction.OUTTAKE) {
       reverseMotors();
@@ -74,7 +74,7 @@ public class IntakeSubsystem extends WCStaticSubsystem {
     double current =
         m_currentFilter.calculate(
             (m_intakeMotorRight.getOutputCurrent() + m_intakeMotorLeft.getOutputCurrent()) / 2);
-    // SmartDashboard.putNumber("l )INTAKECURRENT", current);
+    SmartDashboard.putNumber("INTAKECURRENT", current);
     return current;
   }
 

@@ -51,15 +51,27 @@ public class FeedCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if ((m_shooterSubsystem.isVelocityTerminal()
+    if (m_feederSubsystem.getPhotonDied()) {
+      if ((m_shooterSubsystem.isVelocityTerminal()
+            && m_wristSubsystem.isAtBadPos())
+        || m_armSubsystem.isArmUp() // ||
+      // (m_wristSubsystem.getPIDSetPoint() == Constants.kWristPass && m_wristSubsystem.isAtPos())
+      ) {
+        m_feederSubsystem.shoot();
+      } else {
+        m_feederSubsystem.stop();
+      }
+    } else {
+      if ((m_shooterSubsystem.isVelocityTerminal()
             && m_robot.swerveIsAtSetpoint()
             && m_wristSubsystem.isAtBadPos())
         || m_armSubsystem.isArmUp() // ||
-    // (m_wristSubsystem.getPIDSetPoint() == Constants.kWristPass && m_wristSubsystem.isAtPos())
-    ) {
-      m_feederSubsystem.shoot();
-    } else {
-      m_feederSubsystem.stop();
+      // (m_wristSubsystem.getPIDSetPoint() == Constants.kWristPass && m_wristSubsystem.isAtPos())
+      ) {
+        m_feederSubsystem.shoot();
+      } else {
+        m_feederSubsystem.stop();
+      }
     }
   }
 

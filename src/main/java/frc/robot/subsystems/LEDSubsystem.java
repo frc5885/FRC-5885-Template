@@ -73,11 +73,11 @@ public class LEDSubsystem extends SubsystemBase {
         setLedColor(0, 0, 0);
         break;
       case RAINBOW:
-        // updateLedRainbow();
-        int r = (int) SmartDashboard.getNumber("LED/r", 0);
-        int g = (int) SmartDashboard.getNumber("LED/g", 0);
-        int b = (int) SmartDashboard.getNumber("LED/b", 0);
-        setLedColor(r, g, b);
+        updateLedRainbow();
+        // int r = (int) SmartDashboard.getNumber("LED/r", 0);
+        // int g = (int) SmartDashboard.getNumber("LED/g", 0);
+        // int b = (int) SmartDashboard.getNumber("LED/b", 0);
+        // setLedColor(r, g, b);
         break;
       case SOLID:
         setLedColor(m_r, m_g, m_b);
@@ -90,7 +90,7 @@ public class LEDSubsystem extends SubsystemBase {
               setLedColor(0, 255, 0);
             } else if (m_distanceToTargetFunction.get() <= Constants.kShootFarThreshold) {
               // solid yellow when far and aimbotting
-              setLedColor(255, 255, 0);
+              setLedColor(255, 60, 0);
             } else {
               // solid blue when passing
               setLedColor(0, 0, 255);
@@ -101,7 +101,7 @@ public class LEDSubsystem extends SubsystemBase {
               flash(0, 255, 0);
             } else if (m_distanceToTargetFunction.get() <= Constants.kShootFarThreshold) {
               // flashing yellow when far
-              flash(255, 255, 0);
+              flash(255, 60, 0);
             } else {
               // flashing blue when has note
               flash(0, 0, 255);

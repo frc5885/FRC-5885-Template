@@ -16,6 +16,7 @@ import frc.robot.base.subsystems.PoseEstimator.PhotonVisionSystem;
 import frc.robot.base.subsystems.PoseEstimator.SwervePoseEstimator;
 import frc.robot.base.subsystems.swerve.SwerveAction;
 import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.WristSubsystem;
 
@@ -28,6 +29,7 @@ public class AimShooterCommand extends Command {
   Robot m_robot;
   PhotonVisionSystem m_photonVision;
   SwervePoseEstimator m_swervePoseEstimator;
+  FeederSubsystem m_feederSubsystem;
   Beambreak m_beambreak;
 
   /** Creates a new SpinShooterCMD. */
@@ -39,6 +41,7 @@ public class AimShooterCommand extends Command {
       ArmSubsystem armSubsystem,
       PhotonVisionSystem photonVision,
       SwervePoseEstimator swervePoseEstimator,
+      FeederSubsystem feederSubsystemm,
       Beambreak beambreak) {
     m_shooterSubsystem = shooterSubsystem;
     m_driverController = driverController;
@@ -48,6 +51,7 @@ public class AimShooterCommand extends Command {
     m_wristSubsystem = wristSubsystem;
     m_beambreak = beambreak;
     m_armSubsystem = armSubsystem;
+    m_feederSubsystem = feederSubsystemm;
     addRequirements(m_shooterSubsystem);
   }
 
@@ -60,6 +64,7 @@ public class AimShooterCommand extends Command {
   public void execute() {
     if (m_beambreak.isBroken() && m_armSubsystem.isArmDown()) {
       m_robot.setSwerveAction(SwerveAction.AIMBOTTING);
+      // m_feederSubsystem.setPhotonDied(false);
       double distanceToTarget = m_robot.distanceToTarget();
       double wristAngle = WristAngleUtil.getAngle(distanceToTarget);
       SmartDashboard.putNumber("DistanceToTarget", distanceToTarget);

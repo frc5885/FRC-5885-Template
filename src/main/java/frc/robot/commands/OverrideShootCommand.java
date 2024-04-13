@@ -7,6 +7,7 @@ import frc.robot.base.io.OperatorController;
 import frc.robot.base.subsystems.PoseEstimator.PhotonVisionSystem;
 import frc.robot.base.subsystems.PoseEstimator.SwervePoseEstimator;
 import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.WristSubsystem;
 
@@ -22,6 +23,7 @@ public class OverrideShootCommand extends SequentialCommandGroup {
       ArmSubsystem armSubsystem,
       PhotonVisionSystem photonVision,
       SwervePoseEstimator swervePoseEstimator,
+      FeederSubsystem feederSubsystem,
       Beambreak beambreak) {
     addCommands(
         new AimSpeakerShotCommand(
@@ -32,6 +34,7 @@ public class OverrideShootCommand extends SequentialCommandGroup {
             armSubsystem,
             photonVision,
             swervePoseEstimator,
+            feederSubsystem,
             beambreak),
         new StowWristCommand(armSubsystem, wristSubsystem));
   }

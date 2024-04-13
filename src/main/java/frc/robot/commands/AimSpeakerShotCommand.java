@@ -14,6 +14,7 @@ import frc.robot.base.subsystems.PoseEstimator.PhotonVisionSystem;
 import frc.robot.base.subsystems.PoseEstimator.SwervePoseEstimator;
 import frc.robot.base.subsystems.swerve.SwerveAction;
 import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.FeederSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.WristSubsystem;
 
@@ -27,6 +28,7 @@ public class AimSpeakerShotCommand extends Command {
   Beambreak m_beambreak;
   PhotonVisionSystem m_photonVision;
   SwervePoseEstimator m_swervePoseEstimator;
+  FeederSubsystem m_feederSubsystem;
 
   /** Creates a new SpinShooterCMD. */
   public AimSpeakerShotCommand(
@@ -37,6 +39,7 @@ public class AimSpeakerShotCommand extends Command {
       ArmSubsystem armSubsystem,
       PhotonVisionSystem photonVision,
       SwervePoseEstimator swervePoseEstimator,
+      FeederSubsystem feederSubsystem,
       Beambreak beambreak) {
     m_shooterSubsystem = shooterSubsystem;
     m_operatorController = operatorController;
@@ -46,6 +49,7 @@ public class AimSpeakerShotCommand extends Command {
     m_wristSubsystem = wristSubsystem;
     m_beambreak = beambreak;
     m_armSubsystem = armSubsystem;
+    m_feederSubsystem = feederSubsystem;
     addRequirements(m_shooterSubsystem);
   }
 
@@ -56,8 +60,9 @@ public class AimSpeakerShotCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    m_shooterSubsystem.spinFastClose();
     if (m_beambreak.isBroken() && m_armSubsystem.isArmDown()) {
-      m_robot.setSwerveAction(SwerveAction.AIMBOTTING);
+      m_feederSubsystem.setPhotonDied(true);
       m_wristSubsystem.pos(Constants.kWristSubwoofer);
       if (m_shooterSubsystem.isVelocityTerminal()) {
         m_operatorController.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 1.0);
@@ -79,6 +84,7 @@ public class AimSpeakerShotCommand extends Command {
         new StowWristCommand(m_armSubsystem, m_wristSubsystem).schedule();
       }
     }
+    m_feederSubsystem.setPhotonDied(false);
   }
 
   // Returns true when the command should end.
