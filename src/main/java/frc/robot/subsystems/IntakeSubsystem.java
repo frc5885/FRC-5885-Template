@@ -35,12 +35,15 @@ public class IntakeSubsystem extends WCStaticSubsystem {
   protected void putDebugDataPeriodic(boolean isRealRobot) {
     WCLogger.putNumber(this, "Voltage", m_intakeMotorRight.getAppliedOutput());
     WCLogger.putNumber(this, "Current", m_intakeMotorRight.getOutputCurrent());
+    WCLogger.putNumber(this, "Voltage", m_intakeMotorLeft.getAppliedOutput());
+    WCLogger.putNumber(this, "Current", m_intakeMotorLeft.getOutputCurrent());
     WCLogger.putAction(this, "Action", subsystemAction);
   }
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("THING0", m_intakeMotorRight.getOutputCurrent());
+    SmartDashboard.putNumber("LeftIntake", m_intakeMotorLeft.getOutputCurrent());
+    SmartDashboard.putNumber("RightIntake", m_intakeMotorRight.getOutputCurrent());
     super.periodic();
     if (subsystemAction == SubsystemAction.OUTTAKE) {
       reverseMotors();

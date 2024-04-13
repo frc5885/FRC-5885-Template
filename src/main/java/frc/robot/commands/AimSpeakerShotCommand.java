@@ -10,6 +10,8 @@ import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.base.io.Beambreak;
 import frc.robot.base.io.OperatorController;
+import frc.robot.base.subsystems.PoseEstimator.PhotonVisionSystem;
+import frc.robot.base.subsystems.PoseEstimator.SwervePoseEstimator;
 import frc.robot.base.subsystems.swerve.SwerveAction;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -23,6 +25,8 @@ public class AimSpeakerShotCommand extends Command {
   ArmSubsystem m_armSubsystem;
   Robot m_robot;
   Beambreak m_beambreak;
+  PhotonVisionSystem m_photonVision;
+  SwervePoseEstimator m_swervePoseEstimator;
 
   /** Creates a new SpinShooterCMD. */
   public AimSpeakerShotCommand(
@@ -31,10 +35,14 @@ public class AimSpeakerShotCommand extends Command {
       Robot robot,
       WristSubsystem wristSubsystem,
       ArmSubsystem armSubsystem,
+      PhotonVisionSystem photonVision,
+      SwervePoseEstimator swervePoseEstimator,
       Beambreak beambreak) {
     m_shooterSubsystem = shooterSubsystem;
     m_operatorController = operatorController;
     m_robot = robot;
+    m_photonVision = photonVision;
+    m_swervePoseEstimator = swervePoseEstimator;
     m_wristSubsystem = wristSubsystem;
     m_beambreak = beambreak;
     m_armSubsystem = armSubsystem;
@@ -49,7 +57,7 @@ public class AimSpeakerShotCommand extends Command {
   @Override
   public void execute() {
     if (m_beambreak.isBroken() && m_armSubsystem.isArmDown()) {
-      // m_robot.setSwerveAction(SwerveAction.AIMBOTTING);
+      m_robot.setSwerveAction(SwerveAction.AIMBOTTING);
       m_wristSubsystem.pos(Constants.kWristSubwoofer);
       if (m_shooterSubsystem.isVelocityTerminal()) {
         m_operatorController.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 1.0);

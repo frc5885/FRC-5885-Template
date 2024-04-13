@@ -216,18 +216,16 @@ public class Robot extends WCRobot {
     m_operatorController.getBButton().onTrue(new ArmDownCommand(m_armSubsystem, m_wristSubsystem));
 
     // Shooter Aim Override
-    // m_operatorController.scheduleOnLeftTriggerTrue(
-    //     new OverrideShootCommand(
-    //         this,
-    //         m_operatorController,
-    //         m_shooterSubsystem,
-    //         m_wristSubsystem,
-    //         m_armSubsystem,
-    //         m_beambreak));
-
     m_operatorController.scheduleOnLeftTriggerTrue(
-        new AutoSubwooferShotCommand(
-            m_shooterSubsystem, m_feederSubsystem, m_wristSubsystem, m_beambreak));
+        new OverrideShootCommand(
+            this,
+            m_operatorController,
+            m_shooterSubsystem,
+            m_wristSubsystem,
+            m_armSubsystem,
+            m_photonVision,
+            m_swervePoseEstimator,
+            m_beambreak));
 
     m_operatorController
         .getStartButton()

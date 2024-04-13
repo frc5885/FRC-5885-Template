@@ -46,6 +46,6 @@ public class OuttakeCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_beambreak.isBroken();
+    return false;
   }
 }
