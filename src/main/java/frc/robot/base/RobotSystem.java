@@ -21,6 +21,7 @@ import frc.robot.AprilTagCameraConstants;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.WCLogger;
+import frc.robot.WristAngleUtil;
 import frc.robot.base.subsystems.swerve.SwerveAction;
 import frc.robot.commands.StowWristCommand;
 import frc.robot.commands.test.*;
@@ -123,12 +124,10 @@ public class RobotSystem extends LoggedRobot {
 
   @Override
   public void autonomousPeriodic() {
-    double distanceToTarget =
-        m_robotContainer.m_photonVision.getDistanceToTarget(
-            m_robotContainer.m_swervePoseEstimator.getPose(),
-            m_robotContainer.m_photonVision.getTargetID());
-    if (distanceToTarget >= 3.1) {
-      // m_robotContainer.m_shooterSubsystem.spinFastFar();
+    double distanceToTarget = m_robotContainer.distanceToTarget();
+    if (distanceToTarget >= Constants.kShootCloseThreshold) {
+      m_robotContainer.m_shooterSubsystem.spinFastFar(
+          WristAngleUtil.getVelocityFar(distanceToTarget));
     } else {
       m_robotContainer.m_shooterSubsystem.spinFastClose();
     }

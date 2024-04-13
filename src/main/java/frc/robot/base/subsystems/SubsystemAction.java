@@ -17,5 +17,6 @@ public enum SubsystemAction {
 
   SHOOT,
   SHOOT_FAR,
-  SHOOT_CLOSE
+  SHOOT_CLOSE,
+  PASS
 }

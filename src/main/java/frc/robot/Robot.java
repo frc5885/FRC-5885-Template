@@ -45,7 +45,8 @@ public class Robot extends WCRobot {
             m_beambreak,
             m_shooterSubsystem,
             m_intakeSubsystem,
-            () -> getSwerveAction() == SwerveAction.AIMBOTTING);
+            () -> getSwerveAction() == SwerveAction.AIMBOTTING,
+            () -> distanceToTarget());
     m_noteVisualizer = new NoteVisualizer(m_swervePoseEstimator::getPose, m_wristSubsystem);
   }
 
@@ -62,7 +63,8 @@ public class Robot extends WCRobot {
             m_wristSubsystem,
             m_photonVision,
             m_swervePoseEstimator,
-            m_beambreak));
+            m_beambreak,
+            m_intakeSubsystem));
 
     pathPlannerRegisterNamedCommand(
         "eject", new EjectFeederCommand(m_wristSubsystem, m_feederSubsystem, m_armSubsystem));
@@ -253,5 +255,9 @@ public class Robot extends WCRobot {
 
   public void setLEDsRainbow() {
     m_ledSubsystem.setRainbow();
+  }
+
+  public double distanceToTarget() {
+    return m_photonVision.getDistanceToTarget(m_swervePoseEstimator.getPose(), m_photonVision.getTargetID());
   }
 }

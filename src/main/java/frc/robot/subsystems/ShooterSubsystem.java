@@ -31,6 +31,7 @@ public class ShooterSubsystem extends WCStaticSubsystem {
   double shootFarVelocity = -3500;
   double passCloseVelocity = -2800;
   double passFarVelocity = -3700;
+  double passVelocity = -2800;
   public RobotMode robotMode = RobotMode.AUTO;
 
   public enum RobotMode {
@@ -122,6 +123,21 @@ public class ShooterSubsystem extends WCStaticSubsystem {
               0);
       m_top.setVoltage(setVoltage);
       m_bottom.setVoltage(setVoltage2);
+    } else if (subsystemAction == SubsystemAction.PASS) {
+      double setVoltage =
+          MathUtil.clamp(
+              m_topPIDController.calculate(getTopVelocity(), getBottomVelocity())
+                  + m_topFeedforward.calculate(passVelocity),
+              -12,
+              0);
+      double setVoltage2 =
+          MathUtil.clamp(
+              m_bottomPIDController.calculate(getBottomVelocity(), passVelocity)
+                  + m_bottomFeedforward.calculate(passVelocity),
+              -12,
+              0);
+      m_top.setVoltage(setVoltage);
+      m_bottom.setVoltage(setVoltage2);
     } else {
       stopMotors();
       topVelocitySim = 0;
@@ -168,6 +184,10 @@ public class ShooterSubsystem extends WCStaticSubsystem {
 
   public void spinFast() {
     subsystemAction = SubsystemAction.SHOOT;
+  }
+
+  public void spinPass() {
+    subsystemAction = SubsystemAction.PASS;
   }
 
   public boolean isVelocityTerminal() {

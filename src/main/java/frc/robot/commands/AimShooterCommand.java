@@ -60,9 +60,7 @@ public class AimShooterCommand extends Command {
   public void execute() {
     if (m_beambreak.isBroken() && m_armSubsystem.isArmDown()) {
       m_robot.setSwerveAction(SwerveAction.AIMBOTTING);
-      double distanceToTarget =
-          m_photonVision.getDistanceToTarget(
-              m_swervePoseEstimator.getPose(), m_photonVision.getTargetID());
+      double distanceToTarget = m_robot.distanceToTarget();
       double wristAngle = WristAngleUtil.getAngle(distanceToTarget);
       SmartDashboard.putNumber("DistanceToTarget", distanceToTarget);
       // double wristAngle = SmartDashboard.getNumber("SHOOTPOINT", Constants.kWristAmp);
@@ -75,10 +73,14 @@ public class AimShooterCommand extends Command {
       //   // pass close
       //   m_shooterSubsystem.spinFastClose();
       // } else
-      if (distanceToTarget >= 3.3) {
-        m_shooterSubsystem.spinFastFar(WristAngleUtil.getVelocityFar(distanceToTarget));
-      } else {
+      if (distanceToTarget <= Constants.kShootCloseThreshold) {
         m_shooterSubsystem.spinFastClose();
+      } else if (distanceToTarget <= Constants.kShootFarThreshold) {
+        m_shooterSubsystem.spinFastFar(WristAngleUtil.getVelocityFar(distanceToTarget));
+      }
+      // pass
+      else {
+        m_shooterSubsystem.spinPass();
       }
 
       if (wristAngle >= Constants.kWristEncoderMin && wristAngle <= Constants.kWristStow) {

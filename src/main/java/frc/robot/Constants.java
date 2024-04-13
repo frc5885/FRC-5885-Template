@@ -68,4 +68,8 @@ public final class Constants {
   // Pass target
   public static final Translation2d kPassTargetRed = new Translation2d(1.021, 7.095);
   public static final Translation2d kPassTargetBlue = new Translation2d(15.1, 6.8);
+
+  // shooter distance thresholds
+  public static final double kShootCloseThreshold = 3.3;
+  public static final double kShootFarThreshold = 4.1;
 }

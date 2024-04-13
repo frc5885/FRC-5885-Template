@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.base.io.Beambreak;
@@ -21,6 +22,8 @@ public class LEDSubsystem extends SubsystemBase {
     SUCCESS
   }
 
+  // purple = 200, 0, 255
+
   private AddressableLED m_led;
   private LEDMode m_mode;
   private AddressableLEDBuffer m_ledBuffer;
@@ -36,12 +39,14 @@ public class LEDSubsystem extends SubsystemBase {
   ShooterSubsystem m_shooterSubsystem;
   IntakeSubsystem m_intakeSubsystem;
   Supplier<Boolean> m_isAimbottingFunction;
+  Supplier<Double> m_distanceToTargetFunction;
 
   public LEDSubsystem(
       Beambreak beambreak,
       ShooterSubsystem shooterSubsystem,
       IntakeSubsystem intakeSubsystem,
-      Supplier<Boolean> isAimbottingFunction) {
+      Supplier<Boolean> isAimbottingFunction,
+      Supplier<Double> distanceToTargetFunction) {
     m_led = new AddressableLED(Constants.kLED);
     m_ledBuffer = new AddressableLEDBuffer(60);
     m_led.setLength(m_ledBuffer.getLength());
@@ -54,6 +59,11 @@ public class LEDSubsystem extends SubsystemBase {
     m_isAimbottingFunction = isAimbottingFunction;
     m_shooterSubsystem = shooterSubsystem;
     m_intakeSubsystem = intakeSubsystem;
+    m_distanceToTargetFunction = distanceToTargetFunction;
+
+    SmartDashboard.putNumber("LED/r", 0);
+    SmartDashboard.putNumber("LED/g", 0);
+    SmartDashboard.putNumber("LED/b", 0);
   }
 
   @Override
@@ -63,7 +73,11 @@ public class LEDSubsystem extends SubsystemBase {
         setLedColor(0, 0, 0);
         break;
       case RAINBOW:
-        updateLedRainbow();
+        // updateLedRainbow();
+        int r = (int) SmartDashboard.getNumber("LED/r", 0);
+        int g = (int) SmartDashboard.getNumber("LED/g", 0);
+        int b = (int) SmartDashboard.getNumber("LED/b", 0);
+        setLedColor(r, g, b);
         break;
       case SOLID:
         setLedColor(m_r, m_g, m_b);
@@ -71,26 +85,37 @@ public class LEDSubsystem extends SubsystemBase {
       case TELEOP:
         if (m_beambreak.isBroken()) {
           if (m_isAimbottingFunction.get()) {
-            if (m_shooterSubsystem.isVelocityTerminal()) {
-              // Flash green when aimbotting and shooter is at terminal velocity
-              flash(0, 255, 0);
+            if (m_distanceToTargetFunction.get() <= Constants.kShootCloseThreshold) {
+              // solid green when close and aimbotting
+              setLedColor(0, 255, 0);
+            } else if (m_distanceToTargetFunction.get() <= Constants.kShootFarThreshold) {
+              // solid yellow when far and aimbotting
+              setLedColor(255, 255, 0);
             } else {
-              // Flash orange when aimbotting and shooter is not at terminal velocity
-              flash(255, 170, 0);
+              // solid blue when passing
+              setLedColor(0, 0, 255);
             }
           } else {
-            // Flash blue when note present & not aimbotting
-            flash(0, 0, 255);
+            if (m_distanceToTargetFunction.get() <= Constants.kShootCloseThreshold) {
+              // flashing green when close
+              flash(0, 255, 0);
+            } else if (m_distanceToTargetFunction.get() <= Constants.kShootFarThreshold) {
+              // flashing yellow when far
+              flash(255, 255, 0);
+            } else {
+              // flashing blue when has note
+              flash(0, 0, 255);
+            }
           }
         } else if (m_intakeSubsystem.hasNote()) {
-          // solid blue when intake has note but beambreak is not broken
-          setLedColor(255, 0, 255);
+          // solid red when intake has note but beambreak is not broken
+          setLedColor(255, 0, 0);
         } else if (m_intakeSubsystem.getSubsystemAction() == SubsystemAction.INTAKE) {
           // Solid white when intaking
           setLedColor(255, 255, 255);
         } else {
-          // Solid red when no note present
-          setLedColor(255, 0, 0);
+          // off when no note present
+          setLedColor(0, 0, 0);
         }
         break;
       case AUTO:

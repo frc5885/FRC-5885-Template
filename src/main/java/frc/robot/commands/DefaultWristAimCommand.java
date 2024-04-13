@@ -52,9 +52,7 @@ public class DefaultWristAimCommand extends Command {
   @Override
   public void execute() {
     if (m_beambreak.isBroken() && m_armSubsystem.isArmDown()) {
-      double distanceToTarget =
-          m_photonVision.getDistanceToTarget(
-              m_swervePoseEstimator.getPose(), m_photonVision.getTargetID());
+      double distanceToTarget = m_robot.distanceToTarget();
       double wristAngle = WristAngleUtil.getAngle(distanceToTarget);
       // double wristAngle = SmartDashboard.getNumber("SHOOTPOINT", Constants.kWristAmp);
       if (distanceToTarget < 3.1) {

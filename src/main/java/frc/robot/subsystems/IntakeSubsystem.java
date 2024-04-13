@@ -68,7 +68,9 @@ public class IntakeSubsystem extends WCStaticSubsystem {
   }
 
   public double getMotorCurrent() {
-    double current = m_currentFilter.calculate(m_intakeMotorRight.getOutputCurrent());
+    double current =
+        m_currentFilter.calculate(
+            (m_intakeMotorRight.getOutputCurrent() + m_intakeMotorLeft.getOutputCurrent()) / 2);
     // SmartDashboard.putNumber("l )INTAKECURRENT", current);
     return current;
   }
