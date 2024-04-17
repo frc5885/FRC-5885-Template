@@ -51,8 +51,8 @@ public class PassCommand extends Command {
   public void execute() {
     m_robot.setSwerveAction(SwerveAction.PASS);
     if (m_beambreak.isBroken()) {
+      m_armSubsystem.pos(Constants.kArmPass);
       m_wristSubsystem.pos(Constants.kWristEncoderMin);
-
       m_shooterSubsystem.spinPass();
     }
 
@@ -71,9 +71,11 @@ public class PassCommand extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_wristSubsystem.pos(Constants.kWristStow);
     m_feederSubsystem.stop();
     m_shooterSubsystem.stop();
+    if (!m_armSubsystem.isArmDown() && !interrupted) {
+      new ArmDownCommand(m_armSubsystem, m_wristSubsystem).schedule();
+    }
     m_robot.setSwerveAction(SwerveAction.DEFAULT);
   }
 

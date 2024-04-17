@@ -22,6 +22,7 @@ public final class Constants {
   public static final double kArmAmp = 0.273;
   // public static final double kSetPoint = -0.1;
   public static final double kArmStow = 0.096;
+  public static final double kArmPass = 0.156;
 
   // Wrist Encoder Stuff
   // Angles with wrist relative to the arm at hardstop
@@ -68,8 +69,8 @@ public final class Constants {
   public static final double kShooterMinSpeed = -2800;
 
   // Pass target
-  public static final Translation2d kPassTargetRed = new Translation2d(1.021, 7.095);
-  public static final Translation2d kPassTargetBlue = new Translation2d(15.1, 6.8);
+  public static final Translation2d kPassTargetBlue = new Translation2d(1.5, 7.0);
+  public static final Translation2d kPassTargetRed = new Translation2d(14.25, 7.0);
 
   // shooter distance thresholds
   public static final double kShootCloseThreshold = 3.3;

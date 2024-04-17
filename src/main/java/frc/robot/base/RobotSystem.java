@@ -94,6 +94,8 @@ public class RobotSystem extends LoggedRobot {
       WCLogger.putNumber(this, "RAM/Free", Runtime.getRuntime().freeMemory());
       WCLogger.putNumber(this, "RAM/Used", total - free);
     }
+    // this is the only call to this function pls don't delete it
+    m_robotContainer.refreshDistanceToTarget();
   }
 
   @Override

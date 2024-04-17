@@ -69,11 +69,11 @@ public class FeederSubsystem extends WCStaticSubsystem {
     return m_feeder.getEncoder().getVelocity();
   }
 
-  public boolean getPhotonDied(){
+  public boolean getPhotonDied() {
     return m_photonDied;
   }
 
-  public void setPhotonDied(boolean condition){
+  public void setPhotonDied(boolean condition) {
     m_photonDied = condition;
   }
 }

@@ -195,7 +195,7 @@ public class SwerveJoystickCommand extends Command {
                 robotPose.getRotation().getRadians(),
                 m_photonVision.getAngleToPose(
                     m_poseEstimator.getPose(),
-                    alliance == Alliance.Red
+                    alliance == Alliance.Blue
                         ? Constants.kPassTargetBlue
                         : Constants.kPassTargetRed));
         if (m_aimBotPID.atSetpoint()) {

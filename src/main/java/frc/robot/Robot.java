@@ -21,6 +21,7 @@ public class Robot extends WCRobot {
   public ShooterSubsystem m_shooterSubsystem;
   public LEDSubsystem m_ledSubsystem;
   public NoteVisualizer m_noteVisualizer;
+  private double m_distanceToTarget;
 
   public Robot() {
 
@@ -261,8 +262,13 @@ public class Robot extends WCRobot {
     m_ledSubsystem.setRainbow();
   }
 
+  public void refreshDistanceToTarget() {
+    m_distanceToTarget =
+        m_photonVision.getDistanceToTarget(
+            m_swervePoseEstimator.getPose(), m_photonVision.getTargetID());
+  }
+
   public double distanceToTarget() {
-    return m_photonVision.getDistanceToTarget(
-        m_swervePoseEstimator.getPose(), m_photonVision.getTargetID());
+    return m_distanceToTarget;
   }
 }
