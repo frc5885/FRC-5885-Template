@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
@@ -21,7 +22,7 @@ import org.littletonrobotics.junction.Logger;
 
 public class WristSubsystem extends WCStaticSubsystem {
 
-  private final double buffer = 0.005;
+  private final double buffer = 0.02;
 
   private SparkAbsoluteEncoder m_absoluteEncoder;
   private CANSparkMax m_wrist;
@@ -39,10 +40,10 @@ public class WristSubsystem extends WCStaticSubsystem {
   protected List<MotorController> initMotors() {
     m_wrist = new CANSparkMax(Constants.kWrist, MotorType.kBrushless);
     m_absoluteEncoder = m_wrist.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
-    m_PidController = new PIDController(31.0, 0.0, 0.85);
-    m_PidController.setTolerance(0.02);
+    m_PidController = new PIDController(26.0, 3.0, 0.0);
+    m_PidController.setTolerance(0.001);
 
-    m_feedForward = new ArmFeedforward(0, 0.45, 0);
+    m_feedForward = new ArmFeedforward(0, 1.7, 0);
     SmartDashboard.putNumber(
         "WristAngleCorrectionFactorClose", Constants.kWristAngleCorrectionFactorClose);
     SmartDashboard.putNumber(
@@ -51,7 +52,7 @@ public class WristSubsystem extends WCStaticSubsystem {
     positionSim = Constants.kWristStow;
     m_wristSim =
         new Pose3d(-0.096, -0.003, 0.344, new Rotation3d(0, Units.degreesToRadians(60), Math.PI));
-    WCLogger.putData(this, "PID", m_PidController);
+    // WCLogger.putData(this, "PID", m_PidController);
     SmartDashboard.putData("WristPID", m_PidController);
     return List.of(m_wrist);
   }
@@ -64,20 +65,29 @@ public class WristSubsystem extends WCStaticSubsystem {
     }
     SmartDashboard.putNumber("WristPosition", m_absoluteEncoder.getPosition());
     SmartDashboard.putNumber("WristSetpoint", m_setPoint);
-    SmartDashboard.putNumber("WristRaw", getWristPosition());
+    // SmartDashboard.putNumber("WristRaw", getWristPosition());
     SmartDashboard.putBoolean("WrsitPID/atSetpoint", m_PidController.atSetpoint());
-    m_PidController.setP(SmartDashboard.getNumber("WristPID/p", 0.0));
-    m_PidController.setI(SmartDashboard.getNumber("WristPID/i", 0.0));
-    m_PidController.setD(SmartDashboard.getNumber("WristPID/d", 0.0));
-    // SmartDashboard.putNumber("WristVoltage",
-    // m_wrist.getAppliedOutput()*RobotController.getBatteryVoltage());
+
+    // SmartDashboard.putNumber("WrsitPID/pe", m_PidController.getPositionError());
+    // SmartDashboard.putNumber("WrsitPID/ie", m_PidController.getVelocityError());
+    // SmartDashboard.putString("wristaction", subsystemAction != null ? subsystemAction.toString()
+    // : "NULL");
+
+    // m_PidController.setP(SmartDashboard.getNumber("WristPID/p", 0.0));
+    // m_PidController.setI(SmartDashboard.getNumber("WristPID/i", 0.0));
+    // m_PidController.setD(SmartDashboard.getNumber("WristPID/d", 0.0));
+    SmartDashboard.putNumber(
+        "WristVoltage", m_wrist.getAppliedOutput() * RobotController.getBatteryVoltage());
 
     if (subsystemAction == SubsystemAction.POS) {
       double measurement = getWristPosition();
-      // double calc = -m_PidController.calculate(measurement, m_setPoint);
+      double calc = -m_PidController.calculate(measurement, m_setPoint);
+      m_wrist.setVoltage(calc);
+    } else if (subsystemAction == SubsystemAction.OUTTAKE) {
+      double measurement = getWristPosition();
       double offsetRadians = -Math.PI / 6.0;
       double calc =
-          -m_feedForward.calculate(
+          m_feedForward.calculate(
                   measurement * 2 * Math.PI + offsetRadians,
                   m_setPoint * 2 * Math.PI + offsetRadians)
               - m_PidController.calculate(measurement, m_setPoint);
@@ -107,6 +117,14 @@ public class WristSubsystem extends WCStaticSubsystem {
   public void pos(double setpoint) {
     m_setPoint = setpoint;
     subsystemAction = SubsystemAction.POS;
+    if (setpoint == Constants.kWristStow) {
+      m_PidController.reset();
+    }
+  }
+
+  public void outtake(double setpoint) {
+    m_setPoint = setpoint;
+    subsystemAction = SubsystemAction.OUTTAKE;
   }
 
   public double getWristPosition() {

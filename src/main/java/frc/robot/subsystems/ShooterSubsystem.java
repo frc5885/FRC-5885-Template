@@ -31,7 +31,7 @@ public class ShooterSubsystem extends WCStaticSubsystem {
   double shootFarVelocity = -3500;
   double passCloseVelocity = -2800;
   double passFarVelocity = -3700;
-  double passVelocity = -2800;
+  double passVelocity = -3300; // Low pass was -2800
   public RobotMode robotMode = RobotMode.AUTO;
 
   public enum RobotMode {
@@ -106,7 +106,7 @@ public class ShooterSubsystem extends WCStaticSubsystem {
       m_top.setVoltage(setVoltage);
       m_bottom.setVoltage(setVoltage2);
     } else if (subsystemAction == SubsystemAction.OUTTAKE) {
-      m_top.setVoltage(-12 * 0.2);
+      m_top.setVoltage(-12 * 0.4);
       m_bottom.setVoltage(-12 * 0.2);
     } else if (robotMode == RobotMode.TELEOP && m_beambreak.isBroken()) {
       double setVoltage =

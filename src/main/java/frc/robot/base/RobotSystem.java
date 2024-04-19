@@ -39,7 +39,7 @@ public class RobotSystem extends LoggedRobot {
   @Override
   public void robotInit() {
     SmartDashboard.putNumber("SHOOTPOINT", Constants.kWristStow);
-    SmartDashboard.putNumber("FARVELOCITY", -5000);
+    // SmartDashboard.putNumber("FARVELOCITY", -5000);
 
     if (WCLogger.isEnabled) {
       if (RobotBase.isReal()) {

@@ -45,7 +45,7 @@ public class PhotonVisionSystem extends SubsystemBase {
 
   // don't change the 0.02, its the robot update period
   private LinearFilter m_angleFilter = LinearFilter.singlePoleIIR(0.1, 0.02);
-  private LinearFilter m_distanceFilter = LinearFilter.singlePoleIIR(0.1, 0.02);
+  private LinearFilter m_distanceFilter = LinearFilter.singlePoleIIR(0.3, 0.02);
 
   public PhotonVisionSystem() {
     try {

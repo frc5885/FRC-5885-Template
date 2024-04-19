@@ -19,10 +19,10 @@ public final class Constants {
   public static final double kArmEncoderMax = 0.276;
   public static final double kArmEncoderMin = 0.096;
   // The rotation 2d will have to be changed to doubles when we know our setpoint
-  public static final double kArmAmp = 0.273;
+  public static final double kArmAmp = 0.273; //max -.03
   // public static final double kSetPoint = -0.1;
-  public static final double kArmStow = 0.096;
-  public static final double kArmPass = 0.156;
+  public static final double kArmStow = 0.096; //min
+  public static final double kArmPass = 0.19; //min + .8
 
   // Wrist Encoder Stuff
   // Angles with wrist relative to the arm at hardstop
@@ -30,8 +30,8 @@ public final class Constants {
   // Max 0.315
   // Min  0.625
   // 1.03 worked for old tape
-  public static final double kWristAngleCorrectionFactorClose = 1.0;
-  public static final double kWristAngleCorrectionFactorFar = 1.0;
+  public static final double kWristAngleCorrectionFactorClose = 1.015;
+  public static final double kWristAngleCorrectionFactorFar = 1.015;
   public static final double kWristEncoderMax = 0.577; // Max
   public static final double kWristEncoderMin = 0.325; // Min
   public static final double kWristStow = 0.441; // Stow
@@ -66,11 +66,13 @@ public final class Constants {
   public static final double kPassDistanceClose = 5.0;
   public static final double kPassDistanceFar = 9.25;
 
+  public static final double kShootSubwooferThreshold = 1.0;
+
   public static final double kShooterMinSpeed = -2800;
 
   // Pass target
-  public static final Translation2d kPassTargetBlue = new Translation2d(1.5, 7.0);
-  public static final Translation2d kPassTargetRed = new Translation2d(14.25, 7.0);
+  public static final Translation2d kPassTargetBlue = new Translation2d(1.0, 7.0);
+  public static final Translation2d kPassTargetRed = new Translation2d(14.75, 7.0);
 
   // shooter distance thresholds
   public static final double kShootCloseThreshold = 3.3;

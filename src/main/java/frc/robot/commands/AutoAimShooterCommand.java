@@ -118,7 +118,7 @@ public class AutoAimShooterCommand extends Command {
           && m_aimBotPID.atSetpoint()) {
         if (dwellStart == 0) {
           dwellStart = System.currentTimeMillis();
-        } else if (System.currentTimeMillis() - dwellStart >= 120) {
+        } else if (System.currentTimeMillis() - dwellStart >= 350) {
           m_feederSubsystem.shoot();
         }
       }

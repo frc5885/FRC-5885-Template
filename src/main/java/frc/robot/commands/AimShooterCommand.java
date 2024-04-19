@@ -69,7 +69,7 @@ public class AimShooterCommand extends Command {
       double wristAngle = WristAngleUtil.getAngle(distanceToTarget);
       SmartDashboard.putNumber("DistanceToTarget", distanceToTarget);
       // double wristAngle = SmartDashboard.getNumber("SHOOTPOINT", Constants.kWristAmp);
-      double farVelocity = SmartDashboard.getNumber("FARVELOCITY", -5000);
+      // double farVelocity = SmartDashboard.getNumber("FARVELOCITY", -5000);
 
       // if (distanceToTarget >= Constants.kPassDistanceFar) {
       //   // pass far
@@ -89,6 +89,11 @@ public class AimShooterCommand extends Command {
       }
 
       if (wristAngle >= Constants.kWristEncoderMin && wristAngle <= Constants.kWristStow) {
+        // if (distanceToTarget <= Constants.kShootSubwooferThreshold) {
+        //   m_wristSubsystem.pos(Constants.kWristSubwoofer);
+        // } else {
+        //   m_wristSubsystem.pos(wristAngle);
+        // }
         m_wristSubsystem.pos(wristAngle);
       } else {
         m_wristSubsystem.pos(Constants.kWristStow);

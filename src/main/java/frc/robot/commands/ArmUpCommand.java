@@ -38,7 +38,7 @@ public class ArmUpCommand extends Command {
   @Override
   public void execute() {
     m_armSubsystem.pos(Constants.kArmAmp);
-    m_wristSubsystem.pos(Constants.kWristAmp);
+    m_wristSubsystem.outtake(Constants.kWristAmp);
     m_shooterSubsystem.spinSlow();
     if (m_beambreak.isOpen()) {
       m_feederSubsystem.intake();

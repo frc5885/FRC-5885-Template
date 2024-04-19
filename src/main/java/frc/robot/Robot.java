@@ -205,17 +205,18 @@ public class Robot extends WCRobot {
 
     // Arm up
     m_operatorController
-        .getAButton()
-        .onTrue(
-            new ArmUpCommand(
-                m_armSubsystem,
-                m_wristSubsystem,
-                m_shooterSubsystem,
-                m_feederSubsystem,
-                m_beambreak));
+    .getAButton()
+    .onTrue(
+        new ArmUpCommand(
+            m_armSubsystem,
+            m_wristSubsystem,
+            m_shooterSubsystem,
+            m_feederSubsystem,
+            m_beambreak));
 
     // Arm down
-    m_operatorController.getBButton().onTrue(new ArmDownCommand(m_armSubsystem, m_wristSubsystem));
+    m_operatorController.getBButton().onTrue(new ArmDownCommand(m_armSubsystem,
+    m_wristSubsystem));
 
     // Shooter Aim Override
     m_operatorController.scheduleOnLeftTriggerTrue(
@@ -248,10 +249,10 @@ public class Robot extends WCRobot {
             m_beambreak));
 
     // Wrist Test
-    // m_operatorController.getAButton().onTrue(new InstantCommand(() ->
-    // m_wristSubsystem.pos(0.39)));
-    // m_operatorController.getBButton().onTrue(new InstantCommand(() ->
-    // m_wristSubsystem.pos(0.34)));
+    m_operatorController
+        .getAButton()
+        .onTrue(new InstantCommand(() -> m_wristSubsystem.pos(Constants.kWristStow)));
+    m_operatorController.getBButton().onTrue(new InstantCommand(() -> m_wristSubsystem.pos(0.33)));
   }
 
   public void setLEDsTeleop() {
@@ -269,6 +270,7 @@ public class Robot extends WCRobot {
   }
 
   public double distanceToTarget() {
+    refreshDistanceToTarget();
     return m_distanceToTarget;
   }
 }

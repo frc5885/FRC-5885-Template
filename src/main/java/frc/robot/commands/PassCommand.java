@@ -59,7 +59,8 @@ public class PassCommand extends Command {
     double wristPos = m_wristSubsystem.getWristPosition();
     double buffer = 0.02;
     if (wristPos >= Constants.kWristEncoderMin - buffer
-        && wristPos <= Constants.kWristEncoderMin + buffer) {
+        && wristPos <= Constants.kWristEncoderMin + buffer
+        && m_robot.swerveIsAtSetpoint()) {
       if (dwellStart == 0) {
         dwellStart = System.currentTimeMillis();
       } else if (System.currentTimeMillis() - dwellStart >= 250) {
