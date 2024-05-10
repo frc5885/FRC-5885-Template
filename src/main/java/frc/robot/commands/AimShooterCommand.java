@@ -78,26 +78,11 @@ public class AimShooterCommand extends Command {
       //   // pass close
       //   m_shooterSubsystem.spinFastClose();
       // } else
-      if (distanceToTarget <= Constants.kShootCloseThreshold) {
-        m_shooterSubsystem.spinFastClose();
-      } else if (distanceToTarget <= Constants.kShootFarThreshold) {
-        m_shooterSubsystem.spinFastFar(WristAngleUtil.getVelocityFar(distanceToTarget));
-      }
-      // pass
-      else {
-        m_shooterSubsystem.spinPass();
-      }
+      
+      m_shooterSubsystem.spinPass();
+      
 
-      if (wristAngle >= Constants.kWristEncoderMin && wristAngle <= Constants.kWristStow) {
-        // if (distanceToTarget <= Constants.kShootSubwooferThreshold) {
-        //   m_wristSubsystem.pos(Constants.kWristSubwoofer);
-        // } else {
-        //   m_wristSubsystem.pos(wristAngle);
-        // }
-        m_wristSubsystem.pos(wristAngle);
-      } else {
-        m_wristSubsystem.pos(Constants.kWristStow);
-      }
+      m_wristSubsystem.pos(Constants.kWristStow);
       if (m_shooterSubsystem.isVelocityTerminal()) {
         m_driverController.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 1.0);
       } else {

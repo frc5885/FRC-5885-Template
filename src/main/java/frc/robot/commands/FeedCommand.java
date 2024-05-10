@@ -52,26 +52,10 @@ public class FeedCommand extends Command {
   @Override
   public void execute() {
     if (m_feederSubsystem.getPhotonDied()) {
-      if ((m_shooterSubsystem.isVelocityTerminal() && m_wristSubsystem.isAtBadPos())
-           || m_armSubsystem.isArmUp() // ||
-      // (m_wristSubsystem.getPIDSetPoint() == Constants.kWristPass && m_wristSubsystem.isAtPos())
-      ) {
-        m_feederSubsystem.shoot();
-      } else {
-        m_feederSubsystem.stop();
-      }
+      m_feederSubsystem.shoot();
     } else {
       
-      if ((m_shooterSubsystem.isVelocityTerminal()
-              && m_robot.swerveIsAtSetpoint()
-              && m_wristSubsystem.isAtBadPos())
-          || m_armSubsystem.isArmUp() // ||
-      // (m_wristSubsystem.getPIDSetPoint() == Constants.kWristPass && m_wristSubsystem.isAtPos())
-      ) {
-        m_feederSubsystem.shoot();
-      } else {
-        m_feederSubsystem.stop();
-      }
+      m_feederSubsystem.shoot();
     }
   }
 

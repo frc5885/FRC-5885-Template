@@ -57,7 +57,7 @@ public abstract class WCRobot {
                 }),
             new InstantCommand(
                 () -> {
-                  // setFieldOriented(!m_isFieldOriented);
+                  setFieldOriented(!m_isFieldOriented);
                 }));
 
     m_SwerveJoystickCommand =

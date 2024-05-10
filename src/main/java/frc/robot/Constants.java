@@ -68,7 +68,7 @@ public final class Constants {
 
   public static final double kShootSubwooferThreshold = 1.0;
 
-  public static final double kShooterMinSpeed = -2800;
+  public static final double kShooterMinSpeed = -1738;
 
   // Pass target
   public static final Translation2d kPassTargetBlue = new Translation2d(1.0, 7.0);

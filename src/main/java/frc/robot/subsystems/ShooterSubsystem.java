@@ -31,7 +31,8 @@ public class ShooterSubsystem extends WCStaticSubsystem {
   double shootFarVelocity = -3500;
   double passCloseVelocity = -2800;
   double passFarVelocity = -3700;
-  double passVelocity = -3300; // Low pass was -2800
+  // double passVelocity = -3300; // Low pass was -2800
+  double passVelocity = Constants.kShooterMinSpeed;
   public RobotMode robotMode = RobotMode.AUTO;
 
   public enum RobotMode {
@@ -191,14 +192,15 @@ public class ShooterSubsystem extends WCStaticSubsystem {
   }
 
   public boolean isVelocityTerminal() {
-    double velocity;
-    if (subsystemAction == SubsystemAction.SHOOT_CLOSE) {
-      velocity = shootCloseVelocity + 200;
-    } else {
-      velocity = shootFarVelocity + 200;
-    }
-    return getTopVelocity() <= velocity && getBottomVelocity() <= velocity;
-  }
+  //   double velocity;
+  //   if (subsystemAction == SubsystemAction.SHOOT_CLOSE) {
+  //     velocity = shootCloseVelocity + 200;
+  //   } else {
+  //     velocity = shootFarVelocity + 200;
+  //   }
+  //   return getTopVelocity() <= velocity && getBottomVelocity() <= velocity;
+  // }
+    return true;}
 
   private double getTopVelocity() {
     return RobotSystem.isReal() ? m_topEncoder.getVelocity() : topVelocitySim;
