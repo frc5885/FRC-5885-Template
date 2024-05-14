@@ -33,7 +33,7 @@ public abstract class WCRobot {
   public final PhotonVisionSystem m_photonVision;
   public final WCPathPlanner m_simplePathPlanner;
 
-  protected boolean m_isFieldOriented = true;
+  protected boolean m_isFieldOriented = false;
 
   protected SwerveAction m_swerveAction = SwerveAction.DEFAULT;
 
@@ -57,7 +57,7 @@ public abstract class WCRobot {
                 }),
             new InstantCommand(
                 () -> {
-                  setFieldOriented(!m_isFieldOriented);
+                  // setFieldOriented(!m_isFieldOriented);
                 }));
 
     m_SwerveJoystickCommand =
@@ -68,7 +68,8 @@ public abstract class WCRobot {
             () -> -m_driverController.getLeftY(),
             () -> -m_driverController.getLeftX(),
             () -> -getDriverRotationAxis(),
-            () -> m_isFieldOriented,
+            // () -> m_isFieldOriented,
+            () -> false,
             this::getSwerveAction);
 
     initComponents();

@@ -15,7 +15,7 @@ public class OverrideShootCommand extends SequentialCommandGroup {
 
   // TODO turn off aimbot after shot
 
-  public OverrideShootCommand(
+  public                        OverrideShootCommand(
       Robot robot,
       OperatorController operatorController,
       ShooterSubsystem shooterSubsystem,

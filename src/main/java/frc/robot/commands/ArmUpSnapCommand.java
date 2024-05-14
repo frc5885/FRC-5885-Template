@@ -21,7 +21,7 @@ public class ArmUpSnapCommand extends ParallelCommandGroup {
     super(
         new InstantCommand(() -> robot.setFieldOriented(true)),
         new ArmUpCommand(
-            armSubsystem, wristSubsystem, shooterSubsystem, feederSubsystem, beambreak),
-        new SetSwerveActionCommand(robot, SwerveAction.FACEAMP));
+            armSubsystem, wristSubsystem, shooterSubsystem, feederSubsystem, beambreak));
+        // new SetSwerveActionCommand(robot, SwerveAction.FACEAMP));
   }
 }
