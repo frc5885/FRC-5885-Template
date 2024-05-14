@@ -19,10 +19,10 @@ public final class Constants {
   public static final double kArmEncoderMax = 0.276;
   public static final double kArmEncoderMin = 0.096;
   // The rotation 2d will have to be changed to doubles when we know our setpoint
-  public static final double kArmAmp = 0.273; //max -.03
+  public static final double kArmAmp = 0.273; // max -.03
   // public static final double kSetPoint = -0.1;
-  public static final double kArmStow = 0.096; //min
-  public static final double kArmPass = 0.19; //min + .8
+  public static final double kArmStow = 0.096; // min
+  public static final double kArmPass = 0.19; // min + .8
 
   // Wrist Encoder Stuff
   // Angles with wrist relative to the arm at hardstop

@@ -149,6 +149,17 @@ public class SwerveJoystickCommand extends Command {
           angularVelocity = 0;
         }
         break;
+      case AUTOAIMNOTE:
+        angularVelocity = m_facingPID.calculate(m_photonVision.getAngleToNote(), 0);
+        yDir = -1;
+        // m_swerveSubsystem.setModuleStates(
+        // SwerveConstants.kDriveKinematics.toSwerveModuleStates(
+        //     ChassisSpeeds.fromRobotRelativeSpeeds(SwerveConstants.kMaxSpeedMetersPerSecond, 0, 0,
+        // Rotation2d.fromDegrees(0))));
+        if (m_facingPID.atSetpoint()) {
+          angularVelocity = 0;
+        }
+        break;
       case AIMNOTE:
         angularVelocity = m_facingPID.calculate(m_photonVision.getAngleToNote(), 0);
         if (m_facingPID.atSetpoint()) {

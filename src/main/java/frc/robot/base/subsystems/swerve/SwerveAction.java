@@ -4,6 +4,7 @@ public enum SwerveAction {
   DEFAULT,
   AIMBOTTING,
   AIMNOTE,
+  AUTOAIMNOTE,
   FACEFORWARD,
   FACEBACKWARD,
   FACEAMP,

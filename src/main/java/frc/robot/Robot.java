@@ -84,6 +84,8 @@ public class Robot extends WCRobot {
             m_armSubsystem,
             m_shooterSubsystem,
             m_beambreak));
+
+    pathPlannerRegisterNamedCommand("noteTrack", new AutoNoteTrackCommand(this, m_intakeSubsystem));
   }
 
   @Override
@@ -205,18 +207,17 @@ public class Robot extends WCRobot {
 
     // Arm up
     m_operatorController
-    .getAButton()
-    .onTrue(
-        new ArmUpCommand(
-            m_armSubsystem,
-            m_wristSubsystem,
-            m_shooterSubsystem,
-            m_feederSubsystem,
-            m_beambreak));
+        .getAButton()
+        .onTrue(
+            new ArmUpCommand(
+                m_armSubsystem,
+                m_wristSubsystem,
+                m_shooterSubsystem,
+                m_feederSubsystem,
+                m_beambreak));
 
     // Arm down
-    m_operatorController.getBButton().onTrue(new ArmDownCommand(m_armSubsystem,
-    m_wristSubsystem));
+    m_operatorController.getBButton().onTrue(new ArmDownCommand(m_armSubsystem, m_wristSubsystem));
 
     // Shooter Aim Override
     m_operatorController.scheduleOnLeftTriggerTrue(

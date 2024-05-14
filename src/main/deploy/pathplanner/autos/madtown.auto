@@ -1,0 +1,135 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.4249353408813477,
+      "y": 3.1932594776153564
+    },
+    "rotation": 179.90874767107852
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "madtown.1"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "madtown.2"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "eject"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "noteTrack"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "madtown.4"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "eject"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "noteTrack"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "madtown.6"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "madtown.7"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "noteTrack"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "madtown.9"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "madtown.10"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "noteTrack"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "madtown.12"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shoot"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": true
+}

@@ -41,7 +41,7 @@ public class RobotSystem extends LoggedRobot {
     SmartDashboard.putNumber("SHOOTPOINT", Constants.kWristStow);
     // SmartDashboard.putNumber("FARVELOCITY", -5000);
 
-    if (WCLogger.isEnabled) {
+    if (true) {
       if (RobotBase.isReal()) {
         boolean found_thumbdrive = false;
         File directory = new File("/media/");
