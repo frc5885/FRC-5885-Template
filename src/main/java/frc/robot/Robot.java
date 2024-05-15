@@ -85,7 +85,7 @@ public class Robot extends WCRobot {
             m_shooterSubsystem,
             m_beambreak));
 
-    pathPlannerRegisterNamedCommand("noteTrack", new AutoNoteTrackCommand(this, m_intakeSubsystem));
+    pathPlannerRegisterNamedCommand("noteTrack", new AutoNoteTrackCommand(this, m_intakeSubsystem, m_swerveDrive));
   }
 
   @Override

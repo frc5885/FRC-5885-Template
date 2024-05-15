@@ -4,20 +4,26 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
+import frc.robot.base.modules.swerve.SwerveConstants;
 import frc.robot.base.subsystems.swerve.SwerveAction;
+import frc.robot.base.subsystems.swerve.SwerveDriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 
 public class AutoNoteTrackCommand extends Command {
 
   IntakeSubsystem m_intakeSubsystem;
   Robot m_robot;
+  SwerveDriveSubsystem m_swerveDriveSubsystem;
 
   /** Creates a new AutoNoteTrackCommand. */
-  public AutoNoteTrackCommand(Robot robot, IntakeSubsystem intakeSubsystem) {
+  public AutoNoteTrackCommand(Robot robot, IntakeSubsystem intakeSubsystem, SwerveDriveSubsystem swerveDriveSubsystem) {
     m_intakeSubsystem = intakeSubsystem;
     m_robot = robot;
+    m_swerveDriveSubsystem = swerveDriveSubsystem;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -30,6 +36,12 @@ public class AutoNoteTrackCommand extends Command {
   public void execute() {
     m_robot.setFieldOriented(true);
     new SetSwerveActionCommand(m_robot, SwerveAction.AUTOAIMNOTE);
+
+    double angularVelocity = 0;
+    ChassisSpeeds chassisSpeeds = new ChassisSpeeds(0, 0, angularVelocity);
+      SwerveModuleState[] moduleStates =
+          SwerveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
+      m_swerveDriveSubsystem.setModuleStates(moduleStates);
   }
 
   // Called once the command ends or is interrupted.
