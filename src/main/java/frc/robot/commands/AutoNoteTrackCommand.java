@@ -4,11 +4,13 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.base.modules.swerve.SwerveConstants;
+import frc.robot.base.subsystems.PoseEstimator.PhotonVisionSystem;
 import frc.robot.base.subsystems.swerve.SwerveAction;
 import frc.robot.base.subsystems.swerve.SwerveDriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -18,12 +20,16 @@ public class AutoNoteTrackCommand extends Command {
   IntakeSubsystem m_intakeSubsystem;
   Robot m_robot;
   SwerveDriveSubsystem m_swerveDriveSubsystem;
+  PIDController m_facingPID;
+  PhotonVisionSystem m_photonVision;
 
   /** Creates a new AutoNoteTrackCommand. */
-  public AutoNoteTrackCommand(Robot robot, IntakeSubsystem intakeSubsystem, SwerveDriveSubsystem swerveDriveSubsystem) {
+  public AutoNoteTrackCommand(Robot robot, IntakeSubsystem intakeSubsystem, SwerveDriveSubsystem swerveDriveSubsystem, PhotonVisionSystem photonVision) {
     m_intakeSubsystem = intakeSubsystem;
     m_robot = robot;
     m_swerveDriveSubsystem = swerveDriveSubsystem;
+    m_photonVision = photonVision;
+    m_facingPID = new PIDController(2, 0, 0.2);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -37,8 +43,8 @@ public class AutoNoteTrackCommand extends Command {
     m_robot.setFieldOriented(true);
     new SetSwerveActionCommand(m_robot, SwerveAction.AUTOAIMNOTE);
 
-    double angularVelocity = 0;
-    ChassisSpeeds chassisSpeeds = new ChassisSpeeds(0, 0, angularVelocity);
+    double angularVelocity = m_facingPID.calculate(m_photonVision.getAngleToNote(), 0);
+    ChassisSpeeds chassisSpeeds = new ChassisSpeeds(-3.0, 0, angularVelocity);
       SwerveModuleState[] moduleStates =
           SwerveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
       m_swerveDriveSubsystem.setModuleStates(moduleStates);
@@ -53,6 +59,7 @@ public class AutoNoteTrackCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_intakeSubsystem.hasNote();
+    return false;
+    // return m_intakeSubsystem.hasNote();
   }
 }

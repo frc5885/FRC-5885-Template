@@ -73,7 +73,7 @@ public class Robot extends WCRobot {
     pathPlannerRegisterNamedCommand(
         "subwooferShot",
         new AutoSubwooferShotCommand(
-            m_shooterSubsystem, m_feederSubsystem, m_wristSubsystem, m_beambreak));
+            m_shooterSubsystem, m_feederSubsystem, m_wristSubsystem, m_beambreak)); 
 
     pathPlannerRegisterNamedCommand(
         "lowPass",
@@ -85,7 +85,7 @@ public class Robot extends WCRobot {
             m_shooterSubsystem,
             m_beambreak));
 
-    pathPlannerRegisterNamedCommand("noteTrack", new AutoNoteTrackCommand(this, m_intakeSubsystem, m_swerveDrive));
+    pathPlannerRegisterNamedCommand("noteTrack", new AutoNoteTrackCommand(this, m_intakeSubsystem, m_swerveDrive, m_photonVision));
   }
 
   @Override

@@ -127,12 +127,12 @@ public class RobotSystem extends LoggedRobot {
   @Override
   public void autonomousPeriodic() {
     double distanceToTarget = m_robotContainer.distanceToTarget();
-    if (distanceToTarget >= Constants.kShootCloseThreshold) {
-      m_robotContainer.m_shooterSubsystem.spinFastFar(
-          WristAngleUtil.getVelocityFar(distanceToTarget));
-    } else {
-      m_robotContainer.m_shooterSubsystem.spinFastClose();
-    }
+    // if (distanceToTarget >= Constants.kShootCloseThreshold) {
+    //   m_robotContainer.m_shooterSubsystem.spinFastFar(
+    //       WristAngleUtil.getVelocityFar(distanceToTarget));
+    // } else {
+    //   m_robotContainer.m_shooterSubsystem.spinFastClose();
+    // }
     if (m_robotContainer.m_beambreak.isOpen()) {
       m_robotContainer.m_intakeSubsystem.intake();
       m_robotContainer.m_feederSubsystem.intake();
