@@ -5,12 +5,14 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Robot;
 import frc.robot.base.modules.swerve.SwerveConstants;
 import frc.robot.base.subsystems.PoseEstimator.PhotonVisionSystem;
+import frc.robot.base.subsystems.PoseEstimator.SwervePoseEstimator;
 import frc.robot.base.subsystems.swerve.SwerveAction;
 import frc.robot.base.subsystems.swerve.SwerveDriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -22,14 +24,17 @@ public class AutoNoteTrackCommand extends Command {
   SwerveDriveSubsystem m_swerveDriveSubsystem;
   PIDController m_facingPID;
   PhotonVisionSystem m_photonVision;
+  SwervePoseEstimator m_swervePoseEstimator;
 
   /** Creates a new AutoNoteTrackCommand. */
-  public AutoNoteTrackCommand(Robot robot, IntakeSubsystem intakeSubsystem, SwerveDriveSubsystem swerveDriveSubsystem, PhotonVisionSystem photonVision) {
+  public AutoNoteTrackCommand(Robot robot, IntakeSubsystem intakeSubsystem, SwerveDriveSubsystem swerveDriveSubsystem, PhotonVisionSystem photonVision, SwervePoseEstimator swervePoseEstimator) {
     m_intakeSubsystem = intakeSubsystem;
     m_robot = robot;
     m_swerveDriveSubsystem = swerveDriveSubsystem;
     m_photonVision = photonVision;
     m_facingPID = new PIDController(2, 0, 0.2);
+    m_swervePoseEstimator = swervePoseEstimator;
+    addRequirements(swerveDriveSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -40,11 +45,12 @@ public class AutoNoteTrackCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_robot.setFieldOriented(true);
-    new SetSwerveActionCommand(m_robot, SwerveAction.AUTOAIMNOTE);
+    // m_robot.setFieldOriented(true);
+    // new SetSwerveActionCommand(m_robot, SwerveAction.AUTOAIMNOTE);
+
 
     double angularVelocity = m_facingPID.calculate(m_photonVision.getAngleToNote(), 0);
-    ChassisSpeeds chassisSpeeds = new ChassisSpeeds(-3.0, 0, angularVelocity);
+    ChassisSpeeds chassisSpeeds = new ChassisSpeeds(-1, 0, angularVelocity);
       SwerveModuleState[] moduleStates =
           SwerveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
       m_swerveDriveSubsystem.setModuleStates(moduleStates);
