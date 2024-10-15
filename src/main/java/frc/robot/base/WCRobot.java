@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.WCLogger;
 import frc.robot.base.io.DriverController;
 import frc.robot.base.io.OperatorController;
+import frc.robot.base.subsystems.ArmAction;
 import frc.robot.base.subsystems.PoseEstimator.PhotonVisionSystem;
 import frc.robot.base.subsystems.PoseEstimator.SwervePoseEstimator;
 import frc.robot.base.subsystems.WCPathPlanner;
@@ -34,6 +35,8 @@ public abstract class WCRobot {
   public final WCPathPlanner m_simplePathPlanner;
 
   protected boolean m_isFieldOriented = true;
+
+  ArmAction m_ArmAction = ArmAction.DEFAULT;
 
   protected SwerveAction m_swerveAction = SwerveAction.DEFAULT;
 
@@ -93,6 +96,14 @@ public abstract class WCRobot {
     m_swerveAction = desiredAction;
     WCLogger.putString(
         this, "SwerveAction", m_swerveAction != null ? m_swerveAction.toString() : "null");
+  }
+
+  public void setArmAction(ArmAction action) {
+    m_ArmAction = action;
+  }
+
+  public ArmAction getArmAction() {
+    return m_ArmAction;
   }
 
   public void setFieldOriented(boolean isFieldOriented) {

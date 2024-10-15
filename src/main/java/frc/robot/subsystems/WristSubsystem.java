@@ -29,6 +29,7 @@ public class WristSubsystem extends WCStaticSubsystem {
   private ArmFeedforward m_feedForward;
   private double m_setPoint = Constants.kWristStow;
   private Pose3d m_wristSim;
+  ArmSubsystem m_armSubsystem;
 
   @Override
   protected double getBaseSpeed() {
@@ -49,11 +50,18 @@ public class WristSubsystem extends WCStaticSubsystem {
         "WristAngleCorrectionFactorFar", Constants.kWristAngleCorrectionFactorFar);
 
     positionSim = Constants.kWristStow;
-    m_wristSim =
-        new Pose3d(-0.096, -0.003, 0.344, new Rotation3d(0, Units.degreesToRadians(60), Math.PI));
+
+    // m_wristSim =
+    //     new Pose3d(-0.096, -0.003, 0.344, new Rotation3d(0, Units.degreesToRadians(60),
+    // Math.PI));
     WCLogger.putData(this, "PID", m_PidController);
     SmartDashboard.putData("WristPID", m_PidController);
     return List.of(m_wrist);
+  }
+
+  public WristSubsystem(ArmSubsystem armSubsystem) {
+    super();
+    m_armSubsystem = armSubsystem;
   }
 
   @Override
@@ -66,9 +74,9 @@ public class WristSubsystem extends WCStaticSubsystem {
     // SmartDashboard.putNumber("WristSetpoint", m_setPoint);
     // SmartDashboard.putNumber("WristRaw", getWristPosition());
     // SmartDashboard.putBoolean("WrsitPID/atSetpoint", m_PidController.atSetpoint());
-    // m_PidController.setP(SmartDashboard.getNumber("WristPID/p", 0.0));
-    // m_PidController.setI(SmartDashboard.getNumber("WristPID/i", 0.0));
-    // m_PidController.setD(SmartDashboard.getNumber("WristPID/d", 0.0));
+      // /m_PidController.setP(SmartDashboard.getNumber("WristPID/p", 0.0));
+      // m_PidController.setI(SmartDashboard.getNumber("WristPID/i", 0.0));
+      // m_PidController.setD(SmartDashboard.getNumber("WristPID/d", 0.0));
     // SmartDashboard.putNumber("WristVoltage",
     // m_wrist.getAppliedOutput()*RobotController.getBatteryVoltage());
 
@@ -87,9 +95,22 @@ public class WristSubsystem extends WCStaticSubsystem {
     }
     positionSim += m_wrist.getAppliedOutput() * -0.005;
     m_wristSim =
+        new Pose3d(
+            -Math.cos(m_armSubsystem.getArmAngleSim()) * 0.4445 + 0.348,
+            0,
+            Math.sin(m_armSubsystem.getArmAngleSim()) * 0.4445 + 0.334,
+            new Rotation3d(0, Units.degreesToRadians(60), Math.PI));
+
+    m_wristSim =
         m_wristSim.plus(
             new Transform3d(
-                0, 0, 0, new Rotation3d(0, m_wrist.getAppliedOutput() * -0.005 * 2 * Math.PI, 0)));
+                0, 0, 0, new Rotation3d(0, m_wrist.getAppliedOutput() * -0.005 * Math.PI, 0)));
+
+    // m_wristSim =
+    // new Pose3d(Math.cos(ArmSubsystem.m_encoder.getAbsolutePosition()) * 0.4445 - 0.096,
+    //  Math.sin(ArmSubsystem.m_encoder.getAbsolutePosition()) * 0.4445 -0.003, 0.344,
+    //  new Rotation3d(0, Units.degreesToRadians(60), Math.PI));
+    // System.out.println(m_wrist.getAppliedOutput() * -0.005 * 2 * Math.PI);
   }
 
   @Override

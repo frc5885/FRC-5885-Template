@@ -2,10 +2,13 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.base.WCRobot;
 import frc.robot.base.io.Beambreak;
 import frc.robot.base.io.DriverController;
 import frc.robot.base.io.OperatorController;
+import frc.robot.base.subsystems.ArmAction;
 import frc.robot.base.subsystems.swerve.SwerveAction;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
@@ -21,6 +24,7 @@ public class Robot extends WCRobot {
   public ShooterSubsystem m_shooterSubsystem;
   public LEDSubsystem m_ledSubsystem;
   public NoteVisualizer m_noteVisualizer;
+  Robot_arm m_robot_arm;
 
   public Robot() {
     SmartDashboard.putBoolean("ClimberSubsystem/isLimitsEnabled", true);
@@ -35,7 +39,7 @@ public class Robot extends WCRobot {
   protected void initSubsystems() {
     m_intakeSubsystem = new IntakeSubsystem();
     m_armSubsystem = new ArmSubsystem();
-    m_wristSubsystem = new WristSubsystem();
+    m_wristSubsystem = new WristSubsystem(m_armSubsystem);
     m_feederSubsystem = new FeederSubsystem();
     m_climberSubsystem = new ClimberSubsystem();
     m_shooterSubsystem = new ShooterSubsystem(m_beambreak);
@@ -46,6 +50,7 @@ public class Robot extends WCRobot {
             m_intakeSubsystem,
             () -> getSwerveAction() == SwerveAction.AIMBOTTING);
     m_noteVisualizer = new NoteVisualizer(m_swervePoseEstimator::getPose, m_wristSubsystem);
+    m_robot_arm = new Robot_arm(this::getArmAction, this);
   }
 
   @Override
@@ -71,29 +76,71 @@ public class Robot extends WCRobot {
   protected void initDriverControllerBindings(DriverController m_driverController) {
 
     // Intake
-    m_driverController
-        .getRightBumper()
+    // m_driverController
+    // .getRightBumper()
+    // .whileTrue(
+    // new IntakeCommand(
+    // m_beambreak,
+    // m_intakeSubsystem,
+    // m_feederSubsystem,
+    // m_wristSubsystem,
+    // m_armSubsystem));
+
+    new JoystickButton(m_driverController.getHID(), 1)
         .whileTrue(
-            new IntakeCommand(
-                m_beambreak,
-                m_intakeSubsystem,
-                m_feederSubsystem,
-                m_wristSubsystem,
-                m_armSubsystem));
+            new StartEndCommand(
+                () -> setArmAction(ArmAction.BASEL), () -> setArmAction(ArmAction.DEFAULT)));
+    new JoystickButton(m_driverController.getHID(), 2)
+        .whileTrue(
+            new StartEndCommand(
+                () -> setArmAction(ArmAction.BASER), () -> setArmAction(ArmAction.DEFAULT)));
+    new JoystickButton(m_driverController.getHID(), 3)
+        .whileTrue(
+            new StartEndCommand(
+                () -> setArmAction(ArmAction.ARMC), () -> setArmAction(ArmAction.DEFAULT)));
+    new JoystickButton(m_driverController.getHID(), 4)
+        .whileTrue(
+            new StartEndCommand(
+                () -> setArmAction(ArmAction.ARMCC), () -> setArmAction(ArmAction.DEFAULT)));
+    new JoystickButton(m_driverController.getHID(), 5)
+        .whileTrue(
+            new StartEndCommand(
+                () -> setArmAction(ArmAction.ARM2CC), () -> setArmAction(ArmAction.DEFAULT)));
+    new JoystickButton(m_driverController.getHID(), 6)
+        .whileTrue(
+            new StartEndCommand(
+                () -> setArmAction(ArmAction.ARM2C), () -> setArmAction(ArmAction.DEFAULT)));
+    new JoystickButton(m_driverController.getHID(), 7)
+        .whileTrue(
+            new StartEndCommand(
+                () -> setArmAction(ArmAction.POS), () -> setArmAction(ArmAction.DEFAULT)));
+
+    // new JoystickButton(m_driverController.getHID(), 1)
+    // .whileTrue(new InstantCommand(() -> m_robot_arm.baseR()));
+    // new JoystickButton(m_driverController.getHID(), 2)
+    // .whileTrue(new StartEndCommand(() -> m_robot_arm.baseL(), () ->
+    // m_robot_arm.stopAll()));
+    // new JoystickButton(m_driverController.getHID(), 3)
+    // .whileTrue(new StartEndCommand(() -> m_robot_arm.arm1Up(), () ->
+    // m_robot_arm.stopAll()));
+    // new JoystickButton(m_driverController.getHID(), 4)
+    // .whileTrue(new StartEndCommand(() -> m_robot_arm.arm1Down(), () ->
+    // m_robot_arm.stopAll()));
 
     // Arm Up, snap to amp
-    m_driverController
-        .getAButton()
-        .onTrue( // .whileTrue(
-            new ArmUpSnapCommand(
-                m_armSubsystem,
-                m_wristSubsystem,
-                m_shooterSubsystem,
-                m_feederSubsystem,
-                m_beambreak,
-                this));
+    // m_driverController
+    // .getAButton()
+    // .onTrue( // .whileTrue(
+    // new ArmUpSnapCommand(
+    // m_armSubsystem,
+    // m_wristSubsystem,
+    // m_shooterSubsystem,
+    // m_feederSubsystem,
+    // m_beambreak,
+    // this));
     // .onFalse(new ArmDownCommand(m_armSubsystem, m_wristSubsystem));
-    // (Evan wants press A to go up and shoot to make it go down (which it already does))
+    // (Evan wants press A to go up and shoot to make it go down (which it already
+    // does))
 
     // Spin & Aim Shooter
     m_driverController.scheduleOnLeftTriggerTrue(
@@ -108,17 +155,22 @@ public class Robot extends WCRobot {
             m_beambreak));
     // TODO: add if beambreak not broken, call IntakeAutoAimCommand
 
+    if (m_driverController.getHID().getRawButton(3)) {
+      new ArmUpCommand(
+          m_armSubsystem, m_wristSubsystem, m_shooterSubsystem, m_feederSubsystem, m_beambreak);
+    }
+
     // Aim Wrist
     // m_driverController.scheduleOnLeftTriggerFalse(
-    //         new DefaultWristAimCommand(
-    //                 m_driverController,
-    //                 this,
-    //                 m_armSubsystem,
-    //                 m_wristSubsystem,
-    //                 m_photonVision,
-    //                 m_swervePoseEstimator,
-    //                 m_beambreak)
-    //         );
+    // new DefaultWristAimCommand(
+    // m_driverController,
+    // this,
+    // m_armSubsystem,
+    // m_wristSubsystem,
+    // m_photonVision,
+    // m_swervePoseEstimator,
+    // m_beambreak)
+    // );
 
     // Aim Note
     m_driverController

@@ -28,7 +28,9 @@ public class ArmDownCommand extends Command {
   @Override
   public void execute() {
     if (!m_armSubsystem.isArmDown()) {
-      m_armSubsystem.pos(Constants.kArmStow);
+      // m_armSubsystem.pos(Constants.kArmStow);
+      m_armSubsystem.pos(0);
+
     } else {
       m_armSubsystem.stop();
     }

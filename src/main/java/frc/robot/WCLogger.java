@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.base.subsystems.SubsystemAction;
 
 public class WCLogger {
-  public static final boolean isEnabled = false;
+  public static final boolean isEnabled = true;
 
   public static boolean putBoolean(Object object, String key, boolean value) {
     if (!isEnabled) {

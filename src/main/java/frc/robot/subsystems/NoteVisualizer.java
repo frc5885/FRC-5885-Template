@@ -23,12 +23,17 @@ public class NoteVisualizer extends SubsystemBase {
   private ArrayList<Double> m_durations;
   private ArrayList<Timer> m_timers;
   private Supplier<Pose2d> robotPoseSupplier;
+  Pose3d noteSim;
+
+  double xvelocity;
+  double zvelocity;
 
   public NoteVisualizer(Supplier<Pose2d> supplier, WristSubsystem wristSubsystem) {
     m_poses = new ArrayList<>();
     m_durations = new ArrayList<>();
     m_timers = new ArrayList<>();
     robotPoseSupplier = supplier;
+
     m_wristSubsystem = wristSubsystem;
     if (WCLogger.isEnabled) {
       Logger.recordOutput("Note", new Pose3d[] {});
@@ -38,7 +43,8 @@ public class NoteVisualizer extends SubsystemBase {
   @Override
   public void periodic() {
     if (WCLogger.isEnabled) {
-      Logger.recordOutput("Note", m_poses.toArray(new Pose3d[m_poses.size()]));
+      // Logger.recordOutput("Note", m_poses.toArray(new Pose3d[m_poses.size()]));
+
     }
   }
 
@@ -47,6 +53,11 @@ public class NoteVisualizer extends SubsystemBase {
             () -> {
               m_launcherTransform =
                   new Transform3d(0.35, 0, 0.8, m_wristSubsystem.getWristSimRotation());
+              noteSim = new Pose3d();
+
+              xvelocity = Math.cos(m_wristSubsystem.getWristPosition() * Math.PI * 8.6722);
+              zvelocity = Math.sin(m_wristSubsystem.getWristPosition() * Math.PI * 8.6722);
+
               m_poses.add(new Pose3d(robotPoseSupplier.get()).transformBy(m_launcherTransform));
               int indexPose = m_poses.size() - 1;
               Pose3d endPose =
