@@ -4,11 +4,12 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import java.util.function.BooleanSupplier;
 
-public class WCXboxController extends CommandXboxController {
+public class WCXboxController extends CommandPS5Controller {
 
   protected final JoystickButton xButton =
       new JoystickButton(getHID(), XboxController.Button.kX.value);
@@ -90,7 +91,7 @@ public class WCXboxController extends CommandXboxController {
   }
 
   public void scheduleOnRightTrigger(Command command, double minimumInput) {
-    scheduleOnInput(command, () -> getRightTriggerAxis() > minimumInput);
+    scheduleOnInput(command, () -> getR2Axis() > minimumInput);
   }
 
   public void scheduleOnLeftTriggerTrue(Command command) {
@@ -102,11 +103,11 @@ public class WCXboxController extends CommandXboxController {
   }
 
   public void scheduleOnLeftTriggerTrue(Command command, double minimumInput) {
-    scheduleOnInput(command, () -> getLeftTriggerAxis() > minimumInput);
+    scheduleOnInput(command, () -> getL2Axis() > minimumInput);
   }
 
   public void scheduleOnLeftTriggerFalse(Command command, double minimumInput) {
-    scheduleOnInput(command, () -> getLeftTriggerAxis() <= minimumInput);
+    scheduleOnInput(command, () -> getL2Axis() <= minimumInput);
   }
 
   private void scheduleOnInput(Command command, BooleanSupplier condition) {
