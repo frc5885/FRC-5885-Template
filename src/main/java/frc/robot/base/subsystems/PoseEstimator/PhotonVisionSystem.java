@@ -2,6 +2,7 @@ package frc.robot.base.subsystems.PoseEstimator;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -232,6 +233,16 @@ public class PhotonVisionSystem extends SubsystemBase {
       double angle = yaw + 0.391 * pitch + 0.478;
       double degrees = m_angleFilter.calculate(angle);
       return Units.degreesToRadians(degrees);
+    }
+    return 0.0;
+  }
+
+  public double getPitchToNoteNormalized() {
+     PhotonPipelineResult result = m_photonCameraIntake.getLatestResult();
+    if (result.hasTargets()) {
+      PhotonTrackedTarget target = result.getBestTarget();
+      double pitch = target.getPitch() / 25;
+      return MathUtil.clamp(pitch, 0, 1);
     }
     return 0.0;
   }

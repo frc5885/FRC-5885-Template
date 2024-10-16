@@ -22,7 +22,8 @@ public class AutoNoteTrackCommand extends Command {
   IntakeSubsystem m_intakeSubsystem;
   Robot m_robot;
   SwerveDriveSubsystem m_swerveDriveSubsystem;
-  PIDController m_facingPID;
+  PIDController m_turningPID;
+  PIDController m_translatingPID;
   PhotonVisionSystem m_photonVision;
   SwervePoseEstimator m_swervePoseEstimator;
 
@@ -32,7 +33,10 @@ public class AutoNoteTrackCommand extends Command {
     m_robot = robot;
     m_swerveDriveSubsystem = swerveDriveSubsystem;
     m_photonVision = photonVision;
-    m_facingPID = new PIDController(2, 0, 0.2);
+    m_turningPID = new PIDController(3.1, 0.0, 0.01);
+    m_translatingPID = new PIDController(1.1, 0.0, 0.0);
+    m_turningPID.setTolerance(2);
+    m_translatingPID.setTolerance(2);
     m_swervePoseEstimator = swervePoseEstimator;
     addRequirements(swerveDriveSubsystem);
     // Use addRequirements() here to declare subsystem dependencies.
@@ -48,9 +52,12 @@ public class AutoNoteTrackCommand extends Command {
     // m_robot.setFieldOriented(true);
     // new SetSwerveActionCommand(m_robot, SwerveAction.AUTOAIMNOTE);
 
-
-    double angularVelocity = m_facingPID.calculate(m_photonVision.getAngleToNote(), 0);
-    ChassisSpeeds chassisSpeeds = new ChassisSpeeds(-1, 0, angularVelocity);
+    double angularFactor = m_photonVision.getPitchToNoteNormalized();
+    double translationFactor = 1 - angularFactor;
+    double angularVelocity = m_turningPID.calculate(m_photonVision.getAngleToNote(), 0) * angularFactor;
+    double translatingVelocity = m_translatingPID.calculate(m_photonVision.getAngleToNote(), 0) * translationFactor;
+    // ChassisSpeeds chassisSpeeds = new ChassisSpeeds(-1, 0, angularVelocity);
+    ChassisSpeeds chassisSpeeds = new ChassisSpeeds(-1, -translatingVelocity, angularVelocity);
       SwerveModuleState[] moduleStates =
           SwerveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
       m_swerveDriveSubsystem.setModuleStates(moduleStates);
