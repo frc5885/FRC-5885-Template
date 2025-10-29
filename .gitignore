@@ -169,6 +169,8 @@ out/
 .fleet
 
 # Simulation GUI and other tools window save file
+networktables.json
+simgui*.json
 *-window.json
 
 # Simulation data log directory
@@ -177,15 +179,9 @@ logs/
 # Folder that has CTRE Phoenix Sim device config storage
 ctre_sim/
 
-# AdvantageKit Logs
-Log_*.wpilog
+# clangd
+/.cache
+compile_commands.json
 
-# Auto generated build constants
-# src/main/java/frc/robot/BuildConstants.java
-src/main/java/frc/robot/kernal/BuildConstants.java
-simgui-ds.json
-simgui.json
-
-.DataLogTool/
-.SysId/
-.OutlineViewer/
+# Version file
+src/main/java/frc/robot/BuildConstants.java
